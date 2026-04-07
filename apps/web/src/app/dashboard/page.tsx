@@ -38,16 +38,26 @@ export default function Dashboard() {
       if (isCardanoConnected && cardanoWallet) {
         setLoadingAssets(true)
         try {
-          const assets = await cardanoWallet.getAssets()
+          const rawAssets = await cardanoWallet.getAssets()
+          // Natively guard against undefined structures
+          const assets = Array.isArray(rawAssets) ? rawAssets : []
           const foundHexes: string[] = []
           
           for (const asset of assets) {
-            // Safe guard against undefined lengths causing hydration crashes
-            if (asset && asset.assetName && typeof asset.assetName === 'string') {
-               const decodedName = hexToAscii(asset.assetName)
-               if (decodedName.startsWith("Hex")) {
-                 const rawTty = decodedName.replace("Hex", "")
-                 foundHexes.push(rawTty)
+            // Mesh SDK returns { unit: string, quantity: string }
+            if (asset && asset.unit && typeof asset.unit === 'string') {
+               // PolicyID is 56 chars, the remainder is the hex-encoded asset name
+               const assetNameHex = asset.unit.length > 56 ? asset.unit.slice(56) : ''
+               if (assetNameHex.length > 0) {
+                 try {
+                   const decodedName = hexToAscii(assetNameHex)
+                   if (decodedName.startsWith("Hex")) {
+                     const rawTty = decodedName.replace("Hex", "")
+                     foundHexes.push(rawTty)
+                   }
+                 } catch (e) {
+                   // Silently ignore structurally corrupted UTxO hex maps
+                 }
                }
             }
           }

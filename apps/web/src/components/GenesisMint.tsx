@@ -95,13 +95,6 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                       >
                         Connect Lace
                       </button>
-                      <button 
-                        onClick={() => meshConnect('nami')}
-                        disabled={cardanoConnecting}
-                        className="px-4 py-2 bg-gray-900 text-gray-400 border border-gray-800 rounded-xl text-[10px] font-bold hover:text-white hover:border-gray-500 transition-all active:scale-95 disabled:opacity-50"
-                      >
-                        Connect Nami
-                      </button>
                     </div>
                   )}
                 </div>
@@ -233,7 +226,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
             <motion.div key="step4" initial={{opacity:0, scale:0.9}} animate={{opacity:1, scale:1}} className="space-y-8 flex flex-col items-center text-center pt-10">
               <CheckCircle2 className="w-40 h-40 text-malama-teal mb-6 drop-shadow-[0_0_40px_rgba(68,187,164,0.5)]" />
               <h2 className="text-6xl font-black text-white tracking-tighter">Genesis <span className="text-malama-teal">#{successData?.genesisNumber}</span> Secured</h2>
-              <p className="text-2xl text-gray-400 max-w-2xl leading-relaxed mt-4">Your hardware node is queued! The CIP-68 Identity Receipt is executing securely directly to your native Cardano Nami structures.</p>
+              <p className="text-2xl text-gray-400 max-w-2xl leading-relaxed mt-4">Your hardware node is queued! The CIP-25 Identity Receipt is executing securely directly to your native Cardano Lace structures.</p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mt-12">
                 <a href="/dashboard" className="w-full flex items-center justify-center py-5 bg-malama-deep border border-gray-700 text-gray-300 rounded-xl font-bold hover:bg-gray-800 hover:text-white transition-colors text-lg">

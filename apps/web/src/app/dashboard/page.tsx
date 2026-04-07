@@ -1,17 +1,9 @@
-import { ShieldCheck, Network, Cpu, TrendingUp, Award, CheckCircle2, Lock, ChevronRight, Activity, MapPin } from 'lucide-react'
+import { ShieldCheck, Cpu, Activity, MapPin, CheckCircle2, Box, Radio, AlertCircle, TrendingUp } from 'lucide-react'
 
 export default function Dashboard() {
-  const currentStatus = "Authorized" // Mock State: Identified -> Authorized -> Enabled
+  const currentStatus = "Hardware Pending" // Mock State
   const hexes = ["85289493fffffff"]
-  const dataSubscribers = 340 // Need 1000 to enable Level 2
-
-  const levels = [
-    { title: "Level 1: Network Growth", desc: "Acquire 1,000 active subscribers to achieve Enablement.", active: true, icon: Network },
-    { title: "Level 2: Network Planning", desc: "Identify Host locations and scan coverage gaps.", active: false, icon: MapPin },
-    { title: "Level 3: Infrastructure Enablement", desc: "Coordinate deployment of 1 physical AirNode.", active: false, icon: Cpu },
-    { title: "Level 4: Network Deployment", desc: "Bring infrastructure online and stabilize tracking.", active: false, icon: Activity },
-    { title: "Level 5: Market Leadership", desc: "Achieve 10% market share to unlock Master Builder.", active: false, icon: TrendingUp },
-  ]
+  const activePredictionMarkets = 8
 
   return (
     <div className="min-h-screen bg-black text-gray-200 p-6 md:p-12 font-sans selection:bg-malama-teal selection:text-black">
@@ -19,8 +11,8 @@ export default function Dashboard() {
       {/* Header */}
       <header className="max-w-6xl mx-auto flex items-center justify-between border-b border-gray-800 pb-8 mb-10">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tighter">Command Center</h1>
-          <p className="text-malama-teal font-mono mt-1 text-sm">{hexes.length} Active Nodes Managed</p>
+          <h1 className="text-3xl font-black text-white tracking-tighter">Node Command Center</h1>
+          <p className="text-malama-teal font-mono mt-1 text-sm">{hexes.length} Genesis License Active</p>
         </div>
         <div className="flex space-x-3 items-center">
           <div className="text-right mr-3 hidden sm:block">
@@ -28,7 +20,7 @@ export default function Dashboard() {
             <p className="text-white font-bold text-lg">{currentStatus}</p>
           </div>
           <div className="w-12 h-12 bg-malama-deep border border-malama-teal/30 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(68,187,164,0.2)]">
-            <ShieldCheck className="text-malama-teal w-6 h-6" />
+            <Cpu className="text-malama-teal w-6 h-6" />
           </div>
         </div>
       </header>
@@ -38,71 +30,84 @@ export default function Dashboard() {
         {/* Left Column: Progress & Status */}
         <div className="lg:col-span-2 space-y-8">
           
-          {/* Status Tracker */}
+          {/* Activation Protocol Tracker */}
           <section className="bg-malama-card border border-gray-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-malama-teal to-blue-600"></div>
-            <h2 className="text-xl font-bold text-white mb-6 uppercase tracking-wider">Level 1 Enablement Track</h2>
+            <h2 className="text-xl font-bold text-white mb-6 uppercase tracking-wider">Node Activation Protocol</h2>
             
             <div className="flex flex-col md:flex-row justify-between mb-8 relative">
               <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-800 -z-10 hidden md:block"></div>
-              {/* Tracker Nodes */}
-              <div className="flex flex-col items-center bg-malama-card p-2 z-10">
-                <CheckCircle2 className="w-10 h-10 text-malama-teal mb-2 bg-malama-card rounded-full" />
-                <span className="font-bold text-white">Identified</span>
-                <span className="text-xs text-gray-500 mt-1">KYC Initialized</span>
+              
+              {/* Step 1: License */}
+              <div className="flex flex-col items-center bg-malama-card p-2 z-10 w-32 text-center">
+                <CheckCircle2 className="w-10 h-10 text-malama-teal mb-2 bg-malama-card rounded-full shadow-[0_0_20px_rgba(68,187,164,0.3)]" />
+                <span className="font-bold text-white">License Ownership</span>
+                <span className="text-xs text-gray-500 mt-1">Genesis Deed Secured</span>
               </div>
-              <div className="flex flex-col items-center bg-malama-card p-2 z-10">
+              
+              {/* Step 2: Hardware Delivery */}
+              <div className="flex flex-col items-center bg-malama-card p-2 z-10 w-32 text-center">
                 <div className="w-10 h-10 rounded-full border-4 border-malama-teal flex items-center justify-center bg-malama-teal/20 mb-2">
-                  <div className="w-3 h-3 bg-malama-teal rounded-full animate-pulse"></div>
+                  <Box className="w-4 h-4 text-malama-teal" />
                 </div>
-                <span className="font-bold text-malama-teal">Authorized</span>
-                <span className="text-xs text-malama-teal/70 mt-1">Building Demand</span>
+                <span className="font-bold text-malama-teal">Hardware Shipped</span>
+                <span className="text-xs text-malama-teal/70 mt-1">In Transit - Expected March 12</span>
               </div>
-              <div className="flex flex-col items-center bg-malama-card p-2 z-10 opacity-40">
-                <Lock className="w-10 h-10 text-gray-600 mb-2 bg-malama-card" />
-                <span className="font-bold text-gray-400">Enabled</span>
-                <span className="text-xs text-gray-500 mt-1">Unlock Rewards</span>
+              
+              {/* Step 3: Data Uplink */}
+              <div className="flex flex-col items-center bg-malama-card p-2 z-10 w-32 text-center opacity-40">
+                <Radio className="w-10 h-10 text-gray-600 mb-2 bg-malama-card" />
+                <span className="font-bold text-gray-400">Data Uplink</span>
+                <span className="text-xs text-gray-500 mt-1">Awaiting Sensor Boot</span>
               </div>
             </div>
 
-            <div className="bg-malama-deep p-6 rounded-2xl border border-gray-800">
-               <div className="flex justify-between items-end mb-4">
+            <div className="bg-blue-500/10 p-6 rounded-2xl border border-blue-500/30">
+               <div className="flex items-start">
+                 <AlertCircle className="w-6 h-6 text-blue-400 mr-4 flex-shrink-0 mt-1" />
                  <div>
-                   <h3 className="font-bold text-gray-300">Subscriber Acquisition</h3>
-                   <p className="text-sm text-gray-500">Reach 1,000 active subs to achieve Enablement.</p>
+                   <h3 className="font-bold text-blue-400 text-lg">Next Step: Plug & Play Validation</h3>
+                   <p className="text-sm text-gray-300 mt-1 leading-relaxed">
+                     Once your sensor arrives, simply connect it to a standard power source within your Hex territory. It will immediately begin broadcasting cryptographically-signed spatial data constraints natively to the base network without any technical setup routing required.
+                   </p>
                  </div>
-                 <div className="text-right text-malama-teal font-mono text-xl">{dataSubscribers}<span className="text-gray-500 text-sm">/1000</span></div>
                </div>
-               <div className="w-full h-3 bg-gray-900 rounded-full overflow-hidden">
-                 <div className="h-full bg-malama-teal rounded-full" style={{ width: `${(dataSubscribers/1000)*100}%` }}></div>
-               </div>
-               <button className="mt-5 w-full py-3 bg-white text-black rounded-lg font-black text-sm hover:bg-gray-200 transition-colors">
-                 Get My Affiliate Link
-               </button>
             </div>
           </section>
 
-          {/* Core Progression Path */}
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-white ml-2">Network Builder Progression</h2>
-            <div className="space-y-3">
-              {levels.map((lvl, idx) => (
-                <div key={idx} className={`p-6 rounded-2xl border flex items-center transition-all ${lvl.active ? 'bg-malama-card border-malama-teal/40 shadow-[0_0_20px_rgba(68,187,164,0.05)]' : 'bg-gray-900/40 border-gray-800 opacity-60 grayscale'}`}>
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center mr-5 flex-shrink-0 ${lvl.active ? 'bg-malama-teal/10' : 'bg-gray-800'}`}>
-                    <lvl.icon className={`w-6 h-6 ${lvl.active ? 'text-malama-teal' : 'text-gray-500'}`} />
+          {/* Active Hexes List */}
+          <section className="bg-malama-card border border-gray-800 rounded-3xl p-8 shadow-xl">
+             <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-white">Your Validator Network Licenses</h2>
+             </div>
+             
+             <div className="space-y-4">
+              {hexes.map(hex => (
+                <div key={hex} className="p-5 bg-malama-deep border border-gray-700 rounded-xl relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-malama-amber/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                  
+                  <div className="flex justify-between items-start relative z-10">
+                    <div>
+                      <div className="flex items-center space-x-2">
+                         <span className="bg-malama-teal/20 text-malama-teal text-[10px] font-bold px-2 py-1 rounded">GENESIS TIER</span>
+                      </div>
+                      <p className="font-mono text-2xl text-white font-bold mt-2">{hex}</p>
+                      <p className="text-gray-500 text-sm mt-1">Target Physical Coordinate Base</p>
+                    </div>
+                    
+                    <div className="text-right">
+                       <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">Active Data Markets</p>
+                       <p className="text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className={`font-bold text-lg ${lvl.active ? 'text-white' : 'text-gray-400'}`}>{lvl.title}</h3>
-                    <p className="text-sm text-gray-500 mt-1">{lvl.desc}</p>
-                  </div>
-                  {lvl.active ? (
-                    <ChevronRight className="w-6 h-6 text-malama-teal ml-4" />
-                  ) : (
-                    <Lock className="w-6 h-6 text-gray-600 ml-4" />
-                  )}
                 </div>
               ))}
             </div>
+            
+            <button className="mt-8 w-full py-4 bg-gray-900 border border-gray-800 text-white rounded-xl font-black text-lg hover:bg-gray-800 hover:text-white transition-colors">
+                 Acquire Additional Territory
+            </button>
+            
           </section>
 
         </div>
@@ -112,50 +117,43 @@ export default function Dashboard() {
           
           <section className="bg-malama-card border border-gray-800 rounded-3xl p-8 shadow-xl">
             <div className="flex items-center space-x-3 mb-6">
-              <Award className="w-8 h-8 text-malama-amber" />
-              <h2 className="text-xl font-bold text-white uppercase">Projected Rewards</h2>
+              <TrendingUp className="w-8 h-8 text-malama-teal" />
+              <h2 className="text-xl font-bold text-white uppercase tracking-wider">Validator Fee Accruals</h2>
             </div>
             
             <div className="space-y-6">
               <div>
-                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Subscription Revenue</p>
-                <p className="text-3xl font-mono font-black text-white">$0.00 <span className="text-sm text-gray-500">/mo</span></p>
+                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Prediction Market Yields</p>
+                <div className="flex items-baseline space-x-2">
+                  <p className="text-4xl font-mono font-black text-white">$0.00</p>
+                  <p className="text-sm font-bold text-gray-500">USDC</p>
+                </div>
               </div>
+              
               <div className="h-px bg-gray-800 w-full"></div>
+              
               <div>
-                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Affiliate Bounties</p>
-                <p className="text-3xl font-mono font-black text-white">${dataSubscribers * 60} <span className="text-sm text-gray-500">Total</span></p>
-              </div>
-              <div className="h-px bg-gray-800 w-full"></div>
-              <div>
-                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Hardware Commisions</p>
-                <p className="text-3xl font-mono font-black text-white">0% <span className="text-sm text-gray-500">12.5% at Lvl 3</span></p>
+                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Data Feed Bounties</p>
+                <div className="flex items-baseline space-x-2">
+                  <p className="text-3xl font-mono font-bold text-gray-300">0.00</p>
+                  <p className="text-sm font-bold text-malama-teal">MALAMA</p>
+                </div>
               </div>
             </div>
 
-            <div className="mt-8 p-4 bg-malama-amber/10 border border-malama-amber/30 rounded-xl">
-              <p className="text-xs text-malama-amber/90 font-bold leading-relaxed">
-                Reach <span className="text-malama-amber">Enabled</span> Status to begin unlocking real-time $MALAMA emissions and hardware deployment rights.
+            <div className="mt-8 w-full">
+               <button disabled className="w-full py-3 border border-gray-700 bg-gray-900/50 text-gray-500 rounded-lg font-bold text-sm cursor-not-allowed">
+                 Claim Yields (Awaiting Uplink)
+               </button>
+            </div>
+            
+            <div className="mt-4 p-4 bg-malama-teal/10 border border-malama-teal/30 rounded-xl">
+              <p className="text-xs text-malama-teal/90 font-bold leading-relaxed">
+                As soon as your hardware establishes a secure uplink, external Prediction Markets resolving inside your Hex automatically pay validation fees directly into this ledger!
               </p>
             </div>
           </section>
-
-          {/* Active Hexes List */}
-          <section className="bg-malama-card border border-gray-800 rounded-3xl p-8 shadow-xl">
-            <h2 className="text-lg font-bold text-gray-300 mb-4">Your Territories</h2>
-            <div className="space-y-3">
-              {hexes.map(hex => (
-                <div key={hex} className="p-4 bg-malama-deep border border-gray-700 rounded-xl flex items-center justify-between group hover:border-malama-teal transition-colors cursor-pointer">
-                  <div className="flex items-center space-x-3">
-                    <MapPin className="w-5 h-5 text-gray-500 group-hover:text-malama-teal transition-colors" />
-                    <span className="font-mono text-gray-300 group-hover:text-white transition-colors">{hex}</span>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-malama-teal" />
-                </div>
-              ))}
-            </div>
-          </section>
-
+          
         </div>
       </div>
     </div>

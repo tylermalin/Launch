@@ -5,7 +5,8 @@
   "description": "Cryptographic environmental data network",
   "workspaces": [
     "apps/web",
-    "contracts/evm"
+    "contracts/evm",
+    "packages/sdk"
   ],
   "scripts": {
     "test:all": "npm run test --workspaces --if-present",

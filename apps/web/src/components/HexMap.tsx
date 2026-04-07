@@ -35,6 +35,8 @@ export default function HexMap() {
         style: 'mapbox://styles/mapbox/dark-v11',
         center: [-112.5, 43.5], 
         zoom: 6,
+        pitch: 0,
+        bearing: 0,
         attributionControl: false
       })
 

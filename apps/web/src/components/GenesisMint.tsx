@@ -236,10 +236,10 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
               <p className="text-2xl text-gray-400 max-w-2xl leading-relaxed mt-4">Your hardware node is queued! The CIP-68 Identity Receipt is executing securely directly to your native Cardano Nami structures.</p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mt-12">
-                <a href="#" className="w-full py-5 bg-malama-deep border border-gray-700 text-gray-300 rounded-xl font-bold hover:bg-gray-800 hover:text-white transition-colors text-lg">
+                <a href="/dashboard" className="w-full flex items-center justify-center py-5 bg-malama-deep border border-gray-700 text-gray-300 rounded-xl font-bold hover:bg-gray-800 hover:text-white transition-colors text-lg">
                   Track Hardware Batch
                 </a>
-                <a href="#" className="w-full py-5 bg-[#5865F2] text-white rounded-xl font-bold hover:bg-[#4752C4] transition-colors text-lg shadow-[0_0_20px_rgba(88,101,242,0.3)]">
+                <a href="https://discord.gg/" target="_blank" rel="noreferrer" className="w-full flex items-center justify-center py-5 bg-[#5865F2] text-white rounded-xl font-bold hover:bg-[#4752C4] transition-colors text-lg shadow-[0_0_20px_rgba(88,101,242,0.3)]">
                   Enter Secure Discord
                 </a>
                 <Link href="/dashboard" className="w-full py-5 sm:col-span-2 bg-malama-teal text-malama-deep rounded-xl font-black text-xl hover:scale-[1.02] transition-transform shadow-[0_0_30px_rgba(68,187,164,0.2)]">

@@ -1,31 +1,110 @@
-import { ShieldCheck, Cpu, Activity, MapPin, CheckCircle2, Box, Radio, AlertCircle, TrendingUp } from 'lucide-react'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useWallet } from '@meshsdk/react'
+import { ShieldCheck, Cpu, MapPin, CheckCircle2, Box, Radio, AlertCircle, TrendingUp, Lock } from 'lucide-react'
+import Link from 'next/link'
+
+// Helper to decode Cardano hex-encoded asset names
+function hexToAscii(hexStr: string) {
+  let str = '';
+  for (let i = 0; i < hexStr.length; i += 2) {
+    str += String.fromCharCode(parseInt(hexStr.substr(i, 2), 16));
+  }
+  return str;
+}
 
 export default function Dashboard() {
-  const currentStatus = "Hardware Pending" // Mock State
-  const hexes = ["85289493fffffff"]
-  const activePredictionMarkets = 8
+  const { connected, wallet, connect, connecting } = useWallet()
+  const [hexes, setHexes] = useState<string[]>([])
+  const [loadingAssets, setLoadingAssets] = useState(false)
+
+  const currentStatus = hexes.length > 0 ? "Hardware Pending" : "Awaiting Genesis License"
+  const activePredictionMarkets = hexes.length > 0 ? 8 : 0
+
+  useEffect(() => {
+    async function resolveAssets() {
+      if (connected && wallet) {
+        setLoadingAssets(true)
+        try {
+          const assets = await wallet.getAssets()
+          const foundHexes: string[] = []
+          
+          for (const asset of assets) {
+            // Asset names are often strictly hex encoded on Cardano in CIP-25/68
+            const decodedName = hexToAscii(asset.assetName)
+            if (decodedName.startsWith("Hex")) {
+              // Extract the raw hex territory ID from the name (e.g. Hex85289493f...)
+              const rawTty = decodedName.replace("Hex", "")
+              foundHexes.push(rawTty)
+            }
+          }
+          setHexes(foundHexes)
+        } catch (e) {
+          console.error("Failed to fetch assets", e)
+        } finally {
+          setLoadingAssets(false)
+        }
+      } else {
+        setHexes([])
+      }
+    }
+    resolveAssets()
+  }, [connected, wallet])
 
   return (
-    <div className="min-h-screen bg-black text-gray-200 p-6 md:p-12 font-sans selection:bg-malama-teal selection:text-black">
+    <div className="min-h-screen bg-black text-gray-200 p-6 md:p-12 font-sans selection:bg-malama-teal selection:text-black relative">
       
       {/* Header */}
       <header className="max-w-6xl mx-auto flex items-center justify-between border-b border-gray-800 pb-8 mb-10">
         <div>
           <h1 className="text-3xl font-black text-white tracking-tighter">Node Command Center</h1>
-          <p className="text-malama-teal font-mono mt-1 text-sm">{hexes.length} Genesis License Active</p>
+          <p className="text-malama-teal font-mono mt-1 text-sm">{loadingAssets ? 'Scanning Node Blockchain...' : `${hexes.length} Genesis Licenses Active`}</p>
         </div>
-        <div className="flex space-x-3 items-center">
-          <div className="text-right mr-3 hidden sm:block">
-            <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">Network Status</p>
-            <p className="text-white font-bold text-lg">{currentStatus}</p>
-          </div>
-          <div className="w-12 h-12 bg-malama-deep border border-malama-teal/30 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(68,187,164,0.2)]">
-            <Cpu className="text-malama-teal w-6 h-6" />
-          </div>
+        
+        <div className="flex space-x-4 items-center">
+          {connected ? (
+            <div className="flex items-center space-x-3">
+              <div className="text-right hidden sm:block">
+                <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">Network Status</p>
+                <p className="text-white font-bold text-lg">{currentStatus}</p>
+              </div>
+              <div className="w-12 h-12 bg-malama-deep border border-malama-teal/30 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(68,187,164,0.2)]">
+                <Cpu className="text-malama-teal w-6 h-6" />
+              </div>
+            </div>
+          ) : (
+            <button 
+              onClick={() => connect('lace')}
+              disabled={connecting}
+              className="px-6 py-3 bg-malama-teal text-malama-deep rounded-xl font-bold hover:scale-105 transition-all shadow-[0_0_20px_rgba(68,187,164,0.3)] disabled:opacity-50"
+            >
+              {connecting ? "Connecting..." : "Connect Lace Wallet"}
+            </button>
+          )}
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Authentication Gateway */}
+      {!connected && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/60 pt-32">
+          <div className="bg-malama-card border border-gray-800 p-10 rounded-3xl text-center max-w-md shadow-2xl">
+            <ShieldCheck className="w-20 h-20 text-malama-teal mx-auto mb-6 drop-shadow-[0_0_20px_rgba(68,187,164,0.3)]" />
+            <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Secure Sign-In Required</h2>
+            <p className="text-gray-400 mb-8 leading-relaxed">Connect your Cardano wallet to instantly map your physical Operator nodes and active Prediction Market yields.</p>
+            <button 
+              onClick={() => connect('lace')}
+              disabled={connecting}
+              className="w-full py-4 bg-white text-black rounded-xl font-black hover:bg-gray-200 transition-colors shadow-xl"
+            >
+              {connecting ? "Establishing Connection..." : "Authenticate with Lace"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Main Dashboard UI (Blurs when disconnected) */}
+      <div className={`max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 transition-opacity duration-500 ${!connected ? 'opacity-20 pointer-events-none' : 'opacity-100'}`}>
         
         {/* Left Column: Progress & Status */}
         <div className="lg:col-span-2 space-y-8">
@@ -39,19 +118,19 @@ export default function Dashboard() {
               <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-800 -z-10 hidden md:block"></div>
               
               {/* Step 1: License */}
-              <div className="flex flex-col items-center bg-malama-card p-2 z-10 w-32 text-center">
-                <CheckCircle2 className="w-10 h-10 text-malama-teal mb-2 bg-malama-card rounded-full shadow-[0_0_20px_rgba(68,187,164,0.3)]" />
-                <span className="font-bold text-white">License Ownership</span>
-                <span className="text-xs text-gray-500 mt-1">Genesis Deed Secured</span>
+              <div className={`flex flex-col items-center bg-malama-card p-2 z-10 w-32 text-center ${hexes.length === 0 ? 'opacity-40' : ''}`}>
+                <CheckCircle2 className={`w-10 h-10 mb-2 bg-malama-card rounded-full ${hexes.length > 0 ? 'text-malama-teal shadow-[0_0_20px_rgba(68,187,164,0.3)]' : 'text-gray-600'}`} />
+                <span className={`font-bold ${hexes.length > 0 ? 'text-white' : 'text-gray-400'}`}>License Ownership</span>
+                <span className="text-xs text-gray-500 mt-1">{hexes.length > 0 ? 'Genesis Deed Secured' : 'No License Found'}</span>
               </div>
               
               {/* Step 2: Hardware Delivery */}
-              <div className="flex flex-col items-center bg-malama-card p-2 z-10 w-32 text-center">
-                <div className="w-10 h-10 rounded-full border-4 border-malama-teal flex items-center justify-center bg-malama-teal/20 mb-2">
-                  <Box className="w-4 h-4 text-malama-teal" />
+              <div className={`flex flex-col items-center bg-malama-card p-2 z-10 w-32 text-center ${hexes.length === 0 ? 'opacity-20 grayscale' : ''}`}>
+                <div className={`w-10 h-10 rounded-full border-4 flex items-center justify-center mb-2 ${hexes.length > 0 ? 'border-malama-teal bg-malama-teal/20' : 'border-gray-700 bg-gray-800'}`}>
+                  <Box className={`w-4 h-4 ${hexes.length > 0 ? 'text-malama-teal' : 'text-gray-500'}`} />
                 </div>
-                <span className="font-bold text-malama-teal">Hardware Shipped</span>
-                <span className="text-xs text-malama-teal/70 mt-1">In Transit - Expected March 12</span>
+                <span className={`font-bold ${hexes.length > 0 ? 'text-malama-teal' : 'text-gray-500'}`}>Hardware Shipped</span>
+                <span className="text-xs text-malama-teal/80 mt-1">{hexes.length > 0 ? 'In Transit - Expected in 6 Months' : 'Pending Verification'}</span>
               </div>
               
               {/* Step 3: Data Uplink */}
@@ -81,32 +160,45 @@ export default function Dashboard() {
                 <h2 className="text-xl font-bold text-white">Your Validator Network Licenses</h2>
              </div>
              
-             <div className="space-y-4">
-              {hexes.map(hex => (
-                <div key={hex} className="p-5 bg-malama-deep border border-gray-700 rounded-xl relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-malama-amber/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
-                  
-                  <div className="flex justify-between items-start relative z-10">
-                    <div>
-                      <div className="flex items-center space-x-2">
-                         <span className="bg-malama-teal/20 text-malama-teal text-[10px] font-bold px-2 py-1 rounded">GENESIS TIER</span>
-                      </div>
-                      <p className="font-mono text-2xl text-white font-bold mt-2">{hex}</p>
-                      <p className="text-gray-500 text-sm mt-1">Target Physical Coordinate Base</p>
-                    </div>
+             {loadingAssets ? (
+               <div className="p-10 border border-dashed border-gray-700 rounded-2xl flex flex-col items-center justify-center text-center">
+                 <div className="w-8 h-8 rounded-full border-t-2 border-malama-teal animate-spin mb-4"></div>
+                 <p className="text-gray-400 font-bold">Scanning Ledger Utilities...</p>
+               </div>
+             ) : hexes.length === 0 ? (
+               <div className="p-10 border border-dashed border-gray-700 rounded-2xl flex flex-col items-center justify-center text-center bg-gray-900/30">
+                 <Lock className="w-10 h-10 text-gray-600 mb-4" />
+                 <p className="text-xl font-bold text-gray-400 mb-2">No Genesis Licenses Discovered</p>
+                 <p className="text-gray-500 max-w-sm mb-6">Your connected wallet currently holds exactly 0 verified Node Operator Licenses on the Cardano network.</p>
+               </div>
+             ) : (
+               <div className="space-y-4">
+                {hexes.map((hex, i) => (
+                  <div key={`${hex}-${i}`} className="p-5 bg-malama-deep border border-gray-700 rounded-xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-malama-amber/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
                     
-                    <div className="text-right">
-                       <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">Active Data Markets</p>
-                       <p className="text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
+                    <div className="flex justify-between items-start relative z-10">
+                      <div>
+                        <div className="flex items-center space-x-2">
+                           <span className="bg-malama-teal/20 text-malama-teal text-[10px] font-bold px-2 py-1 rounded">GENESIS TIER</span>
+                        </div>
+                        <p className="font-mono text-2xl text-white font-bold mt-2">{hex}</p>
+                        <p className="text-gray-500 text-sm mt-1">Target Physical Coordinate Base</p>
+                      </div>
+                      
+                      <div className="text-right">
+                         <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">Active Data Markets</p>
+                         <p className="text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+             )}
             
-            <button className="mt-8 w-full py-4 bg-gray-900 border border-gray-800 text-white rounded-xl font-black text-lg hover:bg-gray-800 hover:text-white transition-colors">
+            <Link href="/map" className="block mt-8 w-full py-4 text-center bg-gray-900 border border-gray-800 text-white rounded-xl font-black text-lg hover:bg-gray-800 hover:text-white transition-colors">
                  Acquire Additional Territory
-            </button>
+            </Link>
             
           </section>
 
@@ -125,7 +217,7 @@ export default function Dashboard() {
               <div>
                 <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Prediction Market Yields</p>
                 <div className="flex items-baseline space-x-2">
-                  <p className="text-4xl font-mono font-black text-white">$0.00</p>
+                  <p className={`text-4xl font-mono font-black ${hexes.length > 0 ? 'text-white' : 'text-gray-600'}`}>$0.00</p>
                   <p className="text-sm font-bold text-gray-500">USDC</p>
                 </div>
               </div>
@@ -135,7 +227,7 @@ export default function Dashboard() {
               <div>
                 <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Data Feed Bounties</p>
                 <div className="flex items-baseline space-x-2">
-                  <p className="text-3xl font-mono font-bold text-gray-300">0.00</p>
+                  <p className={`text-3xl font-mono font-bold ${hexes.length > 0 ? 'text-gray-300' : 'text-gray-600'}`}>0.00</p>
                   <p className="text-sm font-bold text-malama-teal">MALAMA</p>
                 </div>
               </div>

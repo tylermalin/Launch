@@ -3,11 +3,23 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CardanoWallet, useWallet as useCardanoWallet } from '@meshsdk/react'
-import { useAccount as useEVMWallet, useConnect as useEVMConnect, useDisconnect as useEVMDisconnect, useSendTransaction } from 'wagmi'
+import { useAccount as useEVMWallet, useConnect as useEVMConnect, useDisconnect as useEVMDisconnect, useWriteContract, usePublicClient } from 'wagmi'
 import { injected } from 'wagmi/connectors'
-import { parseEther } from 'viem'
+import { parseAbi, parseUnits } from 'viem'
 import { MapPin, ShoppingCart, ShieldCheck, Wallet, Globe, ChevronRight, CheckCircle2, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
+
+// Base Sepolia Mock Targets (Replace with genuine verified deployment hashes post-launch)
+const MOCK_USDC_ADDR = '0x1111111111111111111111111111111111111111'
+const MOCK_GENESIS_ADDR = '0x2222222222222222222222222222222222222222'
+
+const USDC_ABI = parseAbi([
+  "function approve(address spender, uint256 amount) public returns (bool)"
+])
+
+const MGEN_ABI = parseAbi([
+  "function secureNode(string calldata hexId) external"
+])
 
 export default function GenesisMint({ hexId }: { hexId: string | null }) {
   const [step, setStep] = useState(1) // 1: Setup, 2: Review, 3: Payment, 4: Success
@@ -16,13 +28,16 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
   const { address: evmAddress, isConnected: evmConnected } = useEVMWallet()
   const { connect: connectEVM } = useEVMConnect()
   const { disconnect: disconnectEVM } = useEVMDisconnect()
-  const { sendTransactionAsync } = useSendTransaction()
+  
+  // Viem/Wagmi Hooks for Native Dual-Signature EVM
+  const publicClient = usePublicClient()
+  const { writeContractAsync } = useWriteContract()
 
   const [loading, setLoading] = useState(false)
+  const [evmTxStatus, setEvmTxStatus] = useState<'' | 'approving' | 'minting'>('')
   const [error, setError] = useState('')
   const [successData, setSuccessData] = useState<any>(null)
 
-  // Omnichain Setup Check -> Allows either EVM OR Cardano identity
   const isSetupComplete = (cardanoConnected || evmConnected) && !!hexId
 
   const syncNodeToMap = (id: string | null) => {
@@ -41,18 +56,49 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       if (!isSetupComplete) throw new Error("Wallet architecture not linked")
       
       if (evmConnected) {
-        // Mocking an ERC-20 1500 USDC commitment via Base ETH equivalence wrapper
-        const txHash = await sendTransactionAsync({
-           to: '0x000000000000000000000000000000000000dead', // Base Sepolia Burn Oracle Layer
-           value: parseEther('0.0001'), 
-        })
+        if (!publicClient) throw new Error("Crucial EVM Client not initialized locally")
+
+        // 1. ERC-20 APPROVE $1,500 USDC
+        setEvmTxStatus('approving')
+        const exactPrice = parseUnits('1500', 6) // Strictly Native USDC natively bounds exactly 6 decimal layers.
         
+        let approveHash;
+        try {
+           approveHash = await writeContractAsync({
+             address: MOCK_USDC_ADDR as `0x${string}`,
+             abi: USDC_ABI,
+             functionName: 'approve',
+             args: [MOCK_GENESIS_ADDR as `0x${string}`, exactPrice],
+           })
+        } catch (e: any) {
+           throw new Error("Approval signature was actively blocked or rejected visually by operator.")
+        }
+        
+        // Block processing gracefully tracking hash finality mathematically on Base
+        await publicClient.waitForTransactionReceipt({ hash: approveHash })
+
+        // 2. STAGE ERC-721 MINT PIPELINE 
+        setEvmTxStatus('minting')
+        let mintHash;
+        try {
+           mintHash = await writeContractAsync({
+             address: MOCK_GENESIS_ADDR as `0x${string}`,
+             abi: MGEN_ABI,
+             functionName: 'secureNode',
+             args: [hexId as string],
+           })
+        } catch (e: any) {
+           throw new Error("Target territorial boundaries previously mathematically claimed or signature rejected.")
+        }
+
+        await publicClient.waitForTransactionReceipt({ hash: mintHash })
+
         syncNodeToMap(hexId)
         
         setSuccessData({ 
            genesisNumber: Math.floor(Math.random() * 50) + 248, 
-           hash: txHash,
-           network: 'EVM L2 Settlement'
+           hash: mintHash,
+           network: 'EVM L2 Settlement (Base Sepolia)'
         })
         setStep(4)
       } else if (cardanoConnected) {
@@ -72,10 +118,21 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
         setStep(4)
       }
     } catch (err: any) {
-      setError(err.message || "Payment bridge verification rejected")
+      setError(err.message || "Payment bridge verification structurally rejected")
     } finally {
       setLoading(false)
+      setEvmTxStatus('')
     }
+  }
+
+  const generateSubmitText = () => {
+     if (loading && evmConnected) {
+        if (evmTxStatus === 'approving') return "1/2 Awaiting USDC Treasury Contract Approval..."
+        if (evmTxStatus === 'minting') return "2/2 Cryptographically Writing Boundaries to L2..."
+        return "Synchronizing EVM Base Structure..."
+     }
+     if (loading && cardanoConnected) return "Forging Cardano Blockchain Asset Native Arrays..."
+     return "Execute Strict Target Bind"
   }
 
   return (
@@ -236,18 +293,18 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
               <p className="text-xl text-gray-400 max-w-md leading-relaxed">Awaiting cryptographic signature releasing exactly $1,500 USDC strictly binding into the <span className="font-bold text-white">{evmConnected ? 'Base L2' : 'Cardano'}</span> settlement layer.</p>
 
               {error && (
-                <div className="p-5 bg-red-500/10 border border-red-500/50 rounded-xl text-red-400 flex items-center mt-4 w-full max-w-lg font-bold">
-                  <AlertCircle className="mr-3 w-6 h-6 flex-shrink-0" /> {error}
+                <div className="p-5 bg-red-500/10 border border-red-500/50 rounded-xl text-red-400 flex items-center mt-4 w-full max-w-lg font-bold text-sm text-left">
+                  <AlertCircle className="mr-3 w-8 h-8 flex-shrink-0" /> {error}
                 </div>
               )}
 
-              <div className="flex flex-col w-full max-w-lg gap-4 mt-10">
+              <div className="flex flex-col w-full max-w-lg gap-4 mt-6">
                 <button 
                   onClick={handlePayment} 
                   disabled={loading}
-                  className={`w-full py-6 text-white rounded-2xl font-black text-2xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_40px_rgba(0,0,0,0.4)] ${evmConnected ? 'bg-blue-600 hover:bg-blue-500' : 'bg-malama-teal text-malama-deep hover:bg-malama-teal/80'}`}
+                  className={`w-full py-6 text-white rounded-2xl font-black text-2xl transition-colors shadow-[0_0_40px_rgba(0,0,0,0.4)] ${loading ? 'bg-gray-800 text-gray-400 cursor-not-allowed border border-gray-700' : evmConnected ? 'bg-blue-600 hover:bg-blue-500' : 'bg-malama-teal text-malama-deep hover:bg-malama-teal/80'}`}
                 >
-                  {loading ? "Confirming Cryptography..." : "Execute Strict Target Bind"}
+                  {generateSubmitText()}
                 </button>
                 <button 
                   disabled={loading}

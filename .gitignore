@@ -1,10 +1,10 @@
 # Node.js
 node_modules/
 dist/
-build/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
 # Next.js
 .next/
@@ -16,7 +16,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.env/
 venv/
 env/
 .venv/
@@ -41,9 +40,7 @@ coverage.json
 # Environment files
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
 *.pem
 *.key
 *.cert
@@ -53,9 +50,21 @@ coverage.json
 .docker/
 docker-volumes/
 
+# Binary assets (keep in external storage, not git)
+*.pdf
+*.pptx
+*.jpeg
+*.jpg
+*.png
+*.gif
+*.mp4
+*.mov
+
 # OS/IDE
 .DS_Store
+**/.DS_Store
 .vscode/
 .idea/
 *.swp
 *.swo
+*~

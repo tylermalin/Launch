@@ -35,6 +35,8 @@ export default function HexMap() {
         style: 'mapbox://styles/mapbox/dark-v11',
         center: [-112.5, 43.5], 
         zoom: 6,
+        pitch: 0,
+        bearing: 0,
         attributionControl: false
       })
 
@@ -65,10 +67,29 @@ export default function HexMap() {
       }
     })
 
-    m.on('load', async () => {
+      m.on('load', async () => {
       try {
         const res = await fetch('/api/hexes')
         const data = await res.json()
+
+        // Omnichain Local State Synchronization
+        // Reads purchased nodes from the decoupled payment gateway and visibly renders them active.
+        try {
+          const purchasedString = localStorage.getItem('malamalabs_purchased_nodes')
+          if (purchasedString) {
+            const purchasedHexes: string[] = JSON.parse(purchasedString)
+            if (purchasedHexes.length > 0 && Array.isArray(data.features)) {
+              data.features.forEach((feature: any) => {
+                if (feature.properties && purchasedHexes.includes(feature.properties.id)) {
+                  feature.properties.status = 'active'
+                  feature.properties.purchasedLocal = true // Flag it purely for diagnostic debugging
+                }
+              })
+            }
+          }
+        } catch (e) {
+          console.warn("Failed to sync purchased nodes", e)
+        }
 
         m.addSource('hexes', {
           type: 'geojson',

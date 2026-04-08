@@ -115,7 +115,7 @@ class AIDataValidator:
         return max(0.0, 1.0 - (diff * 2.5))
 
     def monte_carlo_uncertainty(self, value: float) -> Tuple[float, float]:
-        samples = np.random.normal(value, value * 0.02, 1000)
+        samples = np.random.normal(value, abs(value) * 0.02, 1000)
         return float(np.percentile(samples, 5)), float(np.percentile(samples, 95))
 
     def validate_reading(self, sensor_did: str, reading: dict, signature: str) -> ValidationResult:

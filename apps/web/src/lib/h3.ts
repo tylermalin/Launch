@@ -1,10 +1,4 @@
-import { cellToBoundary, gridDisk, latLngToCell } from 'h3-js'
-
-export function generateHexGrid(lat: number, lng: number, radiusKm: number, resolution: number): string[] {
-  const k = Math.max(1, Math.floor(radiusKm / 8.5))
-  const centerHex = latLngToCell(lat, lng, resolution)
-  return gridDisk(centerHex, k)
-}
+import { cellToBoundary } from 'h3-js'
 
 export function hexToGeoJSON(h3Index: string) {
   const boundary = cellToBoundary(h3Index, true)

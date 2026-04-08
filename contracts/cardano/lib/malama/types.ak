@@ -1,8 +1,6 @@
-use aiken/collection/dict.{Dict}
-
 // CIP-68 standard for dynamic datums
 pub type CIP68Datum<t> {
-  metadata: Dict<ByteArray, Data>,
+  metadata: Pairs<ByteArray, Data>,
   version: Int,
   extra: t,
 }

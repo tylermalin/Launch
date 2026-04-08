@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@meshsdk/core": "^1.9.0-beta.102",
     "@meshsdk/react": "^1.1.0",
     "@tanstack/react-query": "^5.0.0",
     "clsx": "^2.1.0",

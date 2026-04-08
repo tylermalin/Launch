@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { forgeHexNFT } from '@/lib/mint'
 
 export async function POST(req: Request) {
   try {
@@ -9,16 +10,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
     
-    await new Promise(r => setTimeout(r, 2500))
+    // In production, verify the USDC EVM transfer here before minting
+    const txHash = await forgeHexNFT(cardanoAddress, hexId);
 
     return NextResponse.json({ 
       success: true,
-      genesisNumber: 247,
-      transactionHash: '0xmock123hash456789abc...',
-      message: 'Genesis node reserved successfully.'
+      genesisNumber: Math.floor(Math.random() * 300) + 1,
+      transactionHash: txHash,
+      message: 'Genesis NFT forged accurately!'
     })
-  } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
   }
 }
 

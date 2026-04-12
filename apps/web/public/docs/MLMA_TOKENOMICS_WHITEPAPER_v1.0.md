@@ -1,16 +1,24 @@
 # MLMA Tokenomics Whitepaper (v1.0)
 
-## Overview
-The Mālama Labs MLMA token is designed to incentivize the physical deployment of verification infrastructure and support ongoing network revenue maturity. This whitepaper details the supply schedule, revenue models, and allocation structures.
+**Version:** 1.0 · **Date:** April 11, 2026 · **Status:** Final for Genesis Phase 1 Pre-Sale  
+**Authors:** Tyler Malin (CEO), Finance & Treasury Team
 
-## Supply & Allocation
-- **Total Supply Cap:** 500,000,000 MLMA (500M)
-- **Genesis 200 Allocation:** 25,000,000 MLMA (25M total, 125K per Genesis Node)
-  - *Vesting:* 25% (31,250 MLMA) unvests at boot. 75% (93,750 MLMA) vests monthly over 12 months.
-- **Year 4+ Emissions:** Target transition to zero emissions or revenue-funded network operations to eliminate inflationary block rewards.
+The full, interactive whitepaper (tables, emission chart, vesting simulator, and complete narrative) lives at:
 
-## Earnings Multipliers
-- **Genesis Multiplier:** Year 1 Genesis node deployments benefit from a 1.5× baseline multiplier, ensuring early stakeholders who purchase nodes are sufficiently rewarded.
+**[https://malamalaunch.vercel.app/docs/tokenomics](https://malamalaunch.vercel.app/docs/tokenomics)**  
+(or `/docs/tokenomics` on your deployment)
 
-## Demand and Governance
-Earnings and governance weight directly correlate with token locking (veMLMA) strategies and network growth. Early adoption helps seed the ecosystem, while sustained usage depends on demand-driven dynamics in environmental verification.
+This file is retained for static linking. Canonical product cohort: **Genesis 200** operators (125K MLMA each; $2,000 entry).
+
+---
+
+## Snapshot
+
+- **Supply cap:** 500M MLMA  
+- **Genesis operators:** 5% (25M MLMA) — 200 nodes × 125K MLMA  
+- **Emissions:** Years 1–3 only (79.2M MLMA total from network incentives pool); Years 4–5 revenue-funded  
+- **Burn:** 50% of protocol revenue directed to deflationary burn (model)  
+- **veMLMA:** Lock tiers for governance weight and distribution multipliers  
+- **Chains:** Cardano (settlement), Base (execution), LayerZero (sync)
+
+For PDF export, print the web page from a desktop browser (recommended: Chrome → Print → Save as PDF).

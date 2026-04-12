@@ -125,6 +125,19 @@ export default function Home() {
             ))}
           </div>
 
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
+            className="mt-10 flex flex-wrap justify-center gap-3 text-sm">
+            <Link href="/docs/tokenomics" className="px-4 py-2 rounded-full border border-emerald-500/40 text-emerald-400 font-bold hover:bg-emerald-500/10 transition-colors">
+              MLMA tokenomics →
+            </Link>
+            <Link href="/docs/pricing-roi" className="px-4 py-2 rounded-full border border-emerald-500/40 text-emerald-400 font-bold hover:bg-emerald-500/10 transition-colors">
+              Interactive pricing & ROI →
+            </Link>
+            <Link href="/docs" className="px-4 py-2 rounded-full border border-gray-700 text-gray-400 font-bold hover:text-white hover:border-gray-500 transition-colors">
+              All documentation
+            </Link>
+          </motion.div>
+
           {/* Earnings table */}
           <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
             className="mt-16 bg-[#0A1628] rounded-2xl border border-gray-800 p-8">
@@ -327,22 +340,35 @@ export default function Home() {
                 ))}
               </ul>
             </div>
-            {/* Resources */}
+            {/* Resources — interactive docs */}
             <div>
               <p className="text-white font-bold text-sm uppercase tracking-widest mb-4">Genesis 200 Docs</p>
               <ul className="space-y-2 text-sm">
+                <li>
+                  <Link href="/docs" className="text-gray-400 hover:text-emerald-400 transition-colors font-semibold">
+                    Documentation hub →
+                  </Link>
+                </li>
                 {[
-                  { href: '/docs/MLMA_TOKENOMICS_WHITEPAPER_v1.0.md', label: 'MLMA Tokenomics Whitepaper' },
-                  { href: '/docs/GENESIS_200_PRICING_AND_ROI_SUMMARY.md', label: 'Pricing & ROI Summary' },
-                  { href: '/docs/GENESIS_200_PHASE1_TIMELINE.md', label: 'Phase 1 Timeline' },
-                  { href: '/docs/GENESIS_PHASE1_DOCUMENTATION_BUNDLE.md', label: 'Operator Documentation' },
-                  { href: 'mailto:support@malamalabs.com', label: 'Email Support' },
-                  { href: 'https://discord.gg/PcKRRUcJ', label: 'Discord Community' },
+                  { href: '/docs/tokenomics', label: 'MLMA Tokenomics Whitepaper' },
+                  { href: '/docs/pricing-roi', label: 'Pricing & ROI Summary' },
+                  { href: '/docs/phase-1-timeline', label: 'Phase 1 Timeline' },
+                  { href: '/docs/operators', label: 'Operator Documentation' },
                 ].map(({ href, label }) => (
                   <li key={href}>
-                    <a href={href} className="text-gray-400 hover:text-emerald-400 transition-colors">{label}</a>
+                    <Link href={href} className="text-gray-400 hover:text-emerald-400 transition-colors">{label}</Link>
                   </li>
                 ))}
+                <li>
+                  <a href="mailto:support@malamalabs.com" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                    Email Support
+                  </a>
+                </li>
+                <li>
+                  <a href="https://discord.gg/PcKRRUcJ" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                    Discord Community
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

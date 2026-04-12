@@ -15,6 +15,7 @@ const homeLinks = [
 export default function Navbar() {
   const pathname = usePathname()
   const isHome = pathname === '/'
+  const isDocs = pathname.startsWith('/docs')
 
   return (
     <nav className="w-full bg-[#0A1628]/90 backdrop-blur-md border-b border-gray-800 z-50 sticky top-0">
@@ -34,6 +35,11 @@ export default function Navbar() {
                 {label}
               </a>
             ))}
+
+            <Link href="/docs"
+              className={`hidden md:inline transition-colors text-sm font-medium px-2 py-1 ${isDocs ? 'text-emerald-400' : 'text-gray-400 hover:text-emerald-400'}`}>
+              Docs
+            </Link>
 
             <Link href="/timeline"
               className="hidden md:inline text-gray-400 hover:text-emerald-400 transition-colors text-sm font-medium px-2 py-1">

@@ -1,17 +1,16 @@
 import type { Metadata } from 'next'
-import HexMap from '@/components/HexMapDynamic'
+import MapPageClient from '@/components/MapPageClient'
 
 export const metadata: Metadata = {
   title: 'Opportunity Map | Mālama Labs',
-  description: 'Explore the global H3 grid mapping available and active Carbon hardware nodes dynamically.',
+  description:
+    'Explore the Genesis 200 H3 grid: 200 geographic node licenses across Idaho, NYC, London, and Tokyo.',
 }
 
 export default function MapPage() {
   return (
-    <main className="flex flex-col h-[calc(100vh-4rem)] bg-malama-deep overflow-hidden">
-      <div className="flex-grow relative w-full h-full">
-        <HexMap />
-      </div>
-    </main>
+    <div className="h-[calc(100vh-4rem)] w-full overflow-hidden bg-malama-deep">
+      <MapPageClient />
+    </div>
   )
 }

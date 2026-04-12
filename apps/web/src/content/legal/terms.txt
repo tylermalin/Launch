@@ -1,0 +1,503 @@
+MĀLAMA LABS INC.
+
+TERMS AND CONDITIONS
+
+Effective Date: April 11, 2026
+
+Last Updated: April 11, 2026
+
+These Terms and Conditions, together with any documents or policies they expressly incorporate by reference, including the Privacy Policy, any posted sale terms, any node-specific terms, and any token-related disclosures, govern your access to and use of the Mālama Labs website, launch pages, applications, dashboards, hardware purchase flows, Hex Node sale pages, and related products and services (collectively, the “Services”).
+
+These Terms form a binding agreement between you and Mālama Labs Inc. (“Mālama,” “we,” “us,” or “our”).
+
+By accessing or using the Services, creating an account, joining a waitlist, purchasing or reserving a Hex Node, connecting a wallet, or participating in the Mālama network, you agree to be bound by these Terms. If you do not agree, do not use the Services.
+
+1. Definitions
+
+For purposes of these Terms:
+
+“Account” means a user account created to access certain parts of the Services.
+
+“Blockchain” means any distributed ledger or similar public or permissioned system used in connection with the Services.
+
+“Hex Node” means a hardware device, software-enabled device, or other approved node infrastructure made available by Mālama for environmental data collection, signing, relaying, verification, or related network participation.
+
+“Network” means the Mālama environmental data network, including related node infrastructure, software systems, data verification systems, and blockchain integrations.
+
+“Rewards” means any points, tokens, credits, incentives, or similar benefits that may be made available in connection with participation in the Network.
+
+“Services” means the website, launch site, applications, dashboards, APIs, hardware offerings, waitlists, reservation flows, node registration systems, data services, and related products and services offered by Mālama.
+
+“Tokens” means any blockchain-based digital assets, utility assets, environmental assets, rewards, credits, or similar instruments used or referenced in connection with the Services.
+
+“User Content” means any information, files, messages, data, materials, or content submitted, uploaded, transmitted, or otherwise provided by you.
+
+“You” and “your” mean the person or entity using the Services. If you use the Services on behalf of an organization, you represent that you are authorized to bind that organization to these Terms.
+
+2. Agreement Acceptance
+
+By accessing or using the Services, you acknowledge that you have read, understood, and agree to these Terms and the Privacy Policy.
+
+If you are using the Services on behalf of a company, DAO, foundation, nonprofit, or other organization, you represent and warrant that you have authority to bind that entity, and references to “you” will include that entity.
+
+You may not use the Services if:
+
+you are under 18 years old,
+
+you are prohibited from using the Services under applicable law,
+
+you are located in a sanctioned or restricted jurisdiction where access would be unlawful,
+
+or your use would violate any applicable export control, sanctions, securities, commodities, consumer protection, privacy, or other laws.
+
+3. Services and Network Access
+
+Mālama provides environmental data infrastructure and related digital systems, which may include:
+
+launch and informational pages,
+
+node sale, reservation, or preorder flows,
+
+customer accounts and support,
+
+node registration tools,
+
+environmental data dashboards,
+
+blockchain anchoring or verification tools,
+
+wallet-connected experiences,
+
+software, firmware, APIs, and analytics.
+
+The Services may evolve over time. We may add, remove, suspend, or modify features at any time.
+
+We do not guarantee that the Services, the Network, or any specific functionality will always be available, uninterrupted, secure, or error-free. Availability may depend on network access, third-party providers, hardware conditions, environmental conditions, blockchain performance, and other factors beyond our control.
+
+Certain features may be offered only in specific regions or to specific users, and access may be restricted where required for legal, technical, or business reasons.
+
+4. Eligibility and User Account
+
+To access certain Services, you may need to create an Account. You agree to provide accurate, complete, and current information and to keep that information updated.
+
+You are responsible for:
+
+maintaining the confidentiality of your login credentials,
+
+all activity occurring under your Account,
+
+and promptly notifying us of any unauthorized access or suspected security incident.
+
+We may suspend, restrict, or terminate your Account if we reasonably believe:
+
+you provided false information,
+
+your use creates legal or security risk,
+
+you violated these Terms,
+
+or suspension is necessary to protect the Services, other users, or Mālama.
+
+5. Pricing, Billing, Payments, and Sales
+
+Mālama may offer products or services for purchase, including Hex Nodes, reservations, deposits, software access, subscriptions, or related packages.
+
+All prices are listed in the currency stated at the time of sale and may be changed at any time before purchase confirmation. Taxes, shipping, customs, duties, processing fees, gas fees, wallet fees, and similar charges may apply in addition to the stated price.
+
+You agree to pay all amounts due in connection with your purchase using an approved payment method. You authorize us and our payment processors to charge the applicable amounts.
+
+We may use third-party providers to process payments, financing, fraud checks, logistics, tax handling, and order management. Your use of those services may also be subject to their terms.
+
+Unless otherwise stated in writing:
+
+orders are subject to acceptance,
+
+we may reject or cancel orders in our discretion,
+
+availability is not guaranteed,
+
+quoted delivery windows are estimates only,
+
+and promotional offers may be withdrawn at any time.
+
+If you dispute a charge, you must contact us within thirty days after the charge appears, unless a longer period is required by law.
+
+6. Hex Node Sales, Reservations, and Delivery
+
+A Hex Node purchase, preorder, or reservation may include hardware, software, licenses, embedded functionality, documentation, or future access rights as described at the time of sale.
+
+Unless expressly stated otherwise:
+
+preorder or reservation timelines are estimates,
+
+launch plans may change,
+
+product specifications may evolve,
+
+images or renderings may be illustrative,
+
+and a reservation does not guarantee any specific shipment date, territory, yield, earnings level, or regulatory outcome.
+
+You are responsible for providing accurate shipping and contact information. Risk of loss and title transfer terms should be specified in your order documents or shipping terms; if not specified, risk of loss transfers upon delivery to the shipping carrier to the extent permitted by law.
+
+You are responsible for compliance with local laws relating to import, customs, operation, radio use, installation, electricity, data collection, land access, and similar requirements.
+
+7. Node Operation and Technical Responsibility
+
+If you own, operate, host, or manage a Hex Node, you are responsible for:
+
+setup and installation,
+
+obtaining adequate connectivity and power,
+
+following any operating instructions,
+
+maintaining the physical and digital security of the node,
+
+maintaining required licenses, permissions, and site rights,
+
+complying with applicable local laws and technical standards,
+
+and ensuring your operation does not interfere with the Network or third parties.
+
+You may not tamper with, reverse engineer, misconfigure, spoof, falsify, disable, or otherwise manipulate a node or related software in a way that compromises security, data integrity, or reward systems.
+
+We may issue firmware, software, or configuration updates, and certain Services may require installation of such updates to remain compatible or eligible for network participation.
+
+8. Rewards, Tokens, and Network Participation
+
+Participation in the Network may, in Mālama’s discretion, be associated with Rewards, Tokens, credits, or other incentives. Any such programs may depend on criteria such as:
+
+node uptime,
+
+data quality,
+
+location,
+
+verification status,
+
+network need,
+
+anti-fraud scoring,
+
+contribution to system integrity,
+
+or other factors determined by Mālama or the protocol.
+
+You acknowledge and agree that:
+
+participation does not guarantee any Rewards,
+
+any reward framework may change or be discontinued,
+
+token values may fluctuate dramatically,
+
+markets may be illiquid or unavailable,
+
+and legal or tax treatment may change at any time.
+
+Nothing in these Terms constitutes a promise of profit, return on investment, appreciation, liquidity, or resale opportunity.
+
+You are solely responsible for:
+
+understanding wallet and blockchain risks,
+
+safeguarding your private keys and credentials,
+
+determining whether participation is lawful in your jurisdiction,
+
+and reporting and paying all applicable taxes.
+
+Mālama may delay, limit, deny, claw back, or revoke Rewards where reasonably necessary for fraud prevention, sanctions compliance, technical integrity, dispute resolution, legal compliance, or network maintenance.
+
+9. No Financial, Investment, Tax, or Regulatory Advice
+
+The Services and any materials made available through them are provided for informational and operational purposes only. Mālama does not provide investment, legal, tax, accounting, or regulatory advice through the Services.
+
+No statement on the site, in technical documentation, in launch materials, or in any community communication should be interpreted as:
+
+an offer of securities,
+
+investment advice,
+
+a guarantee of yield or future token value,
+
+or a promise of regulatory treatment.
+
+You are solely responsible for obtaining your own professional advice before purchasing a node, acquiring a token, participating in the Network, or relying on any environmental or commercial output.
+
+10. Acceptable Use
+
+You agree not to:
+
+use the Services for unlawful purposes,
+
+interfere with the Services or the Network,
+
+attempt unauthorized access to any account, device, wallet, node, or system,
+
+upload malware, viruses, or malicious code,
+
+scrape or harvest data except as expressly permitted,
+
+impersonate any person or entity,
+
+falsify environmental, technical, location, telemetry, or rewards-related data,
+
+engage in manipulation, fraud, sybil behavior, wash activity, or gaming of incentive systems,
+
+violate intellectual property, privacy, publicity, or contractual rights,
+
+or use the Services in a way that could damage Mālama’s operations, reputation, users, or counterparties.
+
+We may investigate suspected misconduct and may suspend access, cancel transactions, report conduct to authorities, or take other action as appropriate.
+
+11. Privacy and Data Protection
+
+Our collection and use of Personal Data is governed by our Privacy Policy, which is incorporated into these Terms by reference.
+
+You acknowledge that:
+
+certain wallet, blockchain, transaction, and node-related information may be public or effectively irreversible once recorded on-chain,
+
+operation of a node may generate technical, performance, or environmental data,
+
+and global cloud, infrastructure, and blockchain systems may involve international data processing.
+
+12. Intellectual Property
+
+The Services, including all software, code, designs, text, graphics, logos, names, databases, firmware, documentation, audiovisual works, interfaces, data compilations, and related materials, are owned by Mālama or its licensors and are protected by intellectual property and other laws.
+
+Subject to these Terms, Mālama grants you a limited, revocable, non-exclusive, non-transferable, non-sublicensable license to access and use the Services for their intended purpose.
+
+You may not, except as expressly permitted by law or by us in writing:
+
+copy, reproduce, distribute, publish, display, perform, adapt, modify, or create derivative works,
+
+reverse engineer, decompile, disassemble, or attempt to extract source code,
+
+remove or alter notices,
+
+or use our trademarks, names, or branding without permission.
+
+13. User Content and Feedback
+
+If you submit User Content, you represent and warrant that you have all rights necessary to do so and that your User Content does not violate law or third-party rights.
+
+You grant Mālama a non-exclusive, worldwide, royalty-free license to use, host, store, reproduce, modify, adapt, display, and process User Content as reasonably necessary to operate, improve, secure, and provide the Services.
+
+If you provide feedback, suggestions, feature requests, ideas, or improvement proposals, you agree that Mālama may use them without restriction or compensation.
+
+14. Third-Party Services and External Links
+
+The Services may integrate with or link to third-party services such as:
+
+payment processors,
+
+logistics providers,
+
+blockchain networks,
+
+wallets,
+
+exchanges,
+
+analytics providers,
+
+support tools,
+
+map providers,
+
+environmental registries,
+
+cloud platforms,
+
+and communications services.
+
+We do not control and are not responsible for third-party services, their content, their availability, or their terms and privacy practices. Your use of such services is at your own risk and may be governed by separate terms.
+
+15. Environmental Data and Informational Disclaimers
+
+The Services may include environmental, operational, technical, or modeled data. Such data may be derived from hardware inputs, third-party inputs, estimation systems, AI models, software processing, or other sources.
+
+You acknowledge that:
+
+measurements and estimates may contain errors, gaps, delays, or uncertainty,
+
+data may be affected by calibration, transmission, environmental conditions, or third-party systems,
+
+and outputs may not be suitable for regulatory, scientific, legal, accounting, or commercial reliance unless independently verified.
+
+Except where expressly stated in writing, Mālama does not warrant that any environmental data, score, metric, verification status, or output is fit for a particular legal, compliance, registry, accounting, or investment use.
+
+16. Warranty Disclaimer
+
+To the fullest extent permitted by law, the Services and all related content, products, software, hardware, node systems, data, and materials are provided on an “as is” and “as available” basis.
+
+Mālama disclaims all warranties, express or implied, including any implied warranties of merchantability, fitness for a particular purpose, title, non-infringement, quiet enjoyment, accuracy, compatibility, uptime, or results.
+
+Without limiting the foregoing, Mālama does not warrant that:
+
+the Services will be uninterrupted, error-free, or secure,
+
+defects will be corrected,
+
+the Services or hardware will be free from malware or harmful components,
+
+any node will remain continuously eligible for network participation,
+
+any Rewards will be generated,
+
+or any token or asset will retain or increase in value.
+
+If a separate written hardware warranty is provided with a Hex Node, that warranty will govern solely to the extent expressly stated there.
+
+17. Limitation of Liability
+
+To the fullest extent permitted by law, Mālama and its affiliates, officers, directors, employees, contractors, licensors, suppliers, and agents will not be liable for any indirect, incidental, special, consequential, exemplary, or punitive damages, or for any loss of profits, revenue, business, opportunity, goodwill, reputation, expected savings, use, data, digital assets, or tokens, arising out of or relating to the Services, even if advised of the possibility of such damages.
+
+Without limiting the foregoing, Mālama will not be liable for damages arising from:
+
+service interruption or downtime,
+
+blockchain failures, forks, congestion, or exploits,
+
+wallet compromise or loss of private keys,
+
+token price volatility or illiquidity,
+
+node misconfiguration or installation error,
+
+inaccurate or delayed data,
+
+third-party acts or omissions,
+
+force majeure events,
+
+or regulatory actions affecting the Services or any token-related activity.
+
+To the fullest extent permitted by law, Mālama’s aggregate liability for all claims arising out of or relating to these Terms or the Services will not exceed the greater of:
+
+the amount you paid to Mālama in the three months preceding the event giving rise to the claim, or
+
+one hundred U.S. dollars (US$100).
+
+Some jurisdictions do not allow certain limitations, so some of the above may not apply to you.
+
+18. Indemnification
+
+You agree to defend, indemnify, and hold harmless Mālama and its affiliates, officers, directors, employees, contractors, licensors, suppliers, and agents from and against any claims, demands, actions, proceedings, damages, judgments, losses, liabilities, costs, and expenses, including reasonable attorneys’ fees, arising out of or related to:
+
+your use of the Services,
+
+your node operation or deployment,
+
+your User Content,
+
+your violation of these Terms,
+
+your violation of any law or third-party right,
+
+your misuse of tokens, rewards, wallets, or blockchain systems,
+
+or any fraud, negligence, misconduct, or unauthorized activity by you or through your Account.
+
+We reserve the right to assume exclusive defense and control of any matter subject to indemnification, and you agree to cooperate with that defense.
+
+19. Force Majeure
+
+Mālama will not be liable for any failure or delay in performance caused by circumstances beyond its reasonable control, including acts of God, natural disasters, severe weather, wildfire, flood, earthquake, war, terrorism, civil unrest, labor disputes, sanctions, embargoes, supply chain failures, utility outages, internet failures, cloud outages, blockchain disruptions, cyberattacks, changes in law, government action, or failure of third-party providers.
+
+20. Suspension and Termination
+
+We may suspend, restrict, or terminate your access to some or all of the Services at any time, with or without notice, if:
+
+we believe you violated these Terms,
+
+your use poses risk to the Services or others,
+
+required by law or regulatory request,
+
+necessary for maintenance, updates, or migration,
+
+or for any other reason where allowed by law.
+
+You may stop using the Services at any time. Termination will not affect rights and obligations that by their nature should survive, including payment obligations, disclaimers, limitations of liability, indemnification, dispute provisions, and intellectual property terms.
+
+Where a purchase has already occurred, termination of account access does not automatically entitle you to a refund unless expressly required by law or stated in a separate refund policy.
+
+21. Referral Programs and Promotional Offers
+
+Mālama may offer referral programs, discount codes, launch incentives, early access campaigns, or similar promotions. Such programs are optional and subject to any additional terms posted with the program.
+
+We may suspend, modify, revoke, or cancel any program or reward in the event of suspected fraud, abuse, self-referrals, duplicate accounts, ineligible transactions, or technical error.
+
+22. Dispute Resolution and Arbitration
+
+Please read this section carefully. It affects your legal rights.
+
+To the fullest extent permitted by law, any dispute, claim, or controversy arising out of or relating to these Terms or the Services will be resolved by binding individual arbitration and not in court, except that either party may bring an individual claim in small claims court if eligible.
+
+You and Mālama agree:
+
+to waive any right to a jury trial,
+
+to waive any right to participate in a class action, class arbitration, or representative proceeding,
+
+and that disputes will be resolved only on an individual basis.
+
+Arbitration will be administered by the American Arbitration Association under its applicable rules, unless the parties agree otherwise. The seat and venue of arbitration will be Delaware, unless applicable law requires otherwise. Judgment on the award may be entered in any court of competent jurisdiction.
+
+Nothing in this section prevents either party from seeking temporary injunctive relief in court to prevent immediate irreparable harm.
+
+If this arbitration section is found unenforceable as to a particular claim, then that claim shall proceed in the state or federal courts located in Delaware, and the parties consent to that jurisdiction and venue.
+
+You may want counsel to review whether Delaware, California, or another venue is best for your actual launch posture.
+
+23. Governing Law
+
+These Terms and any dispute arising from them are governed by the laws of the State of Delaware, without regard to conflict of laws principles, except to the extent superseded by applicable federal law or non-waivable consumer protection law.
+
+24. Modifications and Updates
+
+We may modify these Terms from time to time. When we do, we will update the “Last Updated” date and may provide additional notice where appropriate.
+
+Your continued use of the Services after revised Terms become effective constitutes your acceptance of the revised Terms. If you do not agree to the updated Terms, you must stop using the Services.
+
+25. Export Controls and Sanctions Compliance
+
+You represent and warrant that:
+
+you are not located in, organized under the laws of, or ordinarily resident in a country or territory subject to comprehensive sanctions,
+
+you are not identified on any applicable sanctions or restricted party list,
+
+and you will not use the Services in violation of export control or sanctions laws.
+
+We may restrict or terminate access where we believe use would violate these requirements.
+
+26. Electronic Communications
+
+By using the Services, you consent to receive electronic communications from us, including notices, disclosures, agreements, receipts, updates, and customer service communications. You agree that such communications satisfy any legal requirement that communications be in writing.
+
+27. Miscellaneous
+
+If any provision of these Terms is found invalid or unenforceable, the remaining provisions will remain in full force and effect.
+
+Our failure to enforce any provision is not a waiver of our right to do so later.
+
+You may not assign or transfer these Terms or any rights under them without our prior written consent. We may assign these Terms in connection with a merger, acquisition, restructuring, asset transfer, or by operation of law.
+
+These Terms, together with any documents expressly incorporated by reference and any written sale-specific or product-specific terms we provide, constitute the entire agreement between you and Mālama regarding the Services and supersede prior or contemporaneous understandings on that subject.
+
+Contact
+
+Questions about these Terms should be sent to:
+
+Mālama Labs Inc.
+
+8 THE GREEN, STE A Dover DE 19901
+
+Email: [legal@malamalabs.com]
+
+Website: [https://malamalabs.com]

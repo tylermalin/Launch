@@ -1,0 +1,385 @@
+MĀLAMA LABS INC.
+
+HEX NODE PURCHASE & PREORDER AGREEMENT
+
+Effective Date: April 11, 2026
+
+Last Updated: April 11, 2026
+
+This Hex Node Purchase & Preorder Agreement (“Agreement”) governs your purchase, reservation, or preorder of a Hex Node and any associated software, licenses, or services offered by Mālama Labs Inc. (“Mālama,” “we,” “us,” or “our”).
+
+This Agreement supplements and incorporates by reference the Mālama Terms and Conditions and Privacy Policy (collectively, the “Platform Terms”). In the event of conflict, this Agreement controls with respect to Hex Node purchases.
+
+By placing an order, reservation, or preorder, you (“you” or “Customer”) agree to be bound by this Agreement.
+
+1. Scope of Agreement
+
+This Agreement applies to:
+
+Hex Node purchases,
+
+preorder reservations and deposits,
+
+bundled hardware and software packages,
+
+node-related licenses or access rights,
+
+and any related fulfillment, delivery, and activation processes.
+
+A “Hex Node” may include:
+
+physical hardware,
+
+embedded firmware,
+
+software components,
+
+node identity and registration,
+
+and access to Mālama network systems.
+
+2. Preorders and Reservations
+
+Mālama may offer Hex Nodes through preorder or reservation.
+
+If you place a preorder:
+
+you may be required to pay a deposit or full purchase price,
+
+your order secures a place in a production or delivery queue,
+
+estimated delivery timelines are non-binding and subject to change.
+
+You acknowledge:
+
+preorder products may not yet be manufactured or finalized,
+
+specifications, design, and functionality may evolve,
+
+delivery dates may shift due to supply chain, regulatory, or technical factors.
+
+Unless otherwise stated at checkout:
+
+deposits may be refundable within a defined window,
+
+after that window, deposits may become non-refundable,
+
+conversion from preorder to final purchase may require additional payment.
+
+3. Pricing and Payment
+
+All prices are displayed at checkout and may include:
+
+hardware cost,
+
+software or activation fees,
+
+shipping and logistics,
+
+taxes, duties, or import charges.
+
+You agree to:
+
+pay all amounts due,
+
+provide accurate billing and payment information,
+
+and authorize Mālama or its payment processors to charge your payment method.
+
+Accepted payment methods may include:
+
+credit/debit cards,
+
+wire transfers,
+
+digital assets or stablecoins (where supported),
+
+third-party payment providers.
+
+If paying in digital assets:
+
+transaction finality is irreversible,
+
+exchange rates may fluctuate,
+
+you are responsible for gas fees and transaction accuracy.
+
+Mālama reserves the right to:
+
+cancel orders for pricing errors,
+
+limit quantities,
+
+reject suspicious or high-risk transactions.
+
+4. Order Acceptance and Cancellation
+
+Your order is not final until accepted by Mālama.
+
+We may cancel or refuse any order:
+
+due to inventory limitations,
+
+suspected fraud,
+
+regulatory concerns,
+
+pricing or listing errors,
+
+or logistical constraints.
+
+If we cancel after payment:
+
+we will refund the amount paid using the original payment method where possible.
+
+5. Delivery and Fulfillment
+
+Estimated shipping or delivery timelines are provided for convenience only and are not guaranteed.
+
+You acknowledge:
+
+delays may occur due to manufacturing, logistics, customs, or regulatory issues,
+
+partial shipments may occur,
+
+fulfillment partners may be used.
+
+You are responsible for:
+
+providing accurate shipping details,
+
+import duties, customs clearance, and local compliance,
+
+receiving the shipment.
+
+Unless otherwise required by law:
+
+risk of loss transfers upon delivery to the carrier.
+
+6. Hardware Specifications and Changes
+
+Hex Nodes are evolving technical products.
+
+Mālama reserves the right to:
+
+update specifications,
+
+change components,
+
+improve performance,
+
+modify firmware or software requirements.
+
+Such changes do not constitute a breach of this Agreement, provided the core intended function of the node is materially preserved.
+
+Images, diagrams, and marketing materials are illustrative and may not reflect final production units.
+
+7. Returns, Refunds, and Cancellations
+
+Preorders
+
+Refund eligibility for preorders depends on the stated policy at checkout. Generally:
+
+a refund window may apply prior to production or allocation,
+
+after that, deposits may become non-refundable.
+
+Delivered Nodes
+
+Unless required by applicable law or explicitly stated:
+
+hardware sales are final,
+
+returns are not accepted after shipment,
+
+refunds are not issued for deployed or activated nodes.
+
+If a return is allowed:
+
+the product must be unused and in original condition,
+
+return shipping may be at your cost,
+
+restocking fees may apply.
+
+Payment Disputes
+
+You must notify us of billing disputes within 30 days of the charge.
+
+8. Limited Hardware Warranty
+
+If provided, a separate written hardware warranty will apply to physical defects in materials or workmanship for a defined period.
+
+Unless otherwise stated:
+
+the warranty does not cover misuse, improper installation, environmental damage, unauthorized modification, or normal wear,
+
+warranty remedies may include repair, replacement, or equivalent substitution.
+
+Except for any express written warranty:
+
+hardware is provided “as is.”
+
+9. Node Activation and Network Participation
+
+Purchase of a Hex Node does not automatically guarantee:
+
+activation,
+
+connectivity,
+
+eligibility for network participation,
+
+or generation of Rewards.
+
+Activation may require:
+
+account setup,
+
+software updates,
+
+network configuration,
+
+compliance verification.
+
+You are responsible for:
+
+proper installation and operation,
+
+maintaining connectivity and power,
+
+compliance with applicable laws and permits.
+
+10. No Guarantee of Rewards or Earnings
+
+A Hex Node is a technical device, not a financial product.
+
+You acknowledge:
+
+there is no guarantee of Rewards, Tokens, or earnings,
+
+reward mechanisms may change or be discontinued,
+
+performance depends on network conditions and other variables.
+
+Nothing in this Agreement constitutes:
+
+an investment contract,
+
+a promise of profit,
+
+or financial advice.
+
+11. Tokens, Wallets, and Blockchain Risk
+
+If your node interacts with blockchain systems:
+
+you are responsible for managing your wallet and private keys,
+
+transactions are irreversible,
+
+blockchain data may be public and permanent.
+
+Mālama is not responsible for:
+
+lost keys,
+
+incorrect transactions,
+
+wallet compromise,
+
+third-party wallet failures.
+
+12. Compliance with Laws
+
+You are responsible for ensuring that:
+
+purchase, import, and use of the node is legal in your jurisdiction,
+
+you comply with all applicable laws, including:
+
+export controls,
+
+telecommunications or radio regulations,
+
+environmental monitoring laws,
+
+land use or permitting requirements.
+
+Mālama may restrict delivery or activation in certain jurisdictions.
+
+13. Limitation of Liability
+
+To the fullest extent permitted by law:
+
+Mālama is not liable for indirect, incidental, or consequential damages,
+
+including loss of profits, data, tokens, or expected returns.
+
+Total liability is limited to:
+
+the amount you paid for the node.
+
+14. Indemnification
+
+You agree to indemnify Mālama against claims arising from:
+
+your use or operation of the node,
+
+regulatory violations,
+
+misuse of data or systems,
+
+or breach of this Agreement.
+
+15. Force Majeure
+
+Mālama is not liable for delays or failure due to events beyond its control, including:
+
+supply chain disruption,
+
+natural disasters,
+
+regulatory changes,
+
+infrastructure failures.
+
+16. Termination
+
+Mālama may cancel or suspend orders or activation if:
+
+you violate these Terms,
+
+required by law,
+
+or necessary to protect the network.
+
+Termination does not automatically entitle you to a refund unless required by law.
+
+17. Governing Law and Disputes
+
+This Agreement is governed by the laws specified in the Mālama Terms and Conditions.
+
+Disputes will be resolved in accordance with the arbitration provisions in those Terms.
+
+18. Entire Agreement
+
+This Agreement, together with:
+
+the Mālama Terms and Conditions,
+
+Privacy Policy,
+
+and any checkout-specific terms,
+
+constitutes the entire agreement regarding your Hex Node purchase.
+
+Contact
+
+Mālama Labs Inc.
+
+8 THE GREEN, STE A Dover DE 19901
+
+Email: [legal@malamalabs.com]
+
+Website: [https://malamalabs.com]

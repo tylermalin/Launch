@@ -80,3 +80,4 @@ Required keys: MAPBOX_TOKEN, PINATA_API_KEY, PINATA_API_SECRET, KAFKA_BOOTSTRAP,
 - Frontend: App Router, dynamic imports for wallet components, Tailwind
 - Coverage threshold: 80% minimum (EVM, Python)
 - Never commit .env files or API keys
+

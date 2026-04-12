@@ -56,11 +56,13 @@ function CardanoProvider({ children }: { children: React.ReactNode }) {
   
   if (!MeshProvider && !failed) {
     return (
-      <div className="fixed inset-0 bg-[#050a14] z-[9999] flex flex-col items-center justify-center space-y-6">
-        <div className="w-16 h-16 border-4 border-malama-teal border-t-transparent animate-spin rounded-full shadow-[0_0_30px_rgba(68,187,164,0.2)]" />
+      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center space-y-6 bg-malama-bg">
+        <div className="h-16 w-16 animate-spin rounded-full border-4 border-malama-accent border-t-transparent shadow-[0_0_30px_rgba(196,240,97,0.2)]" />
         <div className="text-center">
-          <p className="text-malama-teal font-black uppercase tracking-[0.3em] text-xs animate-pulse">Initializing Bridge</p>
-          <p className="text-gray-500 text-[10px] mt-2 font-mono uppercase tracking-widest">Hydrating Cardano WASM Context</p>
+          <p className="animate-pulse font-black uppercase tracking-[0.3em] text-malama-accent text-xs">Initializing Bridge</p>
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">
+            Hydrating Cardano WASM Context
+          </p>
         </div>
       </div>
     );

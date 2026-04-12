@@ -58,11 +58,11 @@ const MILESTONES = [
 
 const colorStyles: Record<string, { ring: string; bg: string; text: string; border: string; line: string }> = {
   emerald: {
-    ring: 'ring-emerald-500/50',
-    bg: 'bg-emerald-500/15',
-    text: 'text-emerald-400',
-    border: 'border-emerald-500/40',
-    line: 'from-emerald-500 to-emerald-500/0',
+    ring: 'ring-malama-accent/50',
+    bg: 'bg-malama-accent/15',
+    text: 'text-malama-accent',
+    border: 'border-malama-accent/40',
+    line: 'from-malama-accent to-malama-accent/0',
   },
   blue: {
     ring: 'ring-blue-500/50',
@@ -174,7 +174,7 @@ export default function Phase1TimelinePage() {
         <div className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-4 sm:p-6">
           <div className="relative h-14 rounded-lg bg-gray-800/80 overflow-hidden">
             {[
-              { w: '28%', offset: '0%', c: 'bg-emerald-500/80' },
+              { w: '28%', offset: '0%', c: 'bg-malama-accent/80' },
               { w: '28%', offset: '28%', c: 'bg-blue-500/80' },
               { w: '18%', offset: '56%', c: 'bg-violet-500/80' },
               { w: '28%', offset: '72%', c: 'bg-amber-500/80' },
@@ -191,7 +191,7 @@ export default function Phase1TimelinePage() {
             ))}
           </div>
           <div className="flex flex-wrap gap-3 mt-4 text-xs text-gray-500">
-            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500" /> Pre-sale</span>
+            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-malama-accent" /> Pre-sale</span>
             <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-500" /> Deploy</span>
             <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-500" /> Boot</span>
             <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" /> Rewards</span>
@@ -208,7 +208,7 @@ export default function Phase1TimelinePage() {
         </Link>
         <Link
           href="/presale"
-          className="flex-1 text-center px-5 py-3 rounded-xl bg-emerald-500 text-black font-black hover:scale-[1.02] transition-transform"
+          className="flex-1 text-center px-5 py-3 rounded-xl bg-malama-accent text-black font-black hover:scale-[1.02] transition-transform"
         >
           Reserve a node
         </Link>

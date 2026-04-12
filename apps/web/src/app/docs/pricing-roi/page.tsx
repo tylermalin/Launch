@@ -72,7 +72,7 @@ export default function PricingRoiPage() {
       {/* Capital */}
       <section className="mb-10">
         <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <DollarSign className="w-5 h-5 text-emerald-400" /> Capital requirement
+          <DollarSign className="w-5 h-5 text-malama-accent" /> Capital requirement
         </h2>
         <div className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
           <p className="text-4xl font-black text-white mb-2 tabular-nums">
@@ -82,8 +82,8 @@ export default function PricingRoiPage() {
           <p className="text-sm text-gray-500 mb-6">One-time Genesis 200 entry</p>
 
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
-              <p className="text-xs uppercase tracking-widest text-emerald-400/80 mb-1">Hardware</p>
+            <div className="rounded-xl border border-malama-accent/30 bg-malama-accent/5 p-4">
+              <p className="text-xs uppercase tracking-widest text-malama-accent/80 mb-1">Hardware</p>
               <p className="text-2xl font-black text-white">${HARDWARE_USD}</p>
               <p className="text-xs text-gray-500 mt-2 leading-relaxed">
                 Raspberry Pi Zero 2W, sensors, NEMA enclosure, solar UPS, ATECC608 secure element.
@@ -100,13 +100,13 @@ export default function PricingRoiPage() {
 
           <div className="mt-4 h-3 rounded-full overflow-hidden flex bg-gray-800">
             <div
-              className="h-full bg-emerald-500"
+              className="h-full bg-malama-accent"
               style={{ width: `${(HARDWARE_USD / ENTRY_USD) * 100}%` }}
             />
             <div className="h-full bg-blue-500" style={{ width: `${(LICENSE_USD / ENTRY_USD) * 100}%` }} />
           </div>
           <div className="flex justify-between text-xs text-gray-500 mt-1">
-            <span className="text-emerald-400">Hardware {((HARDWARE_USD / ENTRY_USD) * 100).toFixed(0)}%</span>
+            <span className="text-malama-accent">Hardware {((HARDWARE_USD / ENTRY_USD) * 100).toFixed(0)}%</span>
             <span className="text-blue-400">License {((LICENSE_USD / ENTRY_USD) * 100).toFixed(0)}%</span>
           </div>
         </div>
@@ -157,9 +157,9 @@ export default function PricingRoiPage() {
           </label>
 
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4">
-              <p className="text-xs text-emerald-400/80 uppercase tracking-widest mb-1">Monthly yield (mid-range)</p>
-              <p className="text-2xl font-black text-emerald-400 tabular-nums">
+            <div className="rounded-xl border border-malama-accent/40 bg-malama-accent/10 p-4">
+              <p className="text-xs text-malama-accent/80 uppercase tracking-widest mb-1">Monthly yield (mid-range)</p>
+              <p className="text-2xl font-black text-malama-accent tabular-nums">
                 {(monthlyMid / 1000).toFixed(0)}K MLMA
               </p>
               <p className="text-sm text-gray-400 mt-1">≈ ${monthlyUsd.toLocaleString(undefined, { maximumFractionDigits: 0 })} / mo at ${mlmaPrice.toFixed(2)}</p>

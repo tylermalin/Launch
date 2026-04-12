@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ 
       success: true,
-      genesisNumber: Math.floor(Math.random() * 300) + 1,
+      genesisNumber: Math.floor(Math.random() * 200) + 1,
       transactionHash: txHash,
       message: 'Genesis NFT forged accurately!'
     })
@@ -26,8 +26,9 @@ export async function POST(req: Request) {
 
 export async function GET() {
   return NextResponse.json({
-    remaining: 53,
-    total: 300,
-    priceUSDC: 1500
+    total: 200,
+    remaining: 195,
+    reserved: 5,
+    priceUSDC: 2000,
   })
 }

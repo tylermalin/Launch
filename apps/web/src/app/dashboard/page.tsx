@@ -102,7 +102,7 @@ export default function Dashboard() {
                    <p className="text-white font-bold text-lg">{currentStatus}</p>
                 </div>
               </div>
-              <div className="w-12 h-12 bg-malama-deep border border-malama-teal/30 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(68,187,164,0.2)]">
+              <div className="w-12 h-12 bg-malama-deep border border-malama-teal/30 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(196,240,97,0.2)]">
                 <Cpu className="text-malama-teal w-6 h-6" />
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function Dashboard() {
       {!isAuthenticated && (
         <div className="absolute inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-black/60 pt-32">
           <div className="bg-malama-card border border-gray-800 p-10 rounded-3xl text-center max-w-md shadow-2xl">
-            <ShieldCheck className="w-20 h-20 text-malama-teal mx-auto mb-6 drop-shadow-[0_0_20px_rgba(68,187,164,0.3)]" />
+            <ShieldCheck className="w-20 h-20 text-malama-teal mx-auto mb-6 drop-shadow-[0_0_20px_rgba(196,240,97,0.3)]" />
             <h2 className="text-2xl font-black text-white mb-2 tracking-tight">DePIN Sign-In Required</h2>
             <p className="text-gray-400 mb-8 leading-relaxed">Secure your identity via Web3. The Omnichain Oracle supports active routing across Cardano and Base.</p>
             
@@ -172,7 +172,7 @@ export default function Dashboard() {
               
               {/* Step 1: License */}
               <div className={`flex flex-col items-center bg-malama-card p-2 z-10 w-32 text-center ${hexes.length === 0 ? 'opacity-40' : ''}`}>
-                <CheckCircle2 className={`w-10 h-10 mb-2 bg-malama-card rounded-full ${hexes.length > 0 ? 'text-malama-teal shadow-[0_0_20px_rgba(68,187,164,0.3)]' : 'text-gray-600'}`} />
+                <CheckCircle2 className={`w-10 h-10 mb-2 bg-malama-card rounded-full ${hexes.length > 0 ? 'text-malama-teal shadow-[0_0_20px_rgba(196,240,97,0.3)]' : 'text-gray-600'}`} />
                 <span className={`font-bold ${hexes.length > 0 ? 'text-white' : 'text-gray-400'}`}>License Ownership</span>
                 <span className="text-xs text-gray-500 mt-1">{hexes.length > 0 ? 'Genesis Deed Secured' : 'No License Found'}</span>
               </div>

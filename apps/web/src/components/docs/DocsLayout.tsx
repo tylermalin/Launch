@@ -46,11 +46,11 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
               onClick={onNavigate}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                 active
-                  ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.12)]'
+                  ? 'bg-malama-accent/15 text-malama-accent border border-malama-accent/30 shadow-[0_0_20px_rgba(196,240,97,0.12)]'
                   : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
               }`}
             >
-              <Icon className={`w-4 h-4 flex-shrink-0 ${active ? 'text-emerald-400' : 'text-gray-500'}`} />
+              <Icon className={`w-4 h-4 flex-shrink-0 ${active ? 'text-malama-accent' : 'text-gray-500'}`} />
               {label}
             </Link>
           </li>
@@ -60,11 +60,11 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   )
 
   return (
-    <div className="min-h-screen bg-[#0A1628]">
+    <div className="min-h-screen bg-malama-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
         {/* Mobile nav toggle */}
         <div className="lg:hidden flex items-center justify-between mb-6">
-          <p className="text-xs font-black uppercase tracking-widest text-emerald-400/80">Documentation</p>
+          <p className="text-xs font-black uppercase tracking-widest text-malama-accent/80">Documentation</p>
           <button
             type="button"
             onClick={() => setMobileOpen((o) => !o)}
@@ -77,7 +77,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {mobileOpen && (
-          <nav className="lg:hidden mb-8 p-4 rounded-2xl border border-gray-800 bg-[#0d1e35]">
+          <nav className="lg:hidden mb-8 p-4 rounded-2xl border border-malama-line bg-malama-elev">
             <NavLinks onNavigate={() => setMobileOpen(false)} />
           </nav>
         )}
@@ -85,19 +85,19 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-14">
           <aside className="hidden lg:block w-56 flex-shrink-0">
             <div className="sticky top-24">
-              <p className="text-xs font-black uppercase tracking-widest text-emerald-400/80 mb-4 px-1">
+              <p className="text-xs font-black uppercase tracking-widest text-malama-accent/80 mb-4 px-1">
                 Documentation
               </p>
               <nav>
                 <NavLinks />
               </nav>
-              <div className="mt-8 p-4 rounded-xl border border-gray-800 bg-[#0d1e35]/80">
-                <p className="text-xs text-gray-500 leading-relaxed">
+              <div className="mt-8 p-4 rounded-xl border border-malama-line bg-malama-elev/80">
+                <p className="text-xs text-malama-ink-faint leading-relaxed">
                   These pages summarize Genesis 200 economics and operations. Figures are illustrative; live terms follow your reservation flow.
                 </p>
                 <Link
                   href="/presale"
-                  className="mt-3 inline-block text-sm font-bold text-emerald-400 hover:text-emerald-300"
+                  className="mt-3 inline-block text-sm font-bold text-malama-accent hover:text-malama-accent-dim"
                 >
                   Reserve a node →
                 </Link>

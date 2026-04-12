@@ -10,8 +10,8 @@ const cards = [
     title: 'MLMA Tokenomics Whitepaper',
     desc: 'Supply cap, Genesis 200 allocation, vesting mechanics, multipliers, and governance.',
     icon: BookOpen,
-    color: 'from-emerald-500/20 to-teal-500/10',
-    border: 'border-emerald-500/30',
+    color: 'from-malama-accent/20 to-malama-accent-dim/10',
+    border: 'border-malama-accent/30',
   },
   {
     href: '/docs/pricing-roi',
@@ -47,7 +47,7 @@ export default function DocsHubPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-12"
       >
-        <p className="text-xs font-black uppercase tracking-widest text-emerald-400 mb-3">Genesis 200</p>
+        <p className="text-xs font-black uppercase tracking-widest text-malama-accent mb-3">Genesis 200</p>
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
           Documentation Hub
         </h1>
@@ -72,7 +72,7 @@ export default function DocsHubPage() {
                 <div className="w-12 h-12 rounded-xl bg-black/20 border border-white/10 flex items-center justify-center">
                   <c.icon className="w-6 h-6 text-white/90" />
                 </div>
-                <ArrowRight className="w-5 h-5 text-gray-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
+                <ArrowRight className="w-5 h-5 text-gray-500 group-hover:text-malama-accent group-hover:translate-x-0.5 transition-all" />
               </div>
               <h2 className="text-xl font-black text-white mb-2">{c.title}</h2>
               <p className="text-sm text-gray-400 leading-relaxed">{c.desc}</p>
@@ -93,7 +93,7 @@ export default function DocsHubPage() {
         </div>
         <Link
           href="/timeline"
-          className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl border border-emerald-500/40 text-emerald-400 font-bold text-sm hover:bg-emerald-500/10 whitespace-nowrap"
+          className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl border border-malama-accent/40 text-malama-accent font-bold text-sm hover:bg-malama-accent/10 whitespace-nowrap"
         >
           Open timeline →
         </Link>

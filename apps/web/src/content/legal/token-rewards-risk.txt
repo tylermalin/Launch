@@ -1,0 +1,311 @@
+MĀLAMA LABS INC.
+
+TOKEN & REWARDS RISK DISCLOSURE
+
+Effective Date: April 11, 2026
+
+Last Updated: April 11, 2026
+
+This Token & Rewards Risk Disclosure (“Disclosure”) applies to your participation in the Mālama network, including any interaction with Hex Nodes, digital rewards, tokens, credits, environmental assets, or blockchain-enabled features (collectively, “Rewards”).
+
+This Disclosure is incorporated into the Mālama Terms and Conditions and the Hex Node Purchase Agreement. By purchasing a Hex Node, connecting a wallet, or participating in the network, you acknowledge and accept the risks described below.
+
+1. No Guarantee of Rewards or Earnings
+
+Participation in the Mālama network does not guarantee that you will receive any Rewards.
+
+Any potential Rewards:
+
+are not guaranteed,
+
+may be zero,
+
+may vary over time,
+
+may depend on factors outside your control.
+
+Mālama does not promise:
+
+income,
+
+yield,
+
+return on investment,
+
+appreciation in value,
+
+or resale opportunity.
+
+You should not purchase a node or participate in the network with an expectation of profit.
+
+2. Rewards Are Not Investment Products
+
+Rewards, tokens, credits, or similar instruments made available through the network:
+
+are not offered as securities,
+
+are not investment contracts,
+
+are not deposits or savings products,
+
+are not insured by any government or agency.
+
+Nothing in Mālama materials constitutes:
+
+financial advice,
+
+investment advice,
+
+or a recommendation to purchase or hold any digital asset.
+
+You are solely responsible for your decisions.
+
+3. Token Value and Market Risk
+
+If Rewards include tokens or transferable digital assets:
+
+their value may be highly volatile,
+
+they may lose all value,
+
+markets may not exist or may be illiquid,
+
+trading may be restricted or unavailable in your jurisdiction,
+
+prices may be influenced by external factors unrelated to Mālama.
+
+Mālama does not control secondary markets and does not guarantee that any token can be sold or exchanged.
+
+4. Regulatory Uncertainty
+
+The legal and regulatory treatment of tokens, digital assets, environmental credits, and decentralized infrastructure is evolving.
+
+Risks include:
+
+tokens being reclassified by regulators,
+
+restrictions on use, transfer, or trading,
+
+licensing or compliance requirements,
+
+taxation changes,
+
+enforcement actions affecting availability or functionality.
+
+Mālama may:
+
+modify or discontinue token-related features,
+
+restrict access in certain jurisdictions,
+
+delay or limit distributions,
+
+or change reward structures in response to legal requirements.
+
+5. Network and Performance Dependency
+
+Rewards, if any, may depend on:
+
+node uptime and performance,
+
+data quality and validation,
+
+geographic relevance,
+
+network demand,
+
+system calibration,
+
+fraud detection mechanisms,
+
+protocol updates,
+
+third-party integrations.
+
+Failures in any of these areas may reduce or eliminate Rewards.
+
+6. Technical and Operational Risks
+
+Participation in the network involves technical risks, including:
+
+hardware failure,
+
+connectivity issues,
+
+power interruptions,
+
+firmware or software bugs,
+
+incorrect configuration,
+
+data transmission errors,
+
+incompatibility with updates.
+
+Mālama is not responsible for losses resulting from:
+
+improper setup or maintenance,
+
+failure to follow instructions,
+
+environmental conditions affecting performance.
+
+7. Blockchain Risks
+
+If Rewards or system components interact with blockchain infrastructure:
+
+transactions are generally irreversible,
+
+errors cannot be undone,
+
+smart contracts may contain bugs or vulnerabilities,
+
+networks may experience congestion, forks, or downtime,
+
+transaction fees (gas) may fluctuate significantly,
+
+data recorded on-chain may be permanent and public.
+
+You are responsible for understanding how blockchain systems work before participating.
+
+8. Wallet and Key Management
+
+If you use a digital wallet:
+
+you are solely responsible for securing your private keys and credentials,
+
+loss of keys may result in permanent loss of access to tokens or assets,
+
+compromised wallets may lead to irreversible loss.
+
+Mālama does not:
+
+store your private keys,
+
+recover lost wallets,
+
+reverse transactions,
+
+or provide custody services unless explicitly stated.
+
+9. Environmental Data and Credit Risks
+
+If Rewards relate to environmental data, carbon markets, or sustainability metrics:
+
+measurements may be estimated, modeled, or subject to uncertainty,
+
+verification standards may evolve,
+
+acceptance by registries or buyers is not guaranteed,
+
+environmental credits may not be issued, validated, or monetized,
+
+methodologies may change or be challenged.
+
+Participation in the network does not guarantee:
+
+issuance of carbon credits,
+
+acceptance by any registry,
+
+or ability to sell environmental assets.
+
+10. Changes to Reward Structures
+
+Mālama reserves the right to:
+
+modify reward formulas,
+
+change distribution schedules,
+
+introduce or remove token systems,
+
+adjust eligibility requirements,
+
+or discontinue Rewards entirely.
+
+Such changes may occur:
+
+for technical optimization,
+
+fraud prevention,
+
+regulatory compliance,
+
+or network sustainability.
+
+11. Tax Responsibility
+
+You are solely responsible for:
+
+determining whether Rewards are taxable,
+
+reporting any income, gains, or losses,
+
+complying with all tax laws in your jurisdiction.
+
+Mālama does not provide tax advice and may not provide tax reporting documentation unless required by law.
+
+12. No Reliance
+
+You agree that you are not relying on:
+
+statements about future value,
+
+projections of earnings,
+
+marketing materials suggesting returns,
+
+or third-party commentary.
+
+You are making an independent decision based on your own assessment of risk.
+
+13. Third-Party Risks
+
+The network may rely on third-party systems, including:
+
+cloud providers,
+
+blockchain networks,
+
+hardware manufacturers,
+
+data providers,
+
+registries,
+
+oracles,
+
+and APIs.
+
+Failures or changes in these systems may affect Rewards or functionality.
+
+Mālama is not responsible for third-party failures.
+
+14. Limitation of Liability
+
+To the fullest extent permitted by law, Mālama is not liable for:
+
+loss of tokens or Rewards,
+
+loss of expected earnings,
+
+market losses,
+
+wallet or key compromise,
+
+blockchain-related issues,
+
+regulatory changes affecting value or usability.
+
+15. Acknowledgment
+
+By proceeding, you acknowledge that:
+
+you understand and accept all risks described in this Disclosure,
+
+you are not relying on Mālama for financial or investment advice,
+
+you understand that participation may result in no financial return,
+
+and you are solely responsible for your decisions and actions.

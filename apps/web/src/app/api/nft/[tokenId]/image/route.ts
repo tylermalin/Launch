@@ -4,19 +4,7 @@ import {
   getClaimByEdition,
   getClaimForEvmToken,
 } from '@/lib/genesis-claim-registry'
-
-function getZone(hexId: string): string {
-  const h = hexId.toLowerCase()
-  if (h.startsWith('8648')) return 'Idaho'
-  if (h.startsWith('872a') || h.startsWith('8729') || h.startsWith('8728')) return 'Los Angeles'
-  if (h.startsWith('8826') || h.startsWith('8827') || h.startsWith('8831') || h.startsWith('8830')) return 'New York City'
-  if (h.startsWith('8c1f') || h.startsWith('8c19') || h.startsWith('8c37')) return 'London'
-  if (h.startsWith('8c2f') || h.startsWith('8c30') || h.startsWith('8c31')) return 'Tokyo'
-  if (h.startsWith('8828') || h.startsWith('8829')) return 'San Francisco'
-  if (h.startsWith('8c65')) return 'Sydney'
-  if (h.startsWith('8c60') || h.startsWith('8c61')) return 'Singapore'
-  return 'Genesis Zone'
-}
+import { resolveNftDisplayEdition, resolveNftZone } from '@/lib/nft-zone'
 
 export async function GET(
   req: Request,
@@ -37,12 +25,10 @@ export async function GET(
 
   const hexId = claim?.hexId ?? searchParams.get('hexId') ?? `genesis-${tokenIdParam}`
   const parsed = Number(tokenIdParam)
-  const editionNum =
-    claim?.editionNumber ??
-    (Number.isFinite(parsed) && parsed > 0 ? parsed : 1)
+  const editionNum = resolveNftDisplayEdition(hexId, claim, Number.isFinite(parsed) ? parsed : 0)
   const genesisNum = String(editionNum).padStart(3, '0')
   const claimIdLabel = claim?.claimId ?? claimIdQ ?? ''
-  const zone   = getZone(hexId)
+  const zone = resolveNftZone(hexId)
 
   // Chain badge color
   const chainColor = chain === 'cardano' ? '#0033AD' : '#0052FF'

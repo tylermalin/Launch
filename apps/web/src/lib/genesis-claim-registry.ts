@@ -3,7 +3,14 @@
  * Canonical identifier: claimId — e.g. G200-001 … G200-200
  */
 
+import regionsData from '@/data/regions.json'
+import { getMalamaWalletReservedHexIds } from '@/lib/genesis-hexes'
+
 export const GENESIS_TOTAL = 200
+
+/** Custody address for the five protocol-reserved Genesis NFTs (env override). */
+export const MALAMA_GENESIS_WALLET = (process.env.NEXT_PUBLIC_MALAMA_GENESIS_WALLET ??
+  '0x1111111111111111111111111111111111111111') as `0x${string}`
 
 export type GenesisClaim = {
   claimId: string
@@ -106,3 +113,19 @@ export function getStats() {
     remaining: GENESIS_TOTAL - issued,
   }
 }
+
+/** Pre-mint registry entries + on-chain token binding for Malama Wallet custody hexes (editions 1–5 → tokenIds 1–5). */
+function seedMalamaWalletGenesisNfts() {
+  const hexIds = getMalamaWalletReservedHexIds(regionsData)
+  for (const hexId of hexIds) {
+    let claim = byHex.get(hexId)
+    if (!claim) {
+      const r = issueClaim(hexId, 'base', MALAMA_GENESIS_WALLET)
+      if (!r.ok) continue
+      claim = r.claim
+    }
+    bindEvmTokenToClaim(claim.claimId, claim.editionNumber)
+  }
+}
+
+seedMalamaWalletGenesisNfts()

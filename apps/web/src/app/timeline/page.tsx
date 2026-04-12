@@ -7,16 +7,16 @@ import { ChevronDown, CheckCircle2, Zap, Package, Cpu, TrendingUp } from 'lucide
 
 const colorMap = {
   emerald: {
-    ring: 'ring-emerald-500/60',
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/40',
-    dot: 'bg-emerald-500',
-    glow: 'shadow-[0_0_30px_rgba(16,185,129,0.25)]',
-    badge: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-    line: 'bg-emerald-500',
-    text: 'text-emerald-400',
-    bullet: 'text-emerald-400',
-    cta: 'bg-emerald-500 text-white hover:bg-emerald-400',
+    ring: 'ring-malama-accent/60',
+    bg: 'bg-malama-accent/10',
+    border: 'border-malama-accent/40',
+    dot: 'bg-malama-accent',
+    glow: 'shadow-[0_0_30px_rgba(196,240,97,0.25)]',
+    badge: 'bg-malama-accent/20 text-malama-accent border-malama-accent/30',
+    line: 'bg-malama-accent',
+    text: 'text-malama-accent',
+    bullet: 'text-malama-accent',
+    cta: 'bg-malama-accent text-malama-bg hover:bg-malama-accent-dim',
   },
   blue: {
     ring: 'ring-blue-500/60',
@@ -81,7 +81,7 @@ const phases: {
       'Pay entry cost and receive your NFT-HEX + 125K MLMA allocation on-chain.',
       'Hardware pre-order is queued. Ships in September 2026.',
     ],
-    cta: { label: 'Reserve Your Node Now', href: '/presale' },
+    cta: { label: 'Reserve with Crypto or Card', href: '/presale' },
   },
   {
     id: 'sep',
@@ -142,15 +142,15 @@ export default function TimelinePage() {
       <div className="max-w-4xl mx-auto pt-24 pb-16 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-          className="inline-flex items-center px-4 py-1.5 mb-8 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 rounded-full bg-emerald-500/10">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2" />
+          className="inline-flex items-center px-4 py-1.5 mb-8 text-xs font-black uppercase tracking-widest text-malama-accent border border-malama-accent/30 rounded-full bg-malama-accent/10">
+          <span className="w-2 h-2 rounded-full bg-malama-accent animate-pulse mr-2" />
           Genesis 200 — Phase 1 Roadmap
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
           className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-6">
           Reserve to{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-malama-accent to-malama-accent-dim">
             Revenue
           </span>
         </motion.h1>
@@ -165,7 +165,7 @@ export default function TimelinePage() {
       {/* Timeline */}
       <div className="max-w-3xl mx-auto relative">
         {/* Vertical connector line */}
-        <div className="absolute left-8 top-8 bottom-8 w-px bg-gradient-to-b from-emerald-500/60 via-blue-500/40 via-violet-500/40 to-amber-500/60 hidden md:block" />
+        <div className="absolute left-8 top-8 bottom-8 w-px bg-gradient-to-b from-malama-accent/60 via-blue-500/40 via-violet-500/40 to-amber-500/60 hidden md:block" />
 
         <div className="space-y-4">
           {phases.map((phase, i) => {
@@ -271,7 +271,7 @@ export default function TimelinePage() {
           ].map(({ label, value, sub }) => (
             <div key={label} className="bg-[#0d1e35] border border-gray-800 rounded-xl p-4 text-center">
               <div className="text-gray-500 text-xs uppercase tracking-widest mb-1">{label}</div>
-              <div className="text-xl font-black text-emerald-400">{value}</div>
+              <div className="text-xl font-black text-malama-accent">{value}</div>
               <div className="text-gray-600 text-xs mt-1">{sub}</div>
             </div>
           ))}
@@ -280,16 +280,16 @@ export default function TimelinePage() {
         {/* Final CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="mt-12 md:ml-20 p-8 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 text-center">
-          <p className="text-emerald-400 font-bold text-lg mb-2">⏳ 190 of 200 nodes remaining for public allocation</p>
+          className="mt-12 md:ml-20 p-8 rounded-2xl border border-malama-accent/30 bg-malama-accent/5 text-center">
+          <p className="text-malama-accent font-bold text-lg mb-2">⏳ 190 of 200 nodes remaining for public allocation</p>
           <p className="text-gray-400 text-sm mb-6">10 nodes reserved for Mālama Labs team · Allocation closes June 2026 or when sold</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/presale"
-              className="px-8 py-4 bg-emerald-500 text-white font-black rounded-full hover:scale-105 transition-transform shadow-[0_0_30px_rgba(16,185,129,0.3)]">
-              Reserve Your Genesis Node
+              className="px-8 py-4 bg-malama-accent text-white font-black rounded-full hover:scale-105 transition-transform shadow-[0_0_30px_rgba(196,240,97,0.3)]">
+              Reserve with Crypto or Card
             </Link>
             <Link href="/map"
-              className="px-8 py-4 border border-emerald-500/40 text-emerald-400 font-black rounded-full hover:bg-emerald-500/10 transition-all">
+              className="px-8 py-4 border border-malama-accent/40 text-malama-accent font-black rounded-full hover:bg-malama-accent/10 transition-all">
               Browse Available Hexes
             </Link>
           </div>

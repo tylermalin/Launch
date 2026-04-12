@@ -5,13 +5,13 @@ import { WHITEPAPER_TOC } from './whitepaper-toc'
 function TocNav() {
   return (
     <nav className="rounded-2xl border border-gray-800 bg-[#0d1e35]/90 backdrop-blur p-4 xl:sticky xl:top-28">
-      <p className="text-xs font-black uppercase tracking-widest text-emerald-400/90 mb-3">On this page</p>
+      <p className="text-xs font-black uppercase tracking-widest text-malama-accent/90 mb-3">On this page</p>
       <ul className="space-y-1.5 text-sm max-h-[70vh] overflow-y-auto pr-1">
         {WHITEPAPER_TOC.map((item) => (
           <li key={item.id}>
             <a
               href={`#${item.id}`}
-              className="text-gray-400 hover:text-emerald-400 transition-colors block py-0.5 border-l-2 border-transparent hover:border-emerald-500 pl-2 -ml-0"
+              className="text-gray-400 hover:text-malama-accent transition-colors block py-0.5 border-l-2 border-transparent hover:border-malama-accent pl-2 -ml-0"
             >
               {item.label}
             </a>
@@ -67,7 +67,7 @@ function Table({
 
 function CodeBlock({ children }: { children: string }) {
   return (
-    <pre className="my-4 p-4 rounded-xl bg-black/40 border border-gray-800 text-xs text-emerald-200/90 font-mono overflow-x-auto whitespace-pre-wrap">
+    <pre className="my-4 p-4 rounded-xl bg-black/40 border border-gray-800 text-xs text-malama-accent/90 font-mono overflow-x-auto whitespace-pre-wrap">
       {children}
     </pre>
   )
@@ -75,8 +75,8 @@ function CodeBlock({ children }: { children: string }) {
 
 function Callout({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
-    <div className="my-6 rounded-xl border border-emerald-500/25 bg-emerald-500/5 p-4 text-sm">
-      {title && <p className="font-bold text-emerald-400 mb-2">{title}</p>}
+    <div className="my-6 rounded-xl border border-malama-accent/25 bg-malama-accent/5 p-4 text-sm">
+      {title && <p className="font-bold text-malama-accent mb-2">{title}</p>}
       <div className="text-gray-300 leading-relaxed space-y-2">{children}</div>
     </div>
   )
@@ -416,7 +416,7 @@ Distributed = Protocol_Revenue × 0.50
 
         <section id="appendices" className="scroll-mt-28 mb-20">
           <h2 className="text-2xl font-black text-white mb-4 border-b border-gray-800 pb-2">12. Appendices</h2>
-          <details className="group rounded-xl border border-gray-800 bg-[#0d1e35] mb-3 open:border-emerald-500/30">
+          <details className="group rounded-xl border border-gray-800 bg-[#0d1e35] mb-3 open:border-malama-accent/30">
             <summary className="cursor-pointer px-4 py-3 font-bold text-white list-none flex justify-between items-center">
               Appendix A — Emission curve
               <span className="text-gray-500 text-xs group-open:rotate-180 transition-transform">▼</span>
@@ -454,7 +454,7 @@ Reserve (27.5%): 137.5M MLMA`}</CodeBlock>
           </details>
         </section>
 
-        <section className="scroll-mt-28 mb-12 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-6">
+        <section className="scroll-mt-28 mb-12 rounded-2xl border border-malama-accent/20 bg-malama-accent/5 p-6">
           <h2 className="text-xl font-black text-white mb-3">Conclusion</h2>
           <P>
             MLMA is a utility token for a climate-data network — not an inflation-dependent DePIN. The protocol transitions from scheduled

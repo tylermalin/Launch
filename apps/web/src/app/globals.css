@@ -2,8 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Tokens mirror malamalabs.com/site.css */
+:root {
+  --bg: #0a0e0a;
+  --bg-elev: #0f1410;
+  --bg-card: #131a14;
+  --ink: #e8efe5;
+  --ink-dim: #9ba89a;
+  --ink-faint: #5f6c5f;
+  --line: #1f2a20;
+  --line-bright: #2d3d2e;
+  --accent: #c4f061;
+  --accent-dim: #8aa845;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 body {
-  background-color: #0A1628;
-  color: #f3f4f6;
-  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Soft lime glow + subtle grain (reference site atmosphere) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(196, 240, 97, 0.06), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(196, 240, 97, 0.03), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+main {
+  position: relative;
+  z-index: 2;
+}
+
+@layer components {
+  .btn-primary {
+    @apply rounded-malama-sm bg-malama-accent font-mono uppercase tracking-[0.1em];
+  }
+  .btn-ghost {
+    @apply rounded-malama-sm bg-transparent;
+  }
+  .feature-card {
+    @apply transition-colors duration-300;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-3;
+  }
 }

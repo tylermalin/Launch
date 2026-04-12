@@ -1,18 +1,40 @@
 'use client'
 
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useCallback } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import HexPanel from './HexPanel'
-import { Navigation } from 'lucide-react'
+import GenesisHexDetail from './GenesisHexDetail'
+import { formatGenesisListingUsd } from '@/lib/h3'
+import { Loader2, Navigation } from 'lucide-react'
+import type { GenesisHexListItem } from '@/lib/genesis-hexes'
+import type { GenesisClaim } from '@/lib/genesis-claim-registry'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''
 
 export default function HexMap() {
   const mapContainer = useRef<HTMLDivElement>(null)
   const map = useRef<mapboxgl.Map | null>(null)
-  const [selectedHex, setSelectedHex] = useState<any | null>(null)
+  const [detailItem, setDetailItem] = useState<GenesisHexListItem | null>(null)
+  const [detailClaim, setDetailClaim] = useState<GenesisClaim | null>(null)
+  const [detailOpen, setDetailOpen] = useState(false)
+  const [detailLoading, setDetailLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const closeHexDetail = useCallback(() => {
+    setDetailOpen(false)
+    setDetailItem(null)
+    setDetailClaim(null)
+    if (map.current) map.current.setFilter('hex-highlight', ['==', 'id', ''])
+  }, [])
+
+  useEffect(() => {
+    if (!detailOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [detailOpen])
   
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
@@ -104,11 +126,13 @@ export default function HexMap() {
             'fill-color': [
               'match',
               ['get', 'status'],
-              'available', '#44BBA4', 
-              'reserved', '#6B7280',  
-              'active', '#22C55E',    
-              'auction', '#F18F01',   
-              '#374151'
+              'available',
+              '#44BBA4',
+              'reserved',
+              '#6B7280',
+              'active',
+              '#22C55E',
+              '#44BBA4'
             ],
             'fill-opacity': [
               'interpolate',
@@ -143,28 +167,23 @@ export default function HexMap() {
           filter: ['==', 'id', '']
         })
 
-        let opacity = 0.5
-        let direction = 0.015
-        
         const animatePulse = () => {
           if (!m.isStyleLoaded()) {
             requestAnimationFrame(animatePulse)
             return
           }
-          opacity += direction
-          if (opacity > 0.9) direction = -0.015
-          if (opacity < 0.2) direction = 0.015
-          
           m.setPaintProperty('hex-fill', 'fill-opacity', [
-            'case',
-            ['==', ['get', 'status'], 'active'],
-            opacity,
-            ['interpolate', ['linear'], ['get', 'dataScore'], 0, 0.1, 100, 0.7] 
+            'interpolate',
+            ['linear'],
+            ['get', 'dataScore'],
+            0,
+            0.1,
+            100,
+            0.7,
           ])
-          
           requestAnimationFrame(animatePulse)
         }
-        
+
         animatePulse()
 
       } catch (err) {
@@ -182,13 +201,22 @@ export default function HexMap() {
       if (!e.features || e.features.length === 0) return
       m.getCanvas().style.cursor = 'pointer'
       const feature = e.features[0]
-      const props = feature.properties as any
+      const props = feature.properties as Record<string, unknown>
+      const listing = Number(props.startingBid ?? 0)
+      const listingLabel = formatGenesisListingUsd(listing)
+      const id = String(props.id ?? '')
+      const score = props.dataScore ?? '—'
+      const sold = props.sold === true || props.sold === 'true'
+      const reserveLine = sold
+        ? `<div class="mt-3 pt-3 border-t border-gray-700 text-[11px] text-gray-300 font-black uppercase tracking-wider">SOLD</div>`
+        : ''
 
       const html = `
         <div class="bg-malama-deep/95 backdrop-blur-xl border border-gray-700 p-4 rounded-xl shadow-2xl text-white font-sans text-sm min-w-[180px]">
-          <p class="font-mono text-xs font-black text-gray-500 tracking-widest mb-3 uppercase">${props.id}</p>
-          <div class="flex justify-between items-center mb-2"><span class="text-gray-400 font-semibold">Score</span><span class="font-black text-malama-teal text-lg">${props.dataScore}</span></div>
-          <div class="flex justify-between items-center"><span class="text-gray-400 font-semibold">Bid</span><span class="font-black text-malama-amber text-lg">$${props.startingBid}</span></div>
+          <p class="font-mono text-xs font-black text-gray-500 tracking-widest mb-3 uppercase">${id}</p>
+          <div class="flex justify-between items-center mb-2"><span class="text-gray-400 font-semibold">Score</span><span class="font-black text-malama-teal text-lg">${score}</span></div>
+          <div class="flex justify-between items-center"><span class="text-gray-400 font-semibold">Listing</span><span class="font-black text-malama-amber text-lg">${listingLabel}</span></div>
+          ${reserveLine}
         </div>
       `
       popup.setLngLat(e.lngLat).setHTML(html).addTo(m)
@@ -199,13 +227,29 @@ export default function HexMap() {
       popup.remove()
     })
 
-    m.on('click', 'hex-fill', (e) => {
+    m.on('click', 'hex-fill', async (e) => {
       if (!e.features || e.features.length === 0) return
       const feature = e.features[0]
-      const props = feature.properties
-      
-      m.setFilter('hex-highlight', ['==', 'id', props?.id])
-      setSelectedHex(props)
+      const props = feature.properties as Record<string, unknown>
+      const id = String(props?.id ?? '')
+
+      m.setFilter('hex-highlight', ['==', 'id', id])
+      setDetailLoading(true)
+      try {
+        const res = await fetch(`/api/hexes/by-id/${encodeURIComponent(id)}`)
+        if (!res.ok) {
+          m.setFilter('hex-highlight', ['==', 'id', ''])
+          return
+        }
+        const j = (await res.json()) as { item: GenesisHexListItem; claim: GenesisClaim | null }
+        setDetailItem(j.item)
+        setDetailClaim(j.claim)
+        setDetailOpen(true)
+      } catch {
+        m.setFilter('hex-highlight', ['==', 'id', ''])
+      } finally {
+        setDetailLoading(false)
+      }
     })
 
   }, [])
@@ -256,7 +300,7 @@ export default function HexMap() {
       
       <div className="absolute top-24 left-8 z-10 pointer-events-none max-w-sm">
         <div className="flex items-center space-x-3 mb-2">
-          <div className="w-3 h-3 bg-malama-teal rounded-full animate-pulse shadow-[0_0_10px_rgba(68,187,164,0.5)]" />
+          <div className="w-3 h-3 bg-malama-teal rounded-full animate-pulse shadow-[0_0_10px_rgba(196,240,97,0.5)]" />
           <h1 className="text-xl font-black text-white uppercase tracking-tighter">Neural Topology</h1>
         </div>
         <p className="text-gray-400 text-xs font-mono uppercase tracking-[0.2em] leading-relaxed">
@@ -301,13 +345,21 @@ export default function HexMap() {
           display: none !important;
         }
       `}</style>
-      
-      <HexPanel 
-        data={selectedHex} 
-        onClose={() => {
-          setSelectedHex(null)
-          if (map.current) map.current.setFilter('hex-highlight', ['==', 'id', ''])
-        }} 
+
+      {detailLoading && (
+        <div
+          className="absolute inset-0 z-[45] flex items-center justify-center bg-black/25 backdrop-blur-[2px] pointer-events-none"
+          aria-hidden
+        >
+          <Loader2 className="h-10 w-10 animate-spin text-malama-teal drop-shadow-lg" />
+        </div>
+      )}
+
+      <GenesisHexDetail
+        item={detailItem}
+        claim={detailClaim}
+        open={detailOpen}
+        onClose={closeHexDetail}
       />
     </div>
   )

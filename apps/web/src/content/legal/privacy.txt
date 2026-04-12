@@ -1,0 +1,609 @@
+MĀLAMA LABS INC.
+
+PRIVACY POLICY
+
+Effective Date: April 11, 2026
+
+Last Updated: April 11, 2026
+
+This Privacy Policy explains how Mālama Labs Inc. (“Mālama,” “we,” “us,” or “our”) collects, uses, stores, shares, and protects your Personal Data when you visit our websites, use the Mālama Launch platform, purchase or operate a Hex Node, join a waitlist, connect a wallet, interact with our applications, or otherwise engage with our products and services.
+
+Please read this Privacy Policy carefully. It also includes information about your rights and choices regarding your Personal Data.
+
+Contact Us
+
+If you have questions about this Privacy Policy or want to exercise your privacy rights, please contact us at:
+
+Mālama Labs Inc.
+
+8 THE GREEN, STE A Dover DE 19901
+
+Email: [privacy@malamalabs.com]
+
+Website: [https://malamalabs.com]
+
+1. Who We Are
+
+Mālama Labs Inc. is a technology company building environmental data infrastructure, digital MRV systems, and related blockchain-based tools for environmental measurement, reporting, verification, and market participation.
+
+This Privacy Policy applies to Personal Data collected through:
+
+the Mālama website and launch pages,
+
+Hex Node sale and reservation flows,
+
+customer support interactions,
+
+applications, dashboards, and account portals,
+
+marketing communications,
+
+and related online or offline interactions.
+
+Mālama Labs Inc. is the controller of your Personal Data unless otherwise specified at the time of collection.
+
+It is important that the Personal Data we hold about you is accurate and current. Please notify us if your information changes.
+
+Our website or services may contain links to third-party websites, wallets, exchanges, payment processors, social platforms, registries, or applications. We do not control those third parties and are not responsible for their privacy practices.
+
+2. The Data We Collect About You
+
+We may collect, use, store, and transfer different kinds of Personal Data depending on how you interact with us.
+
+Identity Data
+
+This may include:
+
+first name and last name,
+
+username,
+
+company or organization name,
+
+title or role,
+
+date of birth where needed for legal eligibility,
+
+government-issued identification if required for compliance, fraud prevention, or restricted transactions.
+
+Contact Data
+
+This may include:
+
+email address,
+
+billing address,
+
+shipping address,
+
+telephone number,
+
+customer support contact details.
+
+Financial and Transaction Data
+
+This may include:
+
+payment card details processed through third-party providers,
+
+billing information,
+
+purchase history,
+
+order details,
+
+wallet address,
+
+blockchain transaction identifiers,
+
+refund or chargeback information,
+
+tax-related information where required.
+
+Technical Data
+
+This may include:
+
+IP address,
+
+browser type and version,
+
+device type,
+
+operating system,
+
+referral URLs,
+
+log data,
+
+time zone setting,
+
+cookies and analytics identifiers,
+
+session information,
+
+crash or error logs.
+
+Profile Data
+
+This may include:
+
+account login information,
+
+password or authentication credentials,
+
+node ownership or reservation status,
+
+preferences,
+
+survey responses,
+
+support tickets,
+
+participation history.
+
+Usage Data
+
+This may include:
+
+how you use the launch site, dashboard, and applications,
+
+pages visited,
+
+features used,
+
+clicks, scrolls, and interactions,
+
+marketing engagement metrics.
+
+Marketing and Communications Data
+
+This may include:
+
+your communication preferences,
+
+whether you opted into newsletters, launch updates, or promotional emails,
+
+your responses to campaigns or offers.
+
+Node and Environmental System Data
+
+If you purchase, deploy, or interact with Hex Nodes or related systems, we may collect:
+
+node registration information,
+
+hardware identifiers,
+
+deployment metadata,
+
+uptime and performance data,
+
+telemetry associated with device health,
+
+geolocation or approximate installation location,
+
+signed environmental or operational data,
+
+reward eligibility data.
+
+Blockchain and Wallet Data
+
+If you connect a wallet or participate in token-enabled features, we may collect:
+
+wallet addresses,
+
+public on-chain transaction data,
+
+token interactions,
+
+participation or reward status,
+
+smart contract interaction history.
+
+Because blockchain data is generally public and immutable, some associated records may remain visible permanently on public networks.
+
+Aggregated and De-Identified Data
+
+We may create aggregated, anonymized, or de-identified datasets for analytics, research, system performance, network planning, and market intelligence. We will treat re-identifiable data as Personal Data where required by law.
+
+If You Do Not Provide Personal Data
+
+Where we need certain Personal Data to provide products or services, comply with law, process a purchase, or maintain security, and you do not provide it, we may be unable to complete the transaction or provide the relevant service.
+
+3. How We Use Your Personal Data
+
+We only use your Personal Data where we have a lawful basis to do so. Depending on your jurisdiction, those legal bases may include:
+
+performance of a contract,
+
+compliance with legal obligations,
+
+legitimate interests,
+
+consent,
+
+and protection against fraud, abuse, or security threats.
+
+We may use your Personal Data for the following purposes:
+
+To provide products and services
+
+Including:
+
+operating the launch site,
+
+processing Hex Node purchases, reservations, or waitlist submissions,
+
+creating and managing your account,
+
+delivering hardware or digital products,
+
+registering nodes,
+
+enabling support and administration.
+
+To process transactions
+
+Including:
+
+payment processing,
+
+purchase confirmations,
+
+fraud screening,
+
+refunds,
+
+invoicing,
+
+tax and accounting administration.
+
+To operate the network and associated systems
+
+Including:
+
+device registration,
+
+node authentication,
+
+telemetry monitoring,
+
+performance evaluation,
+
+fraud detection,
+
+reward or eligibility calculations,
+
+environmental system integrity and auditing.
+
+To communicate with you
+
+Including:
+
+transaction notices,
+
+launch updates,
+
+account notices,
+
+technical or legal notices,
+
+support communications,
+
+security alerts,
+
+marketing where permitted.
+
+To improve our website, products, and systems
+
+Including:
+
+analytics,
+
+debugging,
+
+quality assurance,
+
+feature development,
+
+research and system optimization.
+
+To comply with legal and regulatory obligations
+
+Including:
+
+tax, accounting, and reporting requirements,
+
+anti-fraud measures,
+
+law enforcement requests where legally required,
+
+sanctions or compliance screening where applicable.
+
+To protect our legal rights and business interests
+
+Including:
+
+enforcing our agreements,
+
+investigating misuse,
+
+detecting or preventing security incidents,
+
+resolving disputes.
+
+Marketing
+
+We may use your Identity, Contact, Profile, Technical, and Usage Data to determine what products, services, or updates may be relevant to you.
+
+You may receive marketing communications from us if:
+
+you requested information,
+
+joined a waitlist,
+
+purchased a product or service,
+
+or otherwise engaged with us and applicable law permits it.
+
+You can opt out of marketing communications at any time by using the unsubscribe link in the message or by contacting us directly.
+
+We do not sell your Personal Data to unrelated third parties for their own direct marketing.
+
+Cookies and Similar Technologies
+
+We may use cookies, pixels, tags, session replay tools, and similar technologies to:
+
+remember preferences,
+
+keep you logged in,
+
+understand traffic and campaign performance,
+
+improve user experience,
+
+analyze site usage.
+
+You can manage cookie settings through your browser or any cookie controls we make available.
+
+Change of Purpose
+
+We will generally only use your Personal Data for the purposes for which it was collected unless we reasonably determine that another use is compatible with the original purpose, or we are otherwise permitted or required by law.
+
+4. Disclosures of Your Personal Data
+
+We may share your Personal Data with trusted third parties where reasonably necessary, including:
+
+Service Providers
+
+Such as providers of:
+
+hosting and cloud infrastructure,
+
+analytics,
+
+email and communications,
+
+payment processing,
+
+fraud detection,
+
+shipping and logistics,
+
+CRM and customer support tools,
+
+identity verification,
+
+wallet or blockchain infrastructure.
+
+Professional Advisers
+
+Such as:
+
+lawyers,
+
+accountants,
+
+auditors,
+
+insurers,
+
+brokers,
+
+consultants.
+
+Business Partners and Technical Counterparties
+
+Where relevant to your use of our products or systems, such as:
+
+node fulfillment partners,
+
+hardware vendors,
+
+registry or verification partners,
+
+compliance providers,
+
+ecosystem partners,
+
+infrastructure operators.
+
+Authorities and Legal Recipients
+
+Including:
+
+courts,
+
+regulators,
+
+tax authorities,
+
+law enforcement,
+
+government agencies, where disclosure is required by law or reasonably necessary to protect rights, safety, or legal compliance.
+
+Corporate Transactions
+
+We may disclose Personal Data in connection with:
+
+a merger,
+
+acquisition,
+
+asset sale,
+
+restructuring,
+
+financing,
+
+due diligence process.
+
+Any successor entity may use your Personal Data in a manner consistent with this Privacy Policy unless otherwise disclosed.
+
+Public Blockchain Disclosures
+
+If you use wallet-enabled or token-enabled features, some data may be recorded to public blockchains. These records may be accessible to third parties and cannot typically be modified or deleted.
+
+5. Data Security
+
+We use reasonable administrative, technical, and organizational measures designed to protect Personal Data against unauthorized access, disclosure, alteration, or destruction.
+
+These measures may include:
+
+encryption in transit and at rest where appropriate,
+
+access controls,
+
+monitoring and logging,
+
+key management,
+
+vendor controls,
+
+authentication safeguards,
+
+secure development practices.
+
+However, no internet-based or blockchain-enabled system is completely secure. We cannot guarantee absolute security.
+
+If we become aware of a Personal Data breach requiring notification under applicable law, we will take steps consistent with those legal obligations.
+
+We do not knowingly solicit or collect Personal Data from children under 18 in connection with the Hex Node sale or related platform activities without legally sufficient authorization. If you believe a minor has provided us with Personal Data improperly, contact us so we can review and address it.
+
+6. International Transfers
+
+We may process or transfer your Personal Data in the United States and in other jurisdictions where we or our service providers operate.
+
+If you are located in a jurisdiction with transfer restrictions, we will take steps intended to provide an appropriate level of protection, which may include:
+
+contractual safeguards,
+
+reliance on adequacy determinations where available,
+
+technical and organizational controls,
+
+or other valid transfer mechanisms recognized by applicable law.
+
+Because blockchain networks and some cloud or technical systems are inherently distributed, certain records may be stored or accessed globally.
+
+7. Data Retention
+
+We retain Personal Data for as long as reasonably necessary for the purposes described in this Privacy Policy, including to:
+
+provide services,
+
+maintain business and legal records,
+
+resolve disputes,
+
+enforce agreements,
+
+comply with legal, accounting, tax, and regulatory obligations,
+
+preserve network integrity and auditability.
+
+Retention periods vary depending on the type of data and the purpose of use.
+
+As a general matter:
+
+account, transaction, and customer records may be retained for up to six years or longer where required by law,
+
+support and communications records may be retained as reasonably necessary for service and dispute handling,
+
+technical logs may be retained for security and system integrity purposes,
+
+blockchain records may persist indefinitely because they are stored on public or distributed ledgers,
+
+anonymized or aggregated data may be retained indefinitely.
+
+Where possible and appropriate, we may delete, anonymize, or de-identify data when it is no longer needed.
+
+8. Your Legal Rights
+
+Depending on your location and applicable law, you may have rights regarding your Personal Data, including the right to:
+
+request access to the Personal Data we hold about you,
+
+request correction of inaccurate or incomplete Personal Data,
+
+request deletion of Personal Data in certain circumstances,
+
+object to or restrict certain processing,
+
+withdraw consent where processing is based on consent,
+
+request portability of certain data,
+
+opt out of direct marketing,
+
+lodge a complaint with a relevant supervisory authority.
+
+These rights are not absolute and may be limited by legal obligations, security needs, contractual duties, technical constraints, or the public and immutable nature of blockchain records.
+
+Public Blockchain Limitation
+
+Where data has been recorded on a public blockchain, deletion, correction, or restriction may not be technically feasible. In those cases, we may still be able to limit how associated off-chain Personal Data is processed.
+
+Identity Verification
+
+To protect your privacy and security, we may request information to verify your identity before responding to a request.
+
+Fees
+
+We typically do not charge a fee for valid privacy requests, but we may charge a reasonable fee or decline to act where requests are manifestly unfounded, repetitive, or excessive, as permitted by law.
+
+Response Timing
+
+We aim to respond within the period required by applicable law. In some cases, that may be extended where requests are complex or numerous.
+
+To exercise your rights, contact us at: [privacy@malamalabs.com]
+
+9. Glossary
+
+Personal Data
+
+Information that identifies, relates to, describes, or can reasonably be linked to an individual.
+
+Controller
+
+The entity that determines the purposes and means of processing Personal Data.
+
+Processor
+
+A service provider or other party that processes Personal Data on behalf of a controller.
+
+Legitimate Interests
+
+Our legitimate business interests in operating, improving, securing, and growing our products and services, provided those interests are not overridden by your rights and interests.
+
+Performance of Contract
+
+Processing necessary to enter into or perform a contract with you.
+
+Legal Obligation
+
+Processing necessary to comply with applicable law, regulation, or lawful request.
+
+Blockchain Data
+
+Publicly visible and often immutable data recorded on distributed ledger networks.

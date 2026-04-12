@@ -102,13 +102,13 @@ export default function OperatorsPage() {
                   onClick={() => toggleStep(i)}
                   className={`w-full text-left rounded-2xl border p-5 flex gap-4 transition-all ${
                     checked
-                      ? 'border-emerald-500/50 bg-emerald-500/10'
+                      ? 'border-malama-accent/50 bg-malama-accent/10'
                       : 'border-gray-800 bg-[#0d1e35] hover:border-gray-700'
                   }`}
                 >
                   <div
                     className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                      checked ? 'bg-emerald-500/30 text-emerald-400' : 'bg-gray-800 text-gray-500'
+                      checked ? 'bg-malama-accent/30 text-malama-accent' : 'bg-gray-800 text-gray-500'
                     }`}
                   >
                     {checked ? <CheckCircle2 className="w-6 h-6" /> : <Icon className="w-5 h-5" />}
@@ -132,7 +132,7 @@ export default function OperatorsPage() {
             exit={{ opacity: 0, y: -8 }}
             className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6 space-y-4"
           >
-            <div className="flex items-center gap-3 text-emerald-400 font-bold">
+            <div className="flex items-center gap-3 text-malama-accent font-bold">
               <BookOpen className="w-5 h-5" /> Field notes
             </div>
             <ul className="space-y-3 text-sm text-gray-300 leading-relaxed">
@@ -204,7 +204,7 @@ export default function OperatorsPage() {
             <div className="flex flex-wrap gap-3 pt-4">
               <Link
                 href="/docs/pricing-roi"
-                className="text-sm font-bold text-emerald-400 hover:text-emerald-300"
+                className="text-sm font-bold text-malama-accent hover:text-malama-accent-dim"
               >
                 Pricing & ROI →
               </Link>

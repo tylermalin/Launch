@@ -45,7 +45,7 @@ export function TokenomicsInteractive() {
       {/* Supply */}
       <section className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
         <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-emerald-400" /> Supply snapshot (Genesis 200)
+          <TrendingUp className="w-5 h-5 text-malama-accent" /> Supply snapshot (Genesis 200)
         </h2>
         <div className="flex flex-wrap gap-6 mb-6">
           <div>
@@ -55,7 +55,7 @@ export function TokenomicsInteractive() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Genesis operators pool</p>
-            <p className="text-3xl font-black text-emerald-400 tabular-nums">25M</p>
+            <p className="text-3xl font-black text-malama-accent tabular-nums">25M</p>
             <p className="text-sm text-gray-500">MLMA ({genesisPct.toFixed(1)}% of cap)</p>
           </div>
           <div>
@@ -67,7 +67,7 @@ export function TokenomicsInteractive() {
         <div className="space-y-2">
           <div className="h-4 rounded-full bg-gray-800 overflow-hidden flex">
             <motion.div
-              className="h-full bg-gradient-to-r from-emerald-500 to-teal-400"
+              className="h-full bg-gradient-to-r from-malama-accent to-malama-accent-dim"
               initial={{ width: 0 }}
               animate={{ width: `${genesisPct}%` }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -122,18 +122,18 @@ export function TokenomicsInteractive() {
             max={12}
             value={vestMonth}
             onChange={(e) => setVestMonth(Number(e.target.value))}
-            className="w-full mt-3 accent-emerald-500 h-2 rounded-full"
+            className="w-full mt-3 accent-malama-accent h-2 rounded-full"
           />
           <div className="flex justify-between text-xs text-gray-500 mt-1">
             <span>Boot</span>
-            <span className="text-emerald-400 font-mono font-bold">{vestMonth} mo</span>
+            <span className="text-malama-accent font-mono font-bold">{vestMonth} mo</span>
             <span>12 mo</span>
           </div>
         </label>
         <div className="mt-6 grid sm:grid-cols-2 gap-4">
-          <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4">
-            <p className="text-xs text-emerald-400/80 uppercase tracking-widest mb-1">Unlocked</p>
-            <p className="text-3xl font-black text-emerald-400 tabular-nums">{(unlocked / 1000).toFixed(1)}K</p>
+          <div className="rounded-xl border border-malama-accent/40 bg-malama-accent/10 p-4">
+            <p className="text-xs text-malama-accent/80 uppercase tracking-widest mb-1">Unlocked</p>
+            <p className="text-3xl font-black text-malama-accent tabular-nums">{(unlocked / 1000).toFixed(1)}K</p>
             <p className="text-sm text-gray-400">MLMA of {PER_NODE.toLocaleString()}</p>
           </div>
           <div className="rounded-xl border border-gray-700 bg-black/20 p-4">

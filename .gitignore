@@ -60,6 +60,14 @@ docker-volumes/
 *.mp4
 *.mov
 
+# Exception: web public assets must be in repo for deployment
+!apps/web/public/*.png
+!apps/web/public/*.jpg
+!apps/web/public/*.svg
+!apps/web/public/*.gif
+!apps/web/public/*.ico
+!apps/web/public/*.webp
+
 # OS/IDE
 .DS_Store
 **/.DS_Store

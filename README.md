@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="apps/web/public/brand-logo-dark-bg.png" alt="Mālama Labs" width="320" />
+</p>
+
 # Mālama Labs
 
 Mālama Labs is a DePIN (Decentralized Physical Infrastructure Network) startup building a cryptographic environmental data network. We utilize hardware-signed data from specialized sensors (ATECC608A + BME680) as the root of trust, completely removing human-in-the-loop oracles. The platform employs a dual-token model ($MALAMA and $LCO2/$VCO2) with transactions bridged seamlessly between Cardano (Aiken/CIP-68) and Base (EVM/LayerZero).

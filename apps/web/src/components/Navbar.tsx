@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -19,16 +18,37 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-5 py-[14px] sm:px-10">
         <Link
           href="/"
-          className="flex shrink-0 items-center rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-malama-accent/50"
+          className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-malama-accent/50"
         >
-          <Image
-            src="/brand-logo.png"
-            alt="Mālama Labs Logo"
-            width={700}
-            height={300}
-            priority
-            className="h-9 w-auto max-w-[min(100%,15rem)] object-contain object-left drop-shadow-[0_0_18px_rgba(196,240,97,0.18)] transition-[filter] duration-300 hover:drop-shadow-[0_0_26px_rgba(196,240,97,0.35)] sm:h-11 sm:max-w-[20rem] md:h-12 md:max-w-[24rem]"
-          />
+          {/* Hex logo mark */}
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="shrink-0 drop-shadow-[0_0_10px_rgba(101,217,165,0.3)] transition-[filter] duration-300 hover:drop-shadow-[0_0_18px_rgba(101,217,165,0.5)]"
+            aria-hidden="true"
+          >
+            <path
+              d="M24 4L44 15V33L24 44L4 33V15L24 4Z"
+              fill="#0A1628"
+              stroke="#65d9a5"
+              strokeWidth="2"
+            />
+            <path
+              d="M14 32V18L24 24L34 18V32"
+              stroke="#65d9a5"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            />
+          </svg>
+          {/* Wordmark */}
+          <span className="font-black tracking-tight text-white text-[1.05rem] leading-none drop-shadow-[0_0_18px_rgba(101,217,165,0.18)] transition-[filter] duration-300 hover:drop-shadow-[0_0_26px_rgba(101,217,165,0.35)]">
+            Mālama Labs
+          </span>
         </Link>
 
         <div className="flex min-w-0 items-center justify-end gap-0.5 sm:gap-2">

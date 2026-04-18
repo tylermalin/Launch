@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="apps/web/public/brand-logo.png" alt="Mālama Labs" width="220" />
+  <img src="apps/web/public/brand-logo-dark-bg.png" alt="Mālama Labs" width="320" />
 </p>
 
 # Mālama Labs

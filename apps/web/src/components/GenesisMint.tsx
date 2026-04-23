@@ -660,7 +660,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                   Complete setup to continue
                 </button>
                 <p className="text-xs font-bold uppercase tracking-widest text-gray-600">
-                  Genesis 200 · One mint per hex · Global cross-chain lock
+                  Mālama Genesis · One mint per hex · Per-chain cohort lock (no bridge)
                 </p>
               </div>
             </motion.div>
@@ -694,7 +694,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 <div className="p-6 border-b border-gray-800 flex justify-between items-start gap-4">
                   <div>
                     <div className="font-bold text-white text-lg">Mālama Hex Node License NFT</div>
-                    <p className="text-sm text-gray-500 mt-1">Hardware + exclusive geographic license + 125K MLMA allocation + 12mo support</p>
+                    <p className="text-sm text-gray-500 mt-1">Hardware + exclusive geographic license + 62,500 MLMA allocation + 12mo support</p>
                     <p className="text-xs text-gray-600 mt-2 font-mono">Hex: {hexId}</p>
                     {paymentMode === 'card' && (
                       <p className="text-xs text-violet-400/90 mt-2 font-mono">Email: {cardEmail.trim()}</p>
@@ -715,7 +715,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
 
               <div className="grid grid-cols-3 gap-4 text-center">
                 {[
-                  { label: 'MLMA Allocation', value: '125K', sub: '25% at boot · 75% vested' },
+                  { label: 'MLMA Allocation', value: '62.5K', sub: '25% at boot · 75% vested' },
                   {
                     label: 'Chain',
                     value: paymentMode === 'card' ? 'Base L2' : evmConnected ? 'Base L2' : 'Cardano',

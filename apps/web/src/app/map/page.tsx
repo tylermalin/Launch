@@ -4,7 +4,7 @@ import MapPageClient from '@/components/MapPageClient'
 export const metadata: Metadata = {
   title: 'Opportunity Map | Mālama Labs',
   description:
-    'Explore the Genesis 200 H3 grid: 200 geographic node licenses across Idaho, NYC, London, and Tokyo.',
+    'Explore the Mālama Genesis H3 grid: 400 geographic node licenses (200 Base + 200 Cardano) across Idaho, NYC, London, and Tokyo.',
 }
 
 export default function MapPage() {

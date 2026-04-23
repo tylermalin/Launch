@@ -93,7 +93,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
               </nav>
               <div className="mt-8 p-4 rounded-xl border border-malama-line bg-malama-elev/80">
                 <p className="text-xs text-malama-ink-faint leading-relaxed">
-                  These pages summarize Genesis 200 economics and operations. Figures are illustrative; live terms follow your reservation flow.
+                  These pages summarize Mālama Genesis economics and operations. Figures are illustrative; live terms follow your reservation flow and the whitepaper.
                 </p>
                 <Link
                   href="/presale"

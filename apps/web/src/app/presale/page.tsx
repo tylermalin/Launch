@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import GenesisMint from '@/components/GenesisMintDynamic'
 
 export const metadata: Metadata = {
-  title: 'Reserve with Crypto or Card | Genesis 200 | Mālama Labs',
+  title: 'Reserve with Crypto or Card | Mālama Genesis | Mālama Labs',
   description:
-    'Connect your wallet, pick your hex on the map, and reserve a Genesis validator node. $2,000 entry. 125K MLMA per node. 200 Genesis nodes (195 remaining). Oct 2026 revenue.',
+    'Connect your wallet, pick your hex on the map, and reserve a Genesis validator node. $2,000 entry. 62,500 MLMA per node. 400 Mālama Genesis nodes total (200 Base + 200 Cardano). Oct 2026 revenue.',
 }
 
 export default async function PresalePage({
@@ -23,7 +23,7 @@ export default async function PresalePage({
       <div className="max-w-6xl w-full mx-auto flex flex-col items-center relative z-10 text-center">
         <div className="inline-flex items-center px-4 py-1.5 mb-8 text-xs font-black uppercase tracking-[0.2em] text-malama-accent border border-malama-accent/30 rounded-full bg-malama-accent/10 shadow-[0_0_15px_rgba(196,240,97,0.2)]">
           <span className="w-2 h-2 rounded-full bg-malama-accent animate-pulse mr-2" />
-          Genesis 200 — Scarcity Edition
+          Mālama Genesis — 200 Base + 200 Cardano
         </div>
         
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter mb-8 drop-shadow-xl">
@@ -34,8 +34,8 @@ export default async function PresalePage({
         </h1>
         
         <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed mb-6">
-          Choose a hex from the 200 Genesis licenses for early supporters, connect an EVM or Cardano wallet (or custodial
-          with email), then reserve with crypto or fiat via credit/debit card. $2,000 entry. 125K MLMA vests at first boot.
+          Choose a hex from the 400 Mālama Genesis licenses (200 Base + 200 Cardano), connect an EVM or Cardano wallet (or custodial
+          with email), then reserve with crypto or fiat via credit/debit card. $2,000 entry. 62,500 MLMA vests per operator schedule.
           Revenue starts October 2026.
         </p>
         <p className="text-sm text-gray-500 mb-10">
@@ -117,7 +117,7 @@ async function PresaleStats() {
         <span className="text-xs tracking-[0.2em] text-gray-500 uppercase font-black mt-2">Entry Price</span>
       </div>
       <div className="flex flex-col items-center col-span-2 justify-self-center sm:col-span-1 max-sm:w-full max-sm:max-w-[12rem]">
-        <span className="text-4xl md:text-5xl font-mono font-black text-malama-accent">125K</span>
+        <span className="text-4xl md:text-5xl font-mono font-black text-malama-accent">62.5K</span>
         <span className="text-xs tracking-[0.2em] text-gray-500 uppercase font-black mt-2">MLMA / Node</span>
       </div>
     </div>

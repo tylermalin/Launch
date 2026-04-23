@@ -190,7 +190,7 @@ export default function OperatorsPage() {
               },
               {
                 q: 'What if validation volume is low at launch?',
-                a: 'Network demand ramps with data partners. See Pricing & ROI for tiered scenarios and payback ranges.',
+                a: 'Network demand ramps as data offtake partners come online across carbon, insurance, AI data center, and industrial emissions verticals. See Pricing & Reward Mechanics for the reward formula and Geographic Multiplier tiers. No payback or earnings guarantees.',
               },
             ].map((faq) => (
               <div key={faq.q} className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-5">

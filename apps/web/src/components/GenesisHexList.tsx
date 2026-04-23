@@ -123,7 +123,7 @@ export default function GenesisHexList({ className = '' }: { className?: string 
   return (
     <section
       className={`flex flex-col min-h-0 h-full bg-malama-deep/95 ${className}`}
-      aria-label="Genesis 200 hex license list"
+      aria-label="Mālama Genesis hex license list"
     >
       <div className="shrink-0 p-4 border-b border-gray-800 space-y-3">
         <div className="flex items-center gap-2">

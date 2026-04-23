@@ -154,7 +154,7 @@ export default function GenesisHexDetail({
           <h3 className="mb-3 text-xs font-black uppercase tracking-widest text-gray-500">Terms of sale</h3>
           <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed text-gray-400">
             <li>One-time Genesis entry covers hardware kit and geographic license for this H3 cell.</li>
-            <li>125,000 MLMA vests per operator schedule after verified hardware boot.</li>
+            <li>62,500 MLMA vests per operator schedule after verified hardware boot.</li>
             <li>Rewards depend on network data inflow; not guaranteed.</li>
             <li>
               Full preorder and purchase terms:{' '}

@@ -15,7 +15,7 @@ import { Info, Lock, Sparkles, TrendingUp } from 'lucide-react'
 
 const TOTAL_MLMA = 500_000_000
 const GENESIS_POOL = 25_000_000
-const PER_NODE = 125_000
+const PER_NODE = 62_500
 const BOOT_PCT = 0.25
 const MONTHLY_PCT = 0.75 / 12
 
@@ -45,7 +45,7 @@ export function TokenomicsInteractive() {
       {/* Supply */}
       <section className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
         <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-malama-accent" /> Supply snapshot (Genesis 200)
+          <TrendingUp className="w-5 h-5 text-malama-accent" /> Supply snapshot (Mālama Genesis)
         </h2>
         <div className="flex flex-wrap gap-6 mb-6">
           <div>
@@ -60,7 +60,7 @@ export function TokenomicsInteractive() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Per node</p>
-            <p className="text-3xl font-black text-white tabular-nums">125K</p>
+            <p className="text-3xl font-black text-white tabular-nums">62.5K</p>
             <p className="text-sm text-gray-500">MLMA</p>
           </div>
         </div>
@@ -74,8 +74,8 @@ export function TokenomicsInteractive() {
             />
           </div>
           <div className="flex justify-between text-xs text-gray-500">
-            <span>Genesis 200 ({GENESIS_POOL.toLocaleString()} MLMA)</span>
-            <span>Other allocations per whitepaper §3</span>
+            <span>Mālama Genesis — 200 Base + 200 Cardano ({GENESIS_POOL.toLocaleString()} MLMA)</span>
+            <span>Other allocations per whitepaper §5</span>
           </div>
         </div>
         <p className="mt-4 text-xs text-gray-600 flex items-start gap-2">
@@ -112,7 +112,7 @@ export function TokenomicsInteractive() {
           <Lock className="w-5 h-5 text-blue-400" /> Genesis allocation vesting (per node)
         </h2>
         <p className="text-sm text-gray-400 mb-6">
-          25% at verified hardware boot; 75% linear over 12 months (~7,813 MLMA/month).
+          25% at verified hardware boot; 75% linear over 12 months (~3,906 MLMA/month).
         </p>
         <label className="block mb-2">
           <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Months after boot</span>
@@ -151,7 +151,7 @@ export function TokenomicsInteractive() {
         <p className="text-5xl font-black text-white mb-2">
           1.5<span className="text-2xl text-amber-400">×</span>
         </p>
-        <p className="text-sm text-gray-400">Applied to validation rewards for Genesis 200 operators in Year 1; expires in Year 2 per model.</p>
+        <p className="text-sm text-gray-400">Applied to validation rewards for Mālama Genesis operators (Base + Cardano) in Year 1; expires in Year 2 per model.</p>
       </section>
     </div>
   )

@@ -97,7 +97,7 @@ export default function Phase1TimelinePage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-10"
       >
-        <p className="text-xs font-black uppercase tracking-widest text-violet-400 mb-2">Genesis 200</p>
+        <p className="text-xs font-black uppercase tracking-widest text-violet-400 mb-2">Mālama Genesis</p>
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
           Phase 1 Timeline
         </h1>

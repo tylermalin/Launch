@@ -153,7 +153,7 @@ export async function GET(
   <text x="70" y="456" text-anchor="middle" font-size="8" fill="#6B7280"
         font-family="monospace" letter-spacing="1">MLMA</text>
   <text x="70" y="474" text-anchor="middle" font-size="16" font-weight="900"
-        fill="#10B981" font-family="monospace">125K</text>
+        fill="#10B981" font-family="monospace">62.5K</text>
 
   <!-- Divider 1 -->
   <line x1="123" y1="442" x2="123" y2="480" stroke="#1F2937" stroke-width="1"/>

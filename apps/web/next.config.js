@@ -34,6 +34,35 @@ function mergeRootEnv() {
 
 mergeRootEnv()
 
+// ---------------------------------------------------------------------------
+// libsodium-sumo path resolution
+//
+// We cannot use require.resolve('libsodium-sumo/dist/…') because the package's
+// "exports" field doesn't list that subpath → ERR_PACKAGE_PATH_NOT_EXPORTED.
+// We also cannot use a hardcoded ../../node_modules path because Vercel may
+// install deps into apps/web/node_modules/ (Root Dir mode) or the monorepo
+// root, depending on workspace configuration.
+//
+// Solution: probe candidate locations with fs.existsSync so we bypass
+// Node's exports enforcement entirely.
+// ---------------------------------------------------------------------------
+const LIBSODIUM_SUMO_TAIL = 'libsodium-sumo/dist/modules-sumo-esm/libsodium-sumo.mjs'
+
+function findLibsodiumSumoMjs() {
+  const candidates = [
+    // Vercel workspace install — monorepo root node_modules
+    path.resolve(__dirname, '../../node_modules', LIBSODIUM_SUMO_TAIL),
+    // Vercel Root Dir install — apps/web/node_modules
+    path.resolve(__dirname, 'node_modules', LIBSODIUM_SUMO_TAIL),
+    // cwd fallback (wherever Vercel / npm sets process.cwd())
+    path.resolve(process.cwd(), 'node_modules', LIBSODIUM_SUMO_TAIL),
+    path.resolve(process.cwd(), '../../node_modules', LIBSODIUM_SUMO_TAIL),
+  ]
+  return candidates.find((p) => fs.existsSync(p)) ?? null
+}
+
+const libsodiumSumoMjs = findLibsodiumSumoMjs()
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['@meshsdk/core', '@sidan-lab/sidan-csl-rs-nodejs', '@magic-sdk/admin'],
@@ -42,8 +71,7 @@ const nextConfig = {
   turbopack: {
     resolveAlias: {
       'mapbox-gl': 'mapbox-gl',
-      // resolved dynamically in webpack config; turbopack uses the same canonical package location
-      './libsodium-sumo.mjs': require.resolve('libsodium-sumo/dist/modules-sumo-esm/libsodium-sumo.mjs'),
+      ...(libsodiumSumoMjs ? { './libsodium-sumo.mjs': libsodiumSumoMjs } : {}),
       '@react-native-async-storage/async-storage': './src/lib/stubs/async-storage-stub.js',
     },
   },
@@ -62,9 +90,6 @@ const nextConfig = {
     NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
   },
   webpack: (config) => {
-    const path = require('path')
-    // Mesh SDK / libsodium / WASM use async/await + top-level await; tell webpack the client supports them
-    // (avoids noisy "target environment does not appear to support async/await" warnings).
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,
@@ -80,19 +105,13 @@ const nextConfig = {
         module: true,
       },
     }
-    // Resolve libsodium-sumo via require.resolve so the path works regardless
-    // of whether node_modules is at apps/web/ (Vercel Root Dir mode) or the
-    // monorepo root (local workspace). The hardcoded ../../ path only works
-    // in local monorepo context and breaks on Vercel.
-    const libsodiumSumoDir = path.dirname(require.resolve('libsodium-sumo/package.json'));
     config.resolve.alias = {
       ...config.resolve.alias,
-      './libsodium-sumo.mjs': path.join(libsodiumSumoDir, 'dist/modules-sumo-esm/libsodium-sumo.mjs'),
-      // MetaMask SDK references React Native async-storage in browser bundle; not needed on web.
+      ...(libsodiumSumoMjs ? { './libsodium-sumo.mjs': libsodiumSumoMjs } : {}),
       '@react-native-async-storage/async-storage': path.resolve(__dirname, 'src/lib/stubs/async-storage-stub.js'),
-    };
-    return config;
+    }
+    return config
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

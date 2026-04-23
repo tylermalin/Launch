@@ -81,3 +81,22 @@ aiken check
 - [Protocol Specifications](docs/protocol/specs.md)
 - [Hardware Setup](docs/hardware/setup.md)
 
+## Deployment (Vercel)
+
+The frontend ([apps/web](apps/web)) deploys to Vercel. There are currently two Vercel projects linked to this repository:
+
+- `malamalaunch` — primary project, auto-deploys from `main`
+- `launch-malamalabs-com` — project owning the `launch.malamalabs.com` custom domain
+
+**Required Vercel dashboard configuration for both projects:**
+
+1. **Root Directory:** `apps/web`
+2. **Framework Preset:** Next.js (auto-detected)
+3. **Build Command:** (leave blank — use framework default `next build`)
+4. **Output Directory:** (leave blank — use framework default `.next`)
+5. **Install Command:** (leave blank — use framework default `npm install`)
+
+With both projects configured this way, no `vercel.json` is required at the repo root. Next.js auto-detection handles everything.
+
+If either project is misconfigured with Root Directory set to repo root, the build will fail with *"The Next.js output directory '.next' was not found"* because the monorepo root has no Next.js app. Fix via Project Settings → General → Root Directory.
+

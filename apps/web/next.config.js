@@ -42,7 +42,8 @@ const nextConfig = {
   turbopack: {
     resolveAlias: {
       'mapbox-gl': 'mapbox-gl',
-      './libsodium-sumo.mjs': '../../node_modules/libsodium-sumo/dist/modules-sumo-esm/libsodium-sumo.mjs',
+      // resolved dynamically in webpack config; turbopack uses the same canonical package location
+      './libsodium-sumo.mjs': require.resolve('libsodium-sumo/dist/modules-sumo-esm/libsodium-sumo.mjs'),
       '@react-native-async-storage/async-storage': './src/lib/stubs/async-storage-stub.js',
     },
   },
@@ -79,9 +80,14 @@ const nextConfig = {
         module: true,
       },
     }
+    // Resolve libsodium-sumo via require.resolve so the path works regardless
+    // of whether node_modules is at apps/web/ (Vercel Root Dir mode) or the
+    // monorepo root (local workspace). The hardcoded ../../ path only works
+    // in local monorepo context and breaks on Vercel.
+    const libsodiumSumoDir = path.dirname(require.resolve('libsodium-sumo/package.json'));
     config.resolve.alias = {
       ...config.resolve.alias,
-      './libsodium-sumo.mjs': path.resolve(__dirname, '../../node_modules/libsodium-sumo/dist/modules-sumo-esm/libsodium-sumo.mjs'),
+      './libsodium-sumo.mjs': path.join(libsodiumSumoDir, 'dist/modules-sumo-esm/libsodium-sumo.mjs'),
       // MetaMask SDK references React Native async-storage in browser bundle; not needed on web.
       '@react-native-async-storage/async-storage': path.resolve(__dirname, 'src/lib/stubs/async-storage-stub.js'),
     };

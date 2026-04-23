@@ -1,7 +1,7 @@
 <div style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background: #fff; padding: 40px; border-radius: 8px; border: 1px solid #e1e1e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-top: 8px;">
 
   <h1 style="color: #1a365d; border-bottom: 2px solid #1a365d; padding-bottom: 10px; font-size: 28px; margin-top: 0;">Hex Node Purchase &amp; Preorder Agreement</h1>
-  <p style="font-size: 13px; color: #718096; margin-top: -4px;">Mālama Labs Inc. &nbsp;·&nbsp; Effective Date: April 11, 2026 &nbsp;·&nbsp; Last Updated: April 11, 2026</p>
+  <p style="font-size: 13px; color: #718096; margin-top: -4px;">Mālama Labs Inc. &nbsp;·&nbsp; Effective Date: April 11, 2026 &nbsp;·&nbsp; Last Updated: April 23, 2026 (v2)</p>
 
   <p>This Hex Node Purchase &amp; Preorder Agreement ("Agreement") governs your purchase, reservation, or preorder of a Hex Node and any associated software, licenses, or services offered by Mālama Labs Inc. ("Mālama," "we," "us," or "our").</p>
   <p>This Agreement supplements and incorporates by reference the Mālama Terms and Conditions and Privacy Policy (collectively, the "Platform Terms"). In the event of conflict, this Agreement controls with respect to Hex Node purchases. By placing an order, reservation, or preorder, you ("Customer") agree to be bound by this Agreement.</p>
@@ -42,7 +42,24 @@
   <p>You are responsible for providing accurate shipping details, import duties, customs clearance, local compliance, and receiving the shipment. Unless otherwise required by law, risk of loss transfers upon delivery to the carrier.</p>
 
   <!-- 6 -->
-  <h2 style="color: #2c5282; margin-top: 36px; border-left: 4px solid #2c5282; padding-left: 14px; font-size: 20px;">6. Hardware Specifications and Changes</h2>
+  <h2 style="color: #2c5282; margin-top: 36px; border-left: 4px solid #2c5282; padding-left: 14px; font-size: 20px;">6. Protocol Parameters (Incorporated by Reference)</h2>
+  <p>Mālama Genesis Hex Node Licenses ("Licenses") are issued subject to the parameters published in the Mālama Protocol Whitepaper (as amended from time to time, the "Whitepaper"). The following protocol parameters are expressly incorporated into this Agreement as of the Last Updated date:</p>
+  <ul style="padding-left: 20px;">
+    <li><strong>Genesis supply.</strong> Four hundred (400) total Genesis Licenses, consisting of two hundred (200) ERC-721 Licenses on the Base network and two hundred (200) CIP-68 Licenses on the Cardano network. The two cohorts are independent; there is no bridging between chains.</li>
+    <li><strong>Hex exclusivity.</strong> Each License conveys the exclusive right to operate a sensor node within one H3 resolution-7 hex cell. No more than one active License may be issued per hex per chain.</li>
+    <li><strong>MLMA operator allocation.</strong> Sixty-two thousand five hundred (62,500) MLMA per License, with 25% vesting at verified hardware boot and 75% vesting linearly over twelve (12) months from that date.</li>
+    <li><strong>MLMA supply cap.</strong> The MLMA token has a hard supply cap of 500,000,000, enforced on-chain in the <code>MalamaOFT</code> contract.</li>
+    <li><strong>Deployment requirement; forfeiture.</strong> The Customer must install and activate the sensor associated with the License within ninety (90) days of the License issuance date. Licenses that are not activated within this window, and any unvested MLMA allocation associated with them, are automatically forfeited to the Mālama protocol treasury without refund. The 90-day window may be extended in Mālama's sole discretion on written request prior to expiration, for reasons such as verified shipping delay, permitting, or force majeure.</li>
+    <li><strong>Uptime and relocation.</strong> Active operators must maintain at least 90% uptime measured over any rolling 30-day window. Sensors may not be relocated outside the claimed hex; relocation invalidates the historical baseline and may result in reputation slashing or License suspension under protocol rules.</li>
+    <li><strong>Reward formula.</strong> MLMA operator rewards are computed per the formula described in the Whitepaper (Base rate × Data Quality Score × Geographic Multiplier × Uptime Factor × Pool Factor). Mālama does not guarantee any particular dollar or token return.</li>
+  </ul>
+  <p><strong>Governance updates.</strong> Certain parameters (including Geographic Multiplier coefficients, reward pool sizing, and methodology approvals) may be modified through veMLMA governance processes described in the Whitepaper. The following parameters are immutable and cannot be modified by governance: the 500M MLMA hard cap, the end of scheduled emissions after Year 3, the 400-License Genesis supply, and hex-exclusivity. Changes to immutable parameters would require a new contract deployment and separate Customer consent.</p>
+  <div style="background: #fff5f5; border-left: 4px solid #f56565; padding: 12px 16px; margin: 16px 0; font-size: 14px;">
+    <strong>NFT license scope.</strong> The Hex Node License NFT evidences a revocable, non-exclusive (as between Customer and Mālama but exclusive as to the claimed hex cell) license to operate a sensor node within the claimed hex cell for so long as the Customer remains in compliance with this Agreement and the Whitepaper. The License NFT does not convey: (i) real property rights in the geographic area represented by the hex; (ii) equity, membership, or partnership interests in Mālama Labs Inc.; (iii) a claim on Mālama Labs' revenue; or (iv) a guaranteed allocation of MLMA tokens independent of deployment and performance. License NFTs are transferable; the transferee inherits all obligations under this Agreement including deployment timing and uptime requirements, and the transferee's transfer does not reset vesting or the 90-day deployment window.</p>
+  </div>
+
+  <!-- 6A -->
+  <h2 style="color: #2c5282; margin-top: 36px; border-left: 4px solid #2c5282; padding-left: 14px; font-size: 20px;">6A. Hardware Specifications and Changes</h2>
   <p>Hex Nodes are evolving technical products. Mālama reserves the right to update specifications, change components, improve performance, and modify firmware or software requirements. Such changes do not constitute a breach of this Agreement, provided the core intended function of the node is materially preserved.</p>
   <p>Images, diagrams, and marketing materials are illustrative and may not reflect final production units.</p>
 

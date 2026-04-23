@@ -56,7 +56,8 @@ Required keys: MAPBOX_TOKEN, PINATA_API_KEY, PINATA_API_SECRET, KAFKA_BOOTSTRAP,
 
 - 52 protocol invariants documented in `docs/audit/invariants.md`
 - Sensor reputation [0-100], auto-quarantine below 50, settlement requires >= 80
-- Genesis NFT hard cap: 300 (CIP-68 paired tokens)
+- Genesis NFT hard cap: 200 Base (ERC-721) + 200 Cardano (CIP-68) = 400 total
+- $MALAMA total supply cap: 500M (enforced in MalamaOFT.sol)
 - 30-day minting epochs, 10M $MALAMA cap per epoch
 - 2-hour challenge window on data submissions
 - Confidence >= 0.8 (8000 bps) required for carbon credit minting

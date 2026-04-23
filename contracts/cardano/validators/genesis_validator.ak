@@ -57,7 +57,7 @@ validator genesis_validator {
         expect datum: GenesisValidatorDatum = datum_data
         let meta = datum.extra
         
-        expect meta.genesis_number >= 1 && meta.genesis_number <= 300
+        expect meta.genesis_number >= 1 && meta.genesis_number <= 200
         expect meta.status == Pending
         expect has_required_signer(transaction, meta.buyer_pkh)
         True

@@ -9,6 +9,9 @@
     "packages/sdk"
   ],
   "scripts": {
+    "dev": "npm run dev --workspace apps/web",
+    "build": "npm run build --workspace apps/web",
+    "start": "npm run start --workspace apps/web",
     "test:all": "npm run test --workspaces --if-present",
     "lint:all": "npm run lint --workspaces --if-present",
     "build:all": "npm run build --workspaces --if-present"

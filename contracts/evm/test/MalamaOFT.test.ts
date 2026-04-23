@@ -35,16 +35,46 @@ describe("MalamaOFT", function () {
     expect(await oft.decimals()).to.equal(18);
   });
 
-  it("2. mints 1B to deployer", async function () {
-    const supply = await oft.totalSupply();
-    const expected = ethers.parseEther("1000000000");
-    expect(supply).to.equal(expected);
-    expect(await oft.balanceOf(admin.address)).to.equal(expected);
+  it("2. starts at zero supply (no constructor pre-mint)", async function () {
+    expect(await oft.totalSupply()).to.equal(0n);
+    expect(await oft.balanceOf(admin.address)).to.equal(0n);
+  });
+
+  it("2a. MAX_TOTAL_SUPPLY is 500M", async function () {
+    expect(await oft.MAX_TOTAL_SUPPLY()).to.equal(ethers.parseEther("500000000"));
+  });
+
+  it("2b. initialMint distributes to allocation targets", async function () {
+    const amount = ethers.parseEther("100000000"); // 100M (treasury-sized)
+    await oft.connect(admin).initialMint(user.address, amount);
+    expect(await oft.balanceOf(user.address)).to.equal(amount);
+    expect(await oft.totalSupply()).to.equal(amount);
+  });
+
+  it("2c. initialMint rejects non-owner", async function () {
+    const amount = ethers.parseEther("1000");
+    await expect(oft.connect(user).initialMint(user.address, amount))
+      .to.be.revertedWithCustomError(oft, "OwnableUnauthorizedAccount");
+  });
+
+  it("2d. initialMint rejects amounts exceeding MAX_TOTAL_SUPPLY", async function () {
+    const over = ethers.parseEther("500000001");
+    await expect(oft.connect(admin).initialMint(user.address, over))
+      .to.be.revertedWithCustomError(oft, "SupplyCapExceeded");
+  });
+
+  it("2e. finalizeInitialMint closes the initial-mint phase", async function () {
+    await oft.connect(admin).initialMint(user.address, ethers.parseEther("1000"));
+    await oft.connect(admin).finalizeInitialMint();
+    expect(await oft.initialMintFinalized()).to.equal(true);
+    await expect(
+      oft.connect(admin).initialMint(user.address, ethers.parseEther("1"))
+    ).to.be.revertedWithCustomError(oft, "InitialMintClosed");
   });
 
   it("3. burnForBME reduces supply", async function () {
     const amount = ethers.parseEther("100");
-    await oft.connect(admin).transfer(oracle.address, amount);
+    await oft.connect(admin).initialMint(oracle.address, amount);
 
     const initialSupply = await oft.totalSupply();
     await oft.connect(oracle).burnForBME(amount);
@@ -55,7 +85,7 @@ describe("MalamaOFT", function () {
 
   it("4. burnForBME emits BMEBurn event", async function () {
     const amount = ethers.parseEther("100");
-    await oft.connect(admin).transfer(oracle.address, amount);
+    await oft.connect(admin).initialMint(oracle.address, amount);
 
     await expect(oft.connect(oracle).burnForBME(amount))
       .to.emit(oft, "BMEBurn")
@@ -86,6 +116,22 @@ describe("MalamaOFT", function () {
     await ethers.provider.send("evm_mine", []);
 
     await expect(oft.connect(rDistributor).mintReward(user.address, max)).to.not.be.reverted;
+  });
+
+  it("7a. mintReward reverts when total supply cap would be exceeded", async function () {
+    // Pre-fill total supply to just under the cap via initialMint
+    const cap = await oft.MAX_TOTAL_SUPPLY();
+    const preMint = cap - ethers.parseEther("500"); // leave 500 headroom
+    await oft.connect(admin).initialMint(user.address, preMint);
+
+    // A 1000-MLMA reward now exceeds the cap even though within per-epoch limit
+    await expect(
+      oft.connect(rDistributor).mintReward(user.address, ethers.parseEther("1000"))
+    ).to.be.revertedWithCustomError(oft, "SupplyCapExceeded");
+
+    // A 500-MLMA reward fills exactly to the cap and succeeds
+    await oft.connect(rDistributor).mintReward(user.address, ethers.parseEther("500"));
+    expect(await oft.totalSupply()).to.equal(cap);
   });
 
   it("8. OFT: cross-chain send reduces balance on source", async function () {

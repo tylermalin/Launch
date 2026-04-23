@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const hexId = decodeURIComponent(raw)
   return {
     title: `Genesis hex ${hexId.slice(0, 10)}… | Mālama Labs`,
-    description: 'Genesis 200 hex node license detail, NFT preview, boundary, score, and terms.',
+    description: 'Mālama Genesis hex node license detail, NFT preview, boundary, score, and terms.',
   }
 }
 

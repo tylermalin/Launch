@@ -4,7 +4,7 @@ import DocsLayout from '@/components/docs/DocsLayout'
 export const metadata: Metadata = {
   title: 'Documentation | Mālama Labs',
   description:
-    'MLMA tokenomics, Genesis 200 pricing and ROI, Phase 1 timeline, and operator documentation for the Mālama environmental data network.',
+    'MLMA tokenomics, Mālama Genesis pricing and reward mechanics, Phase 1 timeline, and operator documentation for the Mālama environmental data network.',
 }
 
 export default function DocsRootLayout({ children }: { children: React.ReactNode }) {

@@ -78,7 +78,7 @@ const phases: {
     items: [
       'Pre-sale officially begins — reserve your Genesis node for $2,000.',
       'Pre-qualification confirms region availability, capital, and shipping constraints via the main portal.',
-      'Pay entry cost and receive your NFT-HEX + 125K MLMA allocation on-chain.',
+      'Pay entry cost and receive your NFT-HEX + 62,500 MLMA allocation on-chain.',
       'Hardware pre-order is queued. Ships in September 2026.',
     ],
     cta: { label: 'Reserve with Crypto or Card', href: '/presale' },
@@ -110,7 +110,7 @@ const phases: {
     items: [
       'Secure connection string booting takes ~30 minutes from power-on.',
       'The node connects to the Mālama DePIN network and registers its ATECC608B device key.',
-      '25% token allocation (31,250 MLMA) vests instantly on first verified boot.',
+      '25% token allocation (15,625 MLMA) vests instantly on first verified boot.',
       'Node appears on the live network map as “Active” — data validation begins immediately.',
     ],
     cta: null,
@@ -125,9 +125,9 @@ const phases: {
     badge: 'Revenue',
     items: [
       'Network metrics flow live across the DePIN — validation checks process continuously.',
-      'Earn 8–100K MLMA/month depending on hex demand and geographic multiplier.',
-      '75% monthly vesting unlocks commence — ~7,813 MLMA/month for 12 months.',
-      'Payback on $2,000 entry: 2 weeks (high demand) · 4 weeks (medium) · 12 weeks (low).',
+      'Earn MLMA based on Geographic Multiplier (0.5×–3.0×), Data Quality Score, and uptime. No projected returns.',
+      '75% monthly vesting unlocks commence — ~3,906 MLMA/month for 12 months.',
+      'Operator economics depend on data demand in your hex and MLMA market price. See whitepaper for mechanics.',
     ],
     cta: { label: 'View Economics', href: '/#economics' },
   },
@@ -144,7 +144,7 @@ export default function TimelinePage() {
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
           className="inline-flex items-center px-4 py-1.5 mb-8 text-xs font-black uppercase tracking-widest text-malama-accent border border-malama-accent/30 rounded-full bg-malama-accent/10">
           <span className="w-2 h-2 rounded-full bg-malama-accent animate-pulse mr-2" />
-          Genesis 200 — Phase 1 Roadmap
+          Mālama Genesis — Phase 1 Roadmap
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
@@ -265,9 +265,9 @@ export default function TimelinePage() {
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:ml-20">
           {[
             { label: 'Entry Price', value: '$2,000', sub: 'One-time at reserve' },
-            { label: 'MLMA Allocation', value: '125K', sub: '25% at boot · 75% vested' },
+            { label: 'MLMA Allocation', value: '62.5K', sub: '25% at boot · 75% vested' },
             { label: 'First Rewards', value: 'Oct 2026', sub: 'Early-mid month' },
-            { label: 'Payback', value: '2-12 wks', sub: 'Demand dependent' },
+            { label: 'Revenue onset', value: 'Oct 2026', sub: 'First rewards accrue' },
           ].map(({ label, value, sub }) => (
             <div key={label} className="bg-[#0d1e35] border border-gray-800 rounded-xl p-4 text-center">
               <div className="text-gray-500 text-xs uppercase tracking-widest mb-1">{label}</div>

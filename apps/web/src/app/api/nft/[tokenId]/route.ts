@@ -42,7 +42,7 @@ export async function GET(
     name: claim
       ? `Mālama Hex Node License ${claim.claimId}`
       : `Mālama Hex Node License · #${String(edition).padStart(3, '0')} (${zone})`,
-    description: `Genesis 200 validator node license. ${claimId ? `Claim ${claimId}. ` : ''}Territory: ${hexId} (${zone}). Exclusive geographic rights on the Mālama DePIN network. 125,000 MLMA allocation vests at first hardware boot. Revenue begins October 2026.`,
+    description: `Mālama Genesis validator node license. ${claimId ? `Claim ${claimId}. ` : ''}Territory: ${hexId} (${zone}). Exclusive geographic rights on the Mālama DePIN network. 62,500 MLMA allocation vests per operator schedule after verified hardware boot. Revenue begins October 2026.`,
     image: `${baseUrl}/api/nft/${tokenId}/image?${imageQuery.toString()}`,
     external_url: `${baseUrl}/map`,
     animation_url: null,
@@ -54,10 +54,11 @@ export async function GET(
       { trait_type: 'Hex ID', value: hexId },
       { trait_type: 'Zone', value: zone },
       { trait_type: 'Edition #', value: edition, display_type: 'number' },
-      { trait_type: 'Edition', value: 'Genesis 200' },
+      { trait_type: 'Edition', value: 'Mālama Genesis' },
       { trait_type: 'Chain', value: chain === 'base' ? 'Base (EVM)' : 'Cardano' },
+      { trait_type: 'Cohort', value: chain === 'base' ? '200 Base' : '200 Cardano' },
       { trait_type: 'On-chain token', value: onChainTokenLabel },
-      { trait_type: 'MLMA Allocation', value: '125,000 MLMA' },
+      { trait_type: 'MLMA Allocation', value: '62,500 MLMA' },
       { trait_type: 'Entry Price', value: '$2,000 USDC' },
       { trait_type: 'Vesting', value: '25% at boot · 75% over 12 months' },
       { trait_type: 'Revenue Start', value: 'October 2026' },

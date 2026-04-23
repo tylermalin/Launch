@@ -48,7 +48,7 @@ export default function Home() {
             className="eyebrow mb-8 inline-flex items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.15em] text-malama-accent"
           >
             <span className="h-2 w-2 animate-malama-live rounded-full bg-malama-accent" />
-            Genesis 200 Scarcity Edition
+            Mālama Genesis · 200 Base + 200 Cardano
           </motion.div>
 
           <motion.h1
@@ -70,8 +70,8 @@ export default function Home() {
             custom={2}
             className="mb-8 max-w-2xl text-[19px] leading-relaxed text-malama-ink-dim"
           >
-            A Hex Node validates environmental data on shared protocol. Real-time verified evidence.
-            Predictable revenue. Indigenous stewardship built in.
+            A Hex Node validates environmental data on shared protocol. Hardware-signed evidence.
+            Demand-scaled rewards. Indigenous stewardship built in.
           </motion.p>
 
           <motion.div
@@ -81,9 +81,9 @@ export default function Home() {
             custom={3}
             className="mb-10 w-full max-w-xl border-l-4 border-malama-accent bg-malama-accent/10 p-5 text-left rounded-malama"
           >
-            <p className="mb-1 text-base font-semibold text-malama-accent">Genesis 200 — $2,000 per node</p>
+            <p className="mb-1 text-base font-semibold text-malama-accent">Mālama Genesis — $2,000 per node</p>
             <p className="text-sm leading-relaxed text-malama-ink-dim">
-              Limited to 200 validators in key geographic zones. Allocation closes when sold or June 2026.
+              400 Hex Node Licenses total: 200 on Base (ERC-721) and 200 on Cardano (CIP-68). Allocation closes when sold or June 2026.
             </p>
           </motion.div>
 
@@ -172,7 +172,7 @@ export default function Home() {
             Genesis Node Economics
           </motion.h2>
           <p className="mb-12 text-center text-malama-ink-dim">
-            200 nodes allocated globally. $2,000 entry. Three reward streams. Payback in 2-3 months.
+            200 Base + 200 Cardano Genesis nodes. $2,000 entry. Three reward streams. Operators earn MLMA for validated data contributions.
           </p>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -184,23 +184,23 @@ export default function Home() {
               },
               {
                 title: 'Your MLMA Allocation',
-                value: '125K MLMA',
+                value: '62.5K MLMA',
                 desc: '25% vests at hardware boot. 75% vests monthly over 12 months. Lock as veMLMA for governance weight.',
               },
               {
-                title: 'Allocation Value',
-                value: '$12.5K–37.5K',
-                desc: 'At $0.10–0.30/MLMA launch price. Actual price depends on investor demand and network revenue maturity.',
+                title: 'Genesis Share of Supply',
+                value: '5%',
+                desc: '400 Genesis operators (200 Base + 200 Cardano) × 62,500 MLMA = 25M total, of a 500M hard-capped supply.',
               },
               {
                 title: 'Monthly Rewards',
-                value: '8–100K MLMA',
-                desc: 'Validation earnings depend on hex demand and geographic multiplier. Scenarios shown below.',
+                value: 'Demand-scaled',
+                desc: 'Validation earnings scale with Geographic Multiplier (0.5×–3.0×), Data Quality Score, and uptime. No guaranteed earnings.',
               },
               {
-                title: 'Payback Timeline',
-                value: '2–12 weeks',
-                desc: 'Entry cost recovers in 2 weeks (high demand), 4 weeks (medium), or 12 weeks (low demand).',
+                title: 'Reward Formula',
+                value: 'B × DQS × GM × UF',
+                desc: 'Base rate × Data Quality Score × Geographic Multiplier × Uptime Factor. Full formula in the whitepaper.',
               },
               {
                 title: 'Revenue Onset',
@@ -258,32 +258,30 @@ export default function Home() {
             viewport={{ once: true }}
             className="mt-16 rounded-malama border border-malama-line bg-malama-bg p-8"
           >
-            <h3 className="mb-2 font-serif text-xl text-malama-accent">Year 1 Illustrative Earnings</h3>
+            <h3 className="mb-2 font-serif text-xl text-malama-accent">Reward Mechanics</h3>
             <p className="mb-8 text-sm text-malama-ink-faint">
-              200 Genesis nodes · 10–50 validations/hex/day · geographic multipliers 0.5×–3.0× · 99.9% uptime bonus
-              active. <em>Earnings depend entirely on data inflow.</em>
+              400 Genesis nodes · 10–50 validations/hex/day · Geographic Multipliers 0.5×–3.0× · 99.9% uptime bonus
+              active. <em>Operators should model expectations conservatively. No projected returns are guaranteed.</em>
             </p>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {[
-                { label: 'Low Demand Hex', range: '~8–15K', payback: '6–12 weeks', yr1: '$39K–52K' },
-                { label: 'Medium Demand Hex', range: '~25–40K', payback: '1–4 weeks', yr1: '$73K–103K' },
-                { label: 'High Demand Hex', range: '~50–100K', payback: '<1 week', yr1: '$123K–223K' },
-              ].map(({ label, range, payback, yr1 }) => (
+                { label: 'Low Demand Hex', range: '0.5×–1.0×', desc: 'Rural, low-priority zones with lower baseline validation volume.' },
+                { label: 'Medium Demand Hex', range: '1.0×–2.0×', desc: 'Agricultural or moderately-served regions. Balanced reward and validation frequency.' },
+                { label: 'High Demand Hex', range: '2.0×–3.0×', desc: 'Strategic zones: industrial corridors, data centers, coastal wetlands, flood-prone agricultural hexes.' },
+              ].map(({ label, range, desc }) => (
                 <div key={label} className="rounded-malama border border-malama-line bg-malama-elev p-5">
                   <div className="mb-1 font-mono text-[10px] uppercase tracking-wider text-malama-ink-faint">{label}</div>
                   <div className="font-serif text-3xl text-malama-accent">{range}</div>
                   <div className="mb-3 font-mono text-[10px] uppercase tracking-wider text-malama-ink-faint">
-                    MLMA per month
+                    Geographic Multiplier
                   </div>
-                  <div className="text-sm text-malama-ink-dim">
-                    Payback: <span className="font-semibold text-malama-ink">{payback}</span>
-                  </div>
-                  <div className="mt-1 text-xs text-malama-ink-faint">
-                    Year 1: <span className="text-malama-ink-dim">{yr1}</span> (at $0.20/MLMA)
-                  </div>
+                  <div className="text-sm text-malama-ink-dim">{desc}</div>
                 </div>
               ))}
             </div>
+            <p className="mt-6 text-xs text-malama-ink-faint italic">
+              Mālama does not publish token price forecasts or operator payback timelines. For reference, the closest public comparable (WeatherXM) reports actual monthly station earnings ranging widely by location and token price. Operators should consult the whitepaper and model their own scenarios.
+            </p>
           </motion.div>
         </div>
       </section>
@@ -308,7 +306,7 @@ export default function Home() {
                   'Visit malamalabs.com/genesis',
                   'Complete pre-qualification (capital, region)',
                   'Pay $2,000 entry cost',
-                  'Receive NFT-HEX + 125K MLMA allocation',
+                  'Receive NFT-HEX + 62,500 MLMA allocation',
                   'Hardware pre-order ships in September',
                 ],
               },
@@ -378,23 +376,23 @@ export default function Home() {
           {[
             {
               q: 'What does the $2,000 entry cost include?',
-              a: 'Hardware covers a Raspberry Pi Zero 2W, atmospheric sensors, weatherproof enclosure, solar UPS, and secure enclave. The license covers exclusive geographic rights to your hex, Genesis 200 MLMA allocation, platform infrastructure, and 12 months of support. You pay once at reserve (May 2026). Hardware ships in September 2026.',
+              a: 'Hardware covers a Raspberry Pi Zero 2W, atmospheric sensors, weatherproof enclosure, solar UPS, and secure enclave. The license covers exclusive geographic rights to your hex, Mālama Genesis MLMA allocation, platform infrastructure, and 12 months of support. You pay once at reserve (May 2026). Hardware ships in September 2026.',
             },
             {
-              q: 'When do I receive my 125K MLMA tokens?',
-              a: '25% (31,250 MLMA) vests when your hardware boots and you register. The remaining 75% (93,750 MLMA) vests linearly over 12 months at ~7,813 MLMA/month. After 12 months, all tokens are fully unlocked.',
+              q: 'When do I receive my 62,500 MLMA tokens?',
+              a: '25% (15,625 MLMA) vests when your hardware boots and you register. The remaining 75% (46,875 MLMA) vests linearly over 12 months at ~3,906 MLMA/month. After 12 months, all tokens are fully unlocked. Operators who do not deploy within 90 days forfeit their license and allocation.',
             },
             {
-              q: 'How quickly will I recover my $2,000 entry cost?',
-              a: 'Low-demand zones: 6–12 weeks. Medium-demand zones: 1–4 weeks. High-demand zones: less than 1 week. All scenarios assume rewards accrue from early-mid October at $0.10–0.20/MLMA.',
+              q: 'Will I recover my $2,000 entry cost?',
+              a: 'Mālama Labs does not publish token price forecasts or payback-period claims. Operator economics depend on your Geographic Multiplier, your Data Quality Score, uptime, MLMA market price (which may go up or down), and actual data demand in your hex. Operators should model conservative scenarios. For a public comparable, WeatherXM publishes historical station earnings that vary widely by location and token price.',
             },
             {
               q: 'When do I start earning rewards?',
               a: 'Reserve by May 31, 2026. Hardware ships September. You deploy in late September / early October. First MLMA rewards accrue in early-mid October 2026.',
             },
             {
-              q: 'Why only 200 nodes?',
-              a: 'Scarcity ensures geographic multiplier premium and prevents oversupply. Helium deployed 500K+ nodes and collapsed operator returns. We are demand-first: 200 nodes in key zones with pre-screened carbon projects, Smart City Demand, AI Data Center locations or active Climate Prediction Markets which our Nodes can offer Settlement. Genesis 200 ends when sold or June 2026. Phase 2 (2027+) expands at lower initial multipliers.',
+              q: 'Why 200 per chain?',
+              a: 'Mālama Genesis is a symmetric launch: 200 Hex Node Licenses on Base and 200 on Cardano, 400 total. Scarcity ensures geographic multiplier premium and prevents oversupply. Helium deployed 500K+ nodes and collapsed operator returns. We are demand-first: 400 nodes in key zones supporting carbon projects, AI data-center monitoring, climate prediction-market settlement, and industrial emissions monitoring. Allocation closes when sold or June 2026. Phase 2 (2027+) expands at lower initial multipliers.',
             },
             {
               q: 'How do geographic multipliers work?',
@@ -435,7 +433,7 @@ export default function Home() {
             className="eyebrow mb-6 inline-flex items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.15em] text-malama-accent"
           >
             <span className="h-2 w-2 animate-malama-live rounded-full bg-malama-accent" />
-            200 nodes · Allocation closes June 2026
+            400 nodes (200 Base + 200 Cardano) · Allocation closes June 2026
           </motion.div>
 
           <motion.h2
@@ -451,7 +449,7 @@ export default function Home() {
             Three steps: pick your territory, connect how you want to pay, then lock in your Genesis license.
           </p>
           <p className="mx-auto mb-12 max-w-2xl leading-relaxed text-malama-ink-dim">
-            Choose a hex from the 200 Genesis Hex Node licenses available for early supporters. Connect an EVM or
+            Choose a hex from the 400 Mālama Genesis Hex Node licenses available for early supporters (200 Base + 200 Cardano). Connect an EVM or
             Cardano wallet — or use a custodial wallet with email. Reserve with crypto or fiat (credit/debit card).
             Hardware ships September. Revenue starts October.
           </p>
@@ -461,7 +459,7 @@ export default function Home() {
               {
                 step: '01',
                 title: 'Choose a Hex',
-                desc: 'Pick one of the 200 Genesis Hex Node licenses available for early supporters. Browse the live map and claim your territory before it’s gone.',
+                desc: 'Pick one of the 400 Mālama Genesis Hex Node licenses available for early supporters (200 Base + 200 Cardano). Browse the live map and claim your territory before it’s gone.',
                 icon: '🗺️',
                 href: '/map',
                 cta: 'Browse the map →',
@@ -477,7 +475,7 @@ export default function Home() {
               {
                 step: '03',
                 title: 'Reserve your hex',
-                desc: 'Pay the $2,000 entry with crypto (e.g. USDC on Base) or fiat via credit/debit card. Your NFT-HEX and 125K MLMA allocation follow on-chain.',
+                desc: 'Pay the $2,000 entry with crypto (e.g. USDC on Base) or fiat via credit/debit card. Your NFT-HEX and 62,500 MLMA allocation follow on-chain.',
                 icon: '💳',
                 href: '/presale',
                 cta: 'Reserve with crypto or card →',

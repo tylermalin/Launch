@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server'
 import { randomUUID } from 'crypto'
 import Stripe from 'stripe'
+import { cookies } from 'next/headers'
 import regionsData from '@/data/regions.json'
 import { buildGenesisHexListItems } from '@/lib/genesis-hexes'
 import { getClaimByHex } from '@/lib/genesis-claim-registry'
 import { setSessionProcessing, lockHexForMagicCheckout } from '@/lib/custodial-store'
 import { getCardCustodyMode } from '@/lib/card-custody'
 import { getStripeSecretKey } from '@/lib/stripe-server'
+
+const KOL_ID_RE = /^[a-zA-Z0-9_-]{1,48}$/
 
 export const runtime = 'nodejs'
 
@@ -22,10 +25,20 @@ export async function POST(req: Request) {
       )
     }
 
-    const { hexId, email } = (await req.json()) as { hexId?: string; email?: string }
+    const { hexId, email, referrerId: bodyRef } = (await req.json()) as {
+      hexId?: string
+      email?: string
+      referrerId?: string
+    }
     if (!hexId || !email) {
       return NextResponse.json({ error: 'hexId and email are required' }, { status: 400 })
     }
+
+    // Resolve referrer: body param takes precedence over cookie (cookie set by ReferralCapture)
+    const cookieStore = await cookies()
+    const cookieRef = cookieStore.get('malama_ref')?.value
+    const rawRef = bodyRef || cookieRef
+    const referrerId = rawRef && KOL_ID_RE.test(rawRef) ? rawRef : undefined
     const emailNorm = email.trim().toLowerCase()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNorm)) {
       return NextResponse.json({ error: 'Valid email required' }, { status: 400 })
@@ -66,6 +79,7 @@ export async function POST(req: Request) {
         hexId,
         email: emailNorm,
         transferToken,
+        ...(referrerId ? { referrerId } : {}),
       },
     })
 

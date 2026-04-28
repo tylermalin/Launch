@@ -19,6 +19,8 @@ export type CustodialRecord = {
   custody: 'server' | 'magic'
   /** Stripe Checkout session id (magic custody) — for /launch recovery links */
   stripeCheckoutSessionId?: string
+  /** KOL partner id who referred this purchase (?ref=<kolId>) */
+  referrerId?: string
 }
 
 /** Paid card purchase — mint completes after Magic Email OTP on /launch */
@@ -105,6 +107,8 @@ export type PendingStripeFulfillment = {
   /** Raw hex private key — only in memory until mint succeeds */
   privateKey: `0x${string}`
   transferToken: string
+  /** KOL partner id who referred this purchase */
+  referrerId?: string
 }
 
 const pendingStripeFulfillment = new Map<string, PendingStripeFulfillment>()

@@ -210,6 +210,32 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
   const handleBasePayment = async () => {
     if (!publicClient || !evmAddress || !hexId) throw new Error('Wallet or hex not ready')
 
+    // 0. Enforce Base Sepolia — switch if needed
+    const eth = (window as any).ethereum
+    if (eth) {
+      const currentChain: string = await eth.request({ method: 'eth_chainId' })
+      if (currentChain !== '0x14a34') {
+        try {
+          await eth.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x14a34' }] })
+        } catch (switchErr: any) {
+          if (switchErr.code === 4902) {
+            await eth.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: '0x14a34',
+                chainName: 'Base Sepolia',
+                nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+                rpcUrls: ['https://sepolia.base.org'],
+                blockExplorerUrls: ['https://sepolia.basescan.org'],
+              }],
+            })
+          } else {
+            throw new Error('Please switch to Base Sepolia in your wallet')
+          }
+        }
+      }
+    }
+
     // 1. Reserve in global claim registry
     setEvmTxStatus('claiming')
     const claimRes = await fetch('/api/nft/claim', {

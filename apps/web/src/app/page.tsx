@@ -75,7 +75,7 @@ export default function Home() {
             custom={3}
             className="mb-10 max-w-3xl text-[19px] leading-relaxed text-malama-ink-dim"
           >
-            Mālama Labs is the hardware-signed trust anchor for physical-world data. Every environmental market, every emissions disclosure, every ESG claim, every parametric insurance payout, and every supply-chain attestation depends on one thing: knowing what is actually happening in the physical world. For thirty years, that knowledge came from estimates, models, self-reports, and annual audits. We replaced estimation with cryptographically signed sensors. Each reading is signed at the device by a key burned into hardware at manufacture, anchored on-chain, and verifiable by anyone. Carbon proved the pipeline works. AI compute scales it. Water, supply chain, biodiversity, and grid follow.
+            Mālama Labs is the hardware-signed trust anchor for physical-world data. Every environmental market, every emissions disclosure, every ESG claim, every parametric insurance payout, and every supply-chain attestation depends on one thing: knowing what is actually happening in the physical world. For thirty years, that knowledge came from estimates, models, self-reports, and annual audits. We replaced estimation with cryptographically signed sensors.
           </motion.p>
 
           <motion.div
@@ -86,19 +86,40 @@ export default function Home() {
             className="mb-12 flex w-full flex-col justify-center gap-4 sm:flex-row"
           >
             <Link
-              href="https://www.malamalabs.com/stake/"
+              href="/presale"
               className="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-malama-bg shadow-[0_8px_24px_rgba(196,240,97,0.2)] transition hover:-translate-y-0.5"
             >
-              Join our waitlist →
+              Reserve a Hex Node · Opens May 2 →
             </Link>
             <Link
-              href="/contact"
+              href="mailto:hello@malamalabs.com?subject=Inquiry"
               className="btn-ghost inline-flex items-center justify-center gap-2 border border-malama-line-bright px-7 py-4 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-malama-ink transition hover:border-malama-accent hover:text-malama-accent"
             >
               Schedule a Call
             </Link>
           </motion.div>
 
+          {/* Key Stats */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            custom={5}
+            className="grid w-full max-w-4xl grid-cols-2 gap-4 sm:grid-cols-4"
+          >
+            {[
+              { label: 'SaveCards on-chain', value: '2,786+', sub: 'since June 2024' },
+              { label: 'Dallas pilot node', value: 'Live', sub: 'op5pro-field-a' },
+              { label: 'Genesis Hex Nodes', value: '200', sub: 'hard cap' },
+              { label: 'Pre-sale opens', value: 'May 2', sub: '2026' },
+            ].map(({ label, value, sub }) => (
+              <div key={label} className="card-hover rounded-malama border border-malama-line bg-malama-elev/60 p-5 text-center backdrop-blur">
+                <div className="font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">{label}</div>
+                <div className="my-2 font-serif text-2xl text-malama-accent">{value}</div>
+                <div className="font-mono text-[9px] uppercase tracking-wider text-malama-ink-dim">{sub}</div>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
@@ -404,11 +425,14 @@ export default function Home() {
               <div className="mb-4 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-ink-dim">03 / Node Operators</div>
               <h3 className="mb-4 font-serif text-2xl text-malama-ink">Hex Node Validators</h3>
               <p className="mb-4 text-sm leading-relaxed text-malama-ink-dim">
-                Run a Hex Node in an H3 geographic cell and validate carbon SaveCards, AI compute packets, and future physical-world data types. Earn MLMA verification yield, uptime multipliers, and governance weight in the Mālama DAO.
+                Run a Hex Node in an H3 geographic cell and validate carbon SaveCards, AI compute packets, and future physical-world data types. Receive MLMA rewards for validation work, uptime performance, and governance participation in the Mālama DAO.
+              </p>
+              <p className="mb-8 text-sm leading-relaxed text-malama-ink-dim">
+                Rewards are competitive and relative to the active validator set, not fixed. Genesis 200 Phase 1 opens May 2, 2026. Year 1 economics reflect a deliberate cold-start bootstrapping phase. Not steady-state returns.
               </p>
               <div className="mt-auto pt-4">
-                <Link href="https://www.malamalabs.com/stake/" className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-malama-ink hover:text-malama-ink-dim">
-                  Join our waitlist →
+                <Link href="/presale" className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-malama-ink hover:text-malama-ink-dim">
+                  Reserve a Node · Opens May 2 →
                 </Link>
               </div>
             </motion.div>
@@ -627,7 +651,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 07 · NETWORK CTA ───────────────────────────────────────── */}
+      {/* ── 07 · RESERVE CTA ───────────────────────────────────────── */}
       <section id="reserve" className="w-full border-t border-malama-line bg-malama-elev px-5 py-[120px] sm:px-10">
         <div className="mx-auto max-w-[1400px]">
           <motion.div
@@ -637,28 +661,59 @@ export default function Home() {
             viewport={{ once: true }}
             className="mx-auto max-w-4xl text-center"
           >
+            <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-malama-accent">
+              Genesis 200 · Phase 1 · Opens May 2, 2026
+            </p>
             <h2 className="mb-6 font-serif text-[clamp(2.5rem,5vw,4.5rem)] font-normal leading-tight tracking-tight text-malama-ink">
-              Own the infrastructure
+              Own the validation layer
               <br />
-              <em className="font-light italic text-malama-accent">of truth.</em>
+              <em className="font-light italic text-malama-accent">of a real-world data network.</em>
             </h2>
             <p className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-malama-ink-dim">
-              Each Hex Node validates carbon SaveCards and AI compute packets across the Mālama network. Get updates—learn first when we open in the coming days.
+              Each Hex Node validates carbon SaveCards and AI compute packets across the Mālama network. 195 nodes available to external operators. Hard cap of 200.
             </p>
+
+            <div className="mx-auto mb-12 grid max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
+              {[
+                { label: 'Entry per node', value: '$2,000' },
+                { label: 'MLMA allocation', value: '125,000', sub: 'per operator' },
+                { label: 'First rewards', value: 'Oct 2026' },
+                { label: 'Last emission', value: 'Year 3' },
+              ].map(({ label, value, sub }) => (
+                <div key={label} className="card-hover rounded-malama border border-malama-line bg-malama-bg p-5 text-center">
+                  <div className="font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">{label}</div>
+                  <div className="my-2 font-serif text-2xl text-malama-accent">{value}</div>
+                  {sub && <div className="font-mono text-[9px] uppercase tracking-wider text-malama-ink-dim">{sub}</div>}
+                </div>
+              ))}
+            </div>
 
             <div className="mb-16 flex flex-col justify-center gap-4 sm:flex-row">
               <Link
-                href="https://www.malamalabs.com/stake/"
+                href="/presale"
                 className="btn-primary inline-flex items-center justify-center gap-2 px-8 py-5 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-malama-bg shadow-[0_8px_30px_rgba(196,240,97,0.25)] transition hover:-translate-y-0.5"
               >
-                Join our waitlist ↗
+                Reserve a Node · Opens May 2 →
               </Link>
               <Link
-                href="/contact"
+                href="mailto:hello@malamalabs.com?subject=Hex%20Node%20call"
                 className="btn-ghost inline-flex items-center justify-center gap-2 border border-malama-line-bright px-8 py-5 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-malama-ink transition hover:border-malama-accent hover:text-malama-accent"
               >
                 Schedule a Call
               </Link>
+            </div>
+
+            <div className="mx-auto max-w-3xl text-left text-xs leading-relaxed text-malama-ink-dim">
+              <p className="mb-4">
+                The Genesis 200 program is designed to bootstrap a globally distributed validation layer for real-world data. Early operator incentives are front-loaded. Long-term operator economics are derived from protocol revenue generated by enterprise data usage. Year 1 economics are a temporary bootstrapping mechanism and are not indicative of steady-state returns. Rewards are competitive and relative to the active validator set, not fixed.
+              </p>
+              <p>
+                Mālama does not publish projected operator earnings or token price forecasts. See the{' '}
+                <Link href="/legal/token-rewards-risk" className="underline underline-offset-2 hover:text-malama-ink">
+                  Token & Rewards Risk Disclosure
+                </Link>{' '}
+                before reserving.
+              </p>
             </div>
           </motion.div>
 

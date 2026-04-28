@@ -60,11 +60,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ received: true, skipped: true })
   }
 
+  const referrerId = session.metadata?.referrerId || undefined
+
   await fulfillCardPurchase({
     stripeSessionId: sessionId,
     hexId,
     email,
     transferToken,
+    referrerId,
   })
 
   return NextResponse.json({ received: true })

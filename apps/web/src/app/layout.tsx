@@ -4,6 +4,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import SiteFooter from '@/components/SiteFooter'
 import { Providers } from '@/components/Providers'
+import ReferralCapture from '@/components/ReferralCapture'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 const interTight = Inter_Tight({
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${interTight.className} bg-malama-bg text-malama-ink min-h-screen flex flex-col font-sans antialiased`}
       >
         <Providers>
+          <ReferralCapture />
           <Navbar />
           <main className="flex-grow">{children}</main>
           <SiteFooter />

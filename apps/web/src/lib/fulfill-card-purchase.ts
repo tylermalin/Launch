@@ -19,6 +19,9 @@ import {
   getPendingMagicBySession,
   unlockHexForMagicCheckout,
 } from '@/lib/custodial-store'
+import { issueKOLCommission } from '@/lib/kol-registry'
+
+const SALE_AMOUNT_USD = 2000
 
 const fulfillmentLocks = new Set<string>()
 
@@ -27,8 +30,10 @@ export async function fulfillCardPurchase(opts: {
   hexId: string
   email: string
   transferToken: string
+  /** KOL partner id captured from ?ref= cookie at checkout time */
+  referrerId?: string
 }): Promise<void> {
-  const { stripeSessionId, hexId, email, transferToken } = opts
+  const { stripeSessionId, hexId, email, transferToken, referrerId } = opts
 
   if (isStripeSessionProcessed(stripeSessionId)) return
   if (getSessionStatus(stripeSessionId)?.state === 'complete') return
@@ -54,6 +59,7 @@ export async function fulfillCardPurchase(opts: {
         hexId,
         email,
         transferToken,
+        referrerId,
         createdAt: new Date().toISOString(),
       }
       savePendingMagicPurchase(pending)
@@ -75,7 +81,7 @@ export async function fulfillCardPurchase(opts: {
       const account = privateKeyToAccount(pk)
       address = account.address
 
-      const reserved = issueClaim(hexId, 'base', address)
+      const reserved = issueClaim(hexId, 'base', address, referrerId)
       if (!reserved.ok) {
         const msg =
           reserved.error === 'Hex already claimed'
@@ -93,6 +99,7 @@ export async function fulfillCardPurchase(opts: {
         address,
         privateKey: pk,
         transferToken,
+        referrerId,
       })
     }
 
@@ -117,12 +124,28 @@ export async function fulfillCardPurchase(opts: {
       txHash,
       createdAt: new Date().toISOString(),
       custody: 'server',
+      referrerId,
     }
 
     clearPendingStripeFulfillment(stripeSessionId)
     saveCustodialRecord(record)
     setSessionComplete(stripeSessionId, record)
     markStripeSessionProcessed(stripeSessionId)
+
+    // Issue KOL commission if a referrer was captured — fire-and-forget, non-blocking
+    if (referrerId) {
+      issueKOLCommission({
+        kolId: referrerId,
+        claimId,
+        hexId,
+        buyerEmail: email,
+        chain: 'base',
+        saleAmountUsd: SALE_AMOUNT_USD,
+        stripeSessionId,
+      }).catch((err) => {
+        console.error('[fulfillCardPurchase] KOL commission error:', err)
+      })
+    }
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'Mint failed'
     console.error('[fulfillCardPurchase]', e)

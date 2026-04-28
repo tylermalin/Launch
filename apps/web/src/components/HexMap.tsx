@@ -27,18 +27,13 @@ export default function HexMap() {
     if (map.current) map.current.setFilter('hex-highlight', ['==', 'id', ''])
   }, [])
 
-  useEffect(() => {
-    if (!detailOpen) return
-    const html = document.documentElement
-    const prevHtml = html.style.overflow
-    const prevBody = document.body.style.overflow
-    html.style.overflow = 'hidden'
-    document.body.style.overflow = 'hidden'
-    return () => {
-      html.style.overflow = prevHtml
-      document.body.style.overflow = prevBody
-    }
-  }, [detailOpen])
+  // Note: page-level scroll lock lives in MapPageClient (active for the
+  // lifetime of the map page). The drawer itself is a fixed full-height
+  // panel with its own internal overflow-y-auto, so no extra body lock
+  // is needed when it opens. Duplicating the lock here was the cause of
+  // the post-navigation "can't scroll on /presale" bug — its cleanup
+  // captured 'hidden' (already set by MapPageClient) and then restored
+  // it during route transition, leaving body locked on the next page.
   
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN

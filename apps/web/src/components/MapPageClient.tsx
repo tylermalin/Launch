@@ -10,16 +10,18 @@ export default function MapPageClient() {
   // The map is a full-screen experience; the footer in the global layout
   // would otherwise create a scrollable document that lets the footer
   // slide up and overlap the fixed node-detail drawer.
+  // On unmount we force-clear (not restore previous values) so the next
+  // page (e.g. /presale after clicking "Reserve this hex") is scrollable
+  // — restoring captured 'hidden' values left the body locked and broke
+  // navigation on the destination page.
   useEffect(() => {
     const html = document.documentElement
     const body = document.body
-    const prevHtml = html.style.overflow
-    const prevBody = body.style.overflow
     html.style.overflow = 'hidden'
     body.style.overflow = 'hidden'
     return () => {
-      html.style.overflow = prevHtml
-      body.style.overflow = prevBody
+      html.style.overflow = ''
+      body.style.overflow = ''
     }
   }, [])
 

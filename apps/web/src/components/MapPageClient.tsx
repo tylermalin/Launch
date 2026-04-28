@@ -1,10 +1,28 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { List } from 'lucide-react'
 import HexMapDynamic from './HexMapDynamic'
 
 export default function MapPageClient() {
+  // Lock page scroll for the lifetime of the map page.
+  // The map is a full-screen experience; the footer in the global layout
+  // would otherwise create a scrollable document that lets the footer
+  // slide up and overlap the fixed node-detail drawer.
+  useEffect(() => {
+    const html = document.documentElement
+    const body = document.body
+    const prevHtml = html.style.overflow
+    const prevBody = body.style.overflow
+    html.style.overflow = 'hidden'
+    body.style.overflow = 'hidden'
+    return () => {
+      html.style.overflow = prevHtml
+      body.style.overflow = prevBody
+    }
+  }, [])
+
   return (
     <div className="relative h-full w-full min-h-0 bg-malama-deep">
       <HexMapDynamic />

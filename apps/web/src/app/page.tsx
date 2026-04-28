@@ -75,7 +75,10 @@ export default function Home() {
             custom={3}
             className="mb-10 max-w-3xl text-[19px] leading-relaxed text-malama-ink-dim"
           >
-            Mālama Labs is the hardware-signed trust anchor for physical-world data. Every environmental market, every emissions disclosure, every ESG claim, every parametric insurance payout, and every supply-chain attestation depends on one thing: knowing what is actually happening in the physical world. For thirty years, that knowledge came from estimates, models, self-reports, and annual audits. We replaced estimation with cryptographically signed sensors. Each reading is signed at the device by a key burned into hardware at manufacture, anchored on-chain, and verifiable by anyone. Carbon proved the          <motion.div
+            Mālama Labs is the hardware-signed trust anchor for physical-world data. Every environmental market, every emissions disclosure, every ESG claim, every parametric insurance payout, and every supply-chain attestation depends on one thing: knowing what is actually happening in the physical world. For thirty years, that knowledge came from estimates, models, self-reports, and annual audits. We replaced estimation with cryptographically signed sensors. Each reading is signed at the device by a key burned into hardware at manufacture, anchored on-chain, and verifiable by anyone. Carbon proved the pipeline works. AI compute scales it. Water, supply chain, biodiversity, and grid follow.
+          </motion.p>
+
+          <motion.div
             variants={fadeUp}
             initial="hidden"
             animate="show"
@@ -92,117 +95,6 @@ export default function Home() {
               href="/contact"
               className="btn-ghost inline-flex items-center justify-center gap-2 border border-malama-line-bright px-7 py-4 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-malama-ink transition hover:border-malama-accent hover:text-malama-accent"
             >
-              Schedule a Call →
-            </Link>
-          </motion.div>
-
-          {/* Subnav Links */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            custom={5}
-            className="mb-16 flex items-center gap-6 font-mono text-xs uppercase tracking-widest text-malama-ink-dim"
-          >
-            <a href="#platform" className="hover:text-malama-accent">One Protocol · One Hex Network</a>
-            <span className="text-malama-line">|</span>
-            <a href="#proof" className="hover:text-malama-accent">On-Chain Proof</a>
-          </motion.div>
-
-          {/* Live Data Cards */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            custom={6}
-            className="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 text-left"
-          >
-            {/* AI Energy Data Card */}
-            <div className="card-hover-blue relative flex flex-col overflow-hidden rounded-malama border border-malama-line bg-malama-bg p-6">
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-blue-400">07 · AI Energy Data</div>
-                  <div className="mt-1 font-serif text-xl text-malama-ink">30 models tracked live</div>
-                  <div className="mt-1 font-mono text-[9px] uppercase tracking-wider text-malama-ink-dim">Estimation tier today · hardware tier next</div>
-                </div>
-                <a href={SOURCE_AIPOWER} target="_blank" rel="noopener noreferrer" className="font-mono text-xs text-blue-400 hover:underline underline-offset-4">aipower.fyi</a>
-              </div>
-              
-              <div className="mb-6 grid grid-cols-2 gap-4 border-y border-malama-line py-4">
-                <div>
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-malama-ink-faint">Video Gen Cost</div>
-                  <div className="mt-1 font-mono text-lg text-malama-ink">944Wh</div>
-                </div>
-                <div>
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-malama-ink-faint">GPT-o3 Per Prompt</div>
-                  <div className="mt-1 font-mono text-lg text-malama-ink">39.2Wh</div>
-                </div>
-                <div>
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-malama-ink-faint">Water Per Video</div>
-                  <div className="mt-1 font-mono text-lg text-malama-ink">1L</div>
-                </div>
-                <div>
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-malama-ink-faint">Efficiency Gap</div>
-                  <div className="mt-1 font-mono text-lg text-blue-400">1.88M×</div>
-                </div>
-              </div>
-
-              <p className="text-xs leading-relaxed text-malama-ink-dim">
-                The AI Energy dashboard at aipower.fyi is an open-source project of the Mālama Foundation. Explore there, or visit <a href="https://malamafoundation.org" className="text-malama-ink hover:text-blue-400 underline underline-offset-2">MalamaFoundation.org</a> for our non-profit work.
-              </p>
-            </div>
-
-            {/* Live Sensor Data Card */}
-            <div className="card-hover relative flex flex-col overflow-hidden rounded-malama border border-malama-line bg-malama-bg p-6">
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-malama-accent flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-malama-accent" />
-                    06 · Live Sensor Data · Dallas Pilot Node #1
-                  </div>
-                  <div className="mt-1 font-serif text-xl text-malama-ink">Pilot stream</div>
-                </div>
-              </div>
-
-              <div className="mb-6 grid grid-cols-2 gap-4 border-y border-malama-line py-4">
-                <div>
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-malama-ink-faint">Soil Temperature</div>
-                  <div className="mt-1 font-mono text-lg text-malama-ink">25.1°C</div>
-                </div>
-                <div>
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-malama-ink-faint">Air Temperature</div>
-                  <div className="mt-1 font-mono text-lg text-malama-ink">31.3°C</div>
-                </div>
-                <div>
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-malama-ink-faint">Humidity</div>
-                  <div className="mt-1 font-mono text-lg text-malama-ink">62%</div>
-                </div>
-                <div>
-                  <div className="font-mono text-[9px] uppercase tracking-widest text-malama-ink-faint">Battery</div>
-                  <div className="mt-1 font-mono text-lg text-malama-accent">96%</div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between mt-auto">
-                <div className="font-mono text-[10px] text-malama-ink-dim uppercase tracking-wider">Hardware signed · ECDSA</div>
-                <div className="font-mono text-[10px] text-malama-accent uppercase tracking-wider">just now</div>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            custom={7}
-            className="mt-12"
-          >
-            <a href="#what-is-malama" className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-malama-ink hover:text-malama-accent transition-colors">
-              Orientation · 60 seconds →
-            </a>
-          </motion.div>
-        </div>
-      </section>        >
               Schedule a Call
             </Link>
           </motion.div>

@@ -8,7 +8,7 @@ const topNavLinks = [
   { href: '/docs', label: 'Docs', active: (p: string) => p.startsWith('/docs') },
   { href: '/timeline', label: 'Timeline', active: (p: string) => p.startsWith('/timeline') },
   { href: '/map', label: 'Explorer', active: (p: string) => p === '/map' || p.startsWith('/map/') },
-  { href: '/partners', label: 'Partners', active: (p: string) => p.startsWith('/partners') },
+  { href: '/partners', label: 'Become A Launch Partner', active: (p: string) => p.startsWith('/partners') },
 ]
 
 export default function Navbar() {

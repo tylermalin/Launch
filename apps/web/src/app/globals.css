@@ -69,6 +69,28 @@ main {
   .feature-card {
     @apply transition-colors duration-300;
   }
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-hover:hover {
+    border-color: rgba(196, 240, 97, 0.55) !important;
+    box-shadow:
+      0 0 0 1px rgba(196, 240, 97, 0.18),
+      0 0 20px rgba(196, 240, 97, 0.12),
+      0 4px 24px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+  .card-hover-blue {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-hover-blue:hover {
+    border-color: rgba(96, 165, 250, 0.55) !important;
+    box-shadow:
+      0 0 0 1px rgba(96, 165, 250, 0.18),
+      0 0 20px rgba(96, 165, 250, 0.12),
+      0 4px 24px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
   .eyebrow {
     @apply inline-flex items-center gap-3;
   }

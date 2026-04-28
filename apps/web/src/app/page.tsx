@@ -93,7 +93,7 @@ export default function Home() {
               { label: 'On-Chain SaveCards', value: '2,786+' },
               { label: 'Max Multiplier', value: '3.0×' },
             ].map(({ label, value }) => (
-              <div key={label} className="rounded-malama border border-malama-line bg-malama-elev/60 p-4 text-left backdrop-blur">
+              <div key={label} className="card-hover rounded-malama border border-malama-line bg-malama-elev/60 p-4 text-left backdrop-blur">
                 <div className="font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">{label}</div>
                 <div className="mt-1 font-serif text-xl text-malama-accent">{value}</div>
               </div>
@@ -165,7 +165,7 @@ export default function Home() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true }}
-              className="rounded-malama border border-malama-line bg-malama-bg p-8"
+              className="card-hover rounded-malama border border-malama-line bg-malama-bg p-8"
             >
               <div className="mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-accent">
                 <span className="h-1.5 w-1.5 rounded-full bg-malama-accent" />
@@ -191,7 +191,7 @@ export default function Home() {
               whileInView="show"
               viewport={{ once: true }}
               custom={1}
-              className="rounded-malama border border-malama-line bg-malama-bg p-8"
+              className="card-hover-blue rounded-malama border border-malama-line bg-malama-bg p-8"
             >
               <div className="mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-blue-400">
                 <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
@@ -286,10 +286,10 @@ export default function Home() {
                 whileInView="show"
                 viewport={{ once: true }}
                 custom={i * 0.5}
-                className={`rounded-malama border p-7 transition-colors ${
+                className={`card-hover rounded-malama border p-7 ${
                   highlight
                     ? 'border-malama-accent bg-malama-accent/5 shadow-[0_0_30px_rgba(196,240,97,0.12)]'
-                    : 'border-malama-line bg-malama-elev hover:border-malama-line-bright'
+                    : 'border-malama-line bg-malama-elev'
                 }`}
               >
                 <div className="mb-3 font-mono text-xs font-bold uppercase tracking-widest text-malama-accent">{n}</div>
@@ -354,7 +354,7 @@ export default function Home() {
                 whileInView="show"
                 viewport={{ once: true }}
                 custom={i * 0.5}
-                className="rounded-malama border border-malama-line bg-malama-bg p-7"
+                className="card-hover rounded-malama border border-malama-line bg-malama-bg p-7"
               >
                 <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-accent">{label}</div>
                 <h3 className="mb-3 font-serif text-xl text-malama-ink">{title}</h3>
@@ -445,7 +445,7 @@ export default function Home() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true }}
-              className="rounded-malama border border-malama-accent/40 bg-malama-accent/5 p-8"
+              className="card-hover rounded-malama border border-malama-accent/40 bg-malama-accent/5 p-8"
             >
               <div className="mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-accent">
                 <span className="h-1.5 w-1.5 rounded-full bg-malama-accent" />
@@ -466,7 +466,7 @@ export default function Home() {
               whileInView="show"
               viewport={{ once: true }}
               custom={1}
-              className="rounded-malama border border-malama-line bg-malama-elev p-8"
+              className="card-hover rounded-malama border border-malama-line bg-malama-elev p-8"
             >
               <div className="mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-ink-dim">
                 <span className="h-1.5 w-1.5 rounded-full bg-malama-ink-dim" />
@@ -580,7 +580,7 @@ export default function Home() {
                 whileInView="show"
                 viewport={{ once: true }}
                 custom={i * 0.3}
-                className="rounded-malama border border-malama-line bg-malama-bg p-7"
+                className="card-hover rounded-malama border border-malama-line bg-malama-bg p-7"
               >
                 <div className={`mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest ${color}`}>
                   <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
@@ -797,7 +797,7 @@ export default function Home() {
                 { label: 'MLMA allocation', value: '125,000' },
                 { label: 'Delivery', value: 'Oct 2026' },
               ].map(({ label, value }) => (
-                <div key={label} className="rounded-malama border border-malama-line bg-malama-elev p-4 text-center">
+                <div key={label} className="card-hover rounded-malama border border-malama-line bg-malama-elev p-4 text-center">
                   <div className="font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">{label}</div>
                   <div className="mt-1 font-serif text-xl text-malama-accent">{value}</div>
                 </div>

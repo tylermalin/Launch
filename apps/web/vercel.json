@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build --prefix ../.. --workspace apps/web",
+  "buildCommand": "cd ../.. && npm run build --workspace apps/web",
   "installCommand": "npm ci --prefix ../..",
   "framework": "nextjs"
 }

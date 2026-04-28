@@ -98,6 +98,9 @@ export function buildGenesisHexListItems(regions: RegionsData): GenesisHexListIt
   return entries.map(({ id, region, chain }) => {
     const [lat, lng] = cellToLatLng(id)
     const isHQ = id === MALAMA_HQ_HEX
+    // Only the HQ node is pre-sold; all others are available for purchase
+    const sold = isHQ
+    const status = sold ? 'reserved' as const : 'available' as const
     const dataScore = calculateDataScoreDeterministic(lat, lng, id)
     const startingBid = calculateGenesisListingPriceDeterministic(lat, lng, id)
     return {
@@ -106,8 +109,8 @@ export function buildGenesisHexListItems(regions: RegionsData): GenesisHexListIt
       regionLabel: GENESIS_REGION_LABELS[region],
       lat,
       lng,
-      status: 'reserved' as const,
-      sold: true,
+      status,
+      sold,
       chain,
       isHQ,
       dataScore,
@@ -131,7 +134,7 @@ export function buildGenesisHexFeatureCollection(regions: RegionsData) {
       regionLabel: item.regionLabel,
       zoneName: item.regionLabel,
       status: item.status,
-      sold: true,
+      sold: Boolean(item.sold),
       chain: item.chain,
       isHQ: Boolean(item.isHQ),
       dataScore: item.dataScore,

@@ -8,6 +8,7 @@ const topNavLinks = [
   { href: '/docs', label: 'Docs', active: (p: string) => p.startsWith('/docs') },
   { href: '/timeline', label: 'Timeline', active: (p: string) => p.startsWith('/timeline') },
   { href: '/map', label: 'Explorer', active: (p: string) => p === '/map' || p.startsWith('/map/') },
+  { href: '/partners', label: 'Partners', active: (p: string) => p.startsWith('/partners') },
 ]
 
 export default function Navbar() {
@@ -20,31 +21,16 @@ export default function Navbar() {
           href="/"
           className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-malama-accent/50"
         >
-          {/* Hex logo mark */}
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+          {/* Brand logo mark */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-mark.png"
+            alt="Mālama Labs"
+            width={32}
+            height={32}
             className="shrink-0 drop-shadow-[0_0_10px_rgba(101,217,165,0.3)] transition-[filter] duration-300 hover:drop-shadow-[0_0_18px_rgba(101,217,165,0.5)]"
             aria-hidden="true"
-          >
-            <path
-              d="M24 4L44 15V33L24 44L4 33V15L24 4Z"
-              fill="#0A1628"
-              stroke="#65d9a5"
-              strokeWidth="2"
-            />
-            <path
-              d="M14 32V18L24 24L34 18V32"
-              stroke="#65d9a5"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-            />
-          </svg>
+          />
           {/* Wordmark */}
           <span className="font-black tracking-tight text-white text-[1.05rem] leading-none drop-shadow-[0_0_18px_rgba(101,217,165,0.18)] transition-[filter] duration-300 hover:drop-shadow-[0_0_26px_rgba(101,217,165,0.35)]">
             Mālama Labs

@@ -14,8 +14,11 @@
     "start": "npm run start --workspace apps/web",
     "test:all": "npm run test --workspaces --if-present",
     "lint:all": "npm run lint --workspaces --if-present",
-    "build:all": "npm run build --workspaces --if-present",
-    "postinstall": "node scripts/patch-libsodium-wrappers.js"
+    "build:all": "npm run build --workspaces --if-present"
+  },
+  "overrides": {
+    "libsodium-sumo": "0.8.4",
+    "libsodium-wrappers-sumo": "0.8.4"
   },
   "author": "Mālama Labs",
   "license": "UNLICENSED",

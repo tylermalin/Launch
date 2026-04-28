@@ -22,6 +22,8 @@ export type GenesisClaim = {
   txHash?: string
   /** Set after Base mint — links ERC-721 tokenId to this claim */
   evmTokenId?: number
+  /** KOL partner id who referred this purchase */
+  referrerId?: string
 }
 
 const byHex = new Map<string, GenesisClaim>()
@@ -40,7 +42,8 @@ function makeClaimId(edition: number) {
 export function issueClaim(
   hexId: string,
   chain: 'base' | 'cardano',
-  buyerAddress: string
+  buyerAddress: string,
+  referrerId?: string
 ):
   | { ok: true; claim: GenesisClaim }
   | { ok: false; error: string; existing?: GenesisClaim } {
@@ -59,6 +62,7 @@ export function issueClaim(
     chain,
     buyerAddress,
     claimedAt: new Date().toISOString(),
+    referrerId,
   }
   byHex.set(hexId, claim)
   byClaimId.set(claim.claimId, claim)

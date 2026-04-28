@@ -423,7 +423,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                   Locate your HEX
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-400">
-                  Choose one of the 200 Genesis hex territories on the live map. You need a hex selected before you can
+                  Choose one of the 400 Genesis hex territories on the live map — 200 on Base, 200 on Cardano. You need a hex selected before you can
                   pay with crypto or card.
                 </p>
               </div>
@@ -660,7 +660,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                   Complete setup to continue
                 </button>
                 <p className="text-xs font-bold uppercase tracking-widest text-gray-600">
-                  Mālama Genesis · One mint per hex · Per-chain cohort lock (no bridge)
+                  Mālama Genesis · 400 Total · 200 Base / 200 Cardano · One mint per hex
                 </p>
               </div>
             </motion.div>
@@ -866,7 +866,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                   <span className="text-malama-accent">{successData.claimId}</span>
                 </h2>
                 <p className="text-gray-500 text-sm font-mono mt-1">
-                  Edition {String(successData.editionNumber).padStart(3, '0')} / 200
+                  Edition {String(successData.editionNumber).padStart(3, '0')} / 400
                   {successData.evmTokenId != null && (
                     <span className="text-gray-600"> · Token #{successData.evmTokenId}</span>
                   )}

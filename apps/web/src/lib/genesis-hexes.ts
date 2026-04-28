@@ -11,13 +11,15 @@ export type RegionsData = {
   nyc?: string[]
   london?: string[]
   tokyo?: string[]
+  dallas?: string[]
 }
 
-export const GENESIS_HEX_CAP = 200
-/** Even split across the four launch regions (50 × 4 = 200). */
-export const GENESIS_SLOTS_PER_REGION = 50
+/** 400 total: 200 Base + 200 Cardano across 5 regions. */
+export const GENESIS_HEX_CAP = 400
+/** 80 slots per region × 5 regions = 400 total. First 40 per region → Base, next 40 → Cardano. */
+export const GENESIS_SLOTS_PER_REGION = 80
 
-export const GENESIS_REGION_KEYS = ['idaho', 'nyc', 'london', 'tokyo'] as const
+export const GENESIS_REGION_KEYS = ['idaho', 'nyc', 'london', 'tokyo', 'dallas'] as const
 export type GenesisRegionKey = (typeof GENESIS_REGION_KEYS)[number]
 
 export const GENESIS_REGION_LABELS: Record<GenesisRegionKey, string> = {
@@ -25,22 +27,22 @@ export const GENESIS_REGION_LABELS: Record<GenesisRegionKey, string> = {
   nyc: 'New York City',
   london: 'London',
   tokyo: 'Tokyo',
+  dallas: 'Dallas',
 }
 
-/** First five genesis hex IDs (globally sorted) are reserved for Mālama Wallet custody NFTs. */
-export const MALAMA_WALLET_RESERVED_COUNT = 5
+/** Malama HQ hex (Dallas primary sensor site) — always reserved. */
+export const MALAMA_HQ_HEX = '8726cb912ffffff'
 
 export function getMalamaWalletReservedHexIds(regions: RegionsData): string[] {
   const entries = getGenesisHexIds(regions)
   const ids = entries.map((e) => e.id).sort()
-  return ids.slice(0, MALAMA_WALLET_RESERVED_COUNT)
+  return ids.slice(0, 5)
 }
 
 export function getMalamaWalletReservedHexSet(regions: RegionsData): Set<string> {
   return new Set(getMalamaWalletReservedHexIds(regions))
 }
 
-/** Region label when the hex is in the Genesis 200 pool (authoritative vs H3 prefix heuristics). */
 export function getGenesisRegionLabelForHex(hexId: string, regions: RegionsData): string | null {
   for (const key of GENESIS_REGION_KEYS) {
     if ((regions[key] || []).includes(hexId)) return GENESIS_REGION_LABELS[key]
@@ -48,7 +50,6 @@ export function getGenesisRegionLabelForHex(hexId: string, regions: RegionsData)
   return null
 }
 
-/** 1-based index in the Genesis pool (Idaho block, then NYC, London, Tokyo). Null if not in pool. */
 export function getGenesisPoolSlot(hexId: string, regions: RegionsData): number | null {
   const entries = getGenesisHexIds(regions)
   const idx = entries.findIndex((e) => e.id === hexId)
@@ -57,16 +58,17 @@ export function getGenesisPoolSlot(hexId: string, regions: RegionsData): number 
 }
 
 /**
- * Deterministically selects exactly {@link GENESIS_HEX_CAP} H3 cells: sorted order, first N per region.
+ * Deterministically selects exactly {@link GENESIS_HEX_CAP} H3 cells across 5 regions.
+ * Within each region: first 40 slots → Base chain, next 40 → Cardano chain.
  */
-export function getGenesisHexIds(regions: RegionsData): { id: string; region: GenesisRegionKey }[] {
-  const out: { id: string; region: GenesisRegionKey }[] = []
+export function getGenesisHexIds(regions: RegionsData): { id: string; region: GenesisRegionKey; chain: 'base' | 'cardano' }[] {
+  const out: { id: string; region: GenesisRegionKey; chain: 'base' | 'cardano' }[] = []
   for (const key of GENESIS_REGION_KEYS) {
     const cells = [...(regions[key] || [])].sort()
     const slice = cells.slice(0, GENESIS_SLOTS_PER_REGION)
-    for (const id of slice) {
-      out.push({ id, region: key })
-    }
+    slice.forEach((id, i) => {
+      out.push({ id, region: key, chain: i < GENESIS_SLOTS_PER_REGION / 2 ? 'base' : 'cardano' })
+    })
   }
   return out
 }
@@ -78,25 +80,24 @@ export type GenesisHexListItem = {
   lat: number
   lng: number
   status: 'available' | 'reserved'
-  /** Pre-mint / protocol inventory already sold (show as SOLD in UI, not public reserve). */
   sold?: boolean
+  chain: 'base' | 'cardano'
+  /** True if this is the Malama HQ (Dallas) sensor node. */
+  isHQ?: boolean
   dataScore: number
   startingBid: number
   activeSensors: number
   uptime: number
   overlap: boolean
   genesisEdition: true
-  /** Fixed Genesis reserve price (USD). */
   genesisPriceUsd: number
 }
 
 export function buildGenesisHexListItems(regions: RegionsData): GenesisHexListItem[] {
   const entries = getGenesisHexIds(regions)
-  const malamaReserved = getMalamaWalletReservedHexSet(regions)
-  return entries.map(({ id, region }) => {
+  return entries.map(({ id, region, chain }) => {
     const [lat, lng] = cellToLatLng(id)
-    const reserved = malamaReserved.has(id)
-    const status = reserved ? 'reserved' : 'available'
+    const isHQ = id === MALAMA_HQ_HEX
     const dataScore = calculateDataScoreDeterministic(lat, lng, id)
     const startingBid = calculateGenesisListingPriceDeterministic(lat, lng, id)
     return {
@@ -105,12 +106,14 @@ export function buildGenesisHexListItems(regions: RegionsData): GenesisHexListIt
       regionLabel: GENESIS_REGION_LABELS[region],
       lat,
       lng,
-      status,
-      sold: reserved,
+      status: 'reserved' as const,
+      sold: true,
+      chain,
+      isHQ,
       dataScore,
       startingBid,
-      activeSensors: 0,
-      uptime: 0,
+      activeSensors: isHQ ? 3 : 0,
+      uptime: isHQ ? 99 : 0,
       overlap: false,
       genesisEdition: true,
       genesisPriceUsd: GENESIS_ENTRY_USD,
@@ -128,7 +131,9 @@ export function buildGenesisHexFeatureCollection(regions: RegionsData) {
       regionLabel: item.regionLabel,
       zoneName: item.regionLabel,
       status: item.status,
-      sold: Boolean(item.sold),
+      sold: true,
+      chain: item.chain,
+      isHQ: Boolean(item.isHQ),
       dataScore: item.dataScore,
       startingBid: item.startingBid,
       activeSensors: item.activeSensors,
@@ -145,6 +150,8 @@ export function buildGenesisHexFeatureCollection(regions: RegionsData) {
       cap: GENESIS_HEX_CAP,
       count: items.length,
       slotsPerRegion: GENESIS_SLOTS_PER_REGION,
+      base: items.filter(i => i.chain === 'base').length,
+      cardano: items.filter(i => i.chain === 'cardano').length,
     },
   }
 }

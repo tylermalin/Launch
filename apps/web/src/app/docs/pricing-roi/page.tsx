@@ -2,41 +2,60 @@
 
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { AlertTriangle, DollarSign, Layers, Info } from 'lucide-react'
+import { AlertTriangle, DollarSign, Layers, Info, Lock } from 'lucide-react'
+import Link from 'next/link'
 
 const ENTRY_USD = 2000
 const HARDWARE_USD = 380
 const LICENSE_USD = 1620
+const PER_NODE_MLMA = 125_000
+const TOTAL_SUPPLY = 500_000_000
+const GENESIS_POOL = 25_000_000
 
 type Tier = 'high' | 'medium' | 'low'
 
-const TIERS: Record<
-  Tier,
-  { label: string; gmRange: string; profile: string; examples: string }
-> = {
+const TIERS: Record<Tier, { label: string; gmRange: string; color: string; dot: string; profile: string; detail: string; examples: string }> = {
   high: {
-    label: 'High demand hex',
+    label: 'High demand',
     gmRange: '2.0× – 3.0×',
+    color: 'text-malama-accent',
+    dot: 'bg-malama-accent',
     profile: 'Strategic zones with high institutional demand and scientific priority.',
-    examples: 'Industrial corridors, AI data center perimeters, coastal wetlands, flood-prone agricultural hexes, regulatory-priority zones.',
+    detail: 'Industrial corridors, AI data center perimeters, coastal wetlands, flood-prone agricultural hexes, and regulatory-priority zones represent the highest data-scarcity environments on the network. Enterprise sensor deployments in these zones generate continuous, high-value data streams. Geographic Multiplier reflects that validators here have the highest cost-to-replace and lowest redundancy in the network.',
+    examples: 'Industrial corridor adjacent to hyperscaler data centers · Coastal ERW deployment zones · Flood-prone agricultural regions with parametric insurance coverage · Regulatory-priority carbon monitoring areas',
   },
   medium: {
-    label: 'Medium demand hex',
+    label: 'Medium demand',
     gmRange: '1.0× – 2.0×',
-    profile: 'Agricultural or moderately-served regions. Balanced reward and validation frequency.',
-    examples: 'Rural cropland, suburban edge, moderate-priority monitoring zones.',
+    color: 'text-blue-400',
+    dot: 'bg-blue-400',
+    profile: 'Agricultural regions, suburban edges, and moderately-served monitoring zones.',
+    detail: 'The baseline tier for most external operators. Balanced validation frequency and geographic multiplier. Medium-demand zones represent the core of the network\'s agricultural and environmental monitoring coverage — ERW and biochar deployments, irrigation districts, and moderate-priority climate data collection areas.',
+    examples: 'Rural cropland in the Idaho Magic Valley · Suburban agricultural edge zones · Moderate-priority carbon project regions · Biochar feedstock sourcing areas',
   },
   low: {
-    label: 'Low demand hex',
+    label: 'Low demand',
     gmRange: '0.5× – 1.0×',
+    color: 'text-gray-400',
+    dot: 'bg-gray-400',
     profile: 'Dense urban deployments or low data-scarcity regions.',
-    examples: 'Urban centers with existing dense coverage, low-priority zones.',
+    detail: 'Urban centers and dense suburban areas where environmental monitoring infrastructure already exists and data redundancy is high. Lower data-scarcity premium reflects that validators here are competing against a larger number of nearby nodes. The 0.5× floor ensures all validators contribute meaningfully to the network.',
+    examples: 'Urban centers with existing dense coverage · Suburban zones with low SaveCard volume · Low-priority monitoring zones',
   },
+}
+
+function CodeBlock({ children }: { children: string }) {
+  return (
+    <pre className="my-4 p-4 rounded-xl bg-black/40 border border-gray-800 text-xs text-malama-accent/90 font-mono overflow-x-auto whitespace-pre-wrap leading-relaxed">
+      {children}
+    </pre>
+  )
 }
 
 export default function PricingRoiPage() {
   const [tier, setTier] = useState<Tier>('medium')
   const t = TIERS[tier]
+  const genesisPct = ((GENESIS_POOL / TOTAL_SUPPLY) * 100).toFixed(0)
 
   return (
     <div className="max-w-3xl">
@@ -45,124 +64,284 @@ export default function PricingRoiPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-10"
       >
-        <p className="text-xs font-black uppercase tracking-widest text-blue-400 mb-2">Mālama Genesis</p>
-        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
-          Pricing & Reward Mechanics
+        <p className="text-xs font-black uppercase tracking-widest text-malama-accent mb-2">Genesis 200</p>
+        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-3 leading-tight">
+          Pricing &amp; Reward Mechanics
         </h1>
-        <p className="text-lg text-gray-400 leading-relaxed">
-          Upfront capital breakdown and the formula that governs operator rewards. Mālama does not publish
-          MLMA price forecasts or projected operator earnings.
+        <p className="text-sm text-gray-400 leading-relaxed mb-4">
+          Capital breakdown and the reward formula.
+        </p>
+        <p className="text-base text-gray-300 leading-relaxed">
+          Upfront cost, what you receive for it, and the mechanics that govern how validation rewards are calculated.
+          Mālama does not publish MLMA price forecasts, projected operator earnings, or cost recovery timelines.
         </p>
       </motion.header>
 
-      {/* Capital */}
-      <section className="mb-10">
+      <div className="rounded-xl border border-malama-accent/20 bg-malama-accent/5 p-4 mb-10 text-sm text-gray-300 leading-relaxed">
+        The Genesis 200 program is designed to bootstrap a globally distributed validation layer for real-world data.
+        Early operator incentives are front-loaded to ensure rapid deployment and network reliability prior to revenue maturity.
+        Long-term operator economics are derived exclusively from protocol revenue generated by enterprise data usage.
+      </div>
+
+      {/* ── Capital Requirement ── */}
+      <section className="mb-12">
         <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <DollarSign className="w-5 h-5 text-malama-accent" /> Capital requirement
+          <DollarSign className="w-5 h-5 text-malama-accent" /> Capital Requirement
         </h2>
         <div className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
-          <p className="text-4xl font-black text-white mb-2 tabular-nums">
-            ${ENTRY_USD.toLocaleString()}{' '}
-            <span className="text-lg text-gray-500 font-semibold">USD</span>
-          </p>
-          <p className="text-sm text-gray-500 mb-6">One-time Mālama Genesis entry (per Hex Node License)</p>
+          <div className="flex items-baseline gap-3 mb-1">
+            <p className="text-4xl font-black text-white tabular-nums">${ENTRY_USD.toLocaleString()}</p>
+            <span className="text-base text-gray-500 font-semibold">Total entry</span>
+          </div>
+          <p className="text-sm text-gray-500 mb-6">One-time Genesis 200 entry per Hex Node license. Not recurring.</p>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4 mb-5">
             <div className="rounded-xl border border-malama-accent/30 bg-malama-accent/5 p-4">
               <p className="text-xs uppercase tracking-widest text-malama-accent/80 mb-1">Hardware</p>
-              <p className="text-2xl font-black text-white">${HARDWARE_USD}</p>
-              <p className="text-xs text-gray-500 mt-2 leading-relaxed">
-                Raspberry Pi Zero 2W, sensors, NEMA enclosure, solar UPS, ATECC608 secure element.
+              <p className="text-2xl font-black text-white mb-2">${HARDWARE_USD}</p>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                Raspberry Pi Zero 2W · ATECC608B secure element · RS485 7-in-1 soil probe · BME280 atmospheric · NEMA 4X IP67 enclosure · Waveshare SIM7600G LTE HAT.
               </p>
             </div>
             <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4">
               <p className="text-xs uppercase tracking-widest text-blue-400/80 mb-1">Geographic license</p>
-              <p className="text-2xl font-black text-white">${LICENSE_USD}</p>
-              <p className="text-xs text-gray-500 mt-2 leading-relaxed">
-                Exclusive rights to operate a sensor node within a specific H3 hex cell on the Mālama network.
+              <p className="text-2xl font-black text-white mb-2">${LICENSE_USD.toLocaleString()}</p>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                Exclusive rights to operate a validation node within a specific H3 hex cell on the Mālama network.
+                NFT-HEX minted on Cardano and Base at reservation.
               </p>
             </div>
           </div>
 
-          <div className="mt-4 h-3 rounded-full overflow-hidden flex bg-gray-800">
-            <div
-              className="h-full bg-malama-accent"
-              style={{ width: `${(HARDWARE_USD / ENTRY_USD) * 100}%` }}
-            />
+          <div className="h-3 rounded-full overflow-hidden flex bg-gray-800 mb-2">
+            <div className="h-full bg-malama-accent" style={{ width: `${(HARDWARE_USD / ENTRY_USD) * 100}%` }} />
             <div className="h-full bg-blue-500" style={{ width: `${(LICENSE_USD / ENTRY_USD) * 100}%` }} />
           </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-gray-500">
             <span className="text-malama-accent">Hardware {((HARDWARE_USD / ENTRY_USD) * 100).toFixed(0)}%</span>
             <span className="text-blue-400">License {((LICENSE_USD / ENTRY_USD) * 100).toFixed(0)}%</span>
           </div>
+
+          <p className="mt-5 text-xs text-gray-500 leading-relaxed">
+            Hardware ships September 2026. Geographic license (NFT-HEX) is minted at the time of reservation.
+            Reservation window closes May 31, 2026 or when all 195 external nodes are sold.
+            5 nodes are reserved for Mālama Labs team and production use (Dallas / DFW area).
+          </p>
         </div>
       </section>
 
-      {/* Reward formula */}
-      <section className="mb-10">
+      {/* ── MLMA Allocation ── */}
+      <section className="mb-12">
         <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <Layers className="w-5 h-5 text-violet-400" /> Reward formula
+          <Lock className="w-5 h-5 text-blue-400" /> MLMA Allocation
         </h2>
+        <div className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
+          <p className="text-sm text-gray-300 leading-relaxed mb-6">
+            In addition to the validation rewards described in the formula below, every Genesis 200 operator receives
+            a fixed allocation of 125,000 MLMA. This allocation is a participation grant aligned with network bootstrapping.
+            It is separate from operational rewards and subject to vesting to ensure long-term operator alignment.
+          </p>
+
+          <div className="flex flex-wrap gap-6 mb-6">
+            <div>
+              <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Total MLMA per operator</p>
+              <p className="text-3xl font-black text-malama-accent tabular-nums">{PER_NODE_MLMA.toLocaleString()}</p>
+              <p className="text-xs text-gray-500 mt-1">confirmed allocation</p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Of total 500M supply</p>
+              <p className="text-3xl font-black text-white tabular-nums">{genesisPct}%</p>
+              <p className="text-xs text-gray-500 mt-1">25M MLMA total to Genesis operators</p>
+            </div>
+          </div>
+
+          <h3 className="text-sm font-black text-white uppercase tracking-wider mb-3">Vesting Schedule</h3>
+          <div className="overflow-x-auto rounded-xl border border-gray-800">
+            <table className="w-full text-sm min-w-[480px]">
+              <thead>
+                <tr className="bg-[#0A1628] text-gray-400 border-b border-gray-800 text-left">
+                  {['Milestone', 'Amount', 'Timing'].map((h) => (
+                    <th key={h} className="px-4 py-3 font-bold">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['At hardware boot · deployment registration', '31,250 MLMA (25%)', '~October 2026'],
+                  ['Months 1–12 linear vesting', '93,750 MLMA (75%)', '~7,813 MLMA/month'],
+                  ['Month 13 onward', '125,000 MLMA fully vested', 'Hold, stake as veMLMA, or sell'],
+                ].map((row, i) => (
+                  <tr key={i} className="border-t border-gray-800/80 hover:bg-white/[0.02]">
+                    {row.map((c, j) => (
+                      <td key={j} className="px-4 py-2.5 text-gray-300">{c}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-4 text-xs text-gray-500 leading-relaxed">
+            The MLMA allocation does not arrive at reservation. It begins vesting at hardware boot in October 2026.
+            The 31,250 MLMA boot tranche and each monthly tranche thereafter are liquid at receipt. Unvested amounts
+            cannot be transferred or staked. Operators who do not deploy within 90 days of hardware receipt forfeit
+            their license and allocation to the protocol treasury.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Reward Formula ── */}
+      <section className="mb-12">
+        <h2 className="text-xl font-black text-white mb-2 flex items-center gap-2">
+          <Layers className="w-5 h-5 text-violet-400" /> Reward Formula
+        </h2>
+
+        <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 mb-4 text-xs text-amber-300/90 font-mono uppercase tracking-wider">
+          ▲ Genesis Phase Reward Mechanics · Non-Steady-State
+        </div>
 
         <div className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6 mb-4">
-          <p className="font-mono text-lg text-white mb-4">
-            R<sub>operator</sub> = B × DQS × GM × UF × PoolFactor
+          <p className="text-sm text-gray-300 leading-relaxed mb-5">
+            Rewards are competitive and relative, not fixed. Each operator's monthly reward is their weighted score divided
+            by the sum of all active validator scores in the network. As the network grows, individual reward weight adjusts
+            proportionally. There are no fixed per-node allocations from the emission pool and no guaranteed yields. The formula
+            below governs how your share of the monthly pool is determined.
           </p>
-          <ul className="text-sm text-gray-400 space-y-2 leading-relaxed">
-            <li><span className="text-white font-semibold">B</span> — Base rate: MLMA per epoch from the network incentives pool, divided across active operators.</li>
-            <li><span className="text-white font-semibold">DQS</span> — Data Quality Score: 0.0–1.0 from validator confidence and cross-validation with neighboring hexes.</li>
-            <li><span className="text-white font-semibold">GM</span> — Geographic Multiplier: 0.5× to 3.0×, governance-voted formula (whitepaper v2.1 §6.1).</li>
-            <li><span className="text-white font-semibold">UF</span> — Uptime Factor: linear from 0 at 90% uptime to 1.0 at 99%, 1.1× bonus at ≥99.9%.</li>
-            <li><span className="text-white font-semibold">PoolFactor</span> — Scaling factor that keeps total issuance within the per-epoch cap.</li>
+          <p className="font-mono text-lg text-white mb-5 bg-black/30 rounded-xl px-4 py-3 border border-gray-700">
+            R<sub className="text-sm">operator</sub> = B × DQS × GM × UF × GX × PoolFactor
+          </p>
+          <p className="text-xs text-gray-500 mb-5">
+            Where each term is a multiplier applied to your normalized share of the monthly emission pool.
+          </p>
+          <ul className="space-y-4 text-sm text-gray-400 leading-relaxed">
+            <li>
+              <span className="text-white font-bold">B</span> — Base rate.
+              MLMA per epoch from the network incentives pool, divided across active operators by the PoolFactor normalization.
+              Monthly pool: 750K MLMA in Year 1, scaling to 2.1M in Year 2 and 3.75M in Year 3.
+            </li>
+            <li>
+              <span className="text-white font-bold">DQS</span> — Data Quality Score.
+              Range 0.0–1.0. Derived from validator confidence and cross-validation with neighboring hex operators.
+              Reflects accuracy, consistency, and anomaly detection outcomes. Nodes producing low-quality or disputed
+              data receive a reduced DQS and correspondingly lower rewards.
+            </li>
+            <li>
+              <span className="text-white font-bold">GM</span> — Geographic Multiplier.
+              Range 0.5× to 3.0×. Governance-voted formula (whitepaper v2.0 §4.2). Reflects the data scarcity value
+              and enterprise demand coverage of your hex zone. See demand tiers below.
+            </li>
+            <li>
+              <span className="text-white font-bold">UF</span> — Uptime Factor.
+              Linear from 0 at 90% uptime to 1.0 at 99% uptime, with a 1.1× bonus at 99.9%+. Nodes below 90%
+              uptime earn zero validation rewards for that epoch. This parameter reflects that enterprise clients and
+              carbon registries require uninterrupted data streams.
+            </li>
+            <li>
+              <span className="text-white font-bold">GX</span> — Genesis Multiplier.
+              <span className="text-malama-accent font-semibold"> 1.5× in Year 1 only</span> for Genesis 200 operators.
+              Expires permanently at the end of Year 1. This is the deliberate front-loading that compensates early
+              operators for deploying before the network reaches revenue maturity. It is not a permanent feature of
+              the reward formula.
+            </li>
+            <li>
+              <span className="text-white font-bold">PoolFactor</span> — Network normalization.
+              Scaling factor that keeps total issuance within the monthly per-epoch emission cap. Mathematically:
+              each operator receives (their total score / sum of all active validator scores) × monthly pool.
+              This is what makes rewards competitive and relative rather than fixed.
+            </li>
           </ul>
-        </div>
-      </section>
-
-      {/* Hex tiers */}
-      <section className="mb-10">
-        <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <Layers className="w-5 h-5 text-violet-400" /> Hex demand tiers
-        </h2>
-
-        <div className="flex flex-wrap gap-2 mb-6">
-          {(Object.keys(TIERS) as Tier[]).map((k) => (
-            <button
-              key={k}
-              type="button"
-              onClick={() => setTier(k)}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                tier === k
-                  ? 'bg-violet-500 text-white shadow-lg shadow-violet-500/25'
-                  : 'bg-gray-800 text-gray-400 hover:text-white border border-gray-700'
-              }`}
-            >
-              {TIERS[k].label.replace(' hex', '')}
-            </button>
-          ))}
         </div>
 
         <div className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
-          <p className="text-sm text-gray-400 mb-2">{t.label}</p>
-          <p className="text-3xl font-black text-malama-accent tabular-nums mb-4">{t.gmRange}</p>
-          <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">Geographic Multiplier</p>
-          <p className="text-sm text-gray-300 leading-relaxed mb-3">{t.profile}</p>
-          <p className="text-sm text-gray-400 leading-relaxed">
-            <span className="text-gray-500 uppercase text-xs tracking-widest font-bold">Examples: </span>
-            {t.examples}
+          <h3 className="text-sm font-black text-white uppercase tracking-wider mb-3">Full Expanded Formula</h3>
+          <CodeBlock>{`R_operator = Monthly_Pool × (Operator_Score / Network_Score)
+
+Operator_Score = DQS × GM × UF × GX
+
+Network_Score  = Σ (DQS_i × GM_i × UF_i × GX_i) for all active validators i
+
+Monthly emission pool by year:
+  Year 1: 750,000 MLMA/month   (Genesis 1.5× GX active)
+  Year 2: 2,100,000 MLMA/month (GX = 1.0 · Genesis multiplier expired)
+  Year 3: 3,750,000 MLMA/month (final emission year)
+  Year 4+: 0 emissions · rewards from 25% of protocol revenue`}</CodeBlock>
+          <p className="text-xs text-gray-500 italic leading-relaxed">
+            Year 1 reward levels reflect the Genesis bootstrapping phase only. The GX = 1.5× Genesis multiplier,
+            constrained early validator competition, and the front-loaded emission pool produce elevated reward weight
+            during network cold-start. These are intentional and temporary. They are not indicative of steady-state
+            returns. Emissions stop after Year 3. Long-term rewards are funded by protocol revenue from enterprise
+            data usage.
           </p>
         </div>
       </section>
 
-      {/* Historical comparable */}
-      <section className="mb-10">
-        <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <Info className="w-5 h-5 text-sky-400" /> Historical comparable
+      {/* ── Hex Demand Tiers ── */}
+      <section className="mb-12">
+        <h2 className="text-xl font-black text-white mb-2 flex items-center gap-2">
+          <Layers className="w-5 h-5 text-violet-400" /> Hex Demand Tiers
         </h2>
-        <div className="rounded-2xl border border-sky-500/30 bg-sky-500/5 p-6">
-          <p className="text-sm text-gray-300 leading-relaxed mb-3">
-            Mālama does not publish operator earnings forecasts, token price targets, or payback-period claims.
+        <p className="text-sm text-gray-400 leading-relaxed mb-5">
+          Geographic Multiplier (GM) is determined at zone classification and reflects data scarcity value and enterprise
+          demand coverage of your hex. Classification follows climate data value and enterprise sensor deployment density,
+          not population density.
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-5">
+          {(Object.keys(TIERS) as Tier[]).map((k) => {
+            const active = tier === k
+            return (
+              <button
+                key={k}
+                type="button"
+                onClick={() => setTier(k)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all border ${
+                  active
+                    ? 'bg-violet-500/20 border-violet-500/50 text-white shadow-sm'
+                    : 'bg-gray-800/50 border-gray-700 text-gray-400 hover:text-white'
+                }`}
+              >
+                <span className={`w-2 h-2 rounded-full ${TIERS[k].dot}`} />
+                {TIERS[k].label}
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+            <div className="flex items-center gap-3">
+              <span className={`w-3 h-3 rounded-full ${t.dot}`} />
+              <span className="text-sm text-gray-300 font-semibold">{t.label}</span>
+            </div>
+            <span className={`text-2xl font-black tabular-nums ${t.color}`}>{t.gmRange}</span>
+          </div>
+          <p className="text-xs uppercase tracking-widest text-gray-500 mb-2">Geographic Multiplier (GM) range</p>
+          <p className="text-sm font-semibold text-white mb-3">{t.profile}</p>
+          <p className="text-sm text-gray-300 leading-relaxed mb-4">{t.detail}</p>
+          <p className="text-xs text-gray-500 leading-relaxed">
+            <span className="text-gray-400 uppercase tracking-widest font-bold text-[10px]">Examples: </span>
+            {t.examples}
           </p>
-          <p className="text-sm text-gray-400 leading-relaxed">
+        </div>
+
+        <p className="text-xs text-gray-600 mt-3 leading-relaxed">
+          Geographic zone classification is determined at the time of hex assignment. Zone multipliers are governance-voted
+          parameters (veMLMA) and may change over time per published governance proposals. Mālama does not guarantee a specific
+          GM tier for any hex. Frontier (2.0×) and strategic (3.0×) zone allocations are constrained within Genesis 200.
+        </p>
+      </section>
+
+      {/* ── Historical Comparable ── */}
+      <section className="mb-12">
+        <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
+          <Info className="w-5 h-5 text-sky-400" /> Historical Comparable
+        </h2>
+        <div className="rounded-2xl border border-sky-500/25 bg-sky-500/5 p-6">
+          <p className="text-xs font-black uppercase tracking-widest text-sky-400 mb-3">Public DePIN Reference</p>
+          <p className="text-sm text-gray-300 leading-relaxed mb-4">
+            Mālama does not publish operator earnings forecasts, token price targets, or cost recovery timelines.
+          </p>
+          <p className="text-sm text-gray-400 leading-relaxed mb-4">
             For reference, the closest public DePIN comparable is{' '}
             <a
               href="https://weatherxm.com"
@@ -172,29 +351,60 @@ export default function PricingRoiPage() {
             >
               WeatherXM
             </a>
-            , whose 5,000+ stations report actual monthly token earnings that vary widely by location demand, data quality, and
-            token market price. Mālama's economics will differ based on chain, demand profile, Geographic Multiplier, and rollout
-            pace. Operators should model their own scenarios conservatively and consult their own advisors.
+            , whose 5,000+ stations report actual monthly token earnings that vary widely by location demand, data quality,
+            and token market price. WeatherXM's published station economics show the range between low-demand and high-demand
+            locations can differ by 10× or more — illustrating why per-node projections without zone-specific demand data
+            are not meaningful.
+          </p>
+          <p className="text-sm text-gray-400 leading-relaxed">
+            Mālama's economics will differ based on blockchain architecture (Cardano/Hedera/Base), demand profile,
+            Geographic Multiplier tier, Data Quality Score, Genesis phase status, and network rollout pace.
+            The WeatherXM reference is provided solely as a publicly verifiable example of how DePIN node economics
+            work in practice — not as a projection of Mālama outcomes.
+          </p>
+          <p className="text-xs text-gray-500 mt-4 leading-relaxed">
+            Operators should model their own scenarios conservatively and consult their own qualified legal, tax,
+            and financial advisors before reserving a node.
           </p>
         </div>
       </section>
 
-      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 flex gap-3 mb-6">
-        <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-        <div className="text-sm text-amber-200/90 leading-relaxed">
-          <p className="font-bold mb-1">No guarantees</p>
+      {/* ── No Guarantees ── */}
+      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 flex gap-3 mb-8">
+        <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+        <div className="text-sm text-amber-200/90 leading-relaxed space-y-3">
+          <p className="font-bold text-amber-300">No Guarantees</p>
           <p>
-            Operating a Mālama Hex Node requires labor (physical installation, maintenance, uptime). Earnings depend on
-            validated data contributions, Geographic Multiplier, Data Quality Score, MLMA market price, and network conditions.
-            There is no guaranteed return. Participation involves risk including loss of capital. Consult qualified legal,
-            tax, and financial advisors before reserving. See{' '}
-            <a href="/legal" className="underline underline-offset-2 font-semibold">Legal center</a> for full disclosures.
+            Operating a Genesis 200 Hex Node requires labor: physical installation, network setup, and ongoing uptime maintenance.
+            Validation rewards depend on data volume in your zone, your Data Quality Score, Geographic Multiplier, Uptime Factor,
+            Genesis phase status, MLMA market price, and network conditions.
+          </p>
+          <p>
+            The MLMA allocation (125,000 MLMA per operator) is a participation grant subject to a 12-month vesting schedule
+            beginning at hardware boot. 75% of the allocation is locked during the vesting period and is not immediately liquid.
+          </p>
+          <p>
+            There is no guaranteed return. There is no published cost recovery timeline. Participation involves risk including loss
+            of capital. Genesis Phase reward levels are a temporary bootstrapping mechanism and are not indicative of steady-state
+            network economics.
+          </p>
+          <p>
+            MLMA is a utility token designed for network fee payment, staking, and governance. Regulatory classification varies by
+            jurisdiction. Beneficial Technology is conducting a Howey test analysis that must be complete before any public token
+            offering. Participation in Genesis 200 does not constitute an investment in a security. Consult qualified legal, tax,
+            and financial advisors before reserving. See the{' '}
+            <Link href="/legal" className="underline underline-offset-2 font-semibold text-amber-300">
+              Legal Center
+            </Link>
+            {' '}for full disclosures.
           </p>
         </div>
       </div>
 
-      <p className="text-xs text-gray-600 border-t border-gray-800 pt-6">
-        Mālama Genesis Pricing & Mechanics — aligned with Whitepaper v2.1. Actual rewards follow protocol rules and network conditions.
+      <p className="text-xs text-gray-600 border-t border-gray-800 pt-6 leading-relaxed">
+        Genesis 200 Pricing &amp; Mechanics · aligned with Tokenomics Whitepaper v2.0 · April 2026<br />
+        Actual rewards follow protocol rules and network conditions. No figures on this page constitute earnings guidance or forward-looking projections.<br />
+        © 2026 Mālama Labs, Inc.
       </p>
     </div>
   )

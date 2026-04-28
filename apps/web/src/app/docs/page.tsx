@@ -15,8 +15,8 @@ const cards = [
   },
   {
     href: '/docs/pricing-roi',
-    title: 'Pricing & Reward Mechanics',
-    desc: 'Entry breakdown, reward formula, and hex demand tiers. No price forecasts or payback guarantees.',
+    title: 'Genesis 200 · Pricing & Reward Mechanics',
+    desc: 'Capital requirement, MLMA allocation, full reward formula with GX multiplier, and hex demand tiers.',
     icon: Calculator,
     color: 'from-blue-500/20 to-cyan-500/10',
     border: 'border-blue-500/30',
@@ -24,7 +24,7 @@ const cards = [
   {
     href: '/docs/phase-1-timeline',
     title: 'Phase 1 Timeline',
-    desc: 'From pre-sale through first rewards — milestones, boot, and vesting checkpoints.',
+    desc: 'Six milestones from pre-sale through first validation rewards, including the Genesis Hex Sale Audit gate.',
     icon: CalendarRange,
     color: 'from-violet-500/20 to-purple-500/10',
     border: 'border-violet-500/30',
@@ -32,7 +32,7 @@ const cards = [
   {
     href: '/docs/operators',
     title: 'Operator Documentation',
-    desc: 'Onboarding, mounting, dApp sync, Indigenous Stewardship (ISDA), and support.',
+    desc: 'Deployment checklist, hardware BOM, node operation pipeline, PONO credential, and support FAQ.',
     icon: Hexagon,
     color: 'from-amber-500/20 to-orange-500/10',
     border: 'border-amber-500/30',

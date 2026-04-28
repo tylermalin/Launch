@@ -4,6 +4,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import SiteFooter from '@/components/SiteFooter'
 import { Providers } from '@/components/Providers'
+import { Analytics } from '@vercel/analytics/next'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 const interTight = Inter_Tight({
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="flex-grow">{children}</main>
           <SiteFooter />
         </Providers>
+        <Analytics />
       </body>
     </html>
   )

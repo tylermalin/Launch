@@ -34,44 +34,34 @@ function mergeRootEnv() {
 
 mergeRootEnv()
 
-// ---------------------------------------------------------------------------
-// libsodium-sumo path resolution
-//
-// We cannot use require.resolve('libsodium-sumo/dist/…') because the package's
-// "exports" field doesn't list that subpath → ERR_PACKAGE_PATH_NOT_EXPORTED.
-// We also cannot use a hardcoded ../../node_modules path because Vercel may
-// install deps into apps/web/node_modules/ (Root Dir mode) or the monorepo
-// root, depending on workspace configuration.
-//
-// Solution: probe candidate locations with fs.existsSync so we bypass
-// Node's exports enforcement entirely.
-// ---------------------------------------------------------------------------
-const LIBSODIUM_SUMO_TAIL = 'libsodium-sumo/dist/modules-sumo-esm/libsodium-sumo.mjs'
-
-function findLibsodiumSumoMjs() {
-  const candidates = [
-    // Vercel workspace install — monorepo root node_modules
-    path.resolve(__dirname, '../../node_modules', LIBSODIUM_SUMO_TAIL),
-    // Vercel Root Dir install — apps/web/node_modules
-    path.resolve(__dirname, 'node_modules', LIBSODIUM_SUMO_TAIL),
-    // cwd fallback (wherever Vercel / npm sets process.cwd())
-    path.resolve(process.cwd(), 'node_modules', LIBSODIUM_SUMO_TAIL),
-    path.resolve(process.cwd(), '../../node_modules', LIBSODIUM_SUMO_TAIL),
-  ]
-  return candidates.find((p) => fs.existsSync(p)) ?? null
-}
-
-const libsodiumSumoMjs = findLibsodiumSumoMjs()
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ['@meshsdk/core', '@sidan-lab/sidan-csl-rs-nodejs', '@magic-sdk/admin'],
+  serverExternalPackages: [
+    '@meshsdk/core',
+    '@meshsdk/core-cst',
+    '@meshsdk/wallet',
+    '@meshsdk/transaction',
+    '@meshsdk/provider',
+    '@meshsdk/common',
+    '@cardano-sdk/crypto',
+    'libsodium-wrappers-sumo',
+    'libsodium-sumo',
+    '@sidan-lab/sidan-csl-rs-nodejs',
+    '@magic-sdk/admin',
+  ],
   reactStrictMode: true,
-  transpilePackages: ['@meshsdk/react', '@meshsdk/core-cst', '@cardano-sdk/crypto', 'libsodium-wrappers-sumo', 'libsodium-sumo'],
+  transpilePackages: ['@meshsdk/react'],
+  outputFileTracingIncludes: {
+    '/api/**': [
+      './node_modules/libsodium-sumo/dist/modules-sumo/**',
+      './node_modules/libsodium-wrappers-sumo/dist/modules-sumo/**',
+      './node_modules/@sidan-lab/sidan-csl-rs-nodejs/**',
+    ],
+  },
   turbopack: {
     resolveAlias: {
       'mapbox-gl': 'mapbox-gl',
-      ...(libsodiumSumoMjs ? { './libsodium-sumo.mjs': libsodiumSumoMjs } : {}),
       '@react-native-async-storage/async-storage': './src/lib/stubs/async-storage-stub.js',
     },
   },
@@ -107,7 +97,6 @@ const nextConfig = {
     }
     config.resolve.alias = {
       ...config.resolve.alias,
-      ...(libsodiumSumoMjs ? { './libsodium-sumo.mjs': libsodiumSumoMjs } : {}),
       '@react-native-async-storage/async-storage': path.resolve(__dirname, 'src/lib/stubs/async-storage-stub.js'),
     }
     return config

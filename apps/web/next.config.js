@@ -49,6 +49,7 @@ const nextConfig = {
     'libsodium-sumo',
     '@sidan-lab/sidan-csl-rs-nodejs',
     '@magic-sdk/admin',
+    '@upstash/redis',
   ],
   reactStrictMode: true,
   transpilePackages: ['@meshsdk/react'],

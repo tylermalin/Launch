@@ -15,7 +15,7 @@ import { Info, Lock, Sparkles, TrendingUp } from 'lucide-react'
 
 const TOTAL_MLMA = 500_000_000
 const GENESIS_POOL = 25_000_000
-const PER_NODE = 62_500
+const PER_NODE = 125_000
 const BOOT_PCT = 0.25
 const MONTHLY_PCT = 0.75 / 12
 
@@ -42,26 +42,26 @@ export function TokenomicsInteractive() {
 
   return (
     <div className="space-y-10 mb-16">
-      {/* Supply */}
+      {/* Supply snapshot */}
       <section className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
         <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-malama-accent" /> Supply snapshot (Mālama Genesis)
+          <TrendingUp className="w-5 h-5 text-malama-accent" /> Supply snapshot
         </h2>
         <div className="flex flex-wrap gap-6 mb-6">
           <div>
             <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Total supply cap</p>
             <p className="text-3xl font-black text-white tabular-nums">500M</p>
-            <p className="text-sm text-gray-500">MLMA</p>
+            <p className="text-sm text-gray-500">MLMA · hard ceiling · no further issuance</p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Genesis operators pool</p>
             <p className="text-3xl font-black text-malama-accent tabular-nums">25M</p>
-            <p className="text-sm text-gray-500">MLMA ({genesisPct.toFixed(1)}% of cap)</p>
+            <p className="text-sm text-gray-500">MLMA · 5% of supply · 200 nodes</p>
           </div>
           <div>
-            <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Per node</p>
-            <p className="text-3xl font-black text-white tabular-nums">62.5K</p>
-            <p className="text-sm text-gray-500">MLMA</p>
+            <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Per Genesis operator</p>
+            <p className="text-3xl font-black text-white tabular-nums">125K</p>
+            <p className="text-sm text-gray-500">MLMA · 25% at boot · 75% over 12 months</p>
           </div>
         </div>
         <div className="space-y-2">
@@ -74,20 +74,20 @@ export function TokenomicsInteractive() {
             />
           </div>
           <div className="flex justify-between text-xs text-gray-500">
-            <span>Mālama Genesis — 200 Base + 200 Cardano ({GENESIS_POOL.toLocaleString()} MLMA)</span>
-            <span>Other allocations per whitepaper §5</span>
+            <span>Genesis 200 program · 200 nodes · 195 available ({GENESIS_POOL.toLocaleString()} MLMA)</span>
+            <span>Other allocations per whitepaper §3</span>
           </div>
         </div>
         <p className="mt-4 text-xs text-gray-600 flex items-start gap-2">
           <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
-          Full allocation table (investors, team, incentives, treasury) is in the document below.
+          The Genesis 200 program is designed to bootstrap a globally distributed validation layer for real-world data. Full allocation table in §3.2 below.
         </p>
       </section>
 
       {/* Emissions chart */}
       <section className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
         <h2 className="text-xl font-black text-white mb-2">Network emissions (Y1–Y5)</h2>
-        <p className="text-sm text-gray-500 mb-4">Millions of MLMA per year. Emissions end after Year 3.</p>
+        <p className="text-sm text-gray-500 mb-4">Millions of MLMA per year. Emissions stop entirely after Year 3.</p>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={EMISSION_BY_YEAR} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
@@ -99,20 +99,20 @@ export function TokenomicsInteractive() {
                 labelStyle={{ color: '#e5e7eb' }}
                 formatter={(value: number) => [`${value}M MLMA`, 'Emission']}
               />
-              <Bar dataKey="mlma" fill="#10b981" radius={[6, 6, 0, 0]} name="Annual emission" />
+              <Bar dataKey="mlma" fill="#c4f061" radius={[6, 6, 0, 0]} name="Annual emission" />
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <p className="text-xs text-gray-600 mt-3">Total Y1–Y3: 79.2M MLMA (15.8% of supply). Years 4–5: revenue-funded only.</p>
+        <p className="text-xs text-gray-600 mt-3">Total Y1–Y3: 79.2M MLMA (15.8% of supply). Uncommitted reserve: 58.3M MLMA. Years 4–5: zero emissions, revenue-funded only.</p>
       </section>
 
-      {/* Vesting */}
+      {/* Vesting simulator */}
       <section className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
         <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">
           <Lock className="w-5 h-5 text-blue-400" /> Genesis allocation vesting (per node)
         </h2>
         <p className="text-sm text-gray-400 mb-6">
-          25% at verified hardware boot; 75% linear over 12 months (~3,906 MLMA/month).
+          25% at verified hardware boot (31,250 MLMA); 75% linear over 12 months (~7,813 MLMA/month).
         </p>
         <label className="block mb-2">
           <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Months after boot</span>
@@ -144,6 +144,7 @@ export function TokenomicsInteractive() {
         </div>
       </section>
 
+      {/* Genesis multiplier */}
       <section className="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-orange-500/5 p-6">
         <h2 className="text-xl font-black text-white mb-2 flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-amber-400" /> Year 1 Genesis multiplier
@@ -151,7 +152,7 @@ export function TokenomicsInteractive() {
         <p className="text-5xl font-black text-white mb-2">
           1.5<span className="text-2xl text-amber-400">×</span>
         </p>
-        <p className="text-sm text-gray-400">Applied to validation rewards for Mālama Genesis operators (Base + Cardano) in Year 1; expires in Year 2 per model.</p>
+        <p className="text-sm text-gray-400">Applied to validation rewards for Genesis 200 operators in Year 1 only. Expires at end of Year 1 as emissions and revenue share mature in Year 2.</p>
       </section>
     </div>
   )

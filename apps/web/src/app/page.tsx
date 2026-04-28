@@ -14,7 +14,7 @@ const fadeUp = {
 // TODO(sources): replace placeholders with the final links Mālama controls.
 const SOURCE_SAVECARDS = '/docs/architecture#savecard-archive' // 2,786+ SaveCards: Cardanoscan preprod link goes here
 const SOURCE_FAS_META = 'https://fas.org/publication/unmeasured-emissions/' // FAS Meta emissions: confirm/replace with exact citation
-const SOURCE_AIPOWER = 'https://aipower.fyi'
+const SOURCE_AIPOWER = 'https://ai-energy-impact-opal.vercel.app/'
 
 export default function Home() {
   return (
@@ -45,7 +45,7 @@ export default function Home() {
             className="eyebrow mb-8 inline-flex items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.15em] text-malama-accent"
           >
             <span className="h-2 w-2 animate-malama-live rounded-full bg-malama-accent" />
-            Phase 1 Pre-Sale · Opens May 2026
+            Phase 1 Pre-Sale · Opens May 2026 · 195 Nodes Available
           </motion.div>
 
           <motion.h1
@@ -55,9 +55,9 @@ export default function Home() {
             custom={1}
             className="mb-6 max-w-[1100px] font-serif text-[clamp(2.75rem,7vw,5.5rem)] font-normal leading-[0.95] tracking-[-0.035em] text-malama-ink"
           >
-            Own the infrastructure
+            Own the validation layer
             <br />
-            <em className="text-malama-accent font-light italic">of truth.</em>
+            <em className="font-light italic text-malama-accent">of a real-world data network.</em>
           </motion.h1>
 
           <motion.p
@@ -65,18 +65,18 @@ export default function Home() {
             initial="hidden"
             animate="show"
             custom={2}
-            className="mb-3 max-w-3xl text-[19px] leading-relaxed text-malama-ink-dim"
+            className="mb-5 max-w-3xl text-[19px] leading-relaxed text-malama-ink-dim"
           >
-            The Mālama Hex Node is the validator infrastructure of a hardware-verified climate data network. Each node validates carbon SaveCards from biochar and ERW sites and AI compute packets from data center racks. One protocol. Two product lines. One verified data layer.
+            The Mālama Hex Node validates hardware-signed carbon data and AI compute attestations for enterprise clients. Not a token product. Infrastructure.
           </motion.p>
           <motion.p
             variants={fadeUp}
             initial="hidden"
             animate="show"
             custom={3}
-            className="mb-10 font-serif italic text-malama-accent/90"
+            className="mb-10 max-w-2xl text-base leading-relaxed text-malama-ink-dim"
           >
-            Estimation is the start. Sensors are the truth.
+            The Genesis 200 program is the first and only opportunity to acquire a Hex Node validator license at founder pricing. 200 total nodes. $2,000 entry. 125,000 MLMA allocation. October 2026 delivery.
           </motion.p>
 
           {/* Key fact pills */}
@@ -88,9 +88,9 @@ export default function Home() {
             className="mb-10 grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4"
           >
             {[
-              { label: 'Network Role', value: 'Validator' },
-              { label: 'Geographic Right', value: 'NFT-HEX' },
-              { label: 'Reward Token', value: 'MLMA' },
+              { label: 'Total Nodes', value: '200' },
+              { label: 'Entry Price', value: '$2,000' },
+              { label: 'On-Chain SaveCards', value: '2,786+' },
               { label: 'Max Multiplier', value: '3.0×' },
             ].map(({ label, value }) => (
               <div key={label} className="rounded-malama border border-malama-line bg-malama-elev/60 p-4 text-left backdrop-blur">
@@ -126,14 +126,14 @@ export default function Home() {
             initial="hidden"
             animate="show"
             custom={6}
-            className="text-[11px] font-mono uppercase tracking-[0.15em] text-malama-ink-faint"
+            className="font-mono text-[11px] uppercase tracking-[0.15em] text-malama-ink-faint"
           >
             NFT-HEX Generator · Multi-Chain · First Phase 1 access closes Q2 2026
           </motion.p>
         </div>
       </section>
 
-      {/* ── 01 · WHY HEX NODES ─────────────────────────────────────── */}
+      {/* ── 01 · TWO STREAMS, ONE VALIDATOR ────────────────────────── */}
       <section id="why" className="w-full border-y border-malama-line bg-malama-elev px-5 py-[120px] sm:px-10">
         <div className="mx-auto max-w-[1400px]">
           <motion.p
@@ -143,7 +143,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="mb-3 text-center font-mono text-xs uppercase tracking-[0.2em] text-malama-accent"
           >
-            01 · Why Hex Nodes
+            01 · Two Streams, One Validator
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -155,7 +155,7 @@ export default function Home() {
             Two data streams. One validator network.
           </motion.h2>
           <p className="mx-auto mb-12 max-w-3xl text-center text-malama-ink-dim">
-            A Hex Node is not a token speculation. It is decentralized infrastructure that validates the most critical environmental data streams in the world. Carbon dMRV is the proven pipeline operational on Cardano since June 2024. AI compute monitoring is the scaling product targeting Q2 2026 pilot deployments. The same Hex Node validates both.
+            A Hex Node is not a token speculation. It is decentralized infrastructure that validates the most critical environmental data streams in the world. Carbon dMRV is the proven pipeline operational on Cardano since June 2024. AI compute attestation is the scaling product targeting Q2 2026 pilot deployments. The same Hex Node validates both.
           </p>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -173,7 +173,7 @@ export default function Home() {
               </div>
               <h3 className="mb-3 font-serif text-2xl text-malama-ink">Carbon SaveCards</h3>
               <p className="mb-4 text-sm leading-relaxed text-malama-ink-dim">
-                Hardware-signed environmental telemetry from biochar plots, enhanced rock weathering sites, forestry parcels, and soil carbon projects.{' '}
+                Hardware-signed environmental telemetry direct from the field. Biochar, ERW, forestry, soil carbon. Every reading is ECDSA-signed by an ATECC608B secure enclave — private key burned at manufacture, never exported from the silicon.{' '}
                 <a href={SOURCE_SAVECARDS} className="text-malama-accent underline-offset-2 hover:underline">
                   2,786+ on-chain SaveCards
                 </a>
@@ -184,7 +184,7 @@ export default function Home() {
               </p>
             </motion.div>
 
-            {/* AI Compute Packets */}
+            {/* AI Compute Attestation */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
@@ -197,9 +197,9 @@ export default function Home() {
                 <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
                 Scaling · Q2 2026 Pilots
               </div>
-              <h3 className="mb-3 font-serif text-2xl text-malama-ink">AI Compute Packets</h3>
+              <h3 className="mb-3 font-serif text-2xl text-malama-ink">AI Compute Attestation</h3>
               <p className="mb-4 text-sm leading-relaxed text-malama-ink-dim">
-                Rack-level power sensors deployed inside AI data centers. Direct measurement of electrical load per inference and training cycle. Cooling water attribution. Real-time grid carbon intensity.
+                Rack-level power sensors deployed inside AI data centers. Direct measurement of electrical load per inference run, per training cycle. Cooling water attribution. Real-time grid carbon intensity cross-referenced at the moment of measurement.
               </p>
               <p className="text-sm leading-relaxed text-malama-ink-dim">
                 The{' '}
@@ -215,6 +215,18 @@ export default function Home() {
               </p>
             </motion.div>
           </div>
+
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="mt-8 rounded-malama border border-malama-line bg-malama-bg/50 p-6"
+          >
+            <p className="text-sm leading-relaxed text-malama-ink-dim">
+              The validator network is structurally separate from both upstream data streams. A Hex Node operator does not own carbon credits. They own the right to validate the infrastructure that issues them.
+            </p>
+          </motion.div>
         </div>
       </section>
 
@@ -248,12 +260,12 @@ export default function Home() {
               {
                 n: '01',
                 title: 'Direct Sensor Capture',
-                body: 'IoT sensors capture high-frequency data at the source. Mālama Genesis nodes for environmental sites. Rack-mount AI Power Sensors for data centers. Every reading is ECDSA-signed by an ATECC608B secure enclave with the private key burned in at manufacture. The signature exists before the data leaves the silicon.',
+                body: 'IoT sensors capture high-frequency data at the source. Mālama Genesis nodes for environmental sites. Rack-mount AI Power Sensors for data centers. Every reading is ECDSA-signed by an ATECC608B secure enclave with the private key burned at manufacture — never exported from the silicon. The signature exists before the data leaves the hardware.',
               },
               {
                 n: '02',
                 title: 'Edge Verification',
-                body: 'Raw signed data is processed at the edge. Cryptographic, protocol, physical, spatial, temporal, and methodology checks run in sequence. AI z-score anomaly detection flags spoofed or implausible readings. For AI compute, edge verification cross-references power draw with grid carbon intensity at the moment of measurement.',
+                body: 'Raw signed data is processed at the edge. Cryptographic, protocol, physical, spatial, temporal, and methodology checks run in sequence. AI z-score anomaly detection flags spoofed or implausible readings. For AI compute, edge verification cross-references power draw against grid carbon intensity at the moment of measurement.',
               },
               {
                 n: '03',
@@ -289,7 +301,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 03 · NETWORK ECONOMICS ────────────────────────────────── */}
+      {/* ── 03 · VALIDATION REWARDS ───────────────────────────────── */}
       <section
         id="economics"
         className="w-full border-y border-malama-line bg-malama-elev px-5 py-[120px] sm:px-10"
@@ -302,7 +314,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="mb-3 text-center font-mono text-xs uppercase tracking-[0.2em] text-malama-accent"
           >
-            03 · Network Economics
+            03 · Validation Rewards
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -311,7 +323,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="mb-4 text-center font-serif text-[clamp(2rem,4vw,3rem)] font-normal tracking-tight text-malama-ink"
           >
-            Three reward streams. One node.
+            Three reward mechanisms. One node.
           </motion.h2>
           <p className="mx-auto mb-12 max-w-3xl text-center text-malama-ink-dim">
             Hex Nodes earn through three coordinated reward mechanisms. Each is designed to align long-term network health with operator incentives.
@@ -322,7 +334,7 @@ export default function Home() {
               {
                 label: '01 · Verification Yield',
                 title: 'MLMA per Validation',
-                body: 'Earn MLMA for every successful validation of an AI compute packet or carbon SaveCard. Rewards scale with validation volume and packet complexity. Multi-stream validation compounds yield.',
+                body: 'Earn MLMA for every successful validation of an AI compute attestation or carbon SaveCard. Rewards scale with validation volume and packet complexity. Multi-stream validation compounds yield.',
               },
               {
                 label: '02 · Uptime Multiplier',
@@ -351,6 +363,7 @@ export default function Home() {
             ))}
           </div>
 
+          {/* Geographic multiplier table */}
           <motion.div
             variants={fadeUp}
             initial="hidden"
@@ -358,26 +371,226 @@ export default function Home() {
             viewport={{ once: true }}
             className="mt-10 rounded-malama border border-malama-accent/30 bg-malama-accent/5 p-6"
           >
-            <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-malama-accent">
+            <p className="mb-4 font-mono text-[11px] font-bold uppercase tracking-widest text-malama-accent">
               Geographic multiplier
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-malama-ink-dim">
-              Your Hex Node operates inside an H3 cell governed by an NFT-HEX. Cell classification determines reward multiplier:{' '}
-              <span className="font-semibold text-malama-ink">urban 0.5×</span>,{' '}
-              <span className="font-semibold text-malama-ink">dense suburban 1.0×</span>,{' '}
-              <span className="font-semibold text-malama-ink">rural 1.5×</span>,{' '}
-              <span className="font-semibold text-malama-ink">frontier 2.0×</span>,{' '}
-              <span className="font-semibold text-malama-ink">strategic gap up to 3.0×</span>.
-              {' '}Coverage follows climate value, not population density. Frontier and strategic cells are constrained allocations.
-            </p>
-            <p className="mt-3 text-xs italic text-malama-ink-faint">
-              Mālama does not publish projected operator earnings, token price forecasts, or payback timelines. Operators should model conservative scenarios. See the whitepaper for reward mechanics and the{' '}
+            <div className="overflow-x-auto rounded-malama border border-malama-accent/20">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-malama-accent/20 bg-malama-accent/5 text-left">
+                    {['Zone', 'Multiplier', 'Allocation', 'Notes'].map((h) => (
+                      <th key={h} className="px-4 py-3 font-mono text-[10px] font-bold uppercase tracking-wider text-malama-accent">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-malama-accent/10">
+                  {[
+                    ['Urban', '0.5×', '~40%', 'Most nodes'],
+                    ['Dense suburban', '1.0×', '~30%', 'Mid-tier'],
+                    ['Rural', '1.5×', '~20%', 'Limited'],
+                    ['Frontier', '2.0×', '~8%', 'Very limited'],
+                    ['Strategic gap', '3.0×', '~2%', 'Scarce'],
+                  ].map(([zone, mult, alloc, notes]) => (
+                    <tr key={zone}>
+                      <td className="px-4 py-3 font-semibold text-malama-ink">{zone}</td>
+                      <td className="px-4 py-3 font-mono font-bold text-malama-accent">{mult}</td>
+                      <td className="px-4 py-3 text-malama-ink-dim">{alloc}</td>
+                      <td className="px-4 py-3 text-malama-ink-dim">{notes}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 text-xs italic text-malama-ink-faint">
+              MLMA rewards are relative, not fixed. As the validator set grows, rewards per node are recalculated against total validated packet volume. Early operators benefit from network bootstrap density. Projected figures are illustrative only. Mālama does not publish projected operator earnings, token price forecasts, or payback timelines. See the{' '}
               <Link href="/legal/token-rewards-risk" className="underline underline-offset-2 hover:text-malama-ink-dim">
                 Token &amp; Rewards Risk Disclosure
               </Link>
               {' '}for full risks.
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ── 04 · TWO ECONOMIC PHASES ──────────────────────────────── */}
+      <section id="phases" className="w-full bg-malama-bg px-5 py-[120px] sm:px-10">
+        <div className="mx-auto max-w-[1400px]">
+          <motion.p
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="mb-3 text-center font-mono text-xs uppercase tracking-[0.2em] text-malama-accent"
+          >
+            04 · Two Economic Phases
+          </motion.p>
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="mb-4 text-center font-serif text-[clamp(2rem,4vw,3rem)] font-normal tracking-tight text-malama-ink"
+          >
+            Genesis phase. Steady state.
+          </motion.h2>
+          <p className="mx-auto mb-12 max-w-3xl text-center text-malama-ink-dim">
+            The protocol is designed in two distinct economic phases. Genesis operators capture a structural advantage that cannot be replicated after the network scales.
+          </p>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="rounded-malama border border-malama-accent/40 bg-malama-accent/5 p-8"
+            >
+              <div className="mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-accent">
+                <span className="h-1.5 w-1.5 rounded-full bg-malama-accent" />
+                Genesis Phase · Years 1–3
+              </div>
+              <h3 className="mb-4 font-serif text-2xl text-malama-ink">Founding cohort premium</h3>
+              <ul className="space-y-3 text-sm leading-relaxed text-malama-ink-dim">
+                <li>Higher reward density — protocol is bootstrapping the validator network at 200 nodes.</li>
+                <li>Genesis 200 operators receive lifetime protocol rights, including rights to future product streams added to the network.</li>
+                <li>Founding cohort receives preferential allocation in geographic cells with highest long-term multipliers.</li>
+                <li>Protocol emissions allocated at maximum bootstrap rate during network formation.</li>
+              </ul>
+            </motion.div>
+
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              custom={1}
+              className="rounded-malama border border-malama-line bg-malama-elev p-8"
+            >
+              <div className="mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-ink-dim">
+                <span className="h-1.5 w-1.5 rounded-full bg-malama-ink-dim" />
+                Steady State · Years 4–5
+              </div>
+              <h3 className="mb-4 font-serif text-2xl text-malama-ink">Fee-based revenue model</h3>
+              <ul className="space-y-3 text-sm leading-relaxed text-malama-ink-dim">
+                <li>Expanded validator set as protocol scales beyond the Genesis 200 cohort.</li>
+                <li>Fee-based revenue model from enterprise carbon credit issuance and AI compute disclosure services.</li>
+                <li>Validator rewards shift from pure emission to hybrid emission + fee share.</li>
+                <li>DAO treasury distributions activated from accumulated protocol fees.</li>
+              </ul>
+            </motion.div>
+          </div>
+
+          {/* Revenue flywheel */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="mt-8 rounded-malama border border-malama-line bg-malama-elev p-6"
+          >
+            <p className="mb-4 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-accent">
+              Revenue flywheel
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+              {[
+                'Enterprise clients',
+                'Carbon MRV fees',
+                'Protocol treasury',
+                'Validator rewards',
+                'More validators',
+                'Better coverage',
+                'More enterprise clients',
+              ].map((step, i, arr) => (
+                <span key={step} className="flex items-center gap-2">
+                  <span className="rounded border border-malama-line bg-malama-bg px-3 py-1.5 text-malama-ink-dim">
+                    {step}
+                  </span>
+                  {i < arr.length - 1 && (
+                    <span className="text-malama-accent">→</span>
+                  )}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── 05 · DEMAND ANCHORS ───────────────────────────────────── */}
+      <section id="demand" className="w-full border-y border-malama-line bg-malama-elev px-5 py-[120px] sm:px-10">
+        <div className="mx-auto max-w-[1400px]">
+          <motion.p
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="mb-3 text-center font-mono text-xs uppercase tracking-[0.2em] text-malama-accent"
+          >
+            05 · Demand Anchors
+          </motion.p>
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="mb-4 text-center font-serif text-[clamp(2rem,4vw,3rem)] font-normal tracking-tight text-malama-ink"
+          >
+            Four enterprise deployment categories.
+          </motion.h2>
+          <p className="mx-auto mb-12 max-w-3xl text-center text-malama-ink-dim">
+            The demand for hardware-verified environmental data is structural. These are the markets that require the data the validator network produces.
+          </p>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {[
+              {
+                n: '01',
+                title: 'Carbon MRV',
+                body: 'Compliance buyers at Puro.earth, Isometric, and Verra require hardware-verified dMRV for premium credit issuance. Mālama SaveCards are the verified measurement layer feeding these registries.',
+                color: 'text-malama-accent',
+                dot: 'bg-malama-accent',
+              },
+              {
+                n: '02',
+                title: 'AI Data Center',
+                body: 'SEC climate disclosure, EU CSRD, and SBTi reporting requirements are forcing AI operators to produce verifiable emissions data at the rack level. Hardware attestation is the only credible path.',
+                color: 'text-blue-400',
+                dot: 'bg-blue-400',
+              },
+              {
+                n: '03',
+                title: 'Parametric Insurance',
+                body: 'Weather and emissions triggers for crop and infrastructure insurance policies require verified environmental outcomes. On-chain, hardware-signed data enables trustless parametric payouts.',
+                color: 'text-violet-400',
+                dot: 'bg-violet-400',
+              },
+              {
+                n: '04',
+                title: 'Prediction Markets',
+                body: 'Verified environmental outcomes for on-chain settlement. Carbon sequestration, temperature anomalies, and emissions events settling on hardware-verified data rather than oracle feeds.',
+                color: 'text-amber-400',
+                dot: 'bg-amber-400',
+              },
+            ].map(({ n, title, body, color, dot }, i) => (
+              <motion.div
+                key={n}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                custom={i * 0.3}
+                className="rounded-malama border border-malama-line bg-malama-bg p-7"
+              >
+                <div className={`mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest ${color}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+                  {n}
+                </div>
+                <h3 className="mb-3 font-serif text-xl text-malama-ink">{title}</h3>
+                <p className="text-sm leading-relaxed text-malama-ink-dim">{body}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -430,7 +643,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 04 · SPECIFICATIONS ───────────────────────────────────── */}
+      {/* ── 06 · HARDWARE SPECIFICATIONS ─────────────────────────── */}
       <section id="specs" className="w-full border-y border-malama-line bg-malama-elev px-5 py-[120px] sm:px-10">
         <div className="mx-auto max-w-4xl">
           <motion.p
@@ -440,7 +653,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="mb-3 text-center font-mono text-xs uppercase tracking-[0.2em] text-malama-accent"
           >
-            04 · Hex Node Specifications
+            06 · Hardware Specifications
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -475,8 +688,10 @@ export default function Home() {
                       ['RAM', '8 GB DDR4', '16 GB DDR4'],
                       ['Storage', '256 GB NVMe SSD', '512 GB NVMe SSD'],
                       ['Network', '100 Mbps up/down', '1 Gbps up/down'],
+                      ['Secure element', 'ATECC608B', 'ATECC608B'],
                       ['OS', 'Ubuntu 22.04 LTS', 'Ubuntu 24.04 LTS'],
                       ['Uptime', '99.0%', '99.9%+ for bonus'],
+                      ['Anchoring', 'Cardano + Base', 'Cardano + Hedera + Base'],
                     ].map(([c, min, rec]) => (
                       <tr key={c} className="border-b border-malama-line last:border-0">
                         <td className="px-4 py-3 font-semibold text-malama-ink">{c}</td>
@@ -487,6 +702,9 @@ export default function Home() {
                   </tbody>
                 </table>
               </div>
+              <p className="mt-3 text-xs text-malama-ink-faint">
+                NFT-HEX: Each node license is represented by an NFT-HEX rights object encoding geographic rights, capacity constraints, reward weighting, and regional governance for that H3 cell.
+              </p>
             </SpecSection>
 
             <SpecSection title="Core Functions">
@@ -567,9 +785,25 @@ export default function Home() {
             <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-malama-accent">
               Phase 1 Pre-Sale · Opens May 2026
             </p>
-            <h2 className="mb-5 font-serif text-[clamp(2rem,4vw,3rem)] font-normal tracking-tight text-malama-ink">
+            <h2 className="mb-8 font-serif text-[clamp(2rem,4vw,3rem)] font-normal tracking-tight text-malama-ink">
               Reserve your Hex Node.
             </h2>
+
+            {/* Reserve stats */}
+            <div className="mx-auto mb-10 grid max-w-2xl grid-cols-2 gap-4 sm:grid-cols-4">
+              {[
+                { label: 'Available', value: '195' },
+                { label: 'Entry price', value: '$2,000' },
+                { label: 'MLMA allocation', value: '125,000' },
+                { label: 'Delivery', value: 'Oct 2026' },
+              ].map(({ label, value }) => (
+                <div key={label} className="rounded-malama border border-malama-line bg-malama-elev p-4 text-center">
+                  <div className="font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">{label}</div>
+                  <div className="mt-1 font-serif text-xl text-malama-accent">{value}</div>
+                </div>
+              ))}
+            </div>
+
             <p className="mb-10 text-malama-ink-dim">
               Explore the global hex map, generate your NFT-HEX, and complete your reservation across Cardano and Base. First Phase 1 access closes Q2 2026.
             </p>
@@ -578,7 +812,7 @@ export default function Home() {
                 href="/presale"
                 className="btn-primary inline-flex items-center justify-center gap-2 px-7 py-4 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-malama-bg shadow-[0_8px_24px_rgba(196,240,97,0.2)] transition hover:-translate-y-0.5"
               >
-                Open the Launchpad →
+                Reserve a Hex Node →
               </Link>
               <Link
                 href="mailto:hello@malamalabs.com?subject=Hex%20Node%20call"
@@ -609,7 +843,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-malama-accent hover:text-malama-accent-dim"
             >
-              Live Stream → aipower.fyi
+              Live data stream → aipower.fyi
             </a>
           </motion.div>
         </div>

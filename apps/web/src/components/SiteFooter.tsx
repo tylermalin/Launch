@@ -1,29 +1,34 @@
 import Link from 'next/link'
 
 const DISCORD_URL = 'https://discord.gg/PcKRRUcJ'
+const AIPOWER_URL = 'https://ai-energy-impact-opal.vercel.app/'
 
 const footerSections: { title: string; links: { href: string; label: string; external?: boolean }[] }[] = [
   {
     title: 'Product',
     links: [
       { href: '/presale', label: 'Reserve a node' },
-      { href: '/map', label: 'Explorer' },
+      { href: '/map', label: 'Hex Map Explorer' },
       { href: '/timeline', label: 'Timeline' },
+      { href: '/docs', label: 'Documentation' },
     ],
   },
   {
     title: 'Documentation',
     links: [
       { href: '/docs', label: 'Documentation hub' },
-      { href: '/docs/tokenomics', label: 'White paper' },
-      { href: '/docs/pricing-roi', label: 'Pricing and ROI' },
-      { href: '/docs/phase-1-timeline', label: 'Phase 1 timeline' },
+      { href: '/docs/tokenomics', label: 'Whitepaper' },
+      { href: '/legal/token-rewards-risk', label: 'Token & Rewards Risk Disclosure' },
       { href: '/docs/operators', label: 'Operator docs' },
     ],
   },
   {
     title: 'Community',
-    links: [{ href: DISCORD_URL, label: 'Discord', external: true }],
+    links: [
+      { href: DISCORD_URL, label: 'Discord', external: true },
+      { href: '/docs/operators#faq', label: 'Operator FAQ' },
+      { href: 'mailto:hello@malamalabs.com?subject=Hex%20Node%20call', label: 'Schedule a Call', external: true },
+    ],
   },
   {
     title: 'Legal',
@@ -39,8 +44,17 @@ export default function SiteFooter() {
           <div className="lg:col-span-2">
             <p className="font-serif text-[1.65rem] font-medium tracking-tight text-malama-ink">Mālama Labs</p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-malama-ink-dim">
-              Cryptographic environmental intelligence — hardware-signed data anchored to Base and Cardano.
+              Cryptographic environmental intelligence. Hardware-signed data anchored to Cardano, Hedera, and Base.
             </p>
+            <a
+              href={AIPOWER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-malama-accent hover:text-malama-accent/80 transition-colors"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-malama-accent animate-pulse" />
+              Live data stream → aipower.fyi
+            </a>
           </div>
           {footerSections.map((section) => (
             <div key={section.title}>

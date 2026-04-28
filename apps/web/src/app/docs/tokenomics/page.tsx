@@ -12,16 +12,18 @@ export default function TokenomicsPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-10"
       >
-        <p className="text-xs font-black uppercase tracking-widest text-malama-accent mb-2">Mālama Labs · April 11, 2026</p>
+        <p className="text-xs font-black uppercase tracking-widest text-malama-accent mb-2">Mālama Labs · April 2026</p>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-3 leading-tight">
           MLMA Tokenomics Whitepaper
         </h1>
         <p className="text-base md:text-lg text-malama-accent/90 font-semibold mb-4">
-          Complete token design, emission schedule, revenue model, and operator economics
+          Complete token design, emission schedule, and operator economics
         </p>
         <p className="text-sm text-gray-500 border-l-2 border-malama-accent/50 pl-4">
-          <span className="text-gray-400">Version 1.0</span> · Final for Genesis Phase 1 Pre-Sale · Authors: Tyler Malin (CEO), Finance
-          &amp; Treasury Team
+          <span className="text-gray-400">Version 2.0</span> · April 2026 · Working draft pending Beneficial Technology legal review.
+          Not for external distribution without that review complete.
+          <br />
+          <span className="text-gray-500">Author: Tyler Malin, CEO &amp; Co-Founder · Mālama Labs, Inc.</span>
         </p>
       </motion.header>
 

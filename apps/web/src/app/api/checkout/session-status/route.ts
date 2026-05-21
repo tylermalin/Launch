@@ -4,11 +4,11 @@ import { reconcilePaidCheckoutSession } from '@/lib/checkout-reconcile'
 import type { CustodialRecord } from '@/lib/custodial-store'
 import { getSessionStatus } from '@/lib/custodial-store'
 import { getStripeSecretKey } from '@/lib/stripe-server'
+import { requireGenesisContract } from '@/lib/genesis-contract'
 
 export const runtime = 'nodejs'
 
-const GENESIS_CONTRACT = (process.env.NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS ??
-  '0x2222222222222222222222222222222222222222') as `0x${string}`
+const GENESIS_CONTRACT = requireGenesisContract()
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)

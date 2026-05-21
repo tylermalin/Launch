@@ -7,7 +7,7 @@ const topNavLinks = [
   { href: '/presale', label: 'Reserve', active: (p: string) => p.startsWith('/presale') },
   { href: '/docs', label: 'Docs', active: (p: string) => p.startsWith('/docs') },
   { href: '/timeline', label: 'Timeline', active: (p: string) => p.startsWith('/timeline') },
-  { href: '/map', label: 'Explorer', active: (p: string) => p === '/map' || p.startsWith('/map/') },
+  { href: '/explorer', label: 'Explorer', active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
   { href: '/partners', label: 'Become A Launch Partner', active: (p: string) => p.startsWith('/partners') },
 ]
 

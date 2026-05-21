@@ -26,7 +26,8 @@ import {
 } from '@/components/legal/PurchaseLegalAcknowledgement'
 
 // ─── Contract addresses ───────────────────────────────────────────────────────
-const GENESIS_CONTRACT = (process.env.NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS ?? '0x2222222222222222222222222222222222222222') as `0x${string}`
+import { requireGenesisContract } from '@/lib/genesis-contract'
+const GENESIS_CONTRACT = requireGenesisContract()
 const USDC_CONTRACT    = (process.env.NEXT_PUBLIC_MOCK_USDC_ADDRESS         ?? '0x1111111111111111111111111111111111111111') as `0x${string}`
 const PRICE_USDC       = parseUnits('2000', 6) // $2,000 USDC (6 decimals)
 
@@ -471,14 +472,14 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                   </p>
                 </div>
                 <Link
-                  href="/map"
+                  href="/explorer"
                   className={`flex w-full items-center justify-center rounded-xl px-4 py-3 text-xs font-black transition-all ${
                     hexId
                       ? 'border border-amber-500/50 bg-amber-500/20 text-amber-400 hover:bg-amber-500/30'
                       : 'bg-amber-500 text-black shadow-lg hover:scale-[1.02]'
                   }`}
                 >
-                  {hexId ? 'Change hex on map →' : 'Open map to choose hex →'}
+                  {hexId ? 'Change hex on explorer →' : 'Open explorer to choose hex →'}
                 </Link>
               </div>
 

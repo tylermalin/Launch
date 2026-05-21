@@ -1,0 +1,288 @@
+{
+  "schemaVersion": "1.0.0",
+  "h3Resolution": 5,
+  "generatedAt": "2026-05-20T08:23:48.316Z",
+  "count": 5,
+  "hexes": [
+    {
+      "nodeNumber": 1,
+      "h3Index": "8529a19bfffffff",
+      "h3Resolution": 5,
+      "status": "reserved-founding",
+      "operator": "Tyler Malin",
+      "address": "Los Angeles, CA 90034, USA",
+      "inputLat": 34.029,
+      "inputLng": -118.4012,
+      "centroidLat": 34.01398991105896,
+      "centroidLng": -118.43778346472644,
+      "region": "Los Angeles",
+      "country": "US",
+      "administrativeArea": "California",
+      "locality": "Los Angeles",
+      "postalCode": "90034",
+      "boundaryGeoJson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -118.37966395159236,
+              33.93481926445656
+            ],
+            [
+              -118.32471169293865,
+              34.017947868507264
+            ],
+            [
+              -118.38285074576322,
+              34.09710606653406
+            ],
+            [
+              -118.49596921142012,
+              34.09307581578453
+            ],
+            [
+              -118.55078588571087,
+              34.00993062959066
+            ],
+            [
+              -118.49261999923168,
+              33.930832252249495
+            ],
+            [
+              -118.37966395159236,
+              33.93481926445656
+            ]
+          ]
+        ]
+      },
+      "zoneClassification": null,
+      "geographicMultiplier": null,
+      "dataDemandScore": null,
+      "notes": "Founding team test hex — held by Malama Labs Inc. internal team"
+    },
+    {
+      "nodeNumber": 2,
+      "h3Index": "8526cb9bfffffff",
+      "h3Resolution": 5,
+      "status": "reserved-founding",
+      "operator": "Dominick Garely",
+      "address": "Dallas, TX, USA",
+      "inputLat": 32.7767,
+      "inputLng": -96.797,
+      "centroidLat": 32.72156205364267,
+      "centroidLng": -96.87010196272513,
+      "region": "Dallas",
+      "country": "US",
+      "administrativeArea": "Texas",
+      "locality": "Dallas",
+      "postalCode": null,
+      "boundaryGeoJson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -96.82865368703152,
+              32.63337447823766
+            ],
+            [
+              -96.76016067467985,
+              32.706013436436514
+            ],
+            [
+              -96.80156679722839,
+              32.794184714915346
+            ],
+            [
+              -96.9116240657901,
+              32.80971851676303
+            ],
+            [
+              -96.98013864540466,
+              32.73702270431601
+            ],
+            [
+              -96.93857463245807,
+              32.64885000533554
+            ],
+            [
+              -96.82865368703152,
+              32.63337447823766
+            ]
+          ]
+        ]
+      },
+      "zoneClassification": null,
+      "geographicMultiplier": null,
+      "dataDemandScore": null,
+      "notes": "Founding team test hex — held by Malama Labs Inc. internal team"
+    },
+    {
+      "nodeNumber": 3,
+      "h3Index": "855d1447fffffff",
+      "h3Resolution": 5,
+      "status": "reserved-founding",
+      "operator": "Jeffrey Wise",
+      "address": "Haiku-Pauwela, HI, USA",
+      "inputLat": 20.9189,
+      "inputLng": -156.3158,
+      "centroidLat": 20.97962075326779,
+      "centroidLng": -156.25606158300906,
+      "region": "Haiku",
+      "country": "US",
+      "administrativeArea": "Hawaii",
+      "locality": "Haiku-Pauwela",
+      "postalCode": null,
+      "boundaryGeoJson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -156.32525454443825,
+              21.049222492457265
+            ],
+            [
+              -156.35626271088665,
+              20.95801413251495
+            ],
+            [
+              -156.28709414970191,
+              20.88838882279993
+            ],
+            [
+              -156.18689624320052,
+              20.90995399065519
+            ],
+            [
+              -156.1558120109137,
+              21.001172961649516
+            ],
+            [
+              -156.22500161392367,
+              21.070816204349693
+            ],
+            [
+              -156.32525454443825,
+              21.049222492457265
+            ]
+          ]
+        ]
+      },
+      "zoneClassification": null,
+      "geographicMultiplier": null,
+      "dataDemandScore": null,
+      "notes": "Founding team test hex — held by Malama Labs Inc. internal team"
+    },
+    {
+      "nodeNumber": 4,
+      "h3Index": "8528846ffffffff",
+      "h3Resolution": 5,
+      "status": "reserved-founding",
+      "operator": "Team Node",
+      "address": "3742 ID-21, Idaho City, ID 83631, USA",
+      "inputLat": 43.8281,
+      "inputLng": -115.8341,
+      "centroidLat": 43.88428235217643,
+      "centroidLng": -115.84845220193932,
+      "region": "Idaho",
+      "country": "US",
+      "administrativeArea": "Idaho",
+      "locality": "Idaho City",
+      "postalCode": "83631",
+      "boundaryGeoJson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -115.78583960724029,
+              43.81120630407444
+            ],
+            [
+              -115.72258331170543,
+              43.88763346754172
+            ],
+            [
+              -115.78521038760769,
+              43.96067589129638
+            ],
+            [
+              -115.91115004388797,
+              43.95724451276206
+            ],
+            [
+              -115.97426056689335,
+              43.88079440405037
+            ],
+            [
+              -115.91157766022353,
+              43.80779860504328
+            ],
+            [
+              -115.78583960724029,
+              43.81120630407444
+            ]
+          ]
+        ]
+      },
+      "zoneClassification": null,
+      "geographicMultiplier": null,
+      "dataDemandScore": null,
+      "notes": "Founding team test hex — held by Malama Labs Inc. internal team"
+    },
+    {
+      "nodeNumber": 5,
+      "h3Index": "8527400ffffffff",
+      "h3Resolution": 5,
+      "status": "reserved-founding",
+      "operator": "Wisconsin Project Node",
+      "address": "2383 Maple Drive, Sister Bay, WI 54234, USA",
+      "inputLat": 45.1949,
+      "inputLng": -87.1255,
+      "centroidLat": 45.265016823090924,
+      "centroidLng": -87.10428730189015,
+      "region": "Sister Bay",
+      "country": "US",
+      "administrativeArea": "Wisconsin",
+      "locality": "Sister Bay",
+      "postalCode": "54234",
+      "boundaryGeoJson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -87.1342161376242,
+              45.35335122263613
+            ],
+            [
+              -87.23104216605833,
+              45.29328632740284
+            ],
+            [
+              -87.20096816137051,
+              45.20503601042579
+            ],
+            [
+              -87.07447505177576,
+              45.17674457485578
+            ],
+            [
+              -86.97765893037617,
+              45.23660725533422
+            ],
+            [
+              -87.00732521551512,
+              45.32496332425303
+            ],
+            [
+              -87.1342161376242,
+              45.35335122263613
+            ]
+          ]
+        ]
+      },
+      "zoneClassification": null,
+      "geographicMultiplier": null,
+      "dataDemandScore": null,
+      "notes": "Founding team test hex — held by Malama Labs Inc. internal team"
+    }
+  ]
+}

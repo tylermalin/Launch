@@ -11,8 +11,8 @@ export default function GenesisHexListPage() {
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden bg-malama-deep">
       <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-gray-800 px-4 py-3">
-        <Link href="/map" className="text-sm font-bold text-malama-teal hover:underline">
-          ← Back to map
+        <Link href="/explorer" className="text-sm font-bold text-malama-teal hover:underline">
+          ← Back to explorer
         </Link>
         <p className="hidden text-center text-[11px] font-mono uppercase tracking-widest text-gray-500 sm:block">
           Reserve $2,000 USDC

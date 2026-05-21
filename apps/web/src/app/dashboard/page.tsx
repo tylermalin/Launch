@@ -449,10 +449,10 @@ export default function Dashboard() {
                         <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Active Data Markets</p>
                         <p className="mb-2 text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
                         <Link
-                          href={`/map?hex=${hex}`}
+                          href={`/explorer?hex=${hex}`}
                           className="inline-flex items-center rounded-lg border border-malama-teal/20 bg-malama-teal/10 px-3 py-1.5 text-xs font-bold text-malama-teal transition-colors hover:border-malama-teal hover:text-white"
                         >
-                          <MapPin className="mr-1 h-3 w-3" /> View Map
+                          <MapPin className="mr-1 h-3 w-3" /> View Explorer
                         </Link>
                       </div>
                     </div>
@@ -462,7 +462,7 @@ export default function Dashboard() {
             )}
 
             <Link
-              href="/map"
+              href="/explorer"
               className="mt-8 block w-full rounded-xl border border-gray-800 bg-gray-900 py-4 text-center text-lg font-black text-white transition-colors hover:bg-gray-800"
             >
               Acquire Additional Territory

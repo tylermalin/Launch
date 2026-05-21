@@ -88,28 +88,28 @@ const phases: {
   cta: { label: string; href: string } | null
 }[] = [
   {
-    id: 'may',
-    date: 'May 2026',
-    label: 'Pre-Sale Opens',
+    id: 'launch',
+    date: 'June 1, 2026',
+    label: 'Public Hex Launch',
     icon: Zap,
     color: 'emerald',
     badge: 'Live Soon',
     items: [
-      'Phase 1 pre-sale officially begins — reserve your Genesis Hex Node for $2,000.',
+      'Public Hex Launch — Genesis 200 sale opens to the world. Reserve your Genesis Hex Node for $2,000.',
       'Select your H3 hex cell on the Hex Map Explorer. Each cell is a unique geographic license.',
-      'Pay via crypto or card and receive your NFT-HEX rights object + 125,000 MLMA allocation on-chain.',
-      'Hardware pre-order enters the production queue. Ships September 2026.',
+      'Pay via crypto or card and receive your NFT-HEX rights object on-chain. 125,000 MLMA allocation is bound to your node, vesting through boot and operational milestones.',
+      'Hardware pre-order enters the production queue. Units ship Q4 2026.',
     ],
-    note: '195 nodes available for public allocation. 5 reserved for Mālama Labs.',
+    note: '195 nodes available for public allocation. 5 reserved for Mālama Labs. First-come, first-served by hex cell — sale closes when sold out.',
     cta: { label: 'Reserve a Hex Node', href: '/presale' },
   },
   {
-    id: 'sep',
-    date: 'September 2026',
-    label: 'Hardware Deployment',
+    id: 'ship',
+    date: 'Q4 2026',
+    label: 'Units Ship',
     icon: Package,
     color: 'blue',
-    badge: 'Q3 2026',
+    badge: 'Q4 2026',
     items: [
       'Operator hardware shipments commence to all registered locations globally.',
       'Each kit includes the Mālama-provisioned enclosure, sensors, solar UPS, Ethernet cable, and soil probe.',
@@ -119,23 +119,24 @@ const phases: {
     cta: null,
   },
   {
-    id: 'oct-boot',
-    date: 'Late Sept — Early Oct 2026',
-    label: 'Boot & Register',
+    id: 'mainnet',
+    date: 'Q4 2026',
+    label: 'Mainnet Live · Boot & Register',
     icon: Cpu,
     color: 'violet',
-    badge: 'Q4 2026',
+    badge: 'Pre-TGE',
     items: [
+      'Mālama mainnet goes live in Q4 2026 — ahead of the Token Generation Event. Validation is operational before any token liquidity exists.',
       'Secure connection string booting takes approximately 30 minutes from first power-on.',
       'The node connects to the Mālama DePIN network and registers its ATECC608B device key on-chain.',
-      '25% of your MLMA allocation (31,250 MLMA) vests instantly on first verified boot.',
       'Node appears on the live network map as "Active" — carbon SaveCard and AI compute validation begins immediately.',
+      'Boot tranche (15%, 18,750 MLMA) unlocks at first verified boot. Allocation accrues; liquidity follows at TGE.',
     ],
     cta: null,
   },
   {
-    id: 'oct-earn',
-    date: 'October 2026',
+    id: 'rewards',
+    date: 'Q4 2026 → Q1 2027',
     label: 'First Rewards Accrue',
     icon: TrendingUp,
     color: 'amber',
@@ -143,11 +144,27 @@ const phases: {
     items: [
       'Network metrics flow live — validation checks process carbon SaveCards and AI compute attestations continuously.',
       'Earn MLMA based on your Geographic Multiplier (0.5×–3.0×), Data Quality Score, and uptime. Rewards are relative to total network validation volume.',
-      '75% monthly vesting unlocks commence — approximately 7,812 MLMA per month for 12 months.',
+      'PONO qualification (~90 days post-boot) unlocks the second tranche (15%) and governance eligibility.',
       'Operator economics depend on data demand in your hex cell and MLMA market conditions. See whitepaper for mechanics.',
     ],
     note: 'Mālama does not publish projected earnings, token price forecasts, or payback timelines. Model conservative scenarios.',
     cta: { label: 'View Validation Rewards', href: '/#economics' },
+  },
+  {
+    id: 'tge',
+    date: 'Post-Mainnet',
+    label: 'Token Generation Event',
+    icon: Zap,
+    color: 'amber',
+    badge: 'TGE',
+    items: [
+      'TGE follows mainnet — not before. The protocol is operational with real validation data before any token enters circulation.',
+      'Vested MLMA from the boot tranche becomes liquid at TGE. Future tranches remain on their PONO + operational milestone schedule.',
+      'Genesis 200 operators receive priority allocation status established by their on-chain boot date — earliest boots first.',
+      'TGE timing is governed by mainnet stability metrics and regulatory clearance, not a fixed calendar date.',
+    ],
+    note: 'Token characterization and TGE jurisdiction remain subject to the Token & Rewards Risk Disclosure. Plan for variable timing.',
+    cta: null,
   },
   {
     id: 'genesis-phase',
@@ -168,7 +185,7 @@ const phases: {
 ]
 
 export default function TimelinePage() {
-  const [expanded, setExpanded] = useState<string>('may')
+  const [expanded, setExpanded] = useState<string>('launch')
 
   return (
     <div className="w-full min-h-screen bg-malama-bg">
@@ -204,8 +221,8 @@ export default function TimelinePage() {
           custom={2}
           className="text-lg text-malama-ink-dim leading-relaxed max-w-2xl mx-auto"
         >
-          From your first reservation in May 2026 to earning MLMA rewards in October —
-          every milestone, vesting moment, and Genesis Phase right mapped out.
+          From the Public Hex Launch on June 1, 2026 through mainnet going live in Q4 2026
+          (ahead of TGE) — every milestone, vesting moment, and Genesis Phase right mapped out.
         </motion.p>
       </div>
 
@@ -324,8 +341,8 @@ export default function TimelinePage() {
         >
           {[
             { label: 'Entry price', value: '$2,000', sub: 'One-time at reserve' },
-            { label: 'MLMA allocation', value: '125,000', sub: '25% at boot · 75% vested' },
-            { label: 'First rewards', value: 'Oct 2026', sub: 'Validation live on boot' },
+            { label: 'MLMA allocation', value: '125,000', sub: '15% at boot · 85% milestone-vested' },
+            { label: 'Mainnet live', value: 'Q4 2026', sub: 'Validation live, ahead of TGE' },
             { label: 'Genesis rights', value: 'Lifetime', sub: 'All future product streams' },
           ].map(({ label, value, sub }) => (
             <div key={label} className="bg-malama-card border border-malama-line rounded-malama p-4 text-center">
@@ -345,11 +362,11 @@ export default function TimelinePage() {
           className="mt-8 md:ml-20 p-8 rounded-malama border border-malama-accent/30 bg-malama-accent/5 text-center"
         >
           <p className="font-mono text-[11px] uppercase tracking-widest text-malama-accent mb-2">
-            Phase 1 Pre-Sale · Opens May 2026
+            Public Hex Launch · June 1, 2026
           </p>
           <h3 className="font-serif text-2xl text-malama-ink mb-2">195 nodes available.</h3>
           <p className="text-malama-ink-dim text-sm mb-8 max-w-md mx-auto">
-            5 nodes reserved for Mālama Labs. Allocation closes June 2026 or when sold out. First-come, first-served by hex cell selection.
+            5 nodes reserved for Mālama Labs. Allocation closes when sold out. First-come, first-served by hex cell selection. Hardware ships Q4 2026, mainnet live Q4 2026 ahead of TGE.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -359,7 +376,7 @@ export default function TimelinePage() {
               Reserve a Hex Node →
             </Link>
             <Link
-              href="/map"
+              href="/explorer"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-malama-accent/40 text-malama-accent font-black text-sm uppercase tracking-wider rounded-malama hover:bg-malama-accent/8 transition-all"
             >
               Browse Available Hexes

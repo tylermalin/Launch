@@ -4,7 +4,7 @@ import GenesisMint from '@/components/GenesisMintDynamic'
 export const metadata: Metadata = {
   title: 'Reserve with Crypto or Card | Mālama Genesis | Mālama Labs',
   description:
-    'Connect your wallet, pick your hex on the map, and reserve a Genesis validator node. $2,000 entry. 62,500 MLMA per node. 400 Mālama Genesis nodes total (200 Base + 200 Cardano). Oct 2026 revenue.',
+    'Connect your wallet, pick your hex on the map, and reserve a Genesis validator node. $2,000 entry. 62,500 MLMA per node. 400 Mālama Genesis nodes total (200 Base + 200 Cardano). Public Hex Launch June 1, 2026 · mainnet live Q4 2026 ahead of TGE.',
 }
 
 export default async function PresalePage({
@@ -36,7 +36,7 @@ export default async function PresalePage({
         <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed mb-6">
           Choose a hex from the 400 Mālama Genesis licenses (200 Base + 200 Cardano), connect an EVM or Cardano wallet (or custodial
           with email), then reserve with crypto or fiat via credit/debit card. $2,000 entry. 62,500 MLMA vests per operator schedule.
-          Revenue starts October 2026.
+          Mainnet live Q4 2026, ahead of TGE.
         </p>
         <p className="text-sm text-gray-500 mb-10">
           <a

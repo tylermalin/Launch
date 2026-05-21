@@ -45,7 +45,7 @@ export default function Home() {
             className="eyebrow mb-8 inline-flex items-center gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.15em] text-malama-accent"
           >
             <span className="h-2 w-2 animate-malama-live rounded-full bg-malama-accent" />
-            Phase 1 Pre-Sale · Opens May 2026 · 195 Nodes Available
+            Public Hex Launch · June 1, 2026 · 195 Nodes Available
           </motion.div>
 
           <motion.h1
@@ -76,7 +76,7 @@ export default function Home() {
             custom={3}
             className="mb-10 max-w-2xl text-base leading-relaxed text-malama-ink-dim"
           >
-            The Genesis 200 program is the first and only opportunity to acquire a Hex Node validator license at founder pricing. 200 total nodes. $2,000 entry. 125,000 MLMA allocation. October 2026 delivery.
+            The Genesis 200 program is the first and only opportunity to acquire a Hex Node validator license at founder pricing. 200 total nodes. $2,000 entry. 125,000 MLMA allocation. Hardware ships Q4 2026 · mainnet live Q4 2026 ahead of TGE.
           </motion.p>
 
           {/* Key fact pills */}
@@ -114,7 +114,7 @@ export default function Home() {
               Reserve a Hex Node →
             </Link>
             <Link
-              href="/map"
+              href="/explorer"
               className="btn-ghost inline-flex items-center justify-center gap-2 border border-malama-line-bright px-7 py-4 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-malama-ink transition hover:border-malama-accent hover:text-malama-accent"
             >
               Hex Map Explorer
@@ -128,7 +128,7 @@ export default function Home() {
             custom={6}
             className="font-mono text-[11px] uppercase tracking-[0.15em] text-malama-ink-faint"
           >
-            NFT-HEX Generator · Multi-Chain · First Phase 1 access closes Q2 2026
+            NFT-HEX Generator · Multi-Chain · Public Hex Launch opens June 1, 2026
           </motion.p>
         </div>
       </section>
@@ -594,54 +594,62 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── HARDWARE IMAGES ───────────────────────────────────────── */}
-      <section id="hardware" className="w-full bg-malama-bg px-5 py-[120px] sm:px-10">
-        <div className="mx-auto max-w-[1400px]">
-          <motion.h2
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="mb-4 text-center font-serif text-[clamp(2rem,4vw,3rem)] font-normal tracking-tight text-malama-ink"
-          >
-            The Hex Node Hardware
-          </motion.h2>
-          <p className="mb-12 text-center text-lg text-malama-ink-dim">
-            Everything you need to validate carbon and compute data — shipped to your door.
-          </p>
-          <div className="flex flex-col gap-8">
-            <motion.div
+      {/* ── HARDWARE IMAGES (HIDDEN · sensors still in production) ───
+       *
+       * The two hardware photos (/hardware-exploded.png and
+       * /hardware-views.png) are temporarily hidden because the
+       * physical sensor hardware is still being finalized for production.
+       * To restore: change `{false &&` to `{true &&` (or remove the wrapper).
+       */}
+      {false && (
+        <section id="hardware" className="w-full bg-malama-bg px-5 py-[120px] sm:px-10">
+          <div className="mx-auto max-w-[1400px]">
+            <motion.h2
               variants={fadeUp}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true }}
-              className="overflow-hidden rounded-malama border border-malama-line shadow-2xl"
+              className="mb-4 text-center font-serif text-[clamp(2rem,4vw,3rem)] font-normal tracking-tight text-malama-ink"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/hardware-exploded.png"
-                alt="Mālama Hex Node — full hardware exploded view"
-                className="h-auto w-full object-cover"
-              />
-            </motion.div>
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              custom={1}
-              className="overflow-hidden rounded-malama border border-malama-line shadow-2xl"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/hardware-views.png"
-                alt="Mālama Hex Node — enclosure, power system, sensor and network views"
-                className="h-auto w-full object-cover"
-              />
-            </motion.div>
+              The Hex Node Hardware
+            </motion.h2>
+            <p className="mb-12 text-center text-lg text-malama-ink-dim">
+              Everything you need to validate carbon and compute data — shipped to your door.
+            </p>
+            <div className="flex flex-col gap-8">
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="overflow-hidden rounded-malama border border-malama-line shadow-2xl"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/hardware-exploded.png"
+                  alt="Mālama Hex Node — full hardware exploded view"
+                  className="h-auto w-full object-cover"
+                />
+              </motion.div>
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                custom={1}
+                className="overflow-hidden rounded-malama border border-malama-line shadow-2xl"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/hardware-views.png"
+                  alt="Mālama Hex Node — enclosure, power system, sensor and network views"
+                  className="h-auto w-full object-cover"
+                />
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── 06 · HARDWARE SPECIFICATIONS ─────────────────────────── */}
       <section id="specs" className="w-full border-y border-malama-line bg-malama-elev px-5 py-[120px] sm:px-10">
@@ -783,7 +791,7 @@ export default function Home() {
             className="mx-auto max-w-3xl text-center"
           >
             <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-malama-accent">
-              Phase 1 Pre-Sale · Opens May 2026
+              Public Hex Launch · June 1, 2026
             </p>
             <h2 className="mb-8 font-serif text-[clamp(2rem,4vw,3rem)] font-normal tracking-tight text-malama-ink">
               Reserve your Hex Node.
@@ -795,7 +803,7 @@ export default function Home() {
                 { label: 'Available', value: '195' },
                 { label: 'Entry price', value: '$2,000' },
                 { label: 'MLMA allocation', value: '125,000' },
-                { label: 'Delivery', value: 'Oct 2026' },
+                { label: 'Delivery', value: 'Q4 2026' },
               ].map(({ label, value }) => (
                 <div key={label} className="card-hover rounded-malama border border-malama-line bg-malama-elev p-4 text-center">
                   <div className="font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">{label}</div>
@@ -805,7 +813,7 @@ export default function Home() {
             </div>
 
             <p className="mb-10 text-malama-ink-dim">
-              Explore the global hex map, generate your NFT-HEX, and complete your reservation across Cardano and Base. First Phase 1 access closes Q2 2026.
+              Explore the global hex map, generate your NFT-HEX, and complete your reservation across Cardano and Base. Public Hex Launch opens June 1, 2026.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link

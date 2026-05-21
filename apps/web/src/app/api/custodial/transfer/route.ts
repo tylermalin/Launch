@@ -5,11 +5,11 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { baseSepolia } from 'viem/chains'
 import { getCustodialByClaimId } from '@/lib/custodial-store'
 import { decryptPrivateKeyHex } from '@/lib/wallet-crypto'
+import { requireGenesisContract } from '@/lib/genesis-contract'
 
 export const runtime = 'nodejs'
 
-const GENESIS_CONTRACT = (process.env.NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS ??
-  '0x2222222222222222222222222222222222222222') as `0x${string}`
+const GENESIS_CONTRACT = requireGenesisContract()
 
 const ERC721_ABI = parseAbi([
   'function transferFrom(address from, address to, uint256 tokenId) external',

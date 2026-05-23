@@ -314,13 +314,13 @@ export default function Dashboard() {
   const { connectors, connect: connectEvm, isPending: isEvmConnecting } = useConnect()
 
   const [emailUser, setEmailUser] = useState<string | null>(null)
-  const [sessionAuth, setSessionAuth] = useState<'auth0' | 'email' | null>(null)
+  const [sessionAuth, setSessionAuth] = useState<'email' | null>(null)
   const [emailInput, setEmailInput] = useState('')
   const [emailSubmitting, setEmailSubmitting] = useState(false)
   const [emailError, setEmailError] = useState<string | null>(null)
 
   const walletConnected = isCardanoConnected || isEvmConnected
-  const isAuthenticated = walletConnected || !!emailUser || sessionAuth === 'auth0'
+  const isAuthenticated = walletConnected || !!emailUser
 
   const [hexes, setHexes] = useState<string[]>([])
   const [loadingAssets, setLoadingAssets] = useState(false)
@@ -331,9 +331,9 @@ export default function Dashboard() {
   useEffect(() => {
     fetch('/api/auth/session', { credentials: 'include' })
       .then((r) => r.json())
-      .then((d: { email?: string | null; auth?: 'auth0' | 'email' | null }) => {
+      .then((d: { email?: string | null; auth?: string | null }) => {
         if (d.email) setEmailUser(d.email)
-        if (d.auth === 'auth0' || d.auth === 'email') setSessionAuth(d.auth)
+        if (d.auth === 'email') setSessionAuth('email')
         else setSessionAuth(null)
       })
       .catch(() => {})
@@ -437,28 +437,17 @@ export default function Dashboard() {
         <div className="flex flex-wrap items-center gap-3">
           {isAuthenticated ? (
             <div className="flex flex-wrap items-center gap-3">
-              {(emailUser || sessionAuth === 'auth0') && (
+              {emailUser && (
                 <div className="flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900/80 px-3 py-1.5">
                   <Mail className="h-4 w-4 shrink-0 text-malama-teal" />
-                  <span className="max-w-[200px] truncate text-xs text-gray-300">
-                    {emailUser ?? 'Auth0 session'}
-                  </span>
-                  {sessionAuth === 'auth0' ? (
-                    <a
-                      href="/auth/logout"
-                      className="text-[10px] font-bold uppercase tracking-wider text-gray-500 hover:text-white"
-                    >
-                      Sign out
-                    </a>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => signOutEmail()}
-                      className="text-[10px] font-bold uppercase tracking-wider text-gray-500 hover:text-white"
-                    >
-                      Sign out
-                    </button>
-                  )}
+                  <span className="max-w-[200px] truncate text-xs text-gray-300">{emailUser}</span>
+                  <button
+                    type="button"
+                    onClick={() => signOutEmail()}
+                    className="text-[10px] font-bold uppercase tracking-wider text-gray-500 hover:text-white"
+                  >
+                    Sign out
+                  </button>
                 </div>
               )}
               <div className="hidden text-right sm:block">
@@ -468,15 +457,11 @@ export default function Dashboard() {
                   {isCardanoConnected && (
                     <span className="h-2 w-2 animate-pulse rounded-full bg-malama-teal" />
                   )}
-                  {!walletConnected && (emailUser || sessionAuth === 'auth0') && (
+                  {!walletConnected && emailUser && (
                     <span className="h-2 w-2 rounded-full bg-violet-500" />
                   )}
                   <p className="text-lg font-bold text-white">
-                    {!walletConnected && sessionAuth === 'auth0'
-                      ? 'Auth0 session'
-                      : !walletConnected && emailUser
-                        ? 'Email session'
-                        : currentStatus}
+                    {!walletConnected && emailUser ? 'Email session' : currentStatus}
                   </p>
                 </div>
               </div>
@@ -513,25 +498,10 @@ export default function Dashboard() {
             <ShieldCheck className="mx-auto mb-6 h-20 w-20 text-malama-teal drop-shadow-[0_0_20px_rgba(196,240,97,0.3)]" />
             <h2 className="mb-2 text-2xl font-black tracking-tight text-white">Sign in to the app</h2>
             <p className="mb-8 leading-relaxed text-gray-400">
-              Sign in with Auth0, use your email (session on this device), or connect{' '}
-              <strong className="text-gray-300">Cardano</strong> (Lace) / <strong className="text-gray-300">Base</strong>{' '}
-              (MetaMask) to load on-chain licenses.
+              Enter your email to continue — or connect your{' '}
+              <strong className="text-gray-300">Cardano</strong> (Lace) /{' '}
+              <strong className="text-gray-300">Base</strong> (MetaMask) wallet to load on-chain licences.
             </p>
-
-            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
-              <a
-                href="/auth/login"
-                className="rounded-xl border-2 border-malama-teal/60 bg-malama-teal/15 py-3 text-center font-black text-malama-teal transition hover:bg-malama-teal/25"
-              >
-                Log in
-              </a>
-              <a
-                href="/auth/login?screen_hint=signup"
-                className="rounded-xl border border-gray-700 py-3 text-center font-bold text-gray-300 transition hover:border-malama-teal/50 hover:text-white"
-              >
-                Sign up
-              </a>
-            </div>
 
             <form onSubmit={signInWithEmail} className="mb-6 space-y-3 text-left">
               <label className="block">
@@ -588,7 +558,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {(emailUser || sessionAuth === 'auth0') && !walletConnected && isAuthenticated && (
+      {emailUser && !walletConnected && isAuthenticated && (
         <div className="mx-auto mb-8 max-w-6xl rounded-2xl border border-violet-500/30 bg-violet-500/10 p-4 text-sm text-violet-100 md:text-center">
           Signed in with email. Connect a wallet to scan NFTs on-chain, or use your{' '}
           <Link href="/presale" className="font-bold text-malama-teal underline underline-offset-2">

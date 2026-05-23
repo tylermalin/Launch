@@ -39,16 +39,16 @@ export const GENESIS_REGION_LABELS: Record<GenesisRegionKey, string> = {
  *
  * Resolution 4 lab cells (H3 Res 4, ~1,770 km² each — city-cluster scale):
  *   8429a1dffffffff → West       (Los Angeles, CA)
- *   845d145ffffffff → Pacific    (Haiku, Maui, HI)
- *   8428847ffffffff → Mountain   (Idaho City / Boise corridor, ID)
- *   8427407ffffffff → Midwest    (Sister Bay, WI)
+ *   84464b9ffffffff → Pacific    (Honolulu, HI)
+ *   84268cdffffffff → Mountain   (Denver, CO)
+ *   842664dffffffff → Midwest    (Chicago, IL)
  *   8426cb9ffffffff → South      (Dallas, TX)
  */
 export const MALAMA_RESERVED_HEX_IDS = [
   '8429a1dffffffff', // Los Angeles
-  '845d145ffffffff', // Haiku, Hawaii
-  '8428847ffffffff', // Idaho City / Boise
-  '8427407ffffffff', // Sister Bay
+  '84464b9ffffffff', // Honolulu
+  '84268cdffffffff', // Denver
+  '842664dffffffff', // Chicago
   '8426cb9ffffffff', // Dallas
 ] as const
 

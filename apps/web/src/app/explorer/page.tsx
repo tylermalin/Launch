@@ -38,11 +38,11 @@ import type {
  *   8626cb917ffffff → South & East  (Dallas, TX)
  */
 const MALAMA_RESERVED_HEX_LABELS: Record<string, { operator: string; label: string }> = {
-  '8429a1dffffffff': { operator: 'Mālama Labs', label: 'Los Angeles'   },
-  '845d145ffffffff': { operator: 'Mālama Labs', label: 'Haiku, Hawaii' },
-  '8428847ffffffff': { operator: 'Mālama Labs', label: 'Idaho / Boise' },
-  '8427407ffffffff': { operator: 'Mālama Labs', label: 'Sister Bay'    },
-  '8426cb9ffffffff': { operator: 'Mālama Labs', label: 'Dallas'        },
+  '8429a1dffffffff': { operator: 'Mālama Labs', label: 'Los Angeles' },
+  '84464b9ffffffff': { operator: 'Mālama Labs', label: 'Honolulu'    },
+  '84268cdffffffff': { operator: 'Mālama Labs', label: 'Denver'      },
+  '842664dffffffff': { operator: 'Mālama Labs', label: 'Chicago'     },
+  '8426cb9ffffffff': { operator: 'Mālama Labs', label: 'Dallas'      },
 };
 
 // HexMap pulls in mapbox-gl which is browser-only; load it client-side only.
@@ -178,6 +178,7 @@ export default function ExplorerPage() {
             filter={listFilter}
             onFilterChange={setListFilter}
             onSelect={(hex) => setSelected(hex)}
+            onDeselect={() => setSelected(null)}
             links={hexLinks}
             onReserve={(hex) => { window.location.href = `/presale?hex=${hex.h3Index}`; }}
           />
@@ -260,6 +261,10 @@ function buildManifestFromApi(fc: {
     // Auto-compute zone, water coverage, and region from centroid.
     const { zone, multiplier } = classifyZone(lat, lng);
     const waterCoveragePercent = estimateWaterCoverage(lat, lng, res);
+
+    // Skip cells that are entirely ocean — no commercial value and not for sale.
+    if (waterCoveragePercent >= 100) return;
+
     const detectedRegionKey = detectRegion(lat, lng);
     const detectedRegionLabel = REGION_LABELS[detectedRegionKey];
     const region = p.regionLabel ?? p.region ?? detectedRegionLabel;
@@ -436,6 +441,7 @@ function HexListView({
   filter,
   onFilterChange,
   onSelect,
+  onDeselect,
   links,
   onReserve,
 }: {
@@ -444,6 +450,7 @@ function HexListView({
   filter: string;
   onFilterChange: (f: string) => void;
   onSelect: (hex: Phase1Hex) => void;
+  onDeselect: () => void;
   links: Parameters<typeof HexPanel>[0]['links'];
   onReserve: (hex: Phase1Hex) => void;
 }) {
@@ -633,15 +640,23 @@ function HexListView({
         </div>
       </div>
 
-      {/* ── Detail panel ── */}
+      {/* ── Detail panel — slides in as a fixed-width right column ── */}
       {selected && (
-        <div style={{ flexShrink: 0, width: 380, borderLeft: '1px solid #1a1a1a', overflowY: 'auto', background: '#0f0f0f' }}>
-          <div style={{ padding: 16 }}>
+        <div style={{
+          flexShrink: 0,
+          width: 360,
+          borderLeft: '1px solid #1a1a1a',
+          background: '#0c0c0c',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}>
+          <div style={{ flex: 1, overflowY: 'auto' }}>
             <HexPanel
               hex={selected}
               links={links}
               onReserveClick={onReserve}
-              onClose={() => onSelect(selected)} // noop — keep selection in list view
+              onClose={onDeselect}
             />
           </div>
         </div>

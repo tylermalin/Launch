@@ -21,7 +21,7 @@ import path from 'path'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const OUT = path.resolve(__dirname, '../apps/web/src/data/regions.json')
 
-const RES = 3
+const RES = 6
 const TARGET = 40   // cells per region
 const REGIONS = 5   // 5 × 40 = 200
 

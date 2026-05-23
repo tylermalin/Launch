@@ -29,19 +29,19 @@ import type {
  * These arrive pre-marked as `reserved` from /api/hexes — no override needed.
  * Kept here as a lookup so the explorer can label them distinctly in the panel.
  *
- * Res-3 lab cells (~12,392 km² each):
- *   8329a1fffffffff → West Coast    (Los Angeles, CA)
- *   835d14fffffffff → Pacific       (Haiku, Maui, HI)
- *   832884fffffffff → Mountain West (Idaho City, ID)
- *   832740fffffffff → Midwest       (Sister Bay, WI)
- *   8326cbfffffffff → South & East  (Dallas, TX)
+ * Res-6 lab cells (~36 km² each — city-district scale):
+ *   8629a1d77ffffff → West Coast    (Los Angeles, CA)
+ *   865d144efffffff → Pacific       (Haiku, Maui, HI)
+ *   8628846e7ffffff → Mountain West (Idaho City, ID)
+ *   862740767ffffff → Midwest       (Sister Bay, WI)
+ *   8626cb917ffffff → South & East  (Dallas, TX)
  */
 const MALAMA_RESERVED_HEX_LABELS: Record<string, { operator: string; label: string }> = {
-  '8329a1fffffffff': { operator: 'Mālama Labs', label: 'Los Angeles'  },
-  '835d14fffffffff': { operator: 'Mālama Labs', label: 'Haiku, Hawaii' },
-  '832884fffffffff': { operator: 'Mālama Labs', label: 'Idaho City'   },
-  '832740fffffffff': { operator: 'Mālama Labs', label: 'Sister Bay'   },
-  '8326cbfffffffff': { operator: 'Mālama Labs', label: 'Dallas'       },
+  '8629a1d77ffffff': { operator: 'Mālama Labs', label: 'Los Angeles'  },
+  '865d144efffffff': { operator: 'Mālama Labs', label: 'Haiku, Hawaii' },
+  '8628846e7ffffff': { operator: 'Mālama Labs', label: 'Idaho City'   },
+  '862740767ffffff': { operator: 'Mālama Labs', label: 'Sister Bay'   },
+  '8626cb917ffffff': { operator: 'Mālama Labs', label: 'Dallas'       },
 };
 
 // HexMap pulls in mapbox-gl which is browser-only; load it client-side only.
@@ -350,7 +350,7 @@ function ReviewBanner() {
         zIndex: 10,
       }}
     >
-      Genesis Explorer · H3 Res 3 · 200 hexes · 5 regions
+      Genesis Explorer · H3 Res 6 · 200 hexes · 5 regions
     </div>
   );
 }

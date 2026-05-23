@@ -23,7 +23,7 @@ export default async function PresalePage({
       <div className="max-w-6xl w-full mx-auto flex flex-col items-center relative z-10 text-center">
         <div className="inline-flex items-center px-4 py-1.5 mb-8 text-xs font-black uppercase tracking-[0.2em] text-malama-accent border border-malama-accent/30 rounded-full bg-malama-accent/10 shadow-[0_0_15px_rgba(196,240,97,0.2)]">
           <span className="w-2 h-2 rounded-full bg-malama-accent animate-pulse mr-2" />
-          Mālama Genesis — 200 Base + 200 Cardano
+          Mālama Genesis. 200 Base + 200 Cardano
         </div>
         
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter mb-8 drop-shadow-xl">
@@ -47,7 +47,7 @@ export default async function PresalePage({
           >
             Terms, Privacy, Hex Node Agreement, and Token Risk Disclosure
           </a>{' '}
-          apply to this purchase — you will confirm each at checkout.
+          apply to this purchase. You will confirm each at checkout.
         </p>
 
         <PresaleStats />

@@ -6,7 +6,7 @@ import DocsPageShell from '../_shared/DocsPageShell'
 export const metadata: Metadata = {
   title: 'Operator Guide · Mālama Labs',
   description:
-    'Genesis 200 Operator Guide — deployment, hardware bill of materials, node operation, PONO qualification, support and FAQ. Companion to shipped hardware runbooks.',
+    'Genesis 200 Operator Guide. Deployment, hardware bill of materials, node operation, PONO qualification, support and FAQ. Companion to shipped hardware runbooks.',
 }
 
 export default function OperatorsPage() {
@@ -316,7 +316,7 @@ export default function OperatorsPage() {
               <p>The 1.5× Stewardship Multiplier applies to operators on Indigenous lands or in partnership with Native communities, in regions where the Stewardship Pool has been activated via FPIC consultation, cultural advisor sign-off, and governance supermajority. Regional activation is community-led. Operators interested in qualifying for the Stewardship multiplier should contact the Mālama team to discuss partnership pathways.</p>
 
               <div className="sig-strip">
-                <div className="label">— END OF GUIDE</div>
+                <div className="label">- END OF GUIDE</div>
                 <p className="text">Mālama Labs, Inc. · Genesis 200 Operator Guide · Companion to shipped hardware runbooks</p>
                 <p className="footnote">Questions: <a href="mailto:support@malamalabs.com" style={{ color: 'var(--mlma-accent)' }}>support@malamalabs.com</a> · Discord communities are the fastest path to resolution.</p>
               </div>

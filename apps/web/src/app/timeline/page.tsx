@@ -95,12 +95,12 @@ const phases: {
     color: 'emerald',
     badge: 'Live Soon',
     items: [
-      'Public Hex Launch — Genesis 200 sale opens to the world. Reserve your Genesis Hex Node for $2,000.',
+      'Public Hex Launch. Genesis 200 sale opens to the world. Reserve your Genesis Hex Node for $2,000.',
       'Select your H3 hex cell on the Hex Map Explorer. Each cell is a unique geographic license.',
       'Pay via crypto or card and receive your NFT-HEX rights object on-chain. 125,000 MLMA allocation is bound to your node, vesting through boot and operational milestones.',
       'Hardware pre-order enters the production queue. Units ship Q4 2026.',
     ],
-    note: '195 nodes available for public allocation. 5 reserved for Mālama Labs. First-come, first-served by hex cell — sale closes when sold out.',
+    note: '195 nodes available for public allocation. 5 reserved for Mālama Labs. First-come, first-served by hex cell. Sale closes when sold out.',
     cta: { label: 'Reserve a Hex Node', href: '/presale' },
   },
   {
@@ -113,7 +113,7 @@ const phases: {
     items: [
       'Operator hardware shipments commence to all registered locations globally.',
       'Each kit includes the Mālama-provisioned enclosure, sensors, solar UPS, Ethernet cable, and soil probe.',
-      'Operators unbox, mount, and charge the solar-powered NEMA 4X enclosure — approximately 30 minutes setup.',
+      'Operators unbox, mount, and charge the solar-powered NEMA 4X enclosure. Approximately 30 minutes setup.',
       'Connect to local internet via weatherproof Ethernet or Wi-Fi bridge.',
     ],
     cta: null,
@@ -126,10 +126,10 @@ const phases: {
     color: 'violet',
     badge: 'Pre-TGE',
     items: [
-      'Mālama mainnet goes live in Q4 2026 — ahead of the Token Generation Event. Validation is operational before any token liquidity exists.',
+      'Mālama mainnet goes live in Q4 2026. Ahead of the Token Generation Event. Validation is operational before any token liquidity exists.',
       'Secure connection string booting takes approximately 30 minutes from first power-on.',
       'The node connects to the Mālama DePIN network and registers its ATECC608B device key on-chain.',
-      'Node appears on the live network map as "Active" — carbon SaveCard and AI compute validation begins immediately.',
+      'Node appears on the live network map as "Active". Carbon SaveCard and AI compute validation begins immediately.',
       'Boot tranche (15%, 18,750 MLMA) unlocks at first verified boot. Allocation accrues; liquidity follows at TGE.',
     ],
     cta: null,
@@ -142,8 +142,8 @@ const phases: {
     color: 'amber',
     badge: 'Rewards',
     items: [
-      'Network metrics flow live — validation checks process carbon SaveCards and AI compute attestations continuously.',
-      'Earn MLMA based on your Geographic Multiplier (0.5×–3.0×), Data Quality Score, and uptime. Rewards are relative to total network validation volume.',
+      'Network metrics flow live. Validation checks process carbon SaveCards and AI compute attestations continuously.',
+      'Earn MLMA based on your Geographic Multiplier (0.5×-3.0×), Data Quality Score, and uptime. Rewards are relative to total network validation volume.',
       'PONO qualification (~90 days post-boot) unlocks the second tranche (15%) and governance eligibility.',
       'Operator economics depend on data demand in your hex cell and MLMA market conditions. See whitepaper for mechanics.',
     ],
@@ -158,9 +158,9 @@ const phases: {
     color: 'amber',
     badge: 'TGE',
     items: [
-      'TGE follows mainnet — not before. The protocol is operational with real validation data before any token enters circulation.',
+      'TGE follows mainnet. Not before. The protocol is operational with real validation data before any token enters circulation.',
       'Vested MLMA from the boot tranche becomes liquid at TGE. Future tranches remain on their PONO + operational milestone schedule.',
-      'Genesis 200 operators receive priority allocation status established by their on-chain boot date — earliest boots first.',
+      'Genesis 200 operators receive priority allocation status established by their on-chain boot date. Earliest boots first.',
       'TGE timing is governed by mainnet stability metrics and regulatory clearance, not a fixed calendar date.',
     ],
     note: 'Token characterization and TGE jurisdiction remain subject to the Token & Rewards Risk Disclosure. Plan for variable timing.',
@@ -168,13 +168,13 @@ const phases: {
   },
   {
     id: 'genesis-phase',
-    date: 'Years 1–3',
+    date: 'Years 1-3',
     label: 'Genesis Phase',
     icon: Network,
     color: 'teal',
     badge: 'Long-term',
     items: [
-      'Genesis 200 operators hold lifetime protocol rights — including rights to all future product streams added to the validator network.',
+      'Genesis 200 operators hold lifetime protocol rights. Including rights to all future product streams added to the validator network.',
       'Higher reward density during network bootstrap phase. 200 nodes at maximum per-node emission rate.',
       'Protocol scales enterprise carbon MRV and AI compute attestation client deployments.',
       'DAO governance activates: Genesis operators vote on methodology updates, validator set changes, and treasury distribution.',
@@ -222,7 +222,7 @@ export default function TimelinePage() {
           className="text-lg text-malama-ink-dim leading-relaxed max-w-2xl mx-auto"
         >
           From the Public Hex Launch on June 1, 2026 through mainnet going live in Q4 2026
-          (ahead of TGE) — every milestone, vesting moment, and Genesis Phase right mapped out.
+          (ahead of TGE). Every milestone, vesting moment, and Genesis Phase right mapped out.
         </motion.p>
       </div>
 

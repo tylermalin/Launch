@@ -86,7 +86,7 @@ export function TokenomicsInteractive() {
 
       {/* Emissions chart */}
       <section className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
-        <h2 className="text-xl font-black text-white mb-2">Network emissions (Y1–Y5)</h2>
+        <h2 className="text-xl font-black text-white mb-2">Network emissions (Y1-Y5)</h2>
         <p className="text-sm text-gray-500 mb-4">Millions of MLMA per year. Emissions stop entirely after Year 3.</p>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -103,7 +103,7 @@ export function TokenomicsInteractive() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <p className="text-xs text-gray-600 mt-3">Total Y1–Y3: 79.2M MLMA (15.8% of supply). Uncommitted reserve: 58.3M MLMA. Years 4–5: zero emissions, revenue-funded only.</p>
+        <p className="text-xs text-gray-600 mt-3">Total Y1-Y3: 79.2M MLMA (15.8% of supply). Uncommitted reserve: 58.3M MLMA. Years 4-5: zero emissions, revenue-funded only.</p>
       </section>
 
       {/* Vesting simulator */}

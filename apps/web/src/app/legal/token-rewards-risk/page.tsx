@@ -6,7 +6,7 @@ import TocScrollSpy from './TocScrollSpy'
 export const metadata: Metadata = {
   title: 'Token & Rewards Risk Disclosure | Mālama Labs',
   description:
-    'The plain-language risks of participating in the Mālama network — token volatility, regulatory uncertainty, deployment forfeiture, audit gates, slashing, and the Year 3 emissions cliff.',
+    'The plain-language risks of participating in the Mālama network. Token volatility, regulatory uncertainty, deployment forfeiture, audit gates, slashing, and the Year 3 emissions cliff.',
 }
 
 /**
@@ -70,7 +70,7 @@ export default function TokenRewardsRiskPage() {
               Token &amp; Rewards <em>Risk Disclosure.</em>
             </h1>
             <p className="lede">
-              The plain-language risks of participating in the Mālama network — token
+              The plain-language risks of participating in the Mālama network. Token
               volatility, regulatory uncertainty, deployment forfeiture, audit gates,
               slashing, and the Year 3 emissions cliff.
             </p>
@@ -218,7 +218,7 @@ export default function TokenRewardsRiskPage() {
             </li>
             <li>
               <a href="#contact">
-                <span className="n">— —</span>
+                <span className="n">- -</span>
                 <span className="t">Contact</span>
               </a>
             </li>
@@ -454,7 +454,7 @@ export default function TokenRewardsRiskPage() {
                   Mālama&rsquo;s business or the protocol&rsquo;s performance.
                 </li>
                 <li>
-                  The MLMA emission schedule is <strong>fixed</strong> — the protocol cannot
+                  The MLMA emission schedule is <strong>fixed</strong>. The protocol cannot
                   and will not issue additional tokens to stabilize price or compensate for
                   price decline.
                 </li>
@@ -520,11 +520,11 @@ export default function TokenRewardsRiskPage() {
               <p>Validation rewards, if any, depend on:</p>
               <ul>
                 <li>
-                  Node uptime above 90% — nodes below this threshold earn{' '}
+                  Node uptime above 90%. Nodes below this threshold earn{' '}
                   <strong>zero validation rewards</strong> for that period.
                 </li>
                 <li>
-                  Data Quality Score (0.0–1.0) from validator confidence and cross-validation
+                  Data Quality Score (0.0-1.0) from validator confidence and cross-validation
                   with neighboring nodes.
                 </li>
                 <li>
@@ -532,7 +532,7 @@ export default function TokenRewardsRiskPage() {
                   may change.
                 </li>
                 <li>
-                  Total active validator count —{' '}
+                  Total active validator count -{' '}
                   <strong>rewards are competitive and relative, not fixed.</strong>
                 </li>
                 <li>
@@ -565,8 +565,8 @@ export default function TokenRewardsRiskPage() {
                 fixed per node. Each operator&rsquo;s monthly reward is their weighted score
                 divided by the sum of all active validator scores in the network.{' '}
                 <strong>
-                  As more validators join the network — including during the Genesis phase and
-                  beyond — each operator&rsquo;s share of the monthly emission pool decreases
+                  As more validators join the network. Including during the Genesis phase and
+                  beyond. Each operator&rsquo;s share of the monthly emission pool decreases
                   proportionally.
                 </strong>{' '}
                 Joining early does not lock in a specific reward amount. Actual rewards will
@@ -601,7 +601,7 @@ export default function TokenRewardsRiskPage() {
                 confirms your node is operational, compliant, and properly registered. If your
                 node does not pass the audit initially, rewards are withheld until compliance
                 is confirmed. Your 125,000 MLMA vesting allocation is not affected by audit
-                status — only validation rewards are withheld during the period of
+                status. Only validation rewards are withheld during the period of
                 non-compliance.
               </p>
 
@@ -627,13 +627,13 @@ export default function TokenRewardsRiskPage() {
                   come from <strong>protocol revenue only</strong>.
                 </p>
                 <p>
-                  If protocol revenue in Years 4 – 5 is lower than projected — whether due to
+                  If protocol revenue in Years 4-5 is lower than projected. Whether due to
                   slower enterprise customer adoption, registry acceptance delays, or
-                  competitive pressure — operator rewards will be proportionally lower.{' '}
-                  <strong>There is no emission-funded floor in Years 4 – 5.</strong>
+                  competitive pressure. Operator rewards will be proportionally lower.{' '}
+                  <strong>There is no emission-funded floor in Years 4-5.</strong>
                 </p>
                 <p>
-                  Operators who model Year 4 – 5 economics based on Year 1 – 3 token emission
+                  Operators who model Year 4-5 economics based on Year 1-3 token emission
                   levels are modeling a different regime.
                 </p>
               </div>
@@ -720,7 +720,7 @@ export default function TokenRewardsRiskPage() {
               </p>
               <ul>
                 <li>
-                  Transactions are generally <strong>irreversible</strong> — errors cannot be
+                  Transactions are generally <strong>irreversible</strong>. Errors cannot be
                   undone.
                 </li>
                 <li>
@@ -731,7 +731,7 @@ export default function TokenRewardsRiskPage() {
                 </li>
                 <li>Transaction fees (gas) may fluctuate significantly.</li>
                 <li>
-                  Data recorded on-chain — including your geographic hex cell assignment — is{' '}
+                  Data recorded on-chain. Including your geographic hex cell assignment. Is{' '}
                   <strong>permanent and publicly readable</strong>.
                 </li>
                 <li>
@@ -837,13 +837,12 @@ export default function TokenRewardsRiskPage() {
               <p>
                 Mālama and the veMLMA governance system reserve the right to modify reward
                 formulas, change Geographic Multiplier coefficients, alter distribution
-                schedules, adjust eligibility requirements, or discontinue Rewards entirely —
-                for technical optimization, fraud prevention, regulatory compliance, or
+                schedules, adjust eligibility requirements, or discontinue Rewards entirely. For technical optimization, fraud prevention, regulatory compliance, or
                 network sustainability.
               </p>
               <p>
-                <strong>Immutable parameters</strong> — the 500M MLMA hard cap, the Year 3
-                emissions end date, the Genesis 200 supply cap, and hex exclusivity — cannot
+                <strong>Immutable parameters</strong>. The 500M MLMA hard cap, the Year 3
+                emissions end date, the Genesis 200 supply cap, and hex exclusivity. Cannot
                 be changed through governance. All other reward parameters are subject to
                 governance modification with notice as described in the{' '}
                 <Link
@@ -1094,7 +1093,7 @@ export default function TokenRewardsRiskPage() {
               </div>
 
               <div className="sig-strip">
-                <div className="label">— END OF DOCUMENT</div>
+                <div className="label">- END OF DOCUMENT</div>
                 <p className="text">
                   Mālama Labs, Inc. · Token &amp; Rewards Risk Disclosure · Effective April 11,
                   2026 · Last Updated April 28, 2026 (v2)

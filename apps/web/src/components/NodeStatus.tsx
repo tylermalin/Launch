@@ -141,14 +141,14 @@ export default function NodeStatus({ initialDid }: NodeStatusProps) {
         {/* Reputation */}
         <div className="flex flex-col items-center justify-center px-6 py-8 gap-2">
           <CheckCircle2 className={`w-5 h-5 ${healthColors[health]}`} />
-          <p className="text-2xl font-black text-white">{node.reputation ?? '—'}%</p>
+          <p className="text-2xl font-black text-white">{node.reputation ?? '-'}%</p>
           <p className="text-xs text-gray-500 uppercase tracking-widest text-center">Reputation</p>
         </div>
 
         {/* Uptime */}
         <div className="flex flex-col items-center justify-center px-6 py-8 gap-2">
           <Activity className="w-5 h-5 text-blue-400" />
-          <p className="text-2xl font-black text-white">{node.uptime30d != null ? `${node.uptime30d}%` : '—'}</p>
+          <p className="text-2xl font-black text-white">{node.uptime30d != null ? `${node.uptime30d}%` : '-'}</p>
           <p className="text-xs text-gray-500 uppercase tracking-widest text-center">Uptime 30d</p>
         </div>
 
@@ -162,14 +162,14 @@ export default function NodeStatus({ initialDid }: NodeStatusProps) {
         {/* Malama Today */}
         <div className="flex flex-col items-center justify-center px-6 py-8 gap-2">
           <Zap className="w-5 h-5 text-yellow-400" />
-          <p className="text-2xl font-black text-white">{node.malamaEarnedToday?.toFixed(2) ?? '—'}</p>
+          <p className="text-2xl font-black text-white">{node.malamaEarnedToday?.toFixed(2) ?? '-'}</p>
           <p className="text-xs text-gray-500 uppercase tracking-widest text-center">MALAMA Today</p>
         </div>
 
         {/* Malama Total */}
         <div className="flex flex-col items-center justify-center px-6 py-8 gap-2">
           <Signal className="w-5 h-5 text-malama-teal" />
-          <p className="text-2xl font-black text-white">{node.malamaEarnedTotal?.toFixed(1) ?? '—'}</p>
+          <p className="text-2xl font-black text-white">{node.malamaEarnedTotal?.toFixed(1) ?? '-'}</p>
           <p className="text-xs text-gray-500 uppercase tracking-widest text-center">MALAMA Total</p>
         </div>
 

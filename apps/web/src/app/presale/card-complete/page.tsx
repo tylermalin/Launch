@@ -116,7 +116,7 @@ function CardCompleteInner() {
             href={launchUrl}
             className="inline-flex items-center justify-center rounded-xl bg-malama-teal px-8 py-4 font-black text-black hover:opacity-90"
           >
-            Launch app — Magic wallet
+            Launch app. Magic wallet
           </a>
         )}
         <p className="mt-6 text-xs text-gray-600 max-w-sm">
@@ -137,7 +137,7 @@ function CardCompleteInner() {
         <h1 className="text-2xl font-black text-white mb-2">Finalizing your purchase</h1>
         <p className="text-gray-400 max-w-md">
           {status.state === 'processing'
-            ? 'Payment received — confirming and preparing your wallet…'
+            ? 'Payment received. Confirming and preparing your wallet…'
             : 'Confirming payment…'}
         </p>
       </div>
@@ -174,7 +174,7 @@ function CardCompleteInner() {
       <p className="text-gray-400 text-sm mb-8">
         {custody === 'magic'
           ? 'Your NFT was minted on Base to your Magic embedded wallet (same email as checkout). Open Launch app anytime to view balances.'
-          : 'Your NFT was minted on Base to a custodial wallet created for this purchase. Save the transfer link below — it is your authentication to move the NFT later.'}
+          : 'Your NFT was minted on Base to a custodial wallet created for this purchase. Save the transfer link below. It is your authentication to move the NFT later.'}
       </p>
 
       <div className="w-full rounded-2xl border border-gray-800 bg-malama-card p-6 text-left space-y-4 mb-8">

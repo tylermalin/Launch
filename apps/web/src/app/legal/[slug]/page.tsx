@@ -19,7 +19,7 @@ export async function generateMetadata({
   if (!doc) return {}
   return {
     title: `${doc.title} | Mālama Labs`,
-    description: `${doc.title} — Mālama Labs legal document.`,
+    description: `${doc.title}. Mālama Labs legal document.`,
   }
 }
 

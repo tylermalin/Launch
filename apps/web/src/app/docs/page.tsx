@@ -6,7 +6,7 @@ import DocsHubScrollSpy from './DocsHubScrollSpy'
 export const metadata: Metadata = {
   title: 'Documentation · Mālama Labs',
   description:
-    'Genesis 200 documentation hub — MLMA tokenomics, pricing dynamics, Phase 1 timeline, operator guide. Aligned to Tokenomics Whitepaper v3.6.',
+    'Genesis 200 documentation hub. MLMA tokenomics, pricing dynamics, Phase 1 timeline, operator guide. Aligned to Tokenomics Whitepaper v3.6.',
 }
 
 /**
@@ -74,7 +74,7 @@ export default function DocsOverviewPage() {
             </h1>
             <p className="lede">
               Hardware-signed truth for the physical economy. Genesis 200 bootstraps a
-              globally distributed validation layer for real-world data — hex-zoned nodes
+              globally distributed validation layer for real-world data. Hex-zoned nodes
               that validate enterprise sensor data across carbon, AI compute emissions,
               parametric insurance, supply chain, and more.
             </p>
@@ -178,7 +178,7 @@ export default function DocsOverviewPage() {
               </div>
               <h3>Phase 1 Timeline</h3>
               <p>
-                From reservation through Year 1 milestone vesting. Six phases — reservation,
+                From reservation through Year 1 milestone vesting. Six phases. Reservation,
                 hardware ship, boot &amp; audit, PONO qualify, and three operational
                 milestones.
               </p>
@@ -221,10 +221,9 @@ export default function DocsOverviewPage() {
             <div className="clause-body">
               <p>
                 Mālama Labs builds the measurement layer for markets that depend on
-                physical-world data. The same hardware-signed primitive — a sensor reading,
+                physical-world data. The same hardware-signed primitive. A sensor reading,
                 signed at the silicon level by an{' '}
-                <strong>ATECC608B-class secure element</strong> and anchored to Cardano —
-                produces verifiable evidence across seven markets:
+                <strong>ATECC608B-class secure element</strong> and anchored to Cardano. Produces verifiable evidence across seven markets:
               </p>
               <ul>
                 <li>Carbon dMRV</li>
@@ -337,7 +336,7 @@ export default function DocsOverviewPage() {
                 <span className="tag">▲ Informational only</span>
                 <p>
                   Documentation is informational. Specific reservation, participation, and
-                  token terms are governed by the agreements signed at reservation — the{' '}
+                  token terms are governed by the agreements signed at reservation. The{' '}
                   <Link href="/legal/terms" style={{ color: 'var(--mlma-accent)' }}>
                     Terms &amp; Conditions
                   </Link>
@@ -360,7 +359,7 @@ export default function DocsOverviewPage() {
               </div>
 
               <div className="sig-strip">
-                <div className="label">— DOCUMENTATION HUB · v4</div>
+                <div className="label">- DOCUMENTATION HUB · v4</div>
                 <p className="text">
                   Mālama Labs, Inc. · Genesis 200 Documentation · Aligned to MLMA Tokenomics
                   Whitepaper v3.6

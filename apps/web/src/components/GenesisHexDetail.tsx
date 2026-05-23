@@ -187,7 +187,7 @@ export default function GenesisHexDetail({
         {item.sold && (
           <p className="rounded-xl border border-gray-600/80 bg-gray-900/70 p-4 text-sm text-gray-300">
             <span className="font-black uppercase tracking-wider text-gray-400">SOLD</span>
-            {' — '}This Genesis NFT is not available for public purchase.
+            {'. '}This Genesis NFT is not available for public purchase.
           </p>
         )}
 
@@ -197,7 +197,7 @@ export default function GenesisHexDetail({
               href={`/presale?hex=${encodeURIComponent(item.hexId)}`}
               className="block w-full rounded-2xl bg-malama-accent py-4 text-center text-lg font-black text-white shadow-[0_0_30px_rgba(196,240,97,0.3)] transition-transform hover:scale-[1.02]"
             >
-              Reserve this hex — {formatGenesisListingUsd(GENESIS_ENTRY_USD)}
+              Reserve this hex. {formatGenesisListingUsd(GENESIS_ENTRY_USD)}
             </Link>
           ) : (
             <div className="rounded-2xl border border-gray-700 bg-gray-900/80 py-4 text-center text-sm font-bold text-gray-500">

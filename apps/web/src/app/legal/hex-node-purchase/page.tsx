@@ -6,7 +6,7 @@ import LegalPageShell from '../_shared/LegalPageShell'
 export const metadata: Metadata = {
   title: 'Hex Node Purchase & Preorder Agreement · Mālama Labs',
   description:
-    'Sale-specific agreement for the Genesis 200 program — pricing, deployment window, MLMA vesting, validation reward formula, and mutable / immutable protocol parameters.',
+    'Sale-specific agreement for the Genesis 200 program. Pricing, deployment window, MLMA vesting, validation reward formula, and mutable / immutable protocol parameters.',
 }
 
 export default function HexNodePurchasePage() {
@@ -46,7 +46,7 @@ export default function HexNodePurchasePage() {
               ['s12','12','Compliance with laws'],['s13','13','Limitation of liability'],
               ['s14','14','Indemnification'],['s15','15','Force majeure'],
               ['s16','16','Termination'],['s17','17','Governing law & disputes'],
-              ['s18','18','Entire agreement'],['contact','— —','Contact'],
+              ['s18','18','Entire agreement'],['contact','- -','Contact'],
             ].map(([id, n, t]) => (
               <li key={id}><a href={`#${id}`}><span className="n">{n}</span><span className="t">{t}</span></a></li>
             ))}
@@ -99,7 +99,7 @@ export default function HexNodePurchasePage() {
             <div className="clause-head"><span className="num">§ 03</span><h2>Pricing and payment</h2><a className="anchor" href="#s3">#s3</a></div>
             <div className="clause-body">
               <div className="spec-list">
-                <div className="row"><div className="k">Genesis 200 entry</div><div className="v"><strong>US$2,000</strong> per node — hardware $380 + geographic license $1,620, as stated at checkout. Taxes, duties, or import charges may be billed separately.</div></div>
+                <div className="row"><div className="k">Genesis 200 entry</div><div className="v"><strong>US$2,000</strong> per node. Hardware $380 + geographic license $1,620, as stated at checkout. Taxes, duties, or import charges may be billed separately.</div></div>
                 <div className="row"><div className="k">Accepted methods</div><div className="v">Credit / debit cards · Wire transfers · Digital assets or stablecoins where supported · Third-party payment providers.</div></div>
                 <div className="row"><div className="k">Digital asset notes</div><div className="v">Transaction finality is irreversible. Exchange rates may fluctuate. You are responsible for gas fees and transaction accuracy.</div></div>
               </div>
@@ -129,7 +129,7 @@ export default function HexNodePurchasePage() {
 
               <div className="callout accent">
                 <span className="tag">● Notice · Material whitepaper amendments</span>
-                <p>The Whitepaper is incorporated by reference. Mālama will provide written notice to all registered License holders of any material amendment to parameters that affect operator economic rights or deployment obligations — including changes to the Geographic Multiplier formula, reward pool sizing, or uptime requirements — at least <strong>thirty (30) days</strong> before such amendments take effect.</p>
+                <p>The Whitepaper is incorporated by reference. Mālama will provide written notice to all registered License holders of any material amendment to parameters that affect operator economic rights or deployment obligations. Including changes to the Geographic Multiplier formula, reward pool sizing, or uptime requirements. At least <strong>thirty (30) days</strong> before such amendments take effect.</p>
                 <p>This notice obligation does not apply to governance updates made through the veMLMA process described in the Whitepaper, for which operators may participate directly as token holders.</p>
               </div>
 
@@ -138,7 +138,7 @@ export default function HexNodePurchasePage() {
               <div className="spec-list">
                 <div className="row">
                   <div className="k">Genesis supply</div>
-                  <div className="v">Two hundred (<strong>200</strong>) total Genesis Licenses. <strong>195</strong> Licenses available for external sale. <strong>5</strong> Licenses reserved for Mālama Labs team and production use (Dallas / DFW area). Each License is represented as an NFT-HEX geographic rights object on Cardano (CIP-68) and Base (ERC-721) via cross-chain state synchronization. <strong>One License per geographic hex cell</strong> — a single License conveys rights on both chains, not a separate License per chain.<span className="pill mutable">● Mutable</span></div>
+                  <div className="v">Two hundred (<strong>200</strong>) total Genesis Licenses. <strong>195</strong> Licenses available for external sale. <strong>5</strong> Licenses reserved for Mālama Labs team and production use (Dallas / DFW area). Each License is represented as an NFT-HEX geographic rights object on Cardano (CIP-68) and Base (ERC-721) via cross-chain state synchronization. <strong>One License per geographic hex cell</strong>. A single License conveys rights on both chains, not a separate License per chain.<span className="pill mutable">● Mutable</span></div>
                 </div>
                 <div className="row">
                   <div className="k">Hex exclusivity</div>
@@ -146,7 +146,7 @@ export default function HexNodePurchasePage() {
                 </div>
                 <div className="row">
                   <div className="k">MLMA allocation</div>
-                  <div className="v"><strong>125,000 MLMA</strong> per License. <strong>25%</strong> (31,250 MLMA) vests at verified hardware boot upon successful deployment registration. <strong>75%</strong> (93,750 MLMA) vests linearly over 12 months from the hardware boot date at approximately 7,813 MLMA per month. <em>The allocation does not vest at reservation — it vests at hardware boot.</em><span className="pill mutable">● Mutable</span></div>
+                  <div className="v"><strong>125,000 MLMA</strong> per License. <strong>25%</strong> (31,250 MLMA) vests at verified hardware boot upon successful deployment registration. <strong>75%</strong> (93,750 MLMA) vests linearly over 12 months from the hardware boot date at approximately 7,813 MLMA per month. <em>The allocation does not vest at reservation. It vests at hardware boot.</em><span className="pill mutable">● Mutable</span></div>
                 </div>
                 <div className="row">
                   <div className="k">Genesis multiplier</div>
@@ -164,7 +164,7 @@ export default function HexNodePurchasePage() {
                 </div>
                 <div className="vars">
                   <div className="var"><span className="sym">B</span><span>Base rate from monthly emission pool.</span></div>
-                  <div className="var"><span className="sym">DQS</span><span>Data Quality Score · 0.0–1.0.</span></div>
+                  <div className="var"><span className="sym">DQS</span><span>Data Quality Score · 0.0-1.0.</span></div>
                   <div className="var"><span className="sym">GM</span><span>Geographic Multiplier · 0.5× to 3.0×.</span></div>
                   <div className="var"><span className="sym">UF</span><span>Uptime Factor · 0 at &lt;90% uptime, 1.0 at 99%, 1.1× bonus at 99.9%+.</span></div>
                   <div className="var"><span className="sym">GX</span><span>Genesis Multiplier · 1.5× Year 1 only, 1.0× thereafter.</span></div>
@@ -178,7 +178,7 @@ export default function HexNodePurchasePage() {
                 <div className="row"><div className="k">Year 1</div><div className="v"><strong>9.0M MLMA</strong> · 750K / month.</div></div>
                 <div className="row"><div className="k">Year 2</div><div className="v"><strong>25.2M MLMA</strong> · 2.1M / month.</div></div>
                 <div className="row"><div className="k">Year 3</div><div className="v"><strong>45.0M MLMA</strong> · 3.75M / month.</div></div>
-                <div className="row"><div className="k">Years 4 – 5</div><div className="v"><strong>Zero emissions.</strong> All operator rewards funded by protocol revenue.</div></div>
+                <div className="row"><div className="k">Years 4-5</div><div className="v"><strong>Zero emissions.</strong> All operator rewards funded by protocol revenue.</div></div>
               </div>
               <p>Emissions commence following Genesis Hex Sale audit clearance, not automatically at a calendar date.</p>
 
@@ -186,7 +186,7 @@ export default function HexNodePurchasePage() {
               <div className="callout warn">
                 <span className="tag">▲ Audit · Rewards begin only after audit clearance</span>
                 <p>MLMA validation rewards <strong>do not begin automatically at hardware boot or at a fixed calendar date.</strong> They begin following an independent audit of the Genesis Hex Sale confirming that deployed nodes are operational, compliant, and properly registered. The audit is conducted in <strong>October 2026</strong>.</p>
-                <p>Nodes that do not pass the audit are notified and supported through remediation. <strong>Vesting of the 125,000 MLMA allocation is not affected by audit status — only validation rewards are withheld until compliance is confirmed.</strong></p>
+                <p>Nodes that do not pass the audit are notified and supported through remediation. <strong>Vesting of the 125,000 MLMA allocation is not affected by audit status. Only validation rewards are withheld until compliance is confirmed.</strong></p>
               </div>
 
               <h3>Uptime requirement</h3>
@@ -216,7 +216,7 @@ export default function HexNodePurchasePage() {
                 </div>
                 <div className="row">
                   <div className="k">Emissions end after Year 3</div>
-                  <div className="v">Scheduled token emissions end entirely after Year 3. No governance action can extend the emission schedule. <strong>Years 4 – 5 are revenue-funded only.</strong> <span className="pill immutable">▲ Immutable</span></div>
+                  <div className="v">Scheduled token emissions end entirely after Year 3. No governance action can extend the emission schedule. <strong>Years 4-5 are revenue-funded only.</strong> <span className="pill immutable">▲ Immutable</span></div>
                 </div>
                 <div className="row">
                   <div className="k">Genesis 200 supply</div>
@@ -246,7 +246,7 @@ export default function HexNodePurchasePage() {
           <section className="clause" id="s6a">
             <div className="clause-head"><span className="num">§ 6A</span><h2>Hardware specifications and changes</h2><a className="anchor" href="#s6a">#s6a</a></div>
             <div className="clause-body">
-              <p>Hex Nodes are evolving technical products. Mālama reserves the right to update specifications, change components, improve performance, and modify firmware or software requirements, provided the core intended function — <strong>validation of SaveCards and compute packets on the Mālama network</strong> — is materially preserved.</p>
+              <p>Hex Nodes are evolving technical products. Mālama reserves the right to update specifications, change components, improve performance, and modify firmware or software requirements, provided the core intended function. <strong>validation of SaveCards and compute packets on the Mālama network</strong>. Is materially preserved.</p>
               <p>Images, diagrams, and marketing materials are illustrative and may not reflect final production units. The <strong>ATECC608B secure element</strong> and <strong>Device DID provisioning</strong> are confirmed components of the production design.</p>
             </div>
           </section>
@@ -293,7 +293,7 @@ export default function HexNodePurchasePage() {
                 <span className="tag">▲ Technical infrastructure · Not a financial product</span>
                 <p>A Hex Node is technical infrastructure, not a financial product. <strong>There is no guarantee of Rewards, Tokens, or earnings.</strong> Reward mechanisms may change or be discontinued through governance processes.</p>
               </div>
-              <p>Validation rewards depend on network conditions, data volume in your hex zone, your Data Quality Score, Uptime Factor, Geographic Multiplier, the total active validator set, and MLMA market price — all of which vary and are outside Mālama&rsquo;s control or guarantee.</p>
+              <p>Validation rewards depend on network conditions, data volume in your hex zone, your Data Quality Score, Uptime Factor, Geographic Multiplier, the total active validator set, and MLMA market price. All of which vary and are outside Mālama&rsquo;s control or guarantee.</p>
               <p>Year 1 Genesis phase reward levels are a deliberately <strong>front-loaded bootstrapping mechanism</strong>. They are not indicative of steady-state returns. Emissions stop entirely after Year 3. Nothing in this Agreement constitutes an investment contract, a promise of profit, or financial advice.</p>
             </div>
           </section>
@@ -305,7 +305,7 @@ export default function HexNodePurchasePage() {
               <ul>
                 <li>You are solely responsible for managing your wallet and private keys.</li>
                 <li>Blockchain transactions are irreversible.</li>
-                <li>On-chain data — including your NFT-HEX geographic assignment — is public and permanent.</li>
+                <li>On-chain data. Including your NFT-HEX geographic assignment. Is public and permanent.</li>
                 <li>Token values may fluctuate dramatically and may reach zero.</li>
               </ul>
               <p>Mālama is not responsible for lost keys, incorrect transactions, wallet compromise, or third-party wallet failures. MLMA regulatory classification is subject to ongoing legal review and varies by jurisdiction. <strong>You are solely responsible for determining whether participation is lawful in your jurisdiction before reserving a node.</strong></p>
@@ -342,7 +342,7 @@ export default function HexNodePurchasePage() {
           <section className="clause" id="s14">
             <div className="clause-head"><span className="num">§ 14</span><h2>Indemnification</h2><a className="anchor" href="#s14">#s14</a></div>
             <div className="clause-body">
-              <p>You agree to defend, indemnify, and hold harmless Mālama and its affiliates, officers, directors, employees, contractors, licensors, and agents from and against any claims, damages, liabilities, costs, and expenses — including reasonable attorneys&rsquo; fees — arising out of or related to your purchase, use, or operation of the Hex Node, your violation of applicable law or third-party rights, your misuse of data, tokens, or network systems, or your breach of this Agreement.</p>
+              <p>You agree to defend, indemnify, and hold harmless Mālama and its affiliates, officers, directors, employees, contractors, licensors, and agents from and against any claims, damages, liabilities, costs, and expenses. Including reasonable attorneys&rsquo; fees. Arising out of or related to your purchase, use, or operation of the Hex Node, your violation of applicable law or third-party rights, your misuse of data, tokens, or network systems, or your breach of this Agreement.</p>
             </div>
           </section>
 
@@ -386,7 +386,7 @@ export default function HexNodePurchasePage() {
               </div>
 
               <div className="sig-strip">
-                <div className="label">— END OF DOCUMENT</div>
+                <div className="label">- END OF DOCUMENT</div>
                 <p className="text">Mālama Labs, Inc. · Hex Node Purchase &amp; Preorder Agreement · Effective April 11, 2026 · Last Updated April 28, 2026 (v2)</p>
                 <p className="footnote">This Agreement does not constitute investment advice or a guarantee of rewards. Beneficial Technology legal review required before external publication.</p>
               </div>

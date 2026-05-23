@@ -65,7 +65,7 @@ function PasswordForm() {
           Mālama Labs
         </h1>
         <p className="text-center text-gray-500 text-sm mb-10">
-          Private preview — enter password to continue
+          Private preview. Enter password to continue
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

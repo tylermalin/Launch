@@ -43,7 +43,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
   return (
     <aside
       role="dialog"
-      aria-label={`Hex Node ${hex.nodeNumber} — ${hex.region}`}
+      aria-label={`Hex Node ${hex.nodeNumber}. ${hex.region}`}
       style={{
         width: 380,
         maxHeight: '90vh',
@@ -191,7 +191,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
               cursor: 'pointer',
             }}
           >
-            Reserve this hex — ${hex.genesisReserveUsd.toLocaleString()}
+            Reserve this hex. ${hex.genesisReserveUsd.toLocaleString()}
           </button>
         )}
         {isReserved && !isFounding && (

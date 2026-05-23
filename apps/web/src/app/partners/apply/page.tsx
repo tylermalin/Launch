@@ -189,7 +189,7 @@ export default function ApplyPage() {
               rows={3}
               value={form.bio}
               onChange={set('bio')}
-              placeholder="Tell us who you are — crypto KOL, climate researcher, DePIN enthusiast..."
+              placeholder="Tell us who you are. Crypto KOL, climate researcher, DePIN enthusiast..."
               className="w-full bg-malama-card border border-malama-line rounded-malama px-4 py-3 text-sm text-malama-ink placeholder-malama-ink-faint focus:outline-none focus:border-malama-accent/50 transition-colors resize-none"
             />
           </motion.div>

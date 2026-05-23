@@ -16,7 +16,7 @@ export default function PrivacyPage() {
       eyebrowText="Legal · Privacy Policy"
       titleLead="Privacy"
       titleEmphasis="Policy."
-      lede="How Mālama Labs Inc. collects, uses, discloses, and protects Personal Data — and what public, immutable blockchain records mean for your data-subject rights."
+      lede="How Mālama Labs Inc. collects, uses, discloses, and protects Personal Data. And what public, immutable blockchain records mean for your data-subject rights."
       metaRows={[
         { k: 'Status', v: 'In force', accent: true },
         { k: 'Effective', v: 'April 11, 2026' },
@@ -44,7 +44,7 @@ export default function PrivacyPage() {
               ['s11','11','User rights'],['s12','12','Children’s data'],
               ['s13','13','Blockchain & sensor disclaimer'],['s14','14','Limitation of liability'],
               ['s15','15','Changes to this policy'],['s16','16','Governing law'],
-              ['s17','17','Definitions'],['contact','— —','Privacy inquiries'],
+              ['s17','17','Definitions'],['contact','- -','Privacy inquiries'],
             ].map(([id, n, t]) => (
               <li key={id}><a href={`#${id}`}><span className="n">{n}</span><span className="t">{t}</span></a></li>
             ))}
@@ -109,7 +109,7 @@ export default function PrivacyPage() {
                 <li>Deployment metadata and geographic hex cell assignment.</li>
                 <li>Telemetry and uptime data.</li>
                 <li>Environmental measurement data.</li>
-                <li>Approximate geolocation (H3 hex cell resolution — see disclosure below).</li>
+                <li>Approximate geolocation (H3 hex cell resolution. See disclosure below).</li>
                 <li>Signed sensor outputs and verification data.</li>
               </ul>
 
@@ -143,7 +143,7 @@ export default function PrivacyPage() {
                 <tbody>
                   <tr><td>Performance of contract</td><td>Fulfilling node orders, processing reservations, operating accounts, and providing the core Services you have requested.</td></tr>
                   <tr><td>Legal obligation</td><td>Complying with applicable law, tax obligations, sanctions screening, law enforcement cooperation, and regulatory reporting requirements.</td></tr>
-                  <tr><td>Legitimate interests</td><td>Operating and improving the Network, fraud prevention, security monitoring, abuse prevention, and business analytics — balanced against your rights and interests. Records of our Legitimate Interests Assessments are available on request.</td></tr>
+                  <tr><td>Legitimate interests</td><td>Operating and improving the Network, fraud prevention, security monitoring, abuse prevention, and business analytics. Balanced against your rights and interests. Records of our Legitimate Interests Assessments are available on request.</td></tr>
                   <tr><td>Consent</td><td>Marketing communications to EU/EEA/UK residents, and any other processing where we have explicitly requested and obtained your consent. Consent may be withdrawn at any time without affecting prior processing.</td></tr>
                 </tbody>
               </table>
@@ -194,8 +194,8 @@ export default function PrivacyPage() {
                 <thead><tr><th>Recipient</th><th>Examples</th></tr></thead>
                 <tbody>
                   <tr><td>Service providers (processors)</td><td>Cloud hosting, analytics, payment processors, logistics, CRM, identity verification. All engaged under DPAs.</td></tr>
-                  <tr><td>Professional advisors</td><td>Legal, accounting, audit, insurance, and compliance providers — bound by confidentiality obligations.</td></tr>
-                  <tr><td>Ecosystem partners</td><td>Hardware manufacturers, environmental registry partners, infrastructure operators, and data verification entities — engaged under appropriate agreements.</td></tr>
+                  <tr><td>Professional advisors</td><td>Legal, accounting, audit, insurance, and compliance providers. Bound by confidentiality obligations.</td></tr>
+                  <tr><td>Ecosystem partners</td><td>Hardware manufacturers, environmental registry partners, infrastructure operators, and data verification entities. Engaged under appropriate agreements.</td></tr>
                   <tr><td>Authorities</td><td>Regulators, courts, and law enforcement where legally required or permitted.</td></tr>
                   <tr><td>Corporate transactions</td><td>Acquirers, successors, or financing parties in the event of a merger, acquisition, restructuring, or financing.</td></tr>
                   <tr><td>Blockchain networks</td><td>Certain data is permanently recorded on public Cardano, Hedera, and/or Base networks and is accessible globally and indefinitely.</td></tr>
@@ -223,7 +223,7 @@ export default function PrivacyPage() {
             <div className="clause-head"><span className="num">§ 09</span><h2>International data transfers</h2><a className="anchor" href="#s9">#s9</a></div>
             <div className="clause-body">
               <p>Data may be processed in the United States and other jurisdictions. Where we transfer Personal Data outside the European Economic Area, United Kingdom, or Switzerland to countries not recognized as providing adequate protection, we implement appropriate safeguards including <strong>Standard Contractual Clauses</strong> approved by the European Commission, or equivalent mechanisms.</p>
-              <p>Distributed systems — including Cardano, Hedera, Base, and cloud infrastructure — may involve global data propagation. Public blockchain data is accessible worldwide by construction and cannot be restricted by geographic transfer limitations.</p>
+              <p>Distributed systems. Including Cardano, Hedera, Base, and cloud infrastructure. May involve global data propagation. Public blockchain data is accessible worldwide by construction and cannot be restricted by geographic transfer limitations.</p>
             </div>
           </section>
 
@@ -237,8 +237,8 @@ export default function PrivacyPage() {
                   <tr><td>Support and communication records</td><td>3 years from the close of the relevant matter, or as required for dispute resolution.</td></tr>
                   <tr><td>Technical logs and diagnostic data</td><td>Up to 12 months for operational and security purposes, unless required longer for an ongoing investigation.</td></tr>
                   <tr><td>Marketing consent records</td><td>Retained for the duration of the relationship and for 3 years thereafter to demonstrate consent compliance.</td></tr>
-                  <tr><td>Blockchain and on-chain data</td><td>Indefinite — blockchain data is immutable and cannot be deleted by Mālama or anyone else.</td></tr>
-                  <tr><td>Aggregated and anonymized data</td><td>Indefinite — not Personal Data once genuinely anonymized.</td></tr>
+                  <tr><td>Blockchain and on-chain data</td><td>Indefinite. Blockchain data is immutable and cannot be deleted by Mālama or anyone else.</td></tr>
+                  <tr><td>Aggregated and anonymized data</td><td>Indefinite. Not Personal Data once genuinely anonymized.</td></tr>
                 </tbody>
               </table>
               <p>When data is no longer required, we delete, anonymize, or archive it securely in accordance with applicable legal requirements.</p>
@@ -252,7 +252,7 @@ export default function PrivacyPage() {
 
               <div className="callout warn">
                 <span className="tag">▲ Important limitations</span>
-                <p>Blockchain records — including on-chain hex cell assignments, wallet addresses, transaction history, and SaveCard data — <strong>cannot be altered or deleted</strong> by Mālama or any other party.</p>
+                <p>Blockchain records. Including on-chain hex cell assignments, wallet addresses, transaction history, and SaveCard data. <strong>cannot be altered or deleted</strong> by Mālama or any other party.</p>
                 <p>Legal, contractual, and regulatory obligations may also prevent deletion or restrict processing of certain data. Identity verification is required before we can fulfill data-subject requests.</p>
               </div>
 
@@ -310,7 +310,7 @@ export default function PrivacyPage() {
               <p>Due to the nature of Mālama&rsquo;s infrastructure:</p>
               <ul>
                 <li>Sensor data may be cryptographically signed and permanently recorded on public blockchains (Cardano, Hedera, Base).</li>
-                <li>Environmental measurement data produced by your node — including SaveCards used in carbon credit verification and AI compute energy attestation — may be used in regulatory, financial, or carbon market contexts by third parties.</li>
+                <li>Environmental measurement data produced by your node. Including SaveCards used in carbon credit verification and AI compute energy attestation. May be used in regulatory, financial, or carbon market contexts by third parties.</li>
                 <li>Blockchain entries cannot be modified or erased by Mālama or any other party.</li>
                 <li>Third parties may independently analyze or derive insights from public blockchain data.</li>
                 <li>Geographic hex cell assignments are public and permanent once recorded on-chain.</li>
@@ -328,7 +328,7 @@ export default function PrivacyPage() {
               </div>
               <ul>
                 <li>Mālama is not liable for third-party access to, use of, or analysis of public blockchain data.</li>
-                <li>Mālama does not guarantee anonymity in decentralized systems — public wallet addresses and on-chain activity may be linkable to individuals by third parties using blockchain analytics.</li>
+                <li>Mālama does not guarantee anonymity in decentralized systems. Public wallet addresses and on-chain activity may be linkable to individuals by third parties using blockchain analytics.</li>
                 <li>Mālama is not responsible for privacy breaches arising from your own negligence, wallet compromise, private key loss, or failures in external infrastructure not operated by Mālama.</li>
               </ul>
             </div>
@@ -358,8 +358,8 @@ export default function PrivacyPage() {
                   <tr><td>Controller</td><td>Entity that determines the purposes and means of processing Personal Data. Mālama Labs Inc. is the Controller for Personal Data collected through its Services.</td></tr>
                   <tr><td>Processor</td><td>Entity that processes Personal Data on behalf of the Controller. Mālama&rsquo;s service providers acting on written instructions under a DPA.</td></tr>
                   <tr><td>Blockchain Data</td><td>Public, immutable ledger data recorded on Cardano, Hedera, Base, or other blockchain networks.</td></tr>
-                  <tr><td>DPA</td><td>Data Processing Agreement — a written agreement between Controller and Processor governing the terms of processing as required by GDPR Article 28.</td></tr>
-                  <tr><td>LIA</td><td>Legitimate Interests Assessment — a balancing test conducted to document that Mālama&rsquo;s legitimate interests are not overridden by data-subject rights when relying on the legitimate interests lawful basis.</td></tr>
+                  <tr><td>DPA</td><td>Data Processing Agreement. A written agreement between Controller and Processor governing the terms of processing as required by GDPR Article 28.</td></tr>
+                  <tr><td>LIA</td><td>Legitimate Interests Assessment. A balancing test conducted to document that Mālama&rsquo;s legitimate interests are not overridden by data-subject rights when relying on the legitimate interests lawful basis.</td></tr>
                   <tr><td>H3 Hex Cell</td><td>A geographic area defined by Uber&rsquo;s H3 geospatial indexing system. H3 hex cells used in the Mālama network provide approximate location, not precise GPS coordinates.</td></tr>
                   <tr><td>SaveCard</td><td>A cryptographically signed, on-chain environmental data record produced by Mālama sensor infrastructure and validated by Hex Nodes.</td></tr>
                 </tbody>
@@ -381,7 +381,7 @@ export default function PrivacyPage() {
               </div>
 
               <div className="sig-strip">
-                <div className="label">— END OF DOCUMENT</div>
+                <div className="label">- END OF DOCUMENT</div>
                 <p className="text">Mālama Labs, Inc. · Privacy Policy · Effective April 11, 2026 · Last Updated April 28, 2026 (v2)</p>
                 <p className="footnote">Questions: <a href="mailto:privacy@malamalabs.com" style={{ color: 'var(--mlma-accent)' }}>privacy@malamalabs.com</a> · 8 The Green, Suite A, Dover, Delaware 19901.</p>
               </div>

@@ -119,7 +119,7 @@ export function WhitepaperProse() {
           <h2 className="text-2xl font-black text-white mb-4 border-b border-gray-800 pb-2">2. Token Overview</h2>
           <H3>2.1 Name and Ticker</H3>
           <ul className="list-disc pl-5 text-gray-300 space-y-2 text-sm md:text-[15px]">
-            <li><strong className="text-white">Name:</strong> Mālama — ʻŌlelo Hawaiʻi (Hawaiian). Meaning: to care for, to tend, to protect, to preserve. The name reflects the company's grounding in place-based stewardship and the mission to make ecological data trustworthy.</li>
+            <li><strong className="text-white">Name:</strong> Mālama. ʻŌlelo Hawaiʻi (Hawaiian). Meaning: to care for, to tend, to protect, to preserve. The name reflects the company's grounding in place-based stewardship and the mission to make ecological data trustworthy.</li>
             <li><strong className="text-white">Ticker:</strong> MLMA</li>
             <li><strong className="text-white">Precision:</strong> 18 decimals (Cardano native asset standard and ERC-20 compatible)</li>
           </ul>
@@ -150,7 +150,7 @@ export function WhitepaperProse() {
           <h2 className="text-2xl font-black text-white mb-4 border-b border-gray-800 pb-2">3. Supply Framework</h2>
           <H3>3.1 Total Supply Cap</H3>
           <P>
-            <strong className="text-white">500,000,000 MLMA</strong> — hard ceiling. No additional issuance beyond 500M can occur under any governance vote.
+            <strong className="text-white">500,000,000 MLMA</strong>. Hard ceiling. No additional issuance beyond 500M can occur under any governance vote.
             Emergency issuance would require a hard fork and must be explicitly disclosed as such.
           </P>
           <H3>3.2 Allocation Breakdown</H3>
@@ -160,7 +160,7 @@ export function WhitepaperProse() {
               ['Investors (Seed SAFE)', '30%', '150M', 'Per SAFE vesting terms'],
               ['Team and Advisors', '20%', '100M', '4-year vest, 1-year cliff'],
               ['Genesis 200 Operators', '5%', '25M', '125K per operator · $2K entry · 200 nodes'],
-              ['Future Network Incentives', '27.5%', '137.5M', 'Y1–Y3 emissions: 79.2M · Uncommitted reserve: 58.3M'],
+              ['Future Network Incentives', '27.5%', '137.5M', 'Y1-Y3 emissions: 79.2M · Uncommitted reserve: 58.3M'],
               ['Protocol Treasury', '17.5%', '87.5M', 'DAO-governed · quarterly reporting required'],
               ['Total', '100%', '500M', 'Hard cap'],
             ]}
@@ -177,7 +177,7 @@ export function WhitepaperProse() {
             headers={['Milestone', 'Tokens', 'Timing']}
             rows={[
               ['Hardware boot · deployment registration', '31,250 MLMA (25%)', '~October 2026'],
-              ['Months 1–12 linear vesting', '93,750 MLMA (75%)', '~7,813 MLMA/month'],
+              ['Months 1-12 linear vesting', '93,750 MLMA (75%)', '~7,813 MLMA/month'],
               ['Month 13 onward', '125,000 MLMA fully vested', 'Hold, stake as veMLMA, or sell'],
             ]}
           />
@@ -190,7 +190,7 @@ export function WhitepaperProse() {
 
         {/* ── 4. Emission Schedule ── */}
         <section id="emission-schedule" className="scroll-mt-28 mb-16">
-          <h2 className="text-2xl font-black text-white mb-4 border-b border-gray-800 pb-2">4. Emission Schedule (Years 1–5)</h2>
+          <h2 className="text-2xl font-black text-white mb-4 border-b border-gray-800 pb-2">4. Emission Schedule (Years 1-5)</h2>
           <P>Cold-start emissions for three years only. Zero inflation from Year 4, with all rewards funded by protocol revenue.</P>
           <Table
             headers={['Year', 'Emissions', '% of Supply', 'Cumulative', 'Status']}
@@ -203,9 +203,9 @@ export function WhitepaperProse() {
             ]}
           />
           <P>
-            <strong className="text-white">Total Y1–Y3 emissions: 79.2M MLMA</strong> (15.8% of supply).
+            <strong className="text-white">Total Y1-Y3 emissions: 79.2M MLMA</strong> (15.8% of supply).
             Uncommitted network incentive reserve: 58.3M MLMA.
-            Years 4–5: zero emissions, all rewards from protocol revenue.
+            Years 4-5: zero emissions, all rewards from protocol revenue.
           </P>
           <H3>4.2 Year 1 Distribution Logic</H3>
           <CodeBlock>{`Monthly_Validator_Reward =
@@ -266,8 +266,8 @@ Where:
           <Table
             headers={['Phase', 'Period', 'Reward source', 'Genesis multiplier']}
             rows={[
-              ['Genesis boost', 'Years 1–3', 'Monthly emission pool (750K → 2.1M → 3.75M MLMA/month)', '1.5× in Year 1 only'],
-              ['Revenue-funded steady state', 'Years 4–5', '25% of protocol revenue distributed monthly', 'None'],
+              ['Genesis boost', 'Years 1-3', 'Monthly emission pool (750K → 2.1M → 3.75M MLMA/month)', '1.5× in Year 1 only'],
+              ['Revenue-funded steady state', 'Years 4-5', '25% of protocol revenue distributed monthly', 'None'],
             ]}
           />
           <H3>5.2 Validator Growth and Per-Node Base Rewards</H3>
@@ -279,20 +279,20 @@ Where:
             headers={['Period', 'Monthly pool', 'Approx validators', 'Unweighted base per-validator']}
             rows={[
               ['Y1 early (Genesis only)', '750K MLMA/mo', '200', '3,750 MLMA/mo'],
-              ['Y1 mature (+ community)', '750K MLMA/mo', '350–550', '1,364–2,143 MLMA/mo'],
-              ['Year 2', '2.1M MLMA/mo', '500–800', '2,625–4,200 MLMA/mo'],
-              ['Year 3', '3.75M MLMA/mo', '800–1,200', '3,125–4,688 MLMA/mo'],
-              ['Year 4 (revenue)', '~$445K/mo total', '1,000–1,500', '~$297–$445/mo USD'],
-              ['Year 5 (revenue)', '~$717K/mo total', '1,200–1,800', '~$398–$598/mo USD'],
+              ['Y1 mature (+ community)', '750K MLMA/mo', '350-550', '1,364-2,143 MLMA/mo'],
+              ['Year 2', '2.1M MLMA/mo', '500-800', '2,625-4,200 MLMA/mo'],
+              ['Year 3', '3.75M MLMA/mo', '800-1,200', '3,125-4,688 MLMA/mo'],
+              ['Year 4 (revenue)', '~$445K/mo total', '1,000-1,500', '~$297-$445/mo USD'],
+              ['Year 5 (revenue)', '~$717K/mo total', '1,200-1,800', '~$398-$598/mo USD'],
             ]}
           />
           <H3>5.3 Reward Scenarios (Mechanics, Not Projections)</H3>
           <Table
             headers={['Scenario', 'Geographic multiplier', 'Relative Year 1 weight', 'Notes']}
             rows={[
-              ['Low-demand hex', '0.5×–1.0×', 'Lowest', 'Urban or rural zones with low SaveCard volume'],
-              ['Medium-demand hex', '1.0×–2.0×', 'Mid', 'Agricultural or moderately-served regions'],
-              ['High-demand hex', '2.0×–3.0×', 'Highest', 'Industrial corridor, AI data center, coastal wetland, flood-prone agricultural zone'],
+              ['Low-demand hex', '0.5×-1.0×', 'Lowest', 'Urban or rural zones with low SaveCard volume'],
+              ['Medium-demand hex', '1.0×-2.0×', 'Mid', 'Agricultural or moderately-served regions'],
+              ['High-demand hex', '2.0×-3.0×', 'Highest', 'Industrial corridor, AI data center, coastal wetland, flood-prone agricultural zone'],
             ]}
           />
           <p className="text-xs text-gray-500 italic mt-2">
@@ -333,15 +333,15 @@ Where:
               ['Carbon verification (ERW, Biochar, DAC)', '$10.8M', 'SaveCard validation fees from carbon project operators'],
               ['Energy-market data (AI compute + grid attestation)', '$8.06M', 'Institutional subscriptions for Scope 2 and CFE attestation data'],
               ['Parametric insurance', '$1.8M', 'Data service fee + per-settlement fee'],
-              ['LCO₂ settlement', '$1.28M', '0.5–2% fee on LCO₂ → VCO₂ conversion events'],
+              ['LCO₂ settlement', '$1.28M', '0.5-2% fee on LCO₂ → VCO₂ conversion events'],
               ['Prediction market data licensing', '$2.0M', 'Licensing + resolution fees on Kalshi and Polymarket climate markets'],
               ['MRAA-01 SaaS (direct device revenue)', '$10.5M', '$200/rack/yr × ~52,500 deployed AI compute monitoring units'],
-              ['Total', '$34.44M', '—'],
+              ['Total', '$34.44M', '-'],
             ]}
           />
           <p className="text-xs text-gray-500 italic mt-2">
-            The data demand that generates protocol revenue exists outside the token. Sensor operators — carbon project developers, data centers,
-            kiln operators — pay SaaS fees to the Mālama network independent of MLMA price. This is the structural departure from
+            The data demand that generates protocol revenue exists outside the token. Sensor operators. Carbon project developers, data centers,
+            kiln operators. Pay SaaS fees to the Mālama network independent of MLMA price. This is the structural departure from
             inflation-dependent DePIN models.
           </p>
         </section>
@@ -351,7 +351,7 @@ Where:
           <h2 className="text-2xl font-black text-white mb-4 border-b border-gray-800 pb-2">7. Burn Mechanism &amp; Deflation</h2>
           <P>
             Half of all protocol revenue is permanently removed from circulation. Burn volume scales with network revenue and the prevailing
-            MLMA market price — higher revenue and/or lower price produces more tokens burned per dollar of revenue.
+            MLMA market price. Higher revenue and/or lower price produces more tokens burned per dollar of revenue.
           </P>
           <CodeBlock>{`Monthly_Burn         = (Protocol_Revenue × 0.50) / MLMA_Spot_Price
 Monthly_Distributed  = Protocol_Revenue × 0.50
@@ -411,7 +411,7 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
           <div className="space-y-5 text-sm md:text-[15px] text-gray-300">
             <div>
               <p className="font-bold text-white mb-1">Token Price Risk</p>
-              <p>MLMA price could decline due to weak demand from carbon and energy buyers, slower-than-forecast network deployment, broader crypto market conditions, or competition. Mitigation: five diversified revenue streams, hard supply cap, burn mechanism, and veMLMA long-term locks align incentives. The emission schedule is fixed and does not respond to price movements — the protocol cannot issue additional tokens to defend price.</p>
+              <p>MLMA price could decline due to weak demand from carbon and energy buyers, slower-than-forecast network deployment, broader crypto market conditions, or competition. Mitigation: five diversified revenue streams, hard supply cap, burn mechanism, and veMLMA long-term locks align incentives. The emission schedule is fixed and does not respond to price movements. The protocol cannot issue additional tokens to defend price.</p>
             </div>
             <div>
               <p className="font-bold text-white mb-1">Validator Participation Risk</p>
@@ -423,7 +423,7 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
             </div>
             <div>
               <p className="font-bold text-white mb-1">Revenue Forecast Risk</p>
-              <p>Year 5 protocol revenue of $34.44M depends on successful deployment across all five verticals and market adoption of Mālama-attested data products. Years 1–3 emissions do not require hitting outer-year revenue targets. Years 4–5 scale with actual fees. If Year 5 revenue is 50% of forecast (~$17M), per-validator baseline rewards are approximately $199–$299 per month before multipliers — meaningful but below the base case.</p>
+              <p>Year 5 protocol revenue of $34.44M depends on successful deployment across all five verticals and market adoption of Mālama-attested data products. Years 1-3 emissions do not require hitting outer-year revenue targets. Years 4-5 scale with actual fees. If Year 5 revenue is 50% of forecast (~$17M), per-validator baseline rewards are approximately $199-$299 per month before multipliers. Meaningful but below the base case.</p>
             </div>
           </div>
         </section>
@@ -441,11 +441,11 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
             headers={['Metric', 'Value']}
             rows={[
               ['Network emissions', '9.0M MLMA · 750K/month'],
-              ['Validator count (approx)', '200 Genesis + 150–350 community = 350–550 total'],
+              ['Validator count (approx)', '200 Genesis + 150-350 community = 350-550 total'],
               ['Entry per node', '$2,000 (hardware $380 + license $1,620)'],
               ['MLMA per Genesis operator', '125,000 (31,250 at boot · 93,750 over 12 months)'],
               ['Genesis multiplier', '1.5× · Year 1 only'],
-              ['Burn activity', 'Minimal — revenue insufficient for significant burns in Year 1'],
+              ['Burn activity', 'Minimal. Revenue insufficient for significant burns in Year 1'],
             ]}
           />
           <H3>Year 2</H3>
@@ -453,7 +453,7 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
             headers={['Metric', 'Value']}
             rows={[
               ['Network emissions', '25.2M MLMA · 2.1M/month'],
-              ['Validator count', '500–800'],
+              ['Validator count', '500-800'],
               ['Genesis multiplier', 'Expired · Year 1 only'],
               ['Reward source', 'Emissions + ramping revenue share'],
             ]}
@@ -463,19 +463,19 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
             headers={['Metric', 'Value']}
             rows={[
               ['Network emissions', '45.0M MLMA · 3.75M/month · final emission year'],
-              ['Validator count', '800–1,200'],
+              ['Validator count', '800-1,200'],
               ['After Year 3', 'Emissions stop entirely · revenue-funded from Year 4'],
             ]}
           />
-          <H3>Years 4–5</H3>
+          <H3>Years 4-5</H3>
           <Table
             headers={['Metric', 'Year 4', 'Year 5']}
             rows={[
               ['Emissions', '0', '0'],
-              ['Validators', '1,000–1,500', '1,200–1,800'],
+              ['Validators', '1,000-1,500', '1,200-1,800'],
               ['Reward source', 'Protocol revenue only', 'Protocol revenue only'],
               ['Monthly to operators (25% of revenue)', '~$445K total', '~$717K total'],
-              ['Per-validator baseline', '~$297–$445/month', '~$398–$598/month'],
+              ['Per-validator baseline', '~$297-$445/month', '~$398-$598/month'],
               ['Annual burn (50% of revenue)', '~$10.7M in MLMA', '~$17.2M in MLMA'],
             ]}
           />
@@ -491,7 +491,7 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
             </div>
             <div>
               <p className="font-bold text-white mb-2">What if MLMA price drops significantly?</p>
-              <p>The emission schedule is fixed. If price falls, you receive the same number of tokens for the same validation work, which represents less dollar value. The protocol does not issue additional tokens in response to price movements — any statement to that effect is incorrect. Hardware cost ($380) is low enough that even at $0.05/MLMA, monthly validation rewards in a suburban hex recover hardware cost in under two months. The allocation value at $0.05 would be $6,250 versus $25,000 at the $0.20 base case illustrative price.</p>
+              <p>The emission schedule is fixed. If price falls, you receive the same number of tokens for the same validation work, which represents less dollar value. The protocol does not issue additional tokens in response to price movements. Any statement to that effect is incorrect. Hardware cost ($380) is low enough that even at $0.05/MLMA, monthly validation rewards in a suburban hex recover hardware cost in under two months. The allocation value at $0.05 would be $6,250 versus $25,000 at the $0.20 base case illustrative price.</p>
             </div>
             <div>
               <p className="font-bold text-white mb-2">Can I stake my vesting allocation before it fully unlocks?</p>
@@ -518,37 +518,37 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
           <div className="space-y-3">
             <details className="group rounded-xl border border-gray-800 bg-[#0d1e35] open:border-malama-accent/30">
               <summary className="cursor-pointer px-4 py-3 font-bold text-white list-none flex justify-between items-center">
-                Appendix A — Emission Curve Summary
+                Appendix A. Emission Curve Summary
                 <span className="text-gray-500 text-xs group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-4 pb-4">
                 <CodeBlock>{`Year 1: 9.0M MLMA · 750K/month · linear
 Year 2: 25.2M MLMA · 2.1M/month · linear
 Year 3: 45.0M MLMA · 3.75M/month · linear (final)
-Years 4–5: 0 MLMA
+Years 4-5: 0 MLMA
 
-Total Y1–Y3: 79.2M MLMA
+Total Y1-Y3: 79.2M MLMA
 Uncommitted reserve: 58.3M MLMA
 Hard cap: 500M MLMA`}</CodeBlock>
               </div>
             </details>
             <details className="group rounded-xl border border-gray-800 bg-[#0d1e35]">
               <summary className="cursor-pointer px-4 py-3 font-bold text-white list-none flex justify-between items-center">
-                Appendix B — Revenue Assumptions (High Level)
+                Appendix B. Revenue Assumptions (High Level)
                 <span className="text-gray-500 text-xs group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-4 pb-4 text-sm text-gray-400 space-y-3 pt-2">
-                <p><strong className="text-gray-300">Carbon verification:</strong> 500–1,000 carbon projects using Mālama sensor infrastructure. $100–$1,000/cycle per project. Isometric and Puro.earth as primary registry integrations. Begins Year 1 from ERW and Biochar pilots.</p>
-                <p><strong className="text-gray-300">Energy-market data:</strong> 50–200 institutional subscribers (AI hyperscalers, colocation operators, grid analytics firms). $10,000–$200,000/year per subscription. Primary driver: CSRD compliance and 24/7 CFE matching. Begins Year 2 when MRAA-01 is generally available.</p>
-                <p><strong className="text-gray-300">Parametric insurance:</strong> 5–50 active parametric products using Mālama data as oracle. Revenue is data service fee plus per-settlement fee.</p>
-                <p><strong className="text-gray-300">LCO₂ settlement:</strong> 0.5–2% transaction fee on LCO₂ to VCO₂ conversion events. Scales with pre-financed project volume.</p>
+                <p><strong className="text-gray-300">Carbon verification:</strong> 500-1,000 carbon projects using Mālama sensor infrastructure. $100-$1,000/cycle per project. Isometric and Puro.earth as primary registry integrations. Begins Year 1 from ERW and Biochar pilots.</p>
+                <p><strong className="text-gray-300">Energy-market data:</strong> 50-200 institutional subscribers (AI hyperscalers, colocation operators, grid analytics firms). $10,000-$200,000/year per subscription. Primary driver: CSRD compliance and 24/7 CFE matching. Begins Year 2 when MRAA-01 is generally available.</p>
+                <p><strong className="text-gray-300">Parametric insurance:</strong> 5-50 active parametric products using Mālama data as oracle. Revenue is data service fee plus per-settlement fee.</p>
+                <p><strong className="text-gray-300">LCO₂ settlement:</strong> 0.5-2% transaction fee on LCO₂ to VCO₂ conversion events. Scales with pre-financed project volume.</p>
                 <p><strong className="text-gray-300">Prediction market data:</strong> Licensing and resolution fees on Kalshi and Polymarket climate markets. Active from Year 1 as SaveCards accumulate on-chain.</p>
                 <p><strong className="text-gray-300">MRAA-01 SaaS:</strong> $200/rack/year. Conservative 52,500 racks deployed by Year 5 (approximately 5% penetration of addressable hyperscaler rack base).</p>
               </div>
             </details>
             <details className="group rounded-xl border border-gray-800 bg-[#0d1e35]">
               <summary className="cursor-pointer px-4 py-3 font-bold text-white list-none flex justify-between items-center">
-                Appendix C — Regulatory Classification
+                Appendix C. Regulatory Classification
                 <span className="text-gray-500 text-xs group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-4 pb-4 text-sm text-gray-400 pt-2">
@@ -557,7 +557,7 @@ Hard cap: 500M MLMA`}</CodeBlock>
             </details>
             <details className="group rounded-xl border border-gray-800 bg-[#0d1e35]">
               <summary className="cursor-pointer px-4 py-3 font-bold text-white list-none flex justify-between items-center">
-                Appendix D — Burn Transaction Record Format
+                Appendix D. Burn Transaction Record Format
                 <span className="text-gray-500 text-xs group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-4 pb-4 text-sm text-gray-400 pt-2">
@@ -566,7 +566,7 @@ Hard cap: 500M MLMA`}</CodeBlock>
             </details>
             <details className="group rounded-xl border border-gray-800 bg-[#0d1e35]">
               <summary className="cursor-pointer px-4 py-3 font-bold text-white list-none flex justify-between items-center">
-                Appendix E — Treasury Governance Limits
+                Appendix E. Treasury Governance Limits
                 <span className="text-gray-500 text-xs group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-4 pb-4 text-sm text-gray-400 space-y-2 pt-2">

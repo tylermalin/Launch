@@ -95,7 +95,7 @@ export async function GET(req: Request) {
     }
     return NextResponse.json({
       state: 'processing',
-      message: 'Payment received — minting your NFT…',
+      message: 'Payment received. Minting your NFT…',
     })
   } catch {
     return NextResponse.json({ state: 'error', error: 'Invalid session' }, { status: 404 })

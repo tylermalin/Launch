@@ -46,7 +46,7 @@ export default function TermsPage() {
               ['s18','18','Indemnification'],['s19','19','Force majeure'],['s20','20','Suspension and termination'],
               ['s21','21','Referrals and promotions'],['s22','22','Dispute resolution & arbitration'],['s23','23','Governing law'],
               ['s24','24','Modifications and updates'],['s25','25','Export controls and sanctions'],
-              ['s26','26','Electronic communications'],['s27','27','Miscellaneous'],['contact','— —','Contact'],
+              ['s26','26','Electronic communications'],['s27','27','Miscellaneous'],['contact','- -','Contact'],
             ].map(([id, n, t]) => (
               <li key={id}><a href={`#${id}`}><span className="n">{n}</span><span className="t">{t}</span></a></li>
             ))}
@@ -58,7 +58,7 @@ export default function TermsPage() {
 
         <article className="content">
           <div className="preamble">
-            <p>These <strong>Terms and Conditions</strong>, together with any documents or policies they expressly incorporate by reference — including the Privacy Policy, any posted sale terms, any node-specific terms, and any token-related disclosures — govern your access to and use of the Mālama Labs website, launch pages, applications, dashboards, hardware purchase flows, Hex Node sale pages, and related products and services (collectively, the <strong>&ldquo;Services&rdquo;</strong>).</p>
+            <p>These <strong>Terms and Conditions</strong>, together with any documents or policies they expressly incorporate by reference. Including the Privacy Policy, any posted sale terms, any node-specific terms, and any token-related disclosures. Govern your access to and use of the Mālama Labs website, launch pages, applications, dashboards, hardware purchase flows, Hex Node sale pages, and related products and services (collectively, the <strong>&ldquo;Services&rdquo;</strong>).</p>
             <p>These Terms form a binding agreement between you and <strong>Mālama Labs Inc.</strong> (&ldquo;Mālama,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;). By accessing or using the Services, creating an account, joining a waitlist, purchasing or reserving a Hex Node, connecting a wallet, or participating in the Mālama network, you agree to be bound by these Terms. <strong>If you do not agree, do not use the Services.</strong></p>
           </div>
 
@@ -268,7 +268,7 @@ export default function TermsPage() {
           <section className="clause" id="s18">
             <div className="clause-head"><span className="num">§ 18</span><h2>Indemnification</h2><a className="anchor" href="#s18">#s18</a></div>
             <div className="clause-body">
-              <p>You agree to defend, indemnify, and hold harmless Mālama and its affiliates, officers, directors, employees, contractors, licensors, suppliers, and agents from and against any claims, damages, liabilities, costs, and expenses — including reasonable attorneys&rsquo; fees — arising out of or related to your use of the Services, your node operation, your User Content, your violation of these Terms, your violation of any law or third-party right, or your misuse of tokens, rewards, wallets, or blockchain systems.</p>
+              <p>You agree to defend, indemnify, and hold harmless Mālama and its affiliates, officers, directors, employees, contractors, licensors, suppliers, and agents from and against any claims, damages, liabilities, costs, and expenses. Including reasonable attorneys&rsquo; fees. Arising out of or related to your use of the Services, your node operation, your User Content, your violation of these Terms, your violation of any law or third-party right, or your misuse of tokens, rewards, wallets, or blockchain systems.</p>
             </div>
           </section>
 
@@ -377,7 +377,7 @@ export default function TermsPage() {
               </div>
 
               <div className="sig-strip">
-                <div className="label">— END OF DOCUMENT</div>
+                <div className="label">- END OF DOCUMENT</div>
                 <p className="text">Mālama Labs, Inc. · Terms and Conditions · Effective April 11, 2026 · Last Updated April 28, 2026 (v2)</p>
                 <p className="footnote">These Terms do not constitute investment, legal, tax, or regulatory advice. Regulatory classification of MLMA is subject to ongoing legal review.</p>
               </div>

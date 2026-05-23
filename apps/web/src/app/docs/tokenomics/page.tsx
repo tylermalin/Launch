@@ -6,7 +6,7 @@ import DocsPageShell from '../_shared/DocsPageShell'
 export const metadata: Metadata = {
   title: 'MLMA Tokenomics · Mālama Labs',
   description:
-    'MLMA token design — 500M hard cap, 8-year smooth taper emission window, KPI scaling, supply allocation, revenue distribution, veMLMA governance, Stewardship Pool. Aligned to Tokenomics Whitepaper v3.6.',
+    'MLMA token design. 500M hard cap, 8-year smooth taper emission window, KPI scaling, supply allocation, revenue distribution, veMLMA governance, Stewardship Pool. Aligned to Tokenomics Whitepaper v3.6.',
 }
 
 export default function TokenomicsPage() {
@@ -21,7 +21,7 @@ export default function TokenomicsPage() {
       metaRows={[
         { k: 'Hard cap', v: '500M MLMA', accent: true },
         { k: 'Emissions', v: '60M · 12%' },
-        { k: 'Window', v: 'Years 1 – 8' },
+        { k: 'Window', v: 'Years 1-8' },
         { k: 'Burn floor', v: '250M circulating' },
         { k: 'Chain', v: 'Base (ERC-20)' },
         { k: 'Precision', v: '18 decimals' },
@@ -69,7 +69,7 @@ export default function TokenomicsPage() {
             <p>
               This page summarizes the token design specified in the{' '}
               <strong>MLMA Tokenomics Whitepaper</strong>. MLMA is the utility token
-              coordinating the Mālama validation network — used for fee payment, staking,
+              coordinating the Mālama validation network. Used for fee payment, staking,
               governance (with PONO credential), and validator distributions.
             </p>
           </div>
@@ -245,9 +245,9 @@ export default function TokenomicsPage() {
 
               <h3>Anti-gaming provisions</h3>
               <ul>
-                <li><strong>Sybil validator inflation</strong> — validator count metric weighted by hardware-attested signing activity in the preceding 30 days. Newly registered validators that have not produced signed readings do not increment the metric. KYB requirement prevents trivial sybil multiplication.</li>
-                <li><strong>SaveCard frequency inflation</strong> — SaveCard count metric normalized by hardware unit count and capped at the per-sensor reading rate specified in the Genesis hardware specification.</li>
-                <li><strong>veMLMA TVL inflation through wash-locking</strong> — veMLMA TVL metric weighted by lock duration. Short-tier locks (3-month) contribute 0.25× to the metric; 24-month locks contribute 2.0×.</li>
+                <li><strong>Sybil validator inflation</strong>. Validator count metric weighted by hardware-attested signing activity in the preceding 30 days. Newly registered validators that have not produced signed readings do not increment the metric. KYB requirement prevents trivial sybil multiplication.</li>
+                <li><strong>SaveCard frequency inflation</strong>. SaveCard count metric normalized by hardware unit count and capped at the per-sensor reading rate specified in the Genesis hardware specification.</li>
+                <li><strong>veMLMA TVL inflation through wash-locking</strong>. VeMLMA TVL metric weighted by lock duration. Short-tier locks (3-month) contribute 0.25× to the metric; 24-month locks contribute 2.0×.</li>
               </ul>
               <p>Unused ceiling tokens roll into the post-emission governance reserve, subject to PONO supermajority for any future deployment and bound by the 500M hard cap.</p>
 
@@ -263,7 +263,7 @@ export default function TokenomicsPage() {
                   <tr><td>Year 2</td><td className="num">14.0M</td><td className="num"><span className="accent">11.2M (80%)</span></td><td className="num">9.1M (65%)</td><td className="num">7.0M (50%)</td></tr>
                   <tr><td>Year 3</td><td className="num">12.0M</td><td className="num"><span className="accent">9.6M (80%)</span></td><td className="num">7.8M (65%)</td><td className="num">6.0M (50%)</td></tr>
                   <tr><td>Year 4</td><td className="num">9.0M</td><td className="num"><span className="accent">7.2M (80%)</span></td><td className="num">5.85M (65%)</td><td className="num">4.5M (50%)</td></tr>
-                  <tr><td>Years 5 – 8 cum.</td><td className="num">13.0M</td><td className="num"><span className="accent">10.4M (80%)</span></td><td className="num">8.45M (65%)</td><td className="num">6.5M (50%)</td></tr>
+                  <tr><td>Years 5-8 cum.</td><td className="num">13.0M</td><td className="num"><span className="accent">10.4M (80%)</span></td><td className="num">8.45M (65%)</td><td className="num">6.5M (50%)</td></tr>
                   <tr className="total"><td><strong>Total expected</strong></td><td className="num"><strong>60.0M</strong></td><td className="num"><strong>47.4M (P50)</strong></td><td className="num"><strong>38.4M (P25)</strong></td><td className="num"><strong>29.4M (P10)</strong></td></tr>
                 </tbody>
               </table>
@@ -461,7 +461,7 @@ Foundation_Inflow (post-floor) = Protocol_Revenue × 0.65`}</pre>
               <p>Mālama does not publish MLMA price forecasts or projected operator distributions. Token value is driven by protocol utility and market conditions and may go up or down. Participants should not acquire MLMA with the expectation of profit.</p>
 
               <div className="sig-strip">
-                <div className="label">— END OF PAGE</div>
+                <div className="label">- END OF PAGE</div>
                 <p className="text">Mālama Labs, Inc. · MLMA Tokenomics · Aligned to Whitepaper v3.6 · May 2026</p>
                 <p className="footnote">
                   Next: <Link href="/docs/pricing-roi" style={{ color: 'var(--mlma-accent)' }}>Pricing &amp; Dynamics →</Link>

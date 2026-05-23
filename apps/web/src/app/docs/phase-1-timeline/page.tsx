@@ -6,7 +6,7 @@ import DocsPageShell from '../_shared/DocsPageShell'
 export const metadata: Metadata = {
   title: 'Phase 1 Timeline · Mālama Labs',
   description:
-    'Genesis 200 timeline — from the Public Hex Launch (June 1, 2026) through full milestone vesting (~Q4 2027). Six phases: reserve, close, ship, boot + audit (mainnet live ahead of TGE), PONO qualify, operational milestones.',
+    'Genesis 200 timeline. From the Public Hex Launch (June 1, 2026) through full milestone vesting (~Q4 2027). Six phases: reserve, close, ship, boot + audit (mainnet live ahead of TGE), PONO qualify, operational milestones.',
 }
 
 export default function Phase1TimelinePage() {
@@ -17,7 +17,7 @@ export default function Phase1TimelinePage() {
       eyebrowText="Genesis 200 timeline"
       titleLead="Phase 1"
       titleEmphasis="Timeline."
-      lede="From the Public Hex Launch through Year 1 milestone vesting. Six phases — three cover reservation through hardware shipment, three cover boot, audit, PONO qualification, and the operational milestones that vest 85% of your MLMA allocation across the first 12 months. Mainnet goes live in Q4 2026, ahead of TGE."
+      lede="From the Public Hex Launch through Year 1 milestone vesting. Six phases. Three cover reservation through hardware shipment, three cover boot, audit, PONO qualification, and the operational milestones that vest 85% of your MLMA allocation across the first 12 months. Mainnet goes live in Q4 2026, ahead of TGE."
       metaRows={[
         { k: 'Public Hex Launch', v: 'June 1, 2026', accent: true },
         { k: 'Sale closes', v: 'When 195 sold' },
@@ -72,7 +72,7 @@ export default function Phase1TimelinePage() {
                 <div className="body">
                   <h3>Public Hex Launch</h3>
                   <div className="when">June 1, 2026</div>
-                  <p><strong>What happens.</strong> Public Hex Launch — the Genesis 200 sale opens to the world. Operators reserve a Genesis 200 node for $2,000 total ($380 hardware + $1,620 geographic hex license).</p>
+                  <p><strong>What happens.</strong> Public Hex Launch. The Genesis 200 sale opens to the world. Operators reserve a Genesis 200 node for $2,000 total ($380 hardware + $1,620 geographic hex license).</p>
                   <p><strong>What you receive at reservation.</strong> Your NFT-HEX geographic rights object is minted on Cardano and Base on payment. The Cardano CIP-25 token is your on-chain proof of reservation. Hardware pre-order is queued immediately based on reservation order. Your unit ships in Q4 2026.</p>
                   <p><strong>What you do NOT receive at reservation.</strong> The 125,000 MLMA allocation does not arrive at reservation. The first tranche (15%, 18,750 MLMA) unlocks at boot. The remaining 85% unlocks across PONO qualification and operational milestones.</p>
                   <p><strong>Pre-qualification.</strong> The reservation portal confirms region availability, capital requirement, and shipping address before payment is processed.</p>
@@ -104,8 +104,8 @@ export default function Phase1TimelinePage() {
                 <div className="num">STEP · 04</div>
                 <div className="body">
                   <h3>Mainnet live · Boot, register, and audit</h3>
-                  <div className="when">Q4 2026 — ahead of TGE</div>
-                  <p><strong>Mainnet live ahead of TGE.</strong> The Mālama protocol goes live in Q4 2026 — before the Token Generation Event. Validation is operational and verifiable on-chain before any token enters circulation.</p>
+                  <div className="when">Q4 2026. Ahead of TGE</div>
+                  <p><strong>Mainnet live ahead of TGE.</strong> The Mālama protocol goes live in Q4 2026. Before the Token Generation Event. Validation is operational and verifiable on-chain before any token enters circulation.</p>
                   <p><strong>Boot.</strong> Power on. The secure element provisions its Device DID, approximately 60 seconds. The LED status sequence confirms successful provisioning.</p>
                   <p><strong>Register.</strong> Open the Mālama dApp and connect your Base or Cardano wallet. Enter your node&rsquo;s Device DID to bind your hardware identity to your NFT-HEX geographic assignment.</p>
                   <div className="callout accent">
@@ -153,9 +153,9 @@ export default function Phase1TimelinePage() {
                   <table className="matrix">
                     <thead><tr><th>Milestone</th><th>When</th><th className="num">MLMA</th><th className="num">Cumulative</th></tr></thead>
                     <tbody>
-                      <tr><td>6-month</td><td>~ Q2 2027 (months 4 – 6)</td><td className="num">25,000 (20%)</td><td className="num">50%</td></tr>
-                      <tr><td>9-month</td><td>~ Q3 2027 (months 7 – 9)</td><td className="num">25,000 (20%)</td><td className="num">70%</td></tr>
-                      <tr><td>12-month</td><td>~ Q4 2027 (months 10 – 12)</td><td className="num"><span className="accent">37,500 (30%)</span></td><td className="num"><span className="accent">100%</span></td></tr>
+                      <tr><td>6-month</td><td>~ Q2 2027 (months 4-6)</td><td className="num">25,000 (20%)</td><td className="num">50%</td></tr>
+                      <tr><td>9-month</td><td>~ Q3 2027 (months 7-9)</td><td className="num">25,000 (20%)</td><td className="num">70%</td></tr>
+                      <tr><td>12-month</td><td>~ Q4 2027 (months 10-12)</td><td className="num"><span className="accent">37,500 (30%)</span></td><td className="num"><span className="accent">100%</span></td></tr>
                     </tbody>
                   </table>
 
@@ -183,13 +183,13 @@ export default function Phase1TimelinePage() {
                   <tr><td>05</td><td>PONO qualification</td><td>~ Q1 2027</td><td>18,750 MLMA (15% PONO tranche) + governance eligibility</td></tr>
                   <tr><td>06a</td><td>6-month milestone</td><td>~ Q2 2027</td><td>25,000 MLMA (20% tranche)</td></tr>
                   <tr><td>06b</td><td>9-month milestone</td><td>~ Q3 2027</td><td>25,000 MLMA (20% tranche)</td></tr>
-                  <tr><td>06c</td><td>12-month milestone</td><td>~ Q4 2027</td><td><span className="accent">37,500 MLMA (30% tranche) — fully vested</span></td></tr>
+                  <tr><td>06c</td><td>12-month milestone</td><td>~ Q4 2027</td><td><span className="accent">37,500 MLMA (30% tranche). Fully vested</span></td></tr>
                 </tbody>
               </table>
 
               <div className="sig-strip">
-                <div className="label">— END OF PAGE</div>
-                <p className="text">Phase 1 covers June 1, 2026 → ~ Q4 2027. Mainnet goes live in Q4 2026, ahead of TGE. Subsequent phases govern Year 2+ operation and Years 4 – 5 revenue transition.</p>
+                <div className="label">- END OF PAGE</div>
+                <p className="text">Phase 1 covers June 1, 2026 → ~ Q4 2027. Mainnet goes live in Q4 2026, ahead of TGE. Subsequent phases govern Year 2+ operation and Years 4-5 revenue transition.</p>
                 <p className="footnote">Next: <Link href="/docs/operators" style={{ color: 'var(--mlma-accent)' }}>Operator Guide →</Link></p>
               </div>
             </div>

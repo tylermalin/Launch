@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error:
-            'This NFT is in your Magic embedded wallet. Connect with the same email in the Launch app — on-chain transfer is not available via this server link.',
+            'This NFT is in your Magic embedded wallet. Connect with the same email in the Launch app. On-chain transfer is not available via this server link.',
         },
         { status: 400 }
       )

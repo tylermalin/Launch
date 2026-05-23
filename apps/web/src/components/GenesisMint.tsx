@@ -464,8 +464,8 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                   Locate your HEX
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-400">
-                  Choose one of the 400 Genesis hex territories on the live map. 200 on Base, 200 on Cardano. You need a hex selected before you can
-                  pay with crypto or card.
+                  Choose one of the 200 Genesis hex zones on the live map. One mint per hex; credit-card purchases mirror across Base and Cardano. You need a hex
+                  selected before you can pay with crypto or card.
                 </p>
               </div>
 
@@ -701,7 +701,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                   Complete setup to continue
                 </button>
                 <p className="text-xs font-bold uppercase tracking-widest text-gray-600">
-                  Mālama Genesis · 400 Total · 200 Base / 200 Cardano · One mint per hex
+                  200 hex zones · One mint per hex · Credit card purchases mirror across Base and Cardano
                 </p>
               </div>
             </motion.div>

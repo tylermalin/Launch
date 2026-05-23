@@ -199,7 +199,7 @@ export default function PartnersPage() {
             },
             {
               q: 'Is there a referral cap?',
-              a: 'No. Refer as many buyers as you like. The 400 Genesis nodes are the only natural limit.',
+              a: 'No. Refer as many buyers as you like. The 200 Genesis hex zones are the only natural limit.',
             },
             {
               q: 'How long does the cookie last?',

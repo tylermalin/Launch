@@ -14,9 +14,16 @@ export type RegionsData = {
   dallas?: string[]
 }
 
-/** 400 total: 200 Base + 200 Cardano across 5 regions. */
+/**
+ * Product: 200 unique hex zones, one mint per hex.
+ * Implementation: each hex has 2 chain positions (Base + Cardano) = 400 entries here.
+ * Credit-card purchases mint both chain NFTs (mirror). Crypto purchases mint one
+ * on the chosen chain; the other chain position is locked once the hex is sold.
+ * Name kept as GENESIS_HEX_CAP for backward compatibility; semantically it caps
+ * chain-position entries, not unique hexes (which cap at 200).
+ */
 export const GENESIS_HEX_CAP = 400
-/** 80 slots per region × 5 regions = 400 total. First 40 per region → Base, next 40 → Cardano. */
+/** 80 slots per region × 5 regions = 400 chain-position entries. First 40 per region → Base, next 40 → Cardano. 40 unique hex zones per region (40 × 5 = 200 total). */
 export const GENESIS_SLOTS_PER_REGION = 80
 
 export const GENESIS_REGION_KEYS = ['idaho', 'nyc', 'london', 'tokyo', 'dallas'] as const

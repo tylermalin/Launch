@@ -144,12 +144,13 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
           <li>NFT-HEX geographic operating license for this H3 cell</li>
           <li>Inclusion in the Genesis 200 program</li>
           <li>1.5× Genesis Year 1 Multiplier on validation compensation</li>
-          <li>Up to 125,000 MLMA compensation, milestone-vested over 12 months of verified service</li>
+          <li>125,000 MLMA milestone-vested (boot · PONO · 6/9/12mo)</li>
         </ul>
         <p style={{ fontSize: 12, color: '#888', marginTop: 12, lineHeight: 1.55 }}>
-          Tokens are not granted at purchase. They are earned over twelve months as verification
-          service is rendered. Validation compensation begins after the Genesis Hex Sale audit
-          (Oct 2026) confirms operational compliance.
+          Tokens are not vested at purchase. They are earned against operational milestones
+          beginning at hardware boot. Validation compensation depends on network conditions
+          and is not guaranteed. Validation compensation begins after the Genesis Hex Sale
+          audit (Q4 2026) confirms operational compliance.
         </p>
       </Section>
 
@@ -157,7 +158,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
       <Section title="Terms of sale">
         <ul style={{ paddingLeft: 18, margin: 0, color: '#c8c8c8', fontSize: 12, lineHeight: 1.55 }}>
           <li>One-time Genesis entry covers hardware kit and geographic license for this H3 cell.</li>
-          <li>125,000 MLMA per-operator compensation pool vests over 12 months of verified service.</li>
+          <li>125,000 MLMA per operator earned across operational milestones: 15% at boot, 15% at PONO 90-day qualification, 20% each at the 6 and 9 month milestones, 30% at 12 months. Milestones require continuous PONO qualification, ≥99% uptime, and no tamper events.</li>
           <li>Hardware must be installed and registered within 90 days of delivery or License is forfeited.</li>
           <li>Validation compensation depends on network conditions and is not guaranteed.</li>
         </ul>

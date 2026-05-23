@@ -4,7 +4,7 @@ import GenesisMint from '@/components/GenesisMintDynamic'
 export const metadata: Metadata = {
   title: 'Reserve with Crypto or Card | Mālama Genesis | Mālama Labs',
   description:
-    'Connect your wallet, pick your hex on the map, and reserve a Genesis validator node. $2,000 entry. 62,500 MLMA per node. 400 Mālama Genesis nodes total (200 Base + 200 Cardano). Public Hex Launch June 1, 2026 · mainnet live Q4 2026 ahead of TGE.',
+    'Connect your wallet, pick your hex on the map, and reserve a Genesis validator node. $2,000 entry. 125,000 MLMA per node milestone-vested (boot · PONO · 6/9/12mo). 200 Mālama Genesis hex zones with cross-chain mirror (Cardano + Base) on credit-card purchase. Public Hex Launch June 1, 2026 · mainnet live Q4 2026 ahead of TGE.',
 }
 
 export default async function PresalePage({
@@ -34,8 +34,8 @@ export default async function PresalePage({
         </h1>
         
         <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed mb-6">
-          Choose a hex from the 400 Mālama Genesis licenses (200 Base + 200 Cardano), connect an EVM or Cardano wallet (or custodial
-          with email), then reserve with crypto or fiat via credit/debit card. $2,000 entry. 62,500 MLMA vests per operator schedule.
+          Choose a hex from the 200 Mālama Genesis hex zones (cross-chain mirror on Cardano + Base for credit-card buyers), connect an EVM or Cardano wallet (or custodial
+          with email), then reserve with crypto or fiat via credit/debit card. $2,000 entry. 125,000 MLMA milestone-vested (boot · PONO · 6/9/12mo).
           Mainnet live Q4 2026, ahead of TGE.
         </p>
         <p className="text-sm text-gray-500 mb-10">
@@ -117,7 +117,7 @@ async function PresaleStats() {
         <span className="text-xs tracking-[0.2em] text-gray-500 uppercase font-black mt-2">Entry Price</span>
       </div>
       <div className="flex flex-col items-center col-span-2 justify-self-center sm:col-span-1 max-sm:w-full max-sm:max-w-[12rem]">
-        <span className="text-4xl md:text-5xl font-mono font-black text-malama-accent">62.5K</span>
+        <span className="text-4xl md:text-5xl font-mono font-black text-malama-accent">125K</span>
         <span className="text-xs tracking-[0.2em] text-gray-500 uppercase font-black mt-2">MLMA / Node</span>
       </div>
     </div>

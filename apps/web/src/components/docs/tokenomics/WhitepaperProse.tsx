@@ -173,11 +173,14 @@ export function WhitepaperProse() {
             Operators who do not deploy within 90 days of hardware receipt forfeit their geographic license and allocation to the protocol treasury.
           </P>
           <Table
-            headers={['Milestone', 'Tokens', 'Timing']}
+            headers={['Milestone', 'Tokens', 'Conditions']}
             rows={[
-              ['Hardware boot · deployment registration', '31,250 MLMA (25%)', '~October 2026'],
-              ['Months 1-12 linear vesting', '93,750 MLMA (75%)', '~7,813 MLMA/month'],
-              ['Month 13 onward', '125,000 MLMA fully vested', 'Hold, stake as veMLMA, or sell'],
+              ['Boot', '18,750 MLMA (15%)', 'Deployment registration · KYB · first signed reading'],
+              ['PONO 90-day qualification', '18,750 MLMA (15%)', '~90 days post-boot'],
+              ['6-month milestone', '25,000 MLMA (20%)', 'Continuous PONO · ≥99% uptime · no tamper events'],
+              ['9-month milestone', '25,000 MLMA (20%)', 'Same conditions'],
+              ['12-month milestone', '37,500 MLMA (30%)', 'Same conditions'],
+              ['Fully vested', '125,000 MLMA', 'Hold, stake as veMLMA, or sell'],
             ]}
           />
           <p className="text-xs text-gray-500 italic mt-4">
@@ -442,7 +445,7 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
               ['Network emissions', '9.0M MLMA · 750K/month'],
               ['Validator count (approx)', '200 Genesis + 150-350 community = 350-550 total'],
               ['Entry per node', '$2,000 (hardware $380 + license $1,620)'],
-              ['MLMA per Genesis operator', '125,000 (31,250 at boot · 93,750 over 12 months)'],
+              ['MLMA per Genesis operator', '125,000 milestone-vested (15% boot · 15% PONO · 20% / 20% / 30% at 6/9/12 mo)'],
               ['Genesis multiplier', '1.5× · Year 1 only'],
               ['Burn activity', 'Minimal. Revenue insufficient for significant burns in Year 1'],
             ]}
@@ -486,7 +489,7 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
           <div className="space-y-7 text-sm md:text-[15px] text-gray-300">
             <div>
               <p className="font-bold text-white mb-2">What do I actually receive at reservation vs at hardware boot?</p>
-              <p>At reservation ($2,000 payment): your NFT-HEX geographic rights object is minted on Cardano and Base. That is your hex cell license and it is yours immediately. Your 125,000 MLMA allocation does not arrive at reservation. It begins vesting at hardware boot in October 2026: 31,250 MLMA (25%) at boot, then approximately 7,813 MLMA per month over 12 months (75%).</p>
+              <p>At reservation ($2,000 payment): your NFT-HEX geographic rights object is minted on Cardano and Base. That is your hex cell license and it is yours immediately. Your 125,000 MLMA allocation does not arrive at reservation. It vests against five operational milestones beginning at hardware boot in Q4 2026: 18,750 MLMA (15%) at boot, 18,750 MLMA (15%) at PONO 90-day qualification, 25,000 MLMA (20%) at the 6-month milestone, 25,000 MLMA (20%) at the 9-month milestone, and 37,500 MLMA (30%) at the 12-month milestone. Milestones require continuous PONO qualification, ≥99% uptime, and no tamper events. Tokens are not vested at purchase. They are earned against operational milestones beginning at hardware boot. Validation compensation depends on network conditions and is not guaranteed.</p>
             </div>
             <div>
               <p className="font-bold text-white mb-2">What if MLMA price drops significantly?</p>
@@ -494,7 +497,7 @@ Monthly_Distributed  = Protocol_Revenue × 0.50
             </div>
             <div>
               <p className="font-bold text-white mb-2">Can I stake my vesting allocation before it fully unlocks?</p>
-              <p>Yes. Any vested MLMA (the 25% at boot plus monthly tranches as they unlock) can be locked immediately as veMLMA. Unvested amounts cannot be staked. veMLMA locks earn enhanced distribution multipliers and PONO-gated governance weight. Locking does not affect the vesting schedule for remaining unvested tokens.</p>
+              <p>Yes. Any vested MLMA (the 15% boot tranche plus any milestone tranches as they unlock) can be locked immediately as veMLMA. Unvested amounts cannot be staked. veMLMA locks earn enhanced distribution multipliers and PONO-gated governance weight. Locking does not affect the vesting schedule for remaining unvested tokens.</p>
             </div>
             <div>
               <p className="font-bold text-white mb-2">What is PONO?</p>

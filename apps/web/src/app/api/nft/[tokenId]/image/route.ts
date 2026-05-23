@@ -153,7 +153,7 @@ export async function GET(
   <text x="70" y="456" text-anchor="middle" font-size="8" fill="#6B7280"
         font-family="monospace" letter-spacing="1">MLMA</text>
   <text x="70" y="474" text-anchor="middle" font-size="16" font-weight="900"
-        fill="#10B981" font-family="monospace">62.5K</text>
+        fill="#10B981" font-family="monospace">125K</text>
 
   <!-- Divider 1 -->
   <line x1="123" y1="442" x2="123" y2="480" stroke="#1F2937" stroke-width="1"/>
@@ -181,7 +181,7 @@ export async function GET(
   <text x="24" y="534" font-size="8" font-weight="700" fill="#6B7280"
         font-family="monospace" letter-spacing="1">VESTING SCHEDULE</text>
   <text x="24" y="552" font-size="10" font-weight="700" fill="#D1D5DB"
-        font-family="monospace">25% at boot · 75% over 12 months</text>
+        font-family="monospace">Milestone (boot · PONO · 6/9/12mo)</text>
 
   <text x="24" y="578" font-size="8" font-weight="700" fill="#6B7280"
         font-family="monospace" letter-spacing="1">PAYMENT</text>

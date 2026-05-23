@@ -885,13 +885,15 @@ export default function TokenRewardsRiskPage() {
                   but the ruling framework may be analogous.
                 </p>
                 <p>
-                  Operators receiving MLMA through vesting events (boot tranche or monthly
-                  vesting tranches) may recognize ordinary income at the time tokens become
-                  subject to the operator&rsquo;s control, valued at the MLMA fair market
-                  value on that date, with a separate capital-gain or -loss event on later
-                  sale. The <strong>31,250 MLMA boot tranche</strong> and each{' '}
-                  <strong>~7,813 MLMA monthly vesting tranche</strong> would each separately
-                  trigger a potential income recognition event under this framework.
+                  Operators receiving MLMA through vesting events (boot tranche, PONO tranche,
+                  or operational milestone tranches) may recognize ordinary income at the time
+                  tokens become subject to the operator&rsquo;s control, valued at the MLMA
+                  fair market value on that date, with a separate capital-gain or -loss event
+                  on later sale. The <strong>18,750 MLMA boot tranche</strong>, the{' '}
+                  <strong>18,750 MLMA PONO tranche</strong>, and each subsequent milestone
+                  tranche (<strong>25,000 / 25,000 / 37,500 MLMA</strong> at the 6-, 9-, and
+                  12-month milestones) would each separately trigger a potential income
+                  recognition event under this framework.
                 </p>
                 <p>
                   State and local tax treatment varies.{' '}

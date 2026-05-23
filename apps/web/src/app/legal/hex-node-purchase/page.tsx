@@ -146,7 +146,7 @@ export default function HexNodePurchasePage() {
                 </div>
                 <div className="row">
                   <div className="k">MLMA allocation</div>
-                  <div className="v"><strong>125,000 MLMA</strong> per License. <strong>25%</strong> (31,250 MLMA) vests at verified hardware boot upon successful deployment registration. <strong>75%</strong> (93,750 MLMA) vests linearly over 12 months from the hardware boot date at approximately 7,813 MLMA per month. <em>The allocation does not vest at reservation. It vests at hardware boot.</em><span className="pill mutable">● Mutable</span></div>
+                  <div className="v"><strong>125,000 MLMA</strong> per License, milestone-vested across five tranches: <strong>15%</strong> (18,750 MLMA) at boot upon deployment registration, KYB, and first signed reading. <strong>15%</strong> (18,750 MLMA) at PONO 90-day qualification. <strong>20%</strong> (25,000 MLMA) at the 6-month milestone. <strong>20%</strong> (25,000 MLMA) at the 9-month milestone. <strong>30%</strong> (37,500 MLMA) at the 12-month milestone. Milestones require continuous PONO qualification, ≥99% uptime, and no tamper events. <em>Tokens are not vested at purchase. They are earned against operational milestones beginning at hardware boot. Validation compensation depends on network conditions and is not guaranteed.</em><span className="pill mutable">● Mutable</span></div>
                 </div>
                 <div className="row">
                   <div className="k">Genesis multiplier</div>

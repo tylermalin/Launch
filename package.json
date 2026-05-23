@@ -22,7 +22,7 @@
   },
   "author": "Mālama Labs",
   "license": "UNLICENSED",
-  "dependencies": {
+  "devDependencies": {
     "vercel": "^51.2.1"
   }
 }

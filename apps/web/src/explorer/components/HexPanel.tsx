@@ -307,45 +307,39 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
 
       {/* ── § What's included ── */}
       <Section title="What's included">
-        <ul style={{ paddingLeft: 18, margin: 0, color: '#ffffff', fontSize: 13 }}>
-          <li>One Hex Node hardware kit (ships end of December 2026)</li>
-          <li>NFT-HEX geographic operating licence for this H3 cell</li>
-          <li>Inclusion in the Genesis 200 programme</li>
-          <li>1.5× Genesis Year 1 Multiplier on validation compensation</li>
-          <li>
-            Up to{' '}
-            <strong style={{ color: '#c4f061' }}>{computedMlma.toLocaleString()} MLMA</strong>
-            {' '}earned across operational milestones
-          </li>
-          <li>
-            Hardware must be installed and registered within 90 days of
-            delivery or Licence is forfeited
-          </li>
-          <li>
-            Validation compensation begins after the Genesis Hex Sale audit
-            (Oct 2026) confirms operational compliance
-          </li>
-        </ul>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+          {[
+            <>One Hex Node hardware kit (ships end of December 2026)</>,
+            <>NFT-HEX geographic operating licence for this H3 cell</>,
+            <>Inclusion in the Genesis 200 programme</>,
+            <>1.5× Genesis Year 1 Multiplier on validation compensation</>,
+            <>Up to{' '}<strong style={{ color: '#c4f061' }}>{computedMlma.toLocaleString()} MLMA</strong>{' '}earned across operational milestones</>,
+            <>Hardware must be installed and registered within 90 days of delivery or Licence is forfeited</>,
+            <>Validation compensation begins after the Genesis Hex Sale audit (Oct 2026) confirms operational compliance</>,
+          ].map((item, i) => (
+            <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+              <span style={{ color: '#c4f061', fontSize: 14, lineHeight: '1.4', flexShrink: 0, userSelect: 'none' }}>•</span>
+              <span style={{ color: '#ffffff', fontSize: 13, lineHeight: 1.45 }}>{item}</span>
+            </div>
+          ))}
+        </div>
       </Section>
 
       {/* ── § Terms of sale ── */}
       <Section title="Terms of sale">
-        <ul style={{ paddingLeft: 18, margin: 0, color: '#ffffff', fontSize: 12, lineHeight: 1.55 }}>
-          <li>
-            One-time Genesis entry covers hardware kit and geographic licence for this H3 cell.
-          </li>
-          <li>
-            125,000 MLMA per operator vested across milestones: 15% at hardware boot,
-            15% at PONO 90-day credential, 20% at 6 months, 20% at 9 months, 30% at
-            12 months. Milestones require continuous PONO credential, ≥99% uptime,
-            and no tamper events.
-          </li>
-          <li>
-            Hardware must be installed and registered within 90 days of delivery or
-            Licence is forfeited.
-          </li>
-          <li>Validation compensation depends on network conditions and is not guaranteed.</li>
-        </ul>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+          {[
+            <>One-time Genesis entry covers hardware kit and geographic licence for this H3 cell.</>,
+            <>125,000 MLMA per operator vested across milestones: 15% at hardware boot, 15% at PONO 90-day credential, 20% at 6 months, 20% at 9 months, 30% at 12 months. Milestones require continuous PONO credential, ≥99% uptime, and no tamper events.</>,
+            <>Hardware must be installed and registered within 90 days of delivery or Licence is forfeited.</>,
+            <>Validation compensation depends on network conditions and is not guaranteed.</>,
+          ].map((item, i) => (
+            <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+              <span style={{ color: '#c4f061', fontSize: 14, lineHeight: '1.55', flexShrink: 0, userSelect: 'none' }}>•</span>
+              <span style={{ color: '#ffffff', fontSize: 12, lineHeight: 1.55 }}>{item}</span>
+            </div>
+          ))}
+        </div>
         <p style={{ fontSize: 12, color: '#888', marginTop: 12 }}>By reserving, you agree to:</p>
         <Links>
           <ExternalLink href={links.purchaseAgreementUrl}>

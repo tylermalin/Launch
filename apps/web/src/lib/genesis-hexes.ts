@@ -37,19 +37,19 @@ export const GENESIS_REGION_LABELS: Record<GenesisRegionKey, string> = {
  * Five Mālama Labs reserved nodes — one per region, locked at launch.
  * These are always status='reserved'; never available for external purchase.
  *
- * Resolution 6 lab cells (H3 Res 6, ~36 km² each — city-district scale):
- *   8629a1d77ffffff → West       (Los Angeles, CA)
- *   865d144efffffff → Pacific    (Haiku, Maui, HI)
- *   8628846e7ffffff → Mountain   (Idaho City, ID)
- *   862740767ffffff → Midwest    (Sister Bay, WI)
- *   8626cb917ffffff → South      (Dallas, TX)
+ * Resolution 3 lab cells (H3 Res 3, ~12,392 km² each — metro-region scale):
+ *   8329a1fffffffff → West       (Los Angeles, CA)
+ *   835d14fffffffff → Pacific    (Haiku, Maui, HI)
+ *   832884fffffffff → Mountain   (Idaho City / Boise corridor, ID)
+ *   832740fffffffff → Midwest    (Sister Bay, WI)
+ *   8326cbfffffffff → South      (Dallas, TX)
  */
 export const MALAMA_RESERVED_HEX_IDS = [
-  '8629a1d77ffffff', // Los Angeles
-  '865d144efffffff', // Haiku, Hawaii
-  '8628846e7ffffff', // Idaho City
-  '862740767ffffff', // Sister Bay
-  '8626cb917ffffff', // Dallas
+  '8329a1fffffffff', // Los Angeles
+  '835d14fffffffff', // Haiku, Hawaii
+  '832884fffffffff', // Idaho City / Boise
+  '832740fffffffff', // Sister Bay
+  '8326cbfffffffff', // Dallas
 ] as const
 
 export const MALAMA_RESERVED_HEX_SET = new Set<string>(MALAMA_RESERVED_HEX_IDS)
@@ -183,7 +183,7 @@ export function buildGenesisHexFeatureCollection(regions: RegionsData) {
       cap: GENESIS_HEX_CAP,
       count: items.length,
       uniqueHexes: items.length / 2,
-      h3Resolution: 6,
+      h3Resolution: 3,
       regions: {
         west:     (regions.west?.cells     || []).length,
         pacific:  (regions.pacific?.cells  || []).length,

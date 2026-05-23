@@ -21,7 +21,7 @@ import path from 'path'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const OUT = path.resolve(__dirname, '../apps/web/src/data/regions.json')
 
-const RES = 6
+const RES = 3
 const TARGET = 40   // cells per region
 const REGIONS = 5   // 5 × 40 = 200
 
@@ -134,45 +134,45 @@ const ANCHORS = {
   // ── Mountain West (ID · MT · WY · UT · CO · ND · SD · NE edge) ───────────
   mountain: [
     [43.8288, -115.8374], // Idaho City ★ lab
+    [43.6860, -114.3635], // Sun Valley / Ketchum, ID (Boise–Sun Valley corridor)
+    [43.6150, -116.2023], // Boise, ID
     [39.7392, -104.9903], // Denver, CO
     [40.7608, -111.8910], // Salt Lake City, UT
     [41.1400, -104.8202], // Cheyenne, WY
-    [43.4926, -110.7624], // Jackson, WY
+    [43.4926, -110.7624], // Jackson, WY / Tetons
     [46.8772, -113.9966], // Missoula, MT
     [48.2766, -114.1653], // Kalispell, MT
     [45.7833, -108.5007], // Billings, MT
     [46.5958, -112.0270], // Helena, MT
     [47.5053, -111.2994], // Great Falls, MT
-    [44.5000, -103.8700], // Rapid City, SD
-    [43.0760, -108.9666], // Riverton, WY
+    [44.7080, -110.4584], // Yellowstone, WY
+    [43.0760, -108.9666], // Riverton / Lander, WY
     [41.3114, -105.5911], // Laramie, WY
-    [40.0150, -105.2705], // Boulder, CO
+    [40.0150, -105.2705], // Boulder / Denver Front Range, CO
     [38.8339, -104.8214], // Colorado Springs, CO
-    [37.2753, -107.8801], // Durango, CO
-    [38.8000, -111.7948], // Richfield, UT
-    [37.6775, -113.0619], // Cedar City, UT
+    [37.2753, -107.8801], // Durango / SW Colorado
+    [38.8000, -111.7948], // Richfield, UT / central corridor
     [40.2338, -111.6585], // Provo, UT
     [46.8721, -96.7898],  // Fargo, ND
-    [47.9253, -97.0329],  // Grand Forks, ND
     [46.3700, -99.9996],  // Bismarck, ND
     [43.5473, -96.7283],  // Sioux Falls, SD
-    [44.0805, -103.2310], // Rapid City east
+    [44.5000, -103.8700], // Rapid City, SD
     [42.8666, -106.3132], // Casper, WY
-    [44.7080, -110.4584], // Yellowstone area, WY
     [48.5500, -109.6400], // Havre, MT
-    [45.0000, -109.5000], // Cody, WY area
-    [46.0000, -105.5000], // Miles City, MT
     [47.2500, -101.7500], // Minot, ND
-    [48.8000, -106.8400], // Wolf Point, MT / NE Montana
+    [48.8000, -106.8400], // Wolf Point, MT
     [39.0638, -108.5506], // Grand Junction, CO
     [37.2750, -105.9994], // Alamosa, CO / San Luis Valley
-    [45.5850, -104.7200], // Baker, MT / SE Montana
     [44.8795, -101.7827], // Pierre, SD
     [41.5000, -100.5000], // North Platte, NE
-    [42.0300, -102.8800], // Alliance, NE / panhandle
     [40.8500, -115.7600], // Elko, NV
     [45.6800, -111.0500], // Bozeman, MT
     [46.4300, -117.0000], // Lewiston, ID
+    [44.0521, -114.7420], // Twin Falls / Magic Valley, ID
+    [47.6547, -116.7803], // Coeur d'Alene, ID
+    [42.5630, -114.4609], // Twin Falls, ID (south)
+    [43.1566, -112.3373], // Pocatello, ID
+    [46.0000, -105.5000], // Miles City, MT
   ],
 
   // ── Midwest / Great Lakes (WI · MN · MI · IL · IN · OH · IA · MO · KS · NE) ──

@@ -89,13 +89,13 @@ export const HEX_STATE_STYLES: Record<HexStatus, HexStateStyle> = {
 /**
  * Resolution stepping by Mapbox zoom level.
  *
- * H3 Resolution 6 (~36 km² / cell, ~3 km edge) is the canonical NFT-license
- * size — city-district scale.
+ * H3 Resolution 3 (~12,392 km² / cell, ~130 km edge) is the canonical
+ * NFT-license size — metro-region / city-corridor scale.
  *
- * At low zoom (0-2):  Res 1 — continental overview (7 cells/continent)
- * At zoom 3-5:        Res 3 — regional clusters (~12,392 km²/cell)
- * At zoom 6-8:        Res 5 — sub-regional context (~252 km²/cell)
- * At zoom 9+:         Res 6 — the actual license grid (~36 km²/cell)
+ * The background outline rendering matches the actual license resolution so
+ * the hex grid the user sees IS the grid they are buying from:
+ *   Zoom 0–2:  Res 1 — continental overview (7 cells/continent)
+ *   Zoom 3+:   Res 3 — the actual license grid (~12,392 km²/cell)
  */
 export interface ResolutionStep {
   minZoom: number;
@@ -105,9 +105,7 @@ export interface ResolutionStep {
 
 export const RESOLUTION_STEPS: ResolutionStep[] = [
   { minZoom: 0,    maxZoom: 2.99, h3Resolution: 1 },
-  { minZoom: 3,    maxZoom: 5.99, h3Resolution: 3 },
-  { minZoom: 6,    maxZoom: 8.99, h3Resolution: 5 },
-  { minZoom: 9,    maxZoom: 24,   h3Resolution: 6 },
+  { minZoom: 3,    maxZoom: 24,   h3Resolution: 3 },
 ];
 
 export function resolutionForZoom(zoom: number): number {
@@ -116,13 +114,16 @@ export function resolutionForZoom(zoom: number): number {
       return step.h3Resolution;
     }
   }
-  return 5;
+  return 3;
 }
 
 /**
  * Region quick-jump destinations. The HexMap component starts at
  * MAP_DEFAULTS center/zoom; the explorer page exposes buttons that
  * fly to each region below via the HexMap ref.
+ *
+ * Zoom 4.5 puts Res-3 cells (~12,392 km²) clearly in frame — you can see
+ * 5–8 cells at once, enough to see the full cluster around each lab node.
  */
 export interface RegionDestination {
   name: string;
@@ -131,18 +132,16 @@ export interface RegionDestination {
 }
 
 export const REGION_DESTINATIONS: RegionDestination[] = [
-  // Zoom 9.5 puts Res-6 cells (~36 km²) clearly in frame around each lab node.
-  { name: 'West Coast',       center: [-118.2437,  34.0522], zoom: 9.5 }, // LA lab
-  { name: 'Pacific & Alaska', center: [-156.3044,  20.9208], zoom: 9.5 }, // Haiku, HI lab
-  { name: 'Mountain West',    center: [-115.8374,  43.8288], zoom: 9.5 }, // Idaho City lab
-  { name: 'Midwest',          center: [ -87.1267,  45.1891], zoom: 9.5 }, // Sister Bay lab
-  { name: 'South & East',     center: [ -96.7970,  32.7767], zoom: 9.5 }, // Dallas lab
+  { name: 'West Coast',       center: [-118.2437,  34.0522], zoom: 4.5 }, // LA lab
+  { name: 'Pacific & Alaska', center: [-156.3044,  20.9208], zoom: 4.5 }, // Haiku, HI lab
+  { name: 'Mountain West',    center: [-115.5000,  43.7500], zoom: 4.5 }, // Idaho City/Boise/Sun Valley corridor
+  { name: 'Midwest',          center: [ -87.1267,  45.1891], zoom: 4.5 }, // Sister Bay lab
+  { name: 'South & East',     center: [ -96.7970,  32.7767], zoom: 4.5 }, // Dallas lab
 ];
 
 /**
  * Default landing view. Opens on the continental US at zoom 3.5 so all
- * five Genesis regions are visible. Region jump buttons fly to each lab
- * node at zoom 9.5 where individual Res-6 cells are clearly readable.
+ * five Genesis regions are visible at Res-3 cell scale.
  * To restore a global view, swap initialCenter / initialZoom to
  * `[-30, 30]` / `1.6`.
  */
@@ -151,7 +150,7 @@ export const MAP_DEFAULTS = {
   initialCenter: [-98.5, 39.5] as [number, number], // geographic center of contiguous US
   initialZoom: 3.5,
   minZoom: 0.5,
-  maxZoom: 12,
+  maxZoom: 10,
 };
 
 /**

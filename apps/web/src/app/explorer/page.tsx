@@ -37,11 +37,11 @@ import type {
  *   8626cb917ffffff → South & East  (Dallas, TX)
  */
 const MALAMA_RESERVED_HEX_LABELS: Record<string, { operator: string; label: string }> = {
-  '8629a1d77ffffff': { operator: 'Mālama Labs', label: 'Los Angeles'  },
-  '865d144efffffff': { operator: 'Mālama Labs', label: 'Haiku, Hawaii' },
-  '8628846e7ffffff': { operator: 'Mālama Labs', label: 'Idaho City'   },
-  '862740767ffffff': { operator: 'Mālama Labs', label: 'Sister Bay'   },
-  '8626cb917ffffff': { operator: 'Mālama Labs', label: 'Dallas'       },
+  '8329a1fffffffff': { operator: 'Mālama Labs', label: 'Los Angeles'   },
+  '835d14fffffffff': { operator: 'Mālama Labs', label: 'Haiku, Hawaii' },
+  '832884fffffffff': { operator: 'Mālama Labs', label: 'Idaho / Boise' },
+  '832740fffffffff': { operator: 'Mālama Labs', label: 'Sister Bay'    },
+  '8326cbfffffffff': { operator: 'Mālama Labs', label: 'Dallas'        },
 };
 
 // HexMap pulls in mapbox-gl which is browser-only; load it client-side only.
@@ -55,6 +55,8 @@ export default function ExplorerPage() {
   const [activeRegion, setActiveRegion] = useState<string>(REGION_DESTINATIONS[0].name);
   const [manifest, setManifest] = useState<Phase1Manifest | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
+  const [listFilter, setListFilter] = useState<string>('all');
   const mapRef = useRef<HexMapHandle | null>(null);
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
   const isPlaceholder =
@@ -101,44 +103,85 @@ export default function ExplorerPage() {
     mapRef.current?.flyTo(dest.center, dest.zoom);
   };
 
+  const hexLinks = {
+    erc721MetadataUrl: selected ? `/api/nft/${selected.nodeNumber}?hexId=${selected.h3Index}` : '',
+    cardanoReferenceNftUrl: null,
+    purchaseAgreementUrl: '/legal/hex-node-purchase-agreement',
+    termsAndConditionsUrl: '/legal',
+    tokenRewardsRiskUrl: '/legal/token-rewards-risk',
+    zoneClassificationDocUrl: '/docs/zone-classification',
+    dataDemandScoreDocUrl: '/docs/data-demand-score-methodology',
+    pricingMethodologyDocUrl: '/docs/pricing',
+  };
+
   return (
-    <div style={{ display: 'flex', width: '100%', height: 'calc(100vh - 4rem)', background: '#0f0f0f' }}>
-      <div style={{ flex: 1, position: 'relative' }}>
-        <HexMap
-          ref={mapRef}
-          accessToken={token}
-          manifest={manifest}
-          // Land-cell backdrop is optional; omit it for first-review until
-          // generate-land-hexes.mjs is run with Natural Earth input.
-          landCells={{} as { r1?: LandCellSet; r3?: LandCellSet; r5?: LandCellSet }}
-          onHexClick={({ hex }) => setSelected(hex)}
-        />
-        <RegionJumpBar activeRegion={activeRegion} onSelect={handleRegionClick} />
-        <ReviewBanner />
-      </div>
-      {selected && (
-        <div style={{ flexShrink: 0, padding: 16 }}>
-          <HexPanel
-            hex={selected}
-            links={{
-              erc721MetadataUrl: `/api/nft/${selected.nodeNumber}?hexId=${selected.h3Index}`,
-              cardanoReferenceNftUrl: null, // Cardano metadata endpoint not yet live
-              purchaseAgreementUrl: '/legal/hex-node-purchase-agreement',
-              termsAndConditionsUrl: '/legal',
-              tokenRewardsRiskUrl: '/legal/token-rewards-risk',
-              zoneClassificationDocUrl: '/docs/zone-classification',
-              dataDemandScoreDocUrl: '/docs/data-demand-score-methodology',
-              pricingMethodologyDocUrl: '/docs/pricing',
-            }}
-            onReserveClick={(hex) => {
-              // /explorer now uses the same hex catalog as /api/hexes, so
-              // we can deep-link straight into the live reserve flow.
-              window.location.href = `/presale?hex=${hex.h3Index}`;
-            }}
-            onClose={() => setSelected(null)}
-          />
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: 'calc(100vh - 4rem)', background: '#0f0f0f' }}>
+      {/* ── Top toolbar ── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px', borderBottom: '1px solid #1f1f1f', background: '#0f0f0f', flexShrink: 0, zIndex: 20 }}>
+        <ReviewBanner inline />
+        <div style={{ display: 'flex', gap: 4 }}>
+          {/* View toggle */}
+          {(['map', 'list'] as const).map((mode) => (
+            <button
+              key={mode}
+              onClick={() => setViewMode(mode)}
+              style={{
+                padding: '6px 14px',
+                borderRadius: 4,
+                border: 'none',
+                background: viewMode === mode ? '#c4f061' : '#1a1a1a',
+                color: viewMode === mode ? '#0f0f0f' : '#888',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: 11,
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                cursor: 'pointer',
+              }}
+            >
+              {mode === 'map' ? '⬡ Map' : '≡ List'}
+            </button>
+          ))}
         </div>
-      )}
+      </div>
+
+      {/* ── Content area ── */}
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        {viewMode === 'map' ? (
+          <>
+            <div style={{ flex: 1, position: 'relative' }}>
+              <HexMap
+                ref={mapRef}
+                accessToken={token}
+                manifest={manifest}
+                landCells={{} as { r1?: LandCellSet; r3?: LandCellSet; r5?: LandCellSet }}
+                onHexClick={({ hex }) => setSelected(hex)}
+              />
+              <RegionJumpBar activeRegion={activeRegion} onSelect={handleRegionClick} />
+            </div>
+            {selected && (
+              <div style={{ flexShrink: 0, padding: 16, overflowY: 'auto' }}>
+                <HexPanel
+                  hex={selected}
+                  links={hexLinks}
+                  onReserveClick={(hex) => { window.location.href = `/presale?hex=${hex.h3Index}`; }}
+                  onClose={() => setSelected(null)}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <HexListView
+            manifest={manifest}
+            selected={selected}
+            filter={listFilter}
+            onFilterChange={setListFilter}
+            onSelect={(hex) => setSelected(hex)}
+            links={hexLinks}
+            onReserve={(hex) => { window.location.href = `/presale?hex=${hex.h3Index}`; }}
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -331,7 +374,15 @@ function RegionJumpBar({
   );
 }
 
-function ReviewBanner() {
+function ReviewBanner({ inline = false }: { inline?: boolean }) {
+  const text = 'Genesis Explorer · H3 Res 3 · 200 hexes · 5 regions';
+  if (inline) {
+    return (
+      <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#c4f061', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+        {text}
+      </span>
+    );
+  }
   return (
     <div
       style={{
@@ -350,7 +401,140 @@ function ReviewBanner() {
         zIndex: 10,
       }}
     >
-      Genesis Explorer · H3 Res 6 · 200 hexes · 5 regions
+      {text}
+    </div>
+  );
+}
+
+// ── Hex List View ─────────────────────────────────────────────────────────────
+
+const STATUS_COLORS: Record<string, string> = {
+  'available':        '#3b82f6',
+  'reserved':         '#dc2626',
+  'reserved-founding':'#dc2626',
+  'activated':        '#c4f061',
+  'upcoming':         '#60a5fa',
+  'future-phase':     '#3a3a3a',
+  'restricted':       '#3a3a3a',
+};
+
+function HexListView({
+  manifest,
+  selected,
+  filter,
+  onFilterChange,
+  onSelect,
+  links,
+  onReserve,
+}: {
+  manifest: Phase1Manifest;
+  selected: Phase1Hex | null;
+  filter: string;
+  onFilterChange: (f: string) => void;
+  onSelect: (hex: Phase1Hex) => void;
+  links: Parameters<typeof HexPanel>[0]['links'];
+  onReserve: (hex: Phase1Hex) => void;
+}) {
+  const filters = ['all', 'available', 'reserved', 'reserved-founding'];
+  const filtered = manifest.hexes.filter(
+    (h) => filter === 'all' || h.status === filter
+  );
+
+  return (
+    <div style={{ display: 'flex', flex: 1, overflow: 'hidden', height: '100%' }}>
+      {/* ── Table ── */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        {/* Filter bar */}
+        <div style={{ display: 'flex', gap: 6, padding: '10px 16px', borderBottom: '1px solid #1a1a1a', background: '#0f0f0f', flexShrink: 0 }}>
+          {filters.map((f) => (
+            <button
+              key={f}
+              onClick={() => onFilterChange(f)}
+              style={{
+                padding: '4px 12px',
+                borderRadius: 4,
+                border: 'none',
+                background: filter === f ? '#1f1f1f' : 'transparent',
+                color: filter === f ? '#e8e8e8' : '#666',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: 11,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                cursor: 'pointer',
+                borderBottom: filter === f ? '2px solid #c4f061' : '2px solid transparent',
+              }}
+            >
+              {f === 'all' ? `All (${manifest.hexes.length})` : f}
+            </button>
+          ))}
+          <span style={{ marginLeft: 'auto', color: '#555', fontFamily: 'monospace', fontSize: 11, alignSelf: 'center' }}>
+            {filtered.length} hexes
+          </span>
+        </div>
+
+        {/* Column headers */}
+        <div style={{ display: 'grid', gridTemplateColumns: '3rem 1fr 1fr 1fr 6rem 6rem', gap: 0, padding: '8px 16px', borderBottom: '1px solid #1a1a1a', background: '#0a0a0a', flexShrink: 0 }}>
+          {['#', 'H3 Cell ID', 'Region', 'Status', 'Score', 'Price'].map((h) => (
+            <span key={h} style={{ fontFamily: 'monospace', fontSize: 11, color: '#555', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
+          ))}
+        </div>
+
+        {/* Rows */}
+        <div style={{ overflowY: 'auto', flex: 1 }}>
+          {filtered.map((hex) => {
+            const isSelected = selected?.h3Index === hex.h3Index;
+            return (
+              <div
+                key={hex.h3Index}
+                onClick={() => onSelect(hex)}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '3rem 1fr 1fr 1fr 6rem 6rem',
+                  gap: 0,
+                  padding: '10px 16px',
+                  borderBottom: '1px solid #141414',
+                  background: isSelected ? '#1a2a0a' : 'transparent',
+                  cursor: 'pointer',
+                  transition: 'background 80ms',
+                  borderLeft: isSelected ? '2px solid #c4f061' : '2px solid transparent',
+                }}
+                onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLDivElement).style.background = '#161616'; }}
+                onMouseLeave={(e) => { if (!isSelected) (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
+              >
+                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#555' }}>{hex.nodeNumber}</span>
+                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#c8c8c8' }}>{hex.h3Index}</span>
+                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#999' }}>{hex.region ?? '—'}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: STATUS_COLORS[hex.status] ?? '#555', flexShrink: 0 }} />
+                  <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#c8c8c8', textTransform: 'capitalize' }}>
+                    {hex.status.replace(/-/g, ' ')}
+                  </span>
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#c4f061' }}>
+                  {hex.dataDemandScore != null ? hex.dataDemandScore : '—'}
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#e8e8e8' }}>
+                  ${(hex.listingReferenceUsd ?? 2000).toLocaleString()}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Detail panel ── */}
+      {selected && (
+        <div style={{ flexShrink: 0, width: 380, borderLeft: '1px solid #1a1a1a', overflowY: 'auto', background: '#0f0f0f' }}>
+          <div style={{ padding: 16 }}>
+            <HexPanel
+              hex={selected}
+              links={links}
+              onReserveClick={onReserve}
+              onClose={() => onSelect(selected)} // noop — keep selection in list view
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

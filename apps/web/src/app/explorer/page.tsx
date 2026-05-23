@@ -114,8 +114,8 @@ export default function ExplorerPage() {
           <HexPanel
             hex={selected}
             links={{
-              erc721MetadataUrl: `/api/erc721/${selected.h3Index}`,
-              cardanoReferenceNftUrl: `/api/cardano/${selected.h3Index}`,
+              erc721MetadataUrl: `/api/nft/${selected.nodeNumber}?hexId=${selected.h3Index}`,
+              cardanoReferenceNftUrl: null, // Cardano metadata endpoint not yet live
               purchaseAgreementUrl: '/legal/hex-node-purchase-agreement',
               termsAndConditionsUrl: '/legal',
               tokenRewardsRiskUrl: '/legal/token-rewards-risk',

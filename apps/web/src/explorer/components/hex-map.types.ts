@@ -21,13 +21,13 @@ export interface Phase1Hex {
   centroidLat: number;
   centroidLng: number;
   zoneClassification:
+    | 'urban-core'
     | 'urban'
-    | 'dense-suburban'
+    | 'suburban'
     | 'rural'
-    | 'frontier'
-    | 'strategic'
+    | 'remote'
     | null;
-  geographicMultiplier: number | null; // 0.5, 1.0, 1.5, 2.0, 3.0
+  geographicMultiplier: number | null; // 0.90 · 1.00 · 1.15 · 1.35 · 1.60 (urban-core → remote)
   dataDemandScore: number | null; // 0-100
   listingReferenceUsd: number;
   genesisReserveUsd: number;

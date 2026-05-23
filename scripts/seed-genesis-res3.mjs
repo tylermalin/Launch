@@ -33,11 +33,21 @@ function isOverOcean(lat, lng) {
   if (lng < -162.0 && lat > 17.0 && lat < 29.0) return true   // Pacific west of Hawaii
   if (lng > -60.0  && lat > 24.0 && lat < 50.0) return true   // Atlantic
   if (lat > 23.0 && lat < 30.5 && lng > -98.0 && lng < -80.0) return true  // Gulf of Mexico
-  if (lat > 18.5 && lat < 22.5 && lng > -161.0 && lng < -154.5) return false // Hawaiian islands (land)
-  if (lat > 17.0 && lat < 25.0 && lng > -162.0 && lng < -155.0) return true  // Pacific between HI & mainland
+
+  // Hawaiian islands — per-island checks to avoid wrongly marking inter-island ocean as land.
+  // A broad bbox around all of Hawaii would cover ocean gaps between islands.
+  if (lat > 21.7 && lat < 22.4 && lng > -160.2 && lng < -159.0) return false // Kauai
+  if (lat > 21.0 && lat < 21.8 && lng > -158.7 && lng < -157.4) return false // Oahu
+  if (lat > 20.4 && lat < 21.3 && lng > -157.5 && lng < -156.5) return false // Molokai/Lanai
+  if (lat > 20.4 && lat < 21.1 && lng > -156.9 && lng < -155.9) return false // Maui
+  if (lat > 18.8 && lat < 20.5 && lng > -156.2 && lng < -154.3) return false // Big Island
+
+  // Pacific Ocean around / between Hawaiian islands
+  if (lat > 17.0 && lat < 25.0 && lng > -163.0 && lng < -154.0) return true
+
   if (lat > 71.0) return true  // Arctic Ocean
   if (lng < -168.0 && lat > 54.0) return true  // Bering Sea
-  if (lat > 59.0 && lat < 62.0 && lng > -153.0 && lng < -147.0) return true  // Cook Inlet AK
+  if (lat > 59.0 && lat < 62.0 && lng > -153.0 && lng < -150.5) return true  // Cook Inlet AK (excludes Anchorage at -149.9)
   return false
 }
 
@@ -68,8 +78,9 @@ const LAB = {
   south:    { label: 'Dallas',        lat: 32.7767,  lng:  -96.7970 },
 }
 
-// ── Metro anchors: top 8–12 cities per region, priority order ─────────────
-// Each anchor contributes gridDisk(anchor, 1) = up to 7 unique land cells.
+// ── Metro anchors: 8–14 cities per region, priority order ────────────────
+// Format: [lat, lng] uses default DISK_R (1).
+// Format: [lat, lng, 0] = disk-0 (anchor cell only — for islands smaller than 1 Res-4 cell).
 // With 8+ anchors × ~5 unique land cells ≈ 40 cells per region.
 
 const METRO_ANCHORS = {
@@ -91,35 +102,46 @@ const METRO_ANCHORS = {
   ],
 
   // ── Pacific (Hawaii · Alaska) ──────────────────────────────────────────────
+  // Hawaii anchors use disk=0: each island ≈ 1 Res-4 cell, ring-1 lands in ocean.
+  // Alaska anchors use disk=1: large land mass, neighbors are land.
   pacific: [
-    [21.3069, -157.8583],  // Honolulu ★ lab
-    [19.7071, -155.0885],  // Hilo, Big Island
-    [20.7984, -156.3319],  // Kahului, Maui
-    [22.0964, -159.5261],  // Lihue, Kauai
-    [61.2181, -149.9003],  // Anchorage
-    [61.5806, -149.4420],  // Palmer / Mat-Su
-    [59.6425, -151.5053],  // Homer / Kenai
-    [64.8378, -147.7164],  // Fairbanks
-    [58.3005, -134.4197],  // Juneau
-    [57.7944, -152.4072],  // Kodiak
-    [60.4720, -145.7690],  // Cordova
-    [55.3422, -131.6461],  // Ketchikan
+    [21.3069, -157.8583, 0],  // Honolulu, Oahu ★ lab (disk=0: island fits in 1 cell)
+    [19.7071, -155.0885, 0],  // Hilo, Big Island (disk=0)
+    [20.7984, -156.3319, 0],  // Kahului, Maui (disk=0)
+    [22.0964, -159.5261, 0],  // Lihue, Kauai (disk=0)
+    [61.2181, -149.9003],     // Anchorage
+    [61.5806, -149.4420],     // Palmer / Mat-Su Valley
+    [64.8378, -147.7164],     // Fairbanks
+    [59.6425, -151.5053],     // Homer / Kenai Peninsula
+    [57.7944, -152.4072],     // Kodiak Island
+    [58.3005, -134.4197],     // Juneau
+    [55.3422, -131.6461],     // Ketchikan
+    [57.0531, -135.3300],     // Sitka
+    [60.4720, -145.7690],     // Cordova
+    [56.8131, -132.9573],     // Petersburg, AK
+    [63.3363, -142.9865],     // Tok, AK (interior highway junction)
+    [62.9597, -155.5984],     // McGrath, AK (Kuskokwim interior)
+    [63.8610, -148.9598],     // Healy, AK (Denali area)
   ],
 
-  // ── Mountain West (CO · UT · ID · MT · WY · ND · SD) ─────────────────────
+  // ── Mountain West (CO · UT · ID · WY · ND · SD) ───────────────────────────
+  // Montana removed — filling Idaho corridor from north (CDA) to south (Pocatello).
   mountain: [
     [39.7392, -104.9903],  // Denver ★ lab
     [40.7608, -111.8910],  // Salt Lake City
     [40.2338, -111.6585],  // Provo / Orem
     [43.6150, -116.2023],  // Boise
-    [46.8772, -113.9966],  // Missoula
-    [45.7833, -108.5007],  // Billings
-    [46.8721,  -96.7898],  // Fargo
-    [43.5473,  -96.7283],  // Sioux Falls
+    [47.6547, -116.7803],  // Coeur d'Alene, ID (northern Idaho)
+    [46.7298, -117.0002],  // Moscow / Lewiston, ID (Palouse)
+    [43.6860, -114.3635],  // Sun Valley / Ketchum, ID
+    [42.5630, -114.4609],  // Twin Falls, ID (Magic Valley)
+    [43.1566, -112.3373],  // Pocatello, ID
+    [43.4886, -112.0422],  // Idaho Falls, ID
     [38.8339, -104.8214],  // Colorado Springs
-    [46.5958, -112.0270],  // Helena
-    [44.5000, -103.8700],  // Rapid City
-    [43.0760, -108.9666],  // Riverton / Lander WY
+    [46.8721,  -96.7898],  // Fargo, ND
+    [43.5473,  -96.7283],  // Sioux Falls, SD
+    [44.5000, -103.8700],  // Rapid City, SD
+    [43.0760, -108.9666],  // Riverton / Lander, WY
   ],
 
   // ── Midwest (MN · WI · MI · IL · IN · OH · IA · MO · KS · NE) ──────────
@@ -139,6 +161,7 @@ const METRO_ANCHORS = {
   ],
 
   // ── South & East (TX · FL · GA · NC · VA · MD · PA · NY · NE seaboard) ──
+  // Virginia Beach removed — anchor cell extends into Atlantic Ocean.
   south: [
     [32.7767,  -96.7970],  // Dallas ★ lab
     [29.7604,  -95.3698],  // Houston
@@ -151,7 +174,7 @@ const METRO_ANCHORS = {
     [35.2271,  -80.8431],  // Charlotte
     [39.9526,  -75.1652],  // Philadelphia
     [42.3601,  -71.0589],  // Boston
-    [36.8529,  -75.9780],  // Virginia Beach
+    [37.5407,  -77.4360],  // Richmond, VA (inland — replaces Virginia Beach)
   ],
 }
 
@@ -170,11 +193,12 @@ for (const regionKey of ['west', 'pacific', 'mountain', 'midwest', 'south']) {
   const labCell = latLngToCell(lab.lat, lab.lng, RES)
   const anchors = METRO_ANCHORS[regionKey]
 
-  // 1. Gather all candidate cells from ring-1 of each metro anchor
+  // 1. Gather all candidate cells from ring-1 (or disk=0 for islands) of each metro anchor
   const candidates = []
-  for (const [lat, lng] of anchors) {
+  for (const anchor of anchors) {
+    const [lat, lng, diskR = DISK_R] = anchor
     const center = latLngToCell(lat, lng, RES)
-    for (const cell of gridDisk(center, DISK_R)) {
+    for (const cell of gridDisk(center, diskR)) {
       if (isLandCell(cell)) candidates.push(cell)
     }
   }

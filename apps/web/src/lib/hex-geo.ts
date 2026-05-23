@@ -214,16 +214,20 @@ function isOverOcean(lat: number, lng: number): boolean {
   if (lng > -60.0 && lat > 24.0 && lat < 50.0) return true;
   // Gulf of Mexico
   if (lat > 23.0 && lat < 30.5 && lng > -98.0 && lng < -80.0) return true;
-  // Hawaiian island chain (land patches — return false for these)
-  if (lat > 18.5 && lat < 22.5 && lng > -161.0 && lng < -154.5) return false;
-  // Pacific between Hawaii and mainland
-  if (lat > 17.0 && lat < 25.0 && lng > -162.0 && lng < -155.0) return true;
+  // Hawaiian islands — per-island checks (broad bbox covers inter-island ocean)
+  if (lat > 21.7 && lat < 22.4 && lng > -160.2 && lng < -159.0) return false; // Kauai
+  if (lat > 21.0 && lat < 21.8 && lng > -158.7 && lng < -157.4) return false; // Oahu
+  if (lat > 20.4 && lat < 21.3 && lng > -157.5 && lng < -156.5) return false; // Molokai/Lanai
+  if (lat > 20.4 && lat < 21.1 && lng > -156.9 && lng < -155.9) return false; // Maui
+  if (lat > 18.8 && lat < 20.5 && lng > -156.2 && lng < -154.3) return false; // Big Island
+  // Pacific Ocean around / between Hawaiian islands
+  if (lat > 17.0 && lat < 25.0 && lng > -163.0 && lng < -154.0) return true;
   // Arctic Ocean north of Alaska
   if (lat > 71.0) return true;
   // Bering Sea west of Alaska
   if (lng < -168.0 && lat > 54.0) return true;
-  // Cook Inlet / Prince William Sound (coastal AK)
-  if (lat > 59.0 && lat < 62.0 && lng > -153.0 && lng < -147.0) return true;
+  // Cook Inlet (coastal AK) — excludes Anchorage (-149.9°) and Palmer (-149.4°)
+  if (lat > 59.0 && lat < 62.0 && lng > -153.0 && lng < -150.5) return true;
   return false;
 }
 

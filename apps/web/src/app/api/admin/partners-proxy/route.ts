@@ -60,7 +60,9 @@ async function kolFetch(path: string, init?: RequestInit) {
 
 // ── Approved copy templates ───────────────────────────────────────────────────
 
-export const APPROVED_COPY_TEMPLATES = [
+// Not exported — Next.js route files only allow HTTP-verb exports.
+// The admin page fetches templates via ?action=templates (JSON API).
+const APPROVED_COPY_TEMPLATES = [
   {
     id: 'intro-general',
     label: 'General Introduction',
@@ -122,7 +124,7 @@ Use my link to explore the hex map and reserve: [REFERRAL_URL]`,
   },
 ] as const;
 
-export type ApprovedCopyTemplate = typeof APPROVED_COPY_TEMPLATES[number];
+type ApprovedCopyTemplate = typeof APPROVED_COPY_TEMPLATES[number];
 
 // ── GET ───────────────────────────────────────────────────────────────────────
 

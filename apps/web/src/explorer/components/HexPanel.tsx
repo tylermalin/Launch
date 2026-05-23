@@ -307,7 +307,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
 
       {/* ── § What's included ── */}
       <Section title="What's included">
-        <ul style={{ paddingLeft: 18, margin: 0, color: '#c8c8c8', fontSize: 13 }}>
+        <ul style={{ paddingLeft: 18, margin: 0, color: '#ffffff', fontSize: 13 }}>
           <li>One Hex Node hardware kit (ships end of December 2026)</li>
           <li>NFT-HEX geographic operating licence for this H3 cell</li>
           <li>Inclusion in the Genesis 200 programme</li>
@@ -330,7 +330,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
 
       {/* ── § Terms of sale ── */}
       <Section title="Terms of sale">
-        <ul style={{ paddingLeft: 18, margin: 0, color: '#c8c8c8', fontSize: 12, lineHeight: 1.55 }}>
+        <ul style={{ paddingLeft: 18, margin: 0, color: '#ffffff', fontSize: 12, lineHeight: 1.55 }}>
           <li>
             One-time Genesis entry covers hardware kit and geographic licence for this H3 cell.
           </li>

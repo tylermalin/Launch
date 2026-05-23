@@ -89,10 +89,10 @@ export const HEX_STATE_STYLES: Record<HexStatus, HexStateStyle> = {
 /**
  * Resolution stepping by Mapbox zoom level.
  *
- * At low zoom (0-2) we render H3 Resolution 1 cells (~7 per continent) so
- * the globe reads as continental hexes. At zoom 3-5 we step to Resolution
- * 3. At zoom 6 and up we render Resolution 5, which is the cell size that
- * anchors the actual NFT-HEX licenses.
+ * H3 Resolution 3 (~12,392 km² / cell) is the canonical NFT-license size.
+ * At low zoom (0-2) we render Resolution 1 for a continental overview.
+ * At zoom 3-5 we switch to Resolution 3 — the actual license grid.
+ * At zoom 6+ we render Resolution 5 to show fine sub-hex detail.
  */
 export interface ResolutionStep {
   minZoom: number;
@@ -101,9 +101,9 @@ export interface ResolutionStep {
 }
 
 export const RESOLUTION_STEPS: ResolutionStep[] = [
-  { minZoom: 0, maxZoom: 2.99, h3Resolution: 1 },
-  { minZoom: 3, maxZoom: 5.99, h3Resolution: 3 },
-  { minZoom: 6, maxZoom: 24, h3Resolution: 5 },
+  { minZoom: 0,    maxZoom: 2.99, h3Resolution: 1 },
+  { minZoom: 3,    maxZoom: 5.99, h3Resolution: 3 },
+  { minZoom: 6,    maxZoom: 24,   h3Resolution: 5 },
 ];
 
 export function resolutionForZoom(zoom: number): number {
@@ -127,26 +127,24 @@ export interface RegionDestination {
 }
 
 export const REGION_DESTINATIONS: RegionDestination[] = [
-  { name: 'Los Angeles', center: [-118.4378, 34.0140], zoom: 7.5 },
-  { name: 'New York', center: [-74.0060, 40.7128], zoom: 7.5 },
-  { name: 'London', center: [-0.1278, 51.5074], zoom: 7.5 },
-  { name: 'Tokyo', center: [139.6503, 35.6762], zoom: 7.5 },
-  { name: 'Idaho', center: [-115.8485, 43.8843], zoom: 7.5 },
+  // Zoom 4.5 shows the Res-3 hex cluster around each lab node clearly.
+  { name: 'West Coast',       center: [-118.2437,  34.0522], zoom: 4.5 }, // LA lab
+  { name: 'Pacific & Alaska', center: [-156.3044,  20.9208], zoom: 5.0 }, // Haiku, HI lab
+  { name: 'Mountain West',    center: [-115.8374,  43.8288], zoom: 4.5 }, // Idaho City lab
+  { name: 'Midwest',          center: [ -87.1267,  45.1891], zoom: 4.5 }, // Sister Bay lab
+  { name: 'South & East',     center: [ -96.7970,  32.7767], zoom: 4.0 }, // Dallas lab
 ];
 
 /**
- * Default landing view. Opens on Los Angeles at zoom 7.5 instead of a
- * global view: it shows the LA hex cluster (Tyler's founding hex + 39
- * external cells), triggers the viewport-driven context grid since
- * zoom >= CONTEXT_MIN_ZOOM (5.5), and gives the user something concrete
- * on first load. Region buttons let them jump to NY / London / Tokyo /
- * Idaho. To restore the full-globe initial view, swap
- * initialCenter/initialZoom for `[-30, 30]` / `1.6`.
+ * Default landing view. Opens on the continental US at zoom 3.5 so all
+ * five Genesis regions are immediately visible as Res-3 hex clusters.
+ * Region jump buttons fly to each lab node. To restore a global view,
+ * swap initialCenter / initialZoom to `[-30, 30]` / `1.6`.
  */
 export const MAP_DEFAULTS = {
   style: 'mapbox://styles/mapbox/dark-v11',
-  initialCenter: REGION_DESTINATIONS[0].center,
-  initialZoom: REGION_DESTINATIONS[0].zoom,
+  initialCenter: [-98.5, 39.5] as [number, number], // geographic center of contiguous US
+  initialZoom: 3.5,
   minZoom: 0.5,
   maxZoom: 12,
 };

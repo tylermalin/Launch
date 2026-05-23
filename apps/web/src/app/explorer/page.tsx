@@ -25,16 +25,23 @@ import type {
 } from '@/explorer/components/hex-map.types';
 
 /**
- * The 5 Mālama Labs reserved nodes (one per region, Res 5).
+ * The 5 Mālama Labs reserved nodes (one per region, H3 Res 3).
  * These arrive pre-marked as `reserved` from /api/hexes — no override needed.
  * Kept here as a lookup so the explorer can label them distinctly in the panel.
+ *
+ * Res-3 lab cells (~12,392 km² each):
+ *   8329a1fffffffff → West Coast    (Los Angeles, CA)
+ *   835d14fffffffff → Pacific       (Haiku, Maui, HI)
+ *   832884fffffffff → Mountain West (Idaho City, ID)
+ *   832740fffffffff → Midwest       (Sister Bay, WI)
+ *   8326cbfffffffff → South & East  (Dallas, TX)
  */
 const MALAMA_RESERVED_HEX_LABELS: Record<string, { operator: string; label: string }> = {
-  '8529a19bfffffff': { operator: 'Mālama Labs', label: 'Los Angeles' },
-  '852a100ffffffff': { operator: 'Mālama Labs', label: 'New York City' },
-  '85194ad3fffffff': { operator: 'Mālama Labs', label: 'London' },
-  '852f5aabfffffff': { operator: 'Mālama Labs', label: 'Tokyo' },
-  '8528846ffffffff': { operator: 'Mālama Labs', label: 'Idaho' },
+  '8329a1fffffffff': { operator: 'Mālama Labs', label: 'Los Angeles'  },
+  '835d14fffffffff': { operator: 'Mālama Labs', label: 'Haiku, Hawaii' },
+  '832884fffffffff': { operator: 'Mālama Labs', label: 'Idaho City'   },
+  '832740fffffffff': { operator: 'Mālama Labs', label: 'Sister Bay'   },
+  '8326cbfffffffff': { operator: 'Mālama Labs', label: 'Dallas'       },
 };
 
 // HexMap pulls in mapbox-gl which is browser-only; load it client-side only.
@@ -202,9 +209,8 @@ function buildManifestFromApi(fc: {
       ? 'reserved'
       : 'available';
 
-    // Derive country from region key — London is GB, Tokyo is JP, all others US.
-    const regionKey = (p.region as string) ?? '';
-    const country = regionKey === 'london' ? 'GB' : regionKey === 'tokyo' ? 'JP' : 'US';
+    // All Genesis Res-3 regions are US territory (West, Pacific/AK, Mountain, Midwest, South).
+    const country = 'US';
 
     // TODO: wire population dataset to compute zoneClassification at build time.
     // For now, leave null and emit a dev warning.
@@ -246,7 +252,7 @@ function buildManifestFromApi(fc: {
     externalAvailable: hexes.length - reservedCount,
     lastUpdated: new Date().toISOString().slice(0, 10),
     wavesPolicy: 'Live catalog from /api/hexes',
-    regions: ['Los Angeles', 'New York', 'London', 'Tokyo', 'Idaho'],
+    regions: ['West Coast', 'Pacific & Alaska', 'Mountain West', 'Midwest', 'South & East'],
     statusVocabulary: {
       available: 'Open for reservation',
       upcoming: 'Held back for a future wave',
@@ -344,7 +350,7 @@ function ReviewBanner() {
         zIndex: 10,
       }}
     >
-      Review build · /explorer · 200 hexes seeded
+      Genesis Explorer · H3 Res 3 · 200 hexes · 5 regions
     </div>
   );
 }

@@ -7,65 +7,54 @@ import {
 } from '@/lib/h3'
 
 export type RegionsData = {
-  la?: string[]
-  nyc?: string[]
-  london?: string[]
-  tokyo?: string[]
-  idaho?: string[]
+  west?:     { cells: string[] }
+  pacific?:  { cells: string[] }
+  mountain?: { cells: string[] }
+  midwest?:  { cells: string[] }
+  south?:    { cells: string[] }
 }
 
 /**
- * Product: 200 unique hex zones, one mint per hex.
- * Implementation: each hex has 2 chain positions (Base + Cardano) = 400 entries here.
- * Credit-card purchases mint both chain NFTs (mirror). Crypto purchases mint one
- * on the chosen chain; the other chain position is locked once the hex is sold.
- * Name kept as GENESIS_HEX_CAP for backward compatibility; semantically it caps
- * chain-position entries, not unique hexes (which cap at 200).
+ * Product: 200 unique hex zones at H3 Resolution 3 (~12,392 km² / cell).
+ * One mint per hex. Each hex has 2 chain positions (Base + Cardano) = 400 total
+ * entries.  Credit-card purchases mirror across both chains.  Crypto purchases
+ * mint one chain; the other position locks once the hex sells.
  */
 export const GENESIS_HEX_CAP = 400
 
-/**
- * @deprecated No longer uniform — regions have different cell counts at Res 5.
- * Kept for backward compatibility. Do not use for slicing; see getGenesisHexIds.
- * Counts: LA=28, NYC=16, London=18, Tokyo=18, Idaho=120. Total=200 unique hexes.
- */
-export const GENESIS_SLOTS_PER_REGION = 80
-
-export const GENESIS_REGION_KEYS = ['la', 'nyc', 'london', 'tokyo', 'idaho'] as const
+export const GENESIS_REGION_KEYS = ['west', 'pacific', 'mountain', 'midwest', 'south'] as const
 export type GenesisRegionKey = (typeof GENESIS_REGION_KEYS)[number]
 
 export const GENESIS_REGION_LABELS: Record<GenesisRegionKey, string> = {
-  la: 'Los Angeles',
-  nyc: 'New York City',
-  london: 'London',
-  tokyo: 'Tokyo',
-  idaho: 'Idaho',
+  west:     'West Coast',
+  pacific:  'Pacific & Alaska',
+  mountain: 'Mountain West',
+  midwest:  'Midwest',
+  south:    'South & East',
 }
 
 /**
- * Five Mālama Labs reserved nodes — one per region, held by the company.
+ * Five Mālama Labs reserved nodes — one per region, locked at launch.
  * These are always status='reserved'; never available for external purchase.
  *
- *   8529a19bfffffff → Los Angeles (Tyler Malin / LA ops)
- *   852a100ffffffff → New York City
- *   85194ad3fffffff → London
- *   852f5aabfffffff → Tokyo
- *   8528846ffffffff → Idaho (near Idaho City)
+ * Resolution 3 lab cells (H3 Res 3, ~12,392 km² each):
+ *   8329a1fffffffff → West       (Los Angeles, CA)
+ *   835d14fffffffff → Pacific    (Haiku, Maui, HI)
+ *   832884fffffffff → Mountain   (Idaho City, ID)
+ *   832740fffffffff → Midwest    (Sister Bay, WI)
+ *   8326cbfffffffff → South      (Dallas, TX)
  */
 export const MALAMA_RESERVED_HEX_IDS = [
-  '8529a19bfffffff', // Los Angeles
-  '852a100ffffffff', // New York City
-  '85194ad3fffffff', // London
-  '852f5aabfffffff', // Tokyo
-  '8528846ffffffff', // Idaho
+  '8329a1fffffffff', // Los Angeles
+  '835d14fffffffff', // Haiku, Hawaii
+  '832884fffffffff', // Idaho City
+  '832740fffffffff', // Sister Bay
+  '8326cbfffffffff', // Dallas
 ] as const
 
 export const MALAMA_RESERVED_HEX_SET = new Set<string>(MALAMA_RESERVED_HEX_IDS)
 
-/**
- * @deprecated Use MALAMA_RESERVED_HEX_IDS / MALAMA_RESERVED_HEX_SET instead.
- * The Dallas HQ hex no longer exists in the Genesis pool (reseed v2, Res 5).
- */
+/** @deprecated Res-5 IDs from the v2 reseed. Kept for reference only. */
 export const MALAMA_HQ_HEX = '8726cb912ffffff'
 
 export function getMalamaWalletReservedHexIds(_regions?: RegionsData): string[] {
@@ -78,7 +67,7 @@ export function getMalamaWalletReservedHexSet(_regions?: RegionsData): Set<strin
 
 export function getGenesisRegionLabelForHex(hexId: string, regions: RegionsData): string | null {
   for (const key of GENESIS_REGION_KEYS) {
-    if ((regions[key] || []).includes(hexId)) return GENESIS_REGION_LABELS[key]
+    if ((regions[key]?.cells || []).includes(hexId)) return GENESIS_REGION_LABELS[key]
   }
   return null
 }
@@ -91,20 +80,21 @@ export function getGenesisPoolSlot(hexId: string, regions: RegionsData): number 
 }
 
 /**
- * Deterministically selects all H3 cells across 5 regions.
+ * Returns all 400 chain-position entries (200 unique hexes × 2 chains).
  *
- * Each region uses all its cells (no per-region slice). Within each region,
- * cells are sorted deterministically; the first ceil(n/2) go to Base, the
- * rest to Cardano. Total: 200 unique hexes × 2 chains = 400 entries.
+ * Within each region, cells are sorted deterministically; the first
+ * ceil(n/2) go to Base, the rest to Cardano.
  *
- * Region cell counts at Res 5:
- *   LA=28 (14B/14C), NYC=16 (8B/8C), London=18 (9B/9C),
- *   Tokyo=18 (9B/9C), Idaho=120 (60B/60C) → 400 total.
+ * Region breakdown (all Res 3):
+ *   West=40 (20B/20C), Pacific=40 (20B/20C), Mountain=40 (20B/20C),
+ *   Midwest=40 (20B/20C), South=40 (20B/20C) → 400 total positions.
  */
-export function getGenesisHexIds(regions: RegionsData): { id: string; region: GenesisRegionKey; chain: 'base' | 'cardano' }[] {
+export function getGenesisHexIds(
+  regions: RegionsData,
+): { id: string; region: GenesisRegionKey; chain: 'base' | 'cardano' }[] {
   const out: { id: string; region: GenesisRegionKey; chain: 'base' | 'cardano' }[] = []
   for (const key of GENESIS_REGION_KEYS) {
-    const cells = [...(regions[key] || [])].sort()
+    const cells = [...(regions[key]?.cells || [])].sort()
     const splitAt = Math.ceil(cells.length / 2)
     cells.forEach((id, i) => {
       out.push({ id, region: key, chain: i < splitAt ? 'base' : 'cardano' })
@@ -138,7 +128,7 @@ export function buildGenesisHexListItems(regions: RegionsData): GenesisHexListIt
   return entries.map(({ id, region, chain }) => {
     const [lat, lng] = cellToLatLng(id)
     const isMalamaReserved = MALAMA_RESERVED_HEX_SET.has(id)
-    const status = isMalamaReserved ? 'reserved' as const : 'available' as const
+    const status = isMalamaReserved ? ('reserved' as const) : ('available' as const)
     const dataScore = calculateDataScoreDeterministic(lat, lng, id)
     const startingBid = calculateGenesisListingPriceDeterministic(lat, lng, id)
     return {
@@ -193,15 +183,16 @@ export function buildGenesisHexFeatureCollection(regions: RegionsData) {
       cap: GENESIS_HEX_CAP,
       count: items.length,
       uniqueHexes: items.length / 2,
+      h3Resolution: 3,
       regions: {
-        la: (regions.la || []).length,
-        nyc: (regions.nyc || []).length,
-        london: (regions.london || []).length,
-        tokyo: (regions.tokyo || []).length,
-        idaho: (regions.idaho || []).length,
+        west:     (regions.west?.cells     || []).length,
+        pacific:  (regions.pacific?.cells  || []).length,
+        mountain: (regions.mountain?.cells || []).length,
+        midwest:  (regions.midwest?.cells  || []).length,
+        south:    (regions.south?.cells    || []).length,
       },
-      base: items.filter(i => i.chain === 'base').length,
-      cardano: items.filter(i => i.chain === 'cardano').length,
+      base:    items.filter((i) => i.chain === 'base').length,
+      cardano: items.filter((i) => i.chain === 'cardano').length,
     },
   }
 }

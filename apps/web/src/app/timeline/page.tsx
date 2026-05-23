@@ -98,18 +98,18 @@ const phases: {
       'Public Hex Launch. Genesis 200 sale opens to the world. Reserve your Genesis Hex Node for $2,000.',
       'Select your H3 hex cell on the Hex Map Explorer. Each cell is a unique geographic license.',
       'Pay via crypto or card and receive your NFT-HEX rights object on-chain. 125,000 MLMA allocation is bound to your node, vesting through boot and operational milestones.',
-      'Hardware pre-order enters the production queue. Units ship Q4 2026.',
+      'Hardware pre-order enters the production queue. Units ship by end of December 2026.',
     ],
     note: '195 nodes available for public allocation. 5 reserved for Mālama Labs. First-come, first-served by hex cell. Sale closes when sold out.',
     cta: { label: 'Reserve a Hex Node', href: '/presale' },
   },
   {
     id: 'ship',
-    date: 'Q4 2026',
+    date: 'End of December 2026',
     label: 'Units Ship',
     icon: Package,
     color: 'blue',
-    badge: 'Q4 2026',
+    badge: 'Dec 2026',
     items: [
       'Operator hardware shipments commence to all registered locations globally.',
       'Each kit includes the Mālama-provisioned enclosure, sensors, solar UPS, Ethernet cable, and soil probe.',
@@ -136,7 +136,7 @@ const phases: {
   },
   {
     id: 'rewards',
-    date: 'Q4 2026 → Q1 2027',
+    date: '2027',
     label: 'First Rewards Accrue',
     icon: TrendingUp,
     color: 'amber',
@@ -366,7 +366,7 @@ export default function TimelinePage() {
           </p>
           <h3 className="font-serif text-2xl text-malama-ink mb-2">195 nodes available.</h3>
           <p className="text-malama-ink-dim text-sm mb-8 max-w-md mx-auto">
-            5 nodes reserved for Mālama Labs. Allocation closes when sold out. First-come, first-served by hex cell selection. Hardware ships Q4 2026, mainnet live Q4 2026 ahead of TGE.
+            5 nodes reserved for Mālama Labs. Allocation closes when sold out. First-come, first-served by hex cell selection. Hardware ships end of December 2026, mainnet live Q4 2026 ahead of TGE.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

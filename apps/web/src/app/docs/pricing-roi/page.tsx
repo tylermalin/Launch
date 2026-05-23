@@ -86,7 +86,7 @@ export default function PricingRoiPage() {
                   <tr><td>Geographic license</td><td className="num"><strong>$1,620</strong></td><td>Non-exclusive operating rights for a specific H3 hex cell on the Mālama network. NFT-HEX minted on Cardano and Base at reservation.</td></tr>
                 </tbody>
               </table>
-              <p>Hardware ships <strong>September 2026</strong>. Geographic license is minted at reservation. Reservation window closes <strong>May 31, 2026</strong> or when all 195 external nodes are sold. Five nodes are reserved for Mālama Labs team and production use (Dallas / DFW area).</p>
+              <p>Hardware ships by <strong>end of December 2026</strong>. Geographic license is minted at reservation. Reservation closes when all 195 external nodes are sold. Five nodes are reserved for Mālama Labs team and production use (Dallas / DFW area).</p>
             </div>
           </section>
 

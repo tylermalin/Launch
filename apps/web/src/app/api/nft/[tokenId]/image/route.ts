@@ -171,7 +171,7 @@ export async function GET(
   <text x="338" y="456" text-anchor="middle" font-size="8" fill="#6B7280"
         font-family="monospace" letter-spacing="1">REVENUE</text>
   <text x="338" y="474" text-anchor="middle" font-size="11" font-weight="900"
-        fill="#F59E0B" font-family="monospace">OCT 26</text>
+        fill="#F59E0B" font-family="monospace">BEGINS 2027</text>
 
   <!-- Bottom strip -->
   <rect x="0" y="506" width="400" height="94" rx="0" fill="#060E1A"/>

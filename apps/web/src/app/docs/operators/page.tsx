@@ -86,7 +86,7 @@ export default function OperatorsPage() {
                 <li><strong style={{ color: 'var(--mlma-ink)' }}>Power on and wait for device boot.</strong> The secure element provisions its Device DID on first boot, approximately 60 seconds. The status LED sequence confirms successful provisioning.</li>
                 <li><strong style={{ color: 'var(--mlma-ink)' }}>Register via the Mālama dApp.</strong> Connect your Base or Cardano wallet. Enter your node&rsquo;s Device DID. This binds your hardware identity to your NFT-HEX geographic assignment and triggers the boot tranche unlock (18,750 MLMA, 15%).</li>
                 <li><strong style={{ color: 'var(--mlma-ink)' }}>Confirm network connectivity.</strong> The dApp dashboard shows live status: online or offline, last heartbeat timestamp, validation queue. First SaveCard production should appear within 15 to 30 minutes of successful registration.</li>
-                <li><strong style={{ color: 'var(--mlma-ink)' }}>Await Genesis audit clearance.</strong> Validation distributions begin after the Genesis Hex Sale audit confirms your node is operational and compliant. Audit takes place in October 2026.</li>
+                <li><strong style={{ color: 'var(--mlma-ink)' }}>Await Genesis audit clearance.</strong> Validation distributions begin after the Genesis Hex Sale audit confirms your node is operational and compliant. Audit takes place in early 2027.</li>
                 <li><strong style={{ color: 'var(--mlma-ink)' }}>Begin the 90-day PONO qualifying period.</strong> From successful boot, you have 90 days of continuous operation to qualify for PONO. See Section D below.</li>
               </ol>
 
@@ -181,7 +181,7 @@ export default function OperatorsPage() {
               </ol>
 
               <h3>Genesis Hex Sale audit</h3>
-              <p>MLMA validation distributions do not begin automatically at a calendar date. They begin after the audit confirms your node is operational, compliant, and properly registered. The audit takes place in <strong>October 2026</strong>.</p>
+              <p>MLMA validation distributions do not begin automatically at a calendar date. They begin after the audit confirms your node is operational, compliant, and properly registered. The audit takes place in <strong>early 2027</strong>.</p>
               <ul>
                 <li>Nodes that pass receive full Year 1 Genesis multiplier benefits (1.5×) from the clearance date.</li>
                 <li>Nodes that do not yet pass are notified with specific remediation steps.</li>

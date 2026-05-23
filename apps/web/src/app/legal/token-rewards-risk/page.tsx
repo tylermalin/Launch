@@ -584,9 +584,9 @@ export default function TokenRewardsRiskPage() {
                 </p>
                 <p>
                   The 90-day window begins at hardware delivery, not at reservation. Hardware
-                  is estimated to ship in September 2026. If you cannot physically install and
-                  register your node within 90 days of receiving it, you risk losing both the
-                  hardware value and the entire MLMA allocation.
+                  is estimated to ship by end of December 2026. If you cannot physically install
+                  and register your node within 90 days of receiving it, you risk losing both
+                  the hardware value and the entire MLMA allocation.
                 </p>
                 <p>
                   Extensions require written request to Mālama <strong>before</strong> the
@@ -597,7 +597,7 @@ export default function TokenRewardsRiskPage() {
               <h3>Audit gate before emissions</h3>
               <p>
                 MLMA validation rewards do not begin automatically at hardware boot. They
-                begin following a Genesis Hex Sale audit in <strong>October 2026</strong> that
+                begin following a Genesis Hex Sale audit in <strong>early 2027</strong> that
                 confirms your node is operational, compliant, and properly registered. If your
                 node does not pass the audit initially, rewards are withheld until compliance
                 is confirmed. Your 125,000 MLMA vesting allocation is not affected by audit

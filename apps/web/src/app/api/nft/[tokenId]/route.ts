@@ -42,7 +42,7 @@ export async function GET(
     name: claim
       ? `Mālama Hex Node License ${claim.claimId}`
       : `Mālama Hex Node License · #${String(edition).padStart(3, '0')} (${zone})`,
-    description: `Mālama Genesis validator node license. ${claimId ? `Claim ${claimId}. ` : ''}Territory: ${hexId} (${zone}). Exclusive geographic rights on the Mālama DePIN network. 125,000 MLMA milestone-vested per operator: 15% at boot, 15% at PONO 90-day, 20% at 6mo, 20% at 9mo, 30% at 12mo. Revenue begins Q4 2026.`,
+    description: `Mālama Genesis validator node license. ${claimId ? `Claim ${claimId}. ` : ''}Territory: ${hexId} (${zone}). Exclusive geographic rights on the Mālama DePIN network. 125,000 MLMA milestone-vested per operator: 15% at boot, 15% at PONO 90-day, 20% at 6mo, 20% at 9mo, 30% at 12mo. Hardware ships by end of December 2026. Validation rewards begin 2027 after Genesis Hex Sale audit clearance.`,
     image: `${baseUrl}/api/nft/${tokenId}/image?${imageQuery.toString()}`,
     external_url: `${baseUrl}/map`,
     animation_url: null,
@@ -61,7 +61,7 @@ export async function GET(
       { trait_type: 'MLMA Allocation', value: '125,000 MLMA' },
       { trait_type: 'Entry Price', value: '$2,000 USDC' },
       { trait_type: 'Vesting', value: 'Milestone (boot · PONO · 6/9/12mo)' },
-      { trait_type: 'Revenue Start', value: 'Q4 2026' },
+      { trait_type: 'Revenue Start', value: '2027' },
       { trait_type: 'Status', value: claim?.txHash ? 'Minted' : 'Reserved' },
       ...(txHash ? [{ trait_type: 'Transaction', value: txHash }] : []),
     ],

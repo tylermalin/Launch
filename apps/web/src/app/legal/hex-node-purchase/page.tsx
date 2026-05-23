@@ -117,7 +117,7 @@ export default function HexNodePurchasePage() {
           <section className="clause" id="s5">
             <div className="clause-head"><span className="num">§ 05</span><h2>Delivery and fulfillment</h2><a className="anchor" href="#s5">#s5</a></div>
             <div className="clause-body">
-              <p>Estimated shipping is <strong>September 2026</strong>. This is a non-binding estimate subject to change. Delays may occur due to manufacturing, logistics, customs, or regulatory issues. Partial shipments may occur and fulfillment partners may be used.</p>
+              <p>Estimated shipping is <strong>end of December 2026</strong>. This is a non-binding estimate subject to change. Delays may occur due to manufacturing, logistics, customs, or regulatory issues. Partial shipments may occur and fulfillment partners may be used.</p>
               <p>You are responsible for providing accurate shipping details, import duties, customs clearance, local compliance, and receiving the shipment. Unless otherwise required by law, <strong>risk of loss transfers upon delivery to the carrier.</strong></p>
             </div>
           </section>
@@ -185,7 +185,7 @@ export default function HexNodePurchasePage() {
               <h3>Audit gate before emissions</h3>
               <div className="callout warn">
                 <span className="tag">▲ Audit · Rewards begin only after audit clearance</span>
-                <p>MLMA validation rewards <strong>do not begin automatically at hardware boot or at a fixed calendar date.</strong> They begin following an independent audit of the Genesis Hex Sale confirming that deployed nodes are operational, compliant, and properly registered. The audit is conducted in <strong>October 2026</strong>.</p>
+                <p>MLMA validation rewards <strong>do not begin automatically at hardware boot or at a fixed calendar date.</strong> They begin following an independent audit of the Genesis Hex Sale confirming that deployed nodes are operational, compliant, and properly registered. The audit is conducted in <strong>early 2027</strong>.</p>
                 <p>Nodes that do not pass the audit are notified and supported through remediation. <strong>Vesting of the 125,000 MLMA allocation is not affected by audit status. Only validation rewards are withheld until compliance is confirmed.</strong></p>
               </div>
 

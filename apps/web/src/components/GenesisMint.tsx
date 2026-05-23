@@ -767,7 +767,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                           ? 'ERC-721 NFT'
                           : 'CIP-25 Token',
                   },
-                  { label: 'Revenue Start', value: 'Oct 2026', sub: 'Hardware ships Sept' },
+                  { label: 'Revenue Start', value: '2027', sub: 'Hardware ships Dec 2026' },
                 ].map(({ label, value, sub }) => (
                   <div key={label} className="p-4 border border-gray-800 rounded-2xl bg-malama-deep">
                     <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">{label}</p>

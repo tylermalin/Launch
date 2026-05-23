@@ -76,7 +76,7 @@ export default function Home() {
             custom={3}
             className="mb-10 max-w-2xl text-base leading-relaxed text-malama-ink-dim"
           >
-            The Genesis 200 program is the first and only opportunity to acquire a Hex Node validator license at founder pricing. 200 total nodes. $2,000 entry. 125,000 MLMA allocation. Hardware ships Q4 2026 · mainnet live Q4 2026 ahead of TGE.
+            The Genesis 200 program is the first and only opportunity to acquire a Hex Node validator license at founder pricing. 200 total nodes. $2,000 entry. 125,000 MLMA allocation. Hardware ships end of December 2026 · mainnet live Q4 2026 ahead of TGE.
           </motion.p>
 
           {/* Key fact pills */}
@@ -802,7 +802,7 @@ export default function Home() {
                 { label: 'Available', value: '195' },
                 { label: 'Entry price', value: '$2,000' },
                 { label: 'MLMA allocation', value: '125,000' },
-                { label: 'Delivery', value: 'Q4 2026' },
+                { label: 'Delivery', value: 'End of Dec 2026' },
               ].map(({ label, value }) => (
                 <div key={label} className="card-hover rounded-malama border border-malama-line bg-malama-elev p-4 text-center">
                   <div className="font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">{label}</div>

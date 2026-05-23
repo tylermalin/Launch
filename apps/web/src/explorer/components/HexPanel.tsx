@@ -140,7 +140,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
       {/* What's included */}
       <Section title="What's included">
         <ul style={{ paddingLeft: 18, margin: 0, color: '#c8c8c8', fontSize: 13 }}>
-          <li>One Hex Node hardware kit (estimated ship Sep 2026)</li>
+          <li>One Hex Node hardware kit (estimated ship end of December 2026)</li>
           <li>NFT-HEX geographic operating license for this H3 cell</li>
           <li>Inclusion in the Genesis 200 program</li>
           <li>1.5× Genesis Year 1 Multiplier on validation compensation</li>
@@ -150,7 +150,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
           Tokens are not vested at purchase. They are earned against operational milestones
           beginning at hardware boot. Validation compensation depends on network conditions
           and is not guaranteed. Validation compensation begins after the Genesis Hex Sale
-          audit (Q4 2026) confirms operational compliance.
+          audit (early 2027) confirms operational compliance.
         </p>
       </Section>
 

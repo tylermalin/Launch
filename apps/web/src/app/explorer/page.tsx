@@ -418,8 +418,16 @@ const STATUS_COLORS: Record<string, string> = {
   'reserved-founding':'#dc2626',
   'activated':        '#c4f061',
   'upcoming':         '#60a5fa',
-  'future-phase':     '#3a3a3a',
-  'restricted':       '#3a3a3a',
+  'future-phase':     '#2a2a2a',
+  'restricted':       '#2a2a2a',
+};
+
+const ZONE_STYLES: Record<string, { bg: string; color: string; border: string }> = {
+  'urban-core': { bg: '#0a2010', color: '#c4f061', border: '#1a4020' },
+  'urban':      { bg: '#0a1a30', color: '#60a5fa', border: '#1a3060' },
+  'suburban':   { bg: '#1a1a0a', color: '#e0d060', border: '#3a3a10' },
+  'rural':      { bg: '#1a0a00', color: '#f0a040', border: '#3a2010' },
+  'remote':     { bg: '#1a1a1a', color: '#888',    border: '#2a2a2a' },
 };
 
 function HexListView({
@@ -439,29 +447,39 @@ function HexListView({
   links: Parameters<typeof HexPanel>[0]['links'];
   onReserve: (hex: Phase1Hex) => void;
 }) {
-  const filters = ['all', 'available', 'reserved', 'reserved-founding'];
-  const filtered = manifest.hexes.filter(
-    (h) => filter === 'all' || h.status === filter
-  );
+  const STATUS_FILTERS = ['all', 'available', 'reserved'];
+  const ZONE_FILTERS = ['urban-core', 'urban', 'suburban', 'rural', 'remote'];
+
+  // Filter logic: status-based OR zone-based
+  const filtered = manifest.hexes.filter((h) => {
+    if (filter === 'all') return true;
+    if (STATUS_FILTERS.includes(filter)) {
+      if (filter === 'reserved') return h.status === 'reserved' || h.status === 'reserved-founding';
+      return h.status === filter;
+    }
+    return h.zoneClassification === filter;
+  });
 
   return (
     <div style={{ display: 'flex', flex: 1, overflow: 'hidden', height: '100%' }}>
       {/* ── Table ── */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {/* Filter bar */}
-        <div style={{ display: 'flex', gap: 6, padding: '10px 16px', borderBottom: '1px solid #1a1a1a', background: '#0f0f0f', flexShrink: 0 }}>
-          {filters.map((f) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '8px 16px', borderBottom: '1px solid #1a1a1a', background: '#0a0a0a', flexShrink: 0, flexWrap: 'wrap' }}>
+          {/* Status group */}
+          <span style={{ color: '#333', fontFamily: 'monospace', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: 4 }}>Status</span>
+          {STATUS_FILTERS.map((f) => (
             <button
               key={f}
               onClick={() => onFilterChange(f)}
               style={{
-                padding: '4px 12px',
-                borderRadius: 4,
+                padding: '3px 10px',
+                borderRadius: 3,
                 border: 'none',
                 background: filter === f ? '#1f1f1f' : 'transparent',
-                color: filter === f ? '#e8e8e8' : '#666',
+                color: filter === f ? '#e8e8e8' : '#555',
                 fontFamily: 'var(--font-mono, monospace)',
-                fontSize: 11,
+                fontSize: 10,
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
                 cursor: 'pointer',
@@ -471,15 +489,42 @@ function HexListView({
               {f === 'all' ? `All (${manifest.hexes.length})` : f}
             </button>
           ))}
-          <span style={{ marginLeft: 'auto', color: '#555', fontFamily: 'monospace', fontSize: 11, alignSelf: 'center' }}>
-            {filtered.length} hexes
+          {/* Zone group */}
+          <span style={{ color: '#333', fontFamily: 'monospace', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.06em', marginLeft: 12, marginRight: 4 }}>Zone</span>
+          {ZONE_FILTERS.map((f) => {
+            const zs = ZONE_STYLES[f];
+            return (
+              <button
+                key={f}
+                onClick={() => onFilterChange(f)}
+                style={{
+                  padding: '3px 10px',
+                  borderRadius: 3,
+                  border: 'none',
+                  background: filter === f ? (zs?.bg ?? '#1f1f1f') : 'transparent',
+                  color: filter === f ? (zs?.color ?? '#e8e8e8') : '#555',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontSize: 10,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  cursor: 'pointer',
+                  borderBottom: filter === f ? `2px solid ${zs?.color ?? '#c4f061'}` : '2px solid transparent',
+                }}
+              >
+                {f.replace('-', ' ')}
+              </button>
+            );
+          })}
+
+          <span style={{ marginLeft: 'auto', color: '#444', fontFamily: 'monospace', fontSize: 11, alignSelf: 'center' }}>
+            {filtered.length} / {manifest.hexes.length}
           </span>
         </div>
 
         {/* Column headers */}
-        <div style={{ display: 'grid', gridTemplateColumns: '3rem 1fr 1fr 1fr 6rem 6rem', gap: 0, padding: '8px 16px', borderBottom: '1px solid #1a1a1a', background: '#0a0a0a', flexShrink: 0 }}>
-          {['#', 'H3 Cell ID', 'Region', 'Status', 'Score', 'Price'].map((h) => (
-            <span key={h} style={{ fontFamily: 'monospace', fontSize: 11, color: '#555', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</span>
+        <div style={{ display: 'grid', gridTemplateColumns: '3.5rem 1fr 1fr 1fr 5rem 5rem 5.5rem', gap: 0, padding: '8px 16px', borderBottom: '1px solid #1a1a1a', background: '#0a0a0a', flexShrink: 0 }}>
+          {['ID', 'H3 Cell', 'Region', 'Zone', '×Multi', 'Score', 'Water %'].map((h) => (
+            <span key={h} style={{ fontFamily: 'monospace', fontSize: 10, color: '#444', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{h}</span>
           ))}
         </div>
 
@@ -487,38 +532,100 @@ function HexListView({
         <div style={{ overflowY: 'auto', flex: 1 }}>
           {filtered.map((hex) => {
             const isSelected = selected?.h3Index === hex.h3Index;
+            const zone = hex.zoneClassification;
+            const zoneStyle = ZONE_STYLES[zone ?? 'remote'] ?? ZONE_STYLES.remote;
+            const water = hex.waterCoveragePercent;
+            const waterColor = water == null ? '#444'
+              : water === 0 ? '#3a3a3a'
+              : water < 20 ? '#4a7a6a'
+              : water < 60 ? '#3b82f6'
+              : '#60a5fa';
             return (
               <div
                 key={hex.h3Index}
                 onClick={() => onSelect(hex)}
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: '3rem 1fr 1fr 1fr 6rem 6rem',
+                  gridTemplateColumns: '3.5rem 1fr 1fr 1fr 5rem 5rem 5.5rem',
                   gap: 0,
-                  padding: '10px 16px',
-                  borderBottom: '1px solid #141414',
+                  padding: '11px 16px',
+                  borderBottom: '1px solid #111',
                   background: isSelected ? '#1a2a0a' : 'transparent',
                   cursor: 'pointer',
                   transition: 'background 80ms',
-                  borderLeft: isSelected ? '2px solid #c4f061' : '2px solid transparent',
+                  borderLeft: `2px solid ${isSelected ? '#c4f061' : STATUS_COLORS[hex.status] ?? '#1a1a1a'}`,
+                  alignItems: 'center',
                 }}
-                onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLDivElement).style.background = '#161616'; }}
+                onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLDivElement).style.background = '#141414'; }}
                 onMouseLeave={(e) => { if (!isSelected) (e.currentTarget as HTMLDivElement).style.background = 'transparent'; }}
               >
-                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#555' }}>{hex.nodeNumber}</span>
-                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#c8c8c8' }}>{hex.h3Index}</span>
-                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#999' }}>{hex.region ?? '—'}</span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: STATUS_COLORS[hex.status] ?? '#555', flexShrink: 0 }} />
-                  <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#c8c8c8', textTransform: 'capitalize' }}>
-                    {hex.status.replace(/-/g, ' ')}
-                  </span>
+                {/* ID */}
+                <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#555' }}>
+                  {String(hex.nodeNumber).padStart(3, '0')}
                 </span>
-                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#c4f061' }}>
-                  {hex.dataDemandScore != null ? hex.dataDemandScore : '—'}
+
+                {/* H3 Cell */}
+                <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#999', letterSpacing: '-0.01em' }}>
+                  {hex.h3Index}
                 </span>
-                <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#e8e8e8' }}>
-                  ${(hex.listingReferenceUsd ?? 2000).toLocaleString()}
+
+                {/* Region */}
+                <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#c8c8c8', paddingRight: 8 }}>
+                  {hex.region ?? '—'}
+                </span>
+
+                {/* Zone Classification */}
+                <span style={{ display: 'flex', alignItems: 'center' }}>
+                  {zone ? (
+                    <span style={{
+                      display: 'inline-block',
+                      padding: '2px 7px',
+                      borderRadius: 3,
+                      fontSize: 10,
+                      fontFamily: 'monospace',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      background: zoneStyle.bg,
+                      color: zoneStyle.color,
+                      border: `1px solid ${zoneStyle.border}`,
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {zone.replace('-', ' ')}
+                    </span>
+                  ) : (
+                    <span style={{ color: '#444', fontFamily: 'monospace', fontSize: 11 }}>—</span>
+                  )}
+                </span>
+
+                {/* Geographic Multiplier */}
+                <span style={{ fontFamily: 'monospace', fontSize: 12, color: zoneStyle.color, fontWeight: 600 }}>
+                  {hex.geographicMultiplier != null ? `${hex.geographicMultiplier.toFixed(2)}×` : '—'}
+                </span>
+
+                {/* Data Demand Score */}
+                <span style={{ fontFamily: 'monospace', fontSize: 12, display: 'flex', alignItems: 'center', gap: 5 }}>
+                  {hex.dataDemandScore != null ? (
+                    <>
+                      <span style={{ color: '#c4f061', fontWeight: 600 }}>{hex.dataDemandScore}</span>
+                      <span style={{ color: '#444', fontSize: 10 }}>/100</span>
+                    </>
+                  ) : '—'}
+                </span>
+
+                {/* Water Coverage */}
+                <span style={{ fontFamily: 'monospace', fontSize: 12, display: 'flex', alignItems: 'center', gap: 5 }}>
+                  {water != null ? (
+                    <>
+                      <span style={{ color: waterColor, fontWeight: water > 0 ? 600 : 400 }}>
+                        {water === 0 ? '0%' : `${water}%`}
+                      </span>
+                      {water > 30 && (
+                        <span style={{ fontSize: 9, color: '#3b82f6', fontFamily: 'monospace', textTransform: 'uppercase' }}>
+                          coastal
+                        </span>
+                      )}
+                    </>
+                  ) : '—'}
                 </span>
               </div>
             );

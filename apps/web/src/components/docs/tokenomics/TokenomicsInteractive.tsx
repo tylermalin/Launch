@@ -16,8 +16,17 @@ import { Info, Lock, Sparkles, TrendingUp } from 'lucide-react'
 const TOTAL_MLMA = 500_000_000
 const GENESIS_POOL = 25_000_000
 const PER_NODE = 125_000
-const BOOT_PCT = 0.25
-const MONTHLY_PCT = 0.75 / 12
+
+// v3.6 milestone-vesting schedule. Cumulative % of PER_NODE unlocked at each
+// milestone month. Vesting is step-based, not linear: nothing accrues between
+// milestones — the next tranche unlocks only when its conditions are met.
+const MILESTONES: { month: number; label: string; cumulativePct: number }[] = [
+  { month: 0,  label: 'Boot',          cumulativePct: 0.15 },
+  { month: 3,  label: 'PONO 90-day',   cumulativePct: 0.30 },
+  { month: 6,  label: '6-month',       cumulativePct: 0.50 },
+  { month: 9,  label: '9-month',       cumulativePct: 0.70 },
+  { month: 12, label: '12-month',      cumulativePct: 1.00 },
+]
 
 const EMISSION_BY_YEAR = [
   { year: 'Y1', mlma: 9, cumulative: 9, label: 'Cold-start' },
@@ -30,12 +39,11 @@ const EMISSION_BY_YEAR = [
 export function TokenomicsInteractive() {
   const [vestMonth, setVestMonth] = useState(0)
 
-  const unlocked = useMemo(() => {
-    const boot = PER_NODE * BOOT_PCT
-    if (vestMonth <= 0) return boot
-    const monthly = PER_NODE * MONTHLY_PCT
-    const months = Math.min(vestMonth, 12)
-    return boot + monthly * months
+  const { unlocked, currentMilestone } = useMemo(() => {
+    // Find the highest milestone whose month threshold has been reached.
+    const reached = MILESTONES.filter((m) => m.month <= vestMonth)
+    const last = reached[reached.length - 1] ?? MILESTONES[0]
+    return { unlocked: PER_NODE * last.cumulativePct, currentMilestone: last }
   }, [vestMonth])
 
   const genesisPct = (GENESIS_POOL / TOTAL_MLMA) * 100
@@ -61,7 +69,7 @@ export function TokenomicsInteractive() {
           <div>
             <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Per Genesis operator</p>
             <p className="text-3xl font-black text-white tabular-nums">125K</p>
-            <p className="text-sm text-gray-500">MLMA · 25% at boot · 75% over 12 months</p>
+            <p className="text-sm text-gray-500">MLMA · milestone-vested (boot · PONO · 6/9/12mo)</p>
           </div>
         </div>
         <div className="space-y-2">
@@ -86,7 +94,7 @@ export function TokenomicsInteractive() {
 
       {/* Emissions chart */}
       <section className="rounded-2xl border border-gray-800 bg-[#0d1e35] p-6">
-        <h2 className="text-xl font-black text-white mb-2">Network emissions (Y1–Y5)</h2>
+        <h2 className="text-xl font-black text-white mb-2">Network emissions (Y1-Y5)</h2>
         <p className="text-sm text-gray-500 mb-4">Millions of MLMA per year. Emissions stop entirely after Year 3.</p>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -103,7 +111,7 @@ export function TokenomicsInteractive() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <p className="text-xs text-gray-600 mt-3">Total Y1–Y3: 79.2M MLMA (15.8% of supply). Uncommitted reserve: 58.3M MLMA. Years 4–5: zero emissions, revenue-funded only.</p>
+        <p className="text-xs text-gray-600 mt-3">Total Y1-Y3: 79.2M MLMA (15.8% of supply). Uncommitted reserve: 58.3M MLMA. Years 4-5: zero emissions, revenue-funded only.</p>
       </section>
 
       {/* Vesting simulator */}
@@ -112,7 +120,7 @@ export function TokenomicsInteractive() {
           <Lock className="w-5 h-5 text-blue-400" /> Genesis allocation vesting (per node)
         </h2>
         <p className="text-sm text-gray-400 mb-6">
-          25% at verified hardware boot (31,250 MLMA); 75% linear over 12 months (~7,813 MLMA/month).
+          15% at boot (18,750 MLMA) at deployment registration. 15% (18,750) at PONO 90-day qualification. 20% (25,000) at 6-month milestone. 20% (25,000) at 9-month milestone. 30% (37,500) at 12-month milestone. Milestones require continuous PONO + ≥99% uptime + no tamper events.
         </p>
         <label className="block mb-2">
           <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Months after boot</span>
@@ -126,7 +134,7 @@ export function TokenomicsInteractive() {
           />
           <div className="flex justify-between text-xs text-gray-500 mt-1">
             <span>Boot</span>
-            <span className="text-malama-accent font-mono font-bold">{vestMonth} mo</span>
+            <span className="text-malama-accent font-mono font-bold">{vestMonth} mo · {currentMilestone.label}</span>
             <span>12 mo</span>
           </div>
         </label>

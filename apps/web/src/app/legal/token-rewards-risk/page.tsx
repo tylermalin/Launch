@@ -6,7 +6,7 @@ import TocScrollSpy from './TocScrollSpy'
 export const metadata: Metadata = {
   title: 'Token & Rewards Risk Disclosure | Mālama Labs',
   description:
-    'The plain-language risks of participating in the Mālama network — token volatility, regulatory uncertainty, deployment forfeiture, audit gates, slashing, and the Year 3 emissions cliff.',
+    'The plain-language risks of participating in the Mālama network. Token volatility, regulatory uncertainty, deployment forfeiture, audit gates, slashing, and the Year 3 emissions cliff.',
 }
 
 /**
@@ -70,7 +70,7 @@ export default function TokenRewardsRiskPage() {
               Token &amp; Rewards <em>Risk Disclosure.</em>
             </h1>
             <p className="lede">
-              The plain-language risks of participating in the Mālama network — token
+              The plain-language risks of participating in the Mālama network. Token
               volatility, regulatory uncertainty, deployment forfeiture, audit gates,
               slashing, and the Year 3 emissions cliff.
             </p>
@@ -218,7 +218,7 @@ export default function TokenRewardsRiskPage() {
             </li>
             <li>
               <a href="#contact">
-                <span className="n">— —</span>
+                <span className="n">- -</span>
                 <span className="t">Contact</span>
               </a>
             </li>
@@ -454,7 +454,7 @@ export default function TokenRewardsRiskPage() {
                   Mālama&rsquo;s business or the protocol&rsquo;s performance.
                 </li>
                 <li>
-                  The MLMA emission schedule is <strong>fixed</strong> — the protocol cannot
+                  The MLMA emission schedule is <strong>fixed</strong>. The protocol cannot
                   and will not issue additional tokens to stabilize price or compensate for
                   price decline.
                 </li>
@@ -520,11 +520,11 @@ export default function TokenRewardsRiskPage() {
               <p>Validation rewards, if any, depend on:</p>
               <ul>
                 <li>
-                  Node uptime above 90% — nodes below this threshold earn{' '}
+                  Node uptime above 90%. Nodes below this threshold earn{' '}
                   <strong>zero validation rewards</strong> for that period.
                 </li>
                 <li>
-                  Data Quality Score (0.0–1.0) from validator confidence and cross-validation
+                  Data Quality Score (0.0-1.0) from validator confidence and cross-validation
                   with neighboring nodes.
                 </li>
                 <li>
@@ -532,7 +532,7 @@ export default function TokenRewardsRiskPage() {
                   may change.
                 </li>
                 <li>
-                  Total active validator count —{' '}
+                  Total active validator count -{' '}
                   <strong>rewards are competitive and relative, not fixed.</strong>
                 </li>
                 <li>
@@ -565,8 +565,8 @@ export default function TokenRewardsRiskPage() {
                 fixed per node. Each operator&rsquo;s monthly reward is their weighted score
                 divided by the sum of all active validator scores in the network.{' '}
                 <strong>
-                  As more validators join the network — including during the Genesis phase and
-                  beyond — each operator&rsquo;s share of the monthly emission pool decreases
+                  As more validators join the network. Including during the Genesis phase and
+                  beyond. Each operator&rsquo;s share of the monthly emission pool decreases
                   proportionally.
                 </strong>{' '}
                 Joining early does not lock in a specific reward amount. Actual rewards will
@@ -584,9 +584,9 @@ export default function TokenRewardsRiskPage() {
                 </p>
                 <p>
                   The 90-day window begins at hardware delivery, not at reservation. Hardware
-                  is estimated to ship in September 2026. If you cannot physically install and
-                  register your node within 90 days of receiving it, you risk losing both the
-                  hardware value and the entire MLMA allocation.
+                  is estimated to ship by end of December 2026. If you cannot physically install
+                  and register your node within 90 days of receiving it, you risk losing both
+                  the hardware value and the entire MLMA allocation.
                 </p>
                 <p>
                   Extensions require written request to Mālama <strong>before</strong> the
@@ -597,11 +597,11 @@ export default function TokenRewardsRiskPage() {
               <h3>Audit gate before emissions</h3>
               <p>
                 MLMA validation rewards do not begin automatically at hardware boot. They
-                begin following a Genesis Hex Sale audit in <strong>October 2026</strong> that
+                begin following a Genesis Hex Sale audit in <strong>early 2027</strong> that
                 confirms your node is operational, compliant, and properly registered. If your
                 node does not pass the audit initially, rewards are withheld until compliance
                 is confirmed. Your 125,000 MLMA vesting allocation is not affected by audit
-                status — only validation rewards are withheld during the period of
+                status. Only validation rewards are withheld during the period of
                 non-compliance.
               </p>
 
@@ -627,13 +627,13 @@ export default function TokenRewardsRiskPage() {
                   come from <strong>protocol revenue only</strong>.
                 </p>
                 <p>
-                  If protocol revenue in Years 4 – 5 is lower than projected — whether due to
+                  If protocol revenue in Years 4-5 is lower than projected. Whether due to
                   slower enterprise customer adoption, registry acceptance delays, or
-                  competitive pressure — operator rewards will be proportionally lower.{' '}
-                  <strong>There is no emission-funded floor in Years 4 – 5.</strong>
+                  competitive pressure. Operator rewards will be proportionally lower.{' '}
+                  <strong>There is no emission-funded floor in Years 4-5.</strong>
                 </p>
                 <p>
-                  Operators who model Year 4 – 5 economics based on Year 1 – 3 token emission
+                  Operators who model Year 4-5 economics based on Year 1-3 token emission
                   levels are modeling a different regime.
                 </p>
               </div>
@@ -715,12 +715,12 @@ export default function TokenRewardsRiskPage() {
             </div>
             <div className="clause-body">
               <p>
-                The network uses Cardano, Hedera, and Base. If Rewards or system components
+                The network uses Cardano and Base. If Rewards or system components
                 interact with any of these blockchain networks:
               </p>
               <ul>
                 <li>
-                  Transactions are generally <strong>irreversible</strong> — errors cannot be
+                  Transactions are generally <strong>irreversible</strong>. Errors cannot be
                   undone.
                 </li>
                 <li>
@@ -731,7 +731,7 @@ export default function TokenRewardsRiskPage() {
                 </li>
                 <li>Transaction fees (gas) may fluctuate significantly.</li>
                 <li>
-                  Data recorded on-chain — including your geographic hex cell assignment — is{' '}
+                  Data recorded on-chain. Including your geographic hex cell assignment. Is{' '}
                   <strong>permanent and publicly readable</strong>.
                 </li>
                 <li>
@@ -837,13 +837,12 @@ export default function TokenRewardsRiskPage() {
               <p>
                 Mālama and the veMLMA governance system reserve the right to modify reward
                 formulas, change Geographic Multiplier coefficients, alter distribution
-                schedules, adjust eligibility requirements, or discontinue Rewards entirely —
-                for technical optimization, fraud prevention, regulatory compliance, or
+                schedules, adjust eligibility requirements, or discontinue Rewards entirely. For technical optimization, fraud prevention, regulatory compliance, or
                 network sustainability.
               </p>
               <p>
-                <strong>Immutable parameters</strong> — the 500M MLMA hard cap, the Year 3
-                emissions end date, the Genesis 200 supply cap, and hex exclusivity — cannot
+                <strong>Immutable parameters</strong>. The 500M MLMA hard cap, the Year 3
+                emissions end date, the Genesis 200 supply cap, and hex exclusivity. Cannot
                 be changed through governance. All other reward parameters are subject to
                 governance modification with notice as described in the{' '}
                 <Link
@@ -886,13 +885,15 @@ export default function TokenRewardsRiskPage() {
                   but the ruling framework may be analogous.
                 </p>
                 <p>
-                  Operators receiving MLMA through vesting events (boot tranche or monthly
-                  vesting tranches) may recognize ordinary income at the time tokens become
-                  subject to the operator&rsquo;s control, valued at the MLMA fair market
-                  value on that date, with a separate capital-gain or -loss event on later
-                  sale. The <strong>31,250 MLMA boot tranche</strong> and each{' '}
-                  <strong>~7,813 MLMA monthly vesting tranche</strong> would each separately
-                  trigger a potential income recognition event under this framework.
+                  Operators receiving MLMA through vesting events (boot tranche, PONO tranche,
+                  or operational milestone tranches) may recognize ordinary income at the time
+                  tokens become subject to the operator&rsquo;s control, valued at the MLMA
+                  fair market value on that date, with a separate capital-gain or -loss event
+                  on later sale. The <strong>18,750 MLMA boot tranche</strong>, the{' '}
+                  <strong>18,750 MLMA PONO tranche</strong>, and each subsequent milestone
+                  tranche (<strong>25,000 / 25,000 / 37,500 MLMA</strong> at the 6-, 9-, and
+                  12-month milestones) would each separately trigger a potential income
+                  recognition event under this framework.
                 </p>
                 <p>
                   State and local tax treatment varies.{' '}
@@ -949,7 +950,7 @@ export default function TokenRewardsRiskPage() {
             <div className="clause-body">
               <p>
                 The network relies on third-party systems including cloud infrastructure
-                providers, Cardano, Hedera, and Base blockchain networks, hardware component
+                providers, Cardano and Base blockchain networks, hardware component
                 manufacturers, environmental data registries, oracle networks,{' '}
                 <strong>LayerZero cross-chain bridge infrastructure</strong>, and external
                 APIs. Failures, changes, or discontinuation in any of these systems may affect
@@ -1094,7 +1095,7 @@ export default function TokenRewardsRiskPage() {
               </div>
 
               <div className="sig-strip">
-                <div className="label">— END OF DOCUMENT</div>
+                <div className="label">- END OF DOCUMENT</div>
                 <p className="text">
                   Mālama Labs, Inc. · Token &amp; Rewards Risk Disclosure · Effective April 11,
                   2026 · Last Updated April 28, 2026 (v2)

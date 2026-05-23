@@ -44,7 +44,7 @@ export default function SiteFooter() {
           <div className="lg:col-span-2">
             <p className="font-serif text-[1.65rem] font-medium tracking-tight text-malama-ink">Mālama Labs</p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-malama-ink-dim">
-              Cryptographic environmental intelligence. Hardware-signed data anchored to Cardano, Hedera, and Base.
+              Cryptographic environmental intelligence. Hardware-signed data anchored to Cardano and Base.
             </p>
             <a
               href={AIPOWER_URL}

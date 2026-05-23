@@ -6,7 +6,7 @@ import DocsPageShell from '../_shared/DocsPageShell'
 export const metadata: Metadata = {
   title: 'Operator Guide · Mālama Labs',
   description:
-    'Genesis 200 Operator Guide — deployment, hardware bill of materials, node operation, PONO qualification, support and FAQ. Companion to shipped hardware runbooks.',
+    'Genesis 200 Operator Guide. Deployment, hardware bill of materials, node operation, PONO qualification, support and FAQ. Companion to shipped hardware runbooks.',
 }
 
 export default function OperatorsPage() {
@@ -86,7 +86,7 @@ export default function OperatorsPage() {
                 <li><strong style={{ color: 'var(--mlma-ink)' }}>Power on and wait for device boot.</strong> The secure element provisions its Device DID on first boot, approximately 60 seconds. The status LED sequence confirms successful provisioning.</li>
                 <li><strong style={{ color: 'var(--mlma-ink)' }}>Register via the Mālama dApp.</strong> Connect your Base or Cardano wallet. Enter your node&rsquo;s Device DID. This binds your hardware identity to your NFT-HEX geographic assignment and triggers the boot tranche unlock (18,750 MLMA, 15%).</li>
                 <li><strong style={{ color: 'var(--mlma-ink)' }}>Confirm network connectivity.</strong> The dApp dashboard shows live status: online or offline, last heartbeat timestamp, validation queue. First SaveCard production should appear within 15 to 30 minutes of successful registration.</li>
-                <li><strong style={{ color: 'var(--mlma-ink)' }}>Await Genesis audit clearance.</strong> Validation distributions begin after the Genesis Hex Sale audit confirms your node is operational and compliant. Audit takes place in October 2026.</li>
+                <li><strong style={{ color: 'var(--mlma-ink)' }}>Await Genesis audit clearance.</strong> Validation distributions begin after the Genesis Hex Sale audit confirms your node is operational and compliant. Audit takes place in early 2027.</li>
                 <li><strong style={{ color: 'var(--mlma-ink)' }}>Begin the 90-day PONO qualifying period.</strong> From successful boot, you have 90 days of continuous operation to qualify for PONO. See Section D below.</li>
               </ol>
 
@@ -181,7 +181,7 @@ export default function OperatorsPage() {
               </ol>
 
               <h3>Genesis Hex Sale audit</h3>
-              <p>MLMA validation distributions do not begin automatically at a calendar date. They begin after the audit confirms your node is operational, compliant, and properly registered. The audit takes place in <strong>October 2026</strong>.</p>
+              <p>MLMA validation distributions do not begin automatically at a calendar date. They begin after the audit confirms your node is operational, compliant, and properly registered. The audit takes place in <strong>early 2027</strong>.</p>
               <ul>
                 <li>Nodes that pass receive full Year 1 Genesis multiplier benefits (1.5×) from the clearance date.</li>
                 <li>Nodes that do not yet pass are notified with specific remediation steps.</li>
@@ -304,7 +304,7 @@ export default function OperatorsPage() {
               <p>No. A Genesis 200 Hex Node is a validation node, not a sensor. You receive MLMA distributions for validating data produced by enterprise sensor deployments (ERW sites, biochar kilns, AI data center racks) operated by carbon project developers, data center operators, and industrial clients. You do not need to deploy any sensors. Sensor deployment by a node operator is optional and would increase local data volume in your zone, potentially increasing your validation weight.</p>
 
               <p><strong style={{ color: 'var(--mlma-ink)' }}>Is operating a Hex Node passive income?</strong></p>
-              <p>No. Operating a Genesis 200 Hex Node requires labor: physical installation, network setup, ongoing uptime maintenance, and active stewardship of validation work. <strong>Only 15% of the MLMA allocation unlocks at boot.</strong> The remaining 85% requires sustained operational performance across 12 months. Missed milestones forfeit unvested tranches.</p>
+              <p>No. Operating a Genesis 200 Hex Node requires labor: physical installation, network setup, ongoing uptime maintenance, and active stewardship of validation work. <strong>Only 15% of the MLMA allocation unlocks at boot.</strong> The remaining 85% vests against operational milestones (PONO 90-day, 6-month, 9-month, 12-month). Missed milestones forfeit unvested tranches.</p>
 
               <p><strong style={{ color: 'var(--mlma-ink)' }}>What happens to my node if I stop operating it?</strong></p>
               <p>Nodes offline for 90+ consecutive days trigger PONO revocation review. Affected operators forfeit unvested milestone tranches to the post-emission governance reserve. Vested MLMA remains in your wallet. Your NFT-HEX may be reclaimed by the protocol via governance vote.</p>
@@ -316,7 +316,7 @@ export default function OperatorsPage() {
               <p>The 1.5× Stewardship Multiplier applies to operators on Indigenous lands or in partnership with Native communities, in regions where the Stewardship Pool has been activated via FPIC consultation, cultural advisor sign-off, and governance supermajority. Regional activation is community-led. Operators interested in qualifying for the Stewardship multiplier should contact the Mālama team to discuss partnership pathways.</p>
 
               <div className="sig-strip">
-                <div className="label">— END OF GUIDE</div>
+                <div className="label">- END OF GUIDE</div>
                 <p className="text">Mālama Labs, Inc. · Genesis 200 Operator Guide · Companion to shipped hardware runbooks</p>
                 <p className="footnote">Questions: <a href="mailto:support@malamalabs.com" style={{ color: 'var(--mlma-accent)' }}>support@malamalabs.com</a> · Discord communities are the fastest path to resolution.</p>
               </div>

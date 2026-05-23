@@ -28,7 +28,7 @@ const HOW_IT_WORKS = [
   {
     step: '02',
     title: 'Share your link',
-    desc: 'Post it anywhere — Twitter, Telegram, YouTube, newsletters. Every visit is tracked for 30 days.',
+    desc: 'Post it anywhere. Twitter, Telegram, YouTube, newsletters. Every visit is tracked for 30 days.',
     icon: Share2,
   },
   {
@@ -81,7 +81,7 @@ export default function PartnersPage() {
             <span className="text-malama-accent">spreading the word</span>
           </h1>
           <p className="text-lg text-malama-ink-dim max-w-2xl leading-relaxed mb-10">
-            Share your referral link. When someone buys a Genesis Hex Node, you earn USDC — automatically,
+            Share your referral link. When someone buys a Genesis Hex Node, you earn USDC. Automatically,
             on every sale. No caps, no waiting periods.
           </p>
           <div className="flex flex-wrap gap-4">
@@ -199,7 +199,7 @@ export default function PartnersPage() {
             },
             {
               q: 'Is there a referral cap?',
-              a: 'No. Refer as many buyers as you like. The 400 Genesis nodes are the only natural limit.',
+              a: 'No. Refer as many buyers as you like. The 200 Genesis hex zones are the only natural limit.',
             },
             {
               q: 'How long does the cookie last?',

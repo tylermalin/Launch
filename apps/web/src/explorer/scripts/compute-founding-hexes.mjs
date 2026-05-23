@@ -131,7 +131,7 @@ function buildHexRecord(input) {
     zoneClassification: null,
     geographicMultiplier: null,
     dataDemandScore: null,
-    notes: 'Founding team test hex — held by Malama Labs Inc. internal team',
+    notes: 'Founding team test hex. Held by Malama Labs Inc. internal team',
   };
 }
 

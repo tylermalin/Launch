@@ -8,14 +8,16 @@ import { requireGenesisContract } from '@/lib/genesis-contract'
 
 export const runtime = 'nodejs'
 
-const GENESIS_CONTRACT = requireGenesisContract()
-
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const sessionId = searchParams.get('session_id')
   if (!sessionId) {
     return NextResponse.json({ error: 'session_id required' }, { status: 400 })
   }
+
+  // Lazy at request time, not module top-level — avoids blocking Next.js
+  // build "Collect page data" when the env var isn't set on a preview branch.
+  const GENESIS_CONTRACT = requireGenesisContract()
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
@@ -93,7 +95,7 @@ export async function GET(req: Request) {
     }
     return NextResponse.json({
       state: 'processing',
-      message: 'Payment received — minting your NFT…',
+      message: 'Payment received. Minting your NFT…',
     })
   } catch {
     return NextResponse.json({ state: 'error', error: 'Invalid session' }, { status: 404 })

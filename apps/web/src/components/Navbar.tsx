@@ -1,18 +1,33 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
+type SessionData = { auth: 'auth0' | 'email' | null }
+
 const topNavLinks = [
-  { href: '/presale', label: 'Reserve', active: (p: string) => p.startsWith('/presale') },
-  { href: '/docs', label: 'Docs', active: (p: string) => p.startsWith('/docs') },
-  { href: '/timeline', label: 'Timeline', active: (p: string) => p.startsWith('/timeline') },
-  { href: '/explorer', label: 'Explorer', active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
+  { href: '/presale',  label: 'Reserve',                 active: (p: string) => p.startsWith('/presale') },
+  { href: '/docs',     label: 'Docs',                    active: (p: string) => p.startsWith('/docs') },
+  { href: '/timeline', label: 'Timeline',                active: (p: string) => p.startsWith('/timeline') },
+  { href: '/explorer', label: 'Explorer',                active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
   { href: '/partners', label: 'Become A Launch Partner', active: (p: string) => p.startsWith('/partners') },
 ]
 
 export default function Navbar() {
   const pathname = usePathname()
+  // null = session check not yet resolved; show Sign In until confirmed
+  const [session, setSession] = useState<SessionData | null>(null)
+
+  useEffect(() => {
+    fetch('/api/auth/session', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : { auth: null }))
+      .then((d: SessionData) => setSession(d))
+      .catch(() => setSession({ auth: null }))
+  }, [])
+
+  const isAuthed  = session?.auth != null
+  const dashLabel = isAuthed ? 'User Dashboard' : 'Sign In'
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-malama-line bg-malama-bg/80 backdrop-blur-[14px]">
@@ -21,7 +36,6 @@ export default function Navbar() {
           href="/"
           className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-malama-accent/50"
         >
-          {/* Brand logo mark */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo-mark.png"
@@ -31,7 +45,6 @@ export default function Navbar() {
             className="shrink-0 drop-shadow-[0_0_10px_rgba(101,217,165,0.3)] transition-[filter] duration-300 hover:drop-shadow-[0_0_18px_rgba(101,217,165,0.5)]"
             aria-hidden="true"
           />
-          {/* Wordmark */}
           <span className="font-black tracking-tight text-white text-[1.05rem] leading-none drop-shadow-[0_0_18px_rgba(101,217,165,0.18)] transition-[filter] duration-300 hover:drop-shadow-[0_0_26px_rgba(101,217,165,0.35)]">
             Mālama Labs
           </span>
@@ -49,15 +62,16 @@ export default function Navbar() {
               {label}
             </Link>
           ))}
+
           <Link
             href="/dashboard"
-            className={`ml-1 shrink-0 whitespace-nowrap rounded-malama-sm px-[18px] py-[11px] font-mono text-[11px] font-semibold uppercase tracking-[0.1em] transition-transform hover:-translate-y-px sm:ml-2 ${
+            className={`ml-1 min-w-[10rem] shrink-0 whitespace-nowrap rounded-malama-sm px-[18px] py-[11px] text-center font-mono text-[11px] font-semibold uppercase tracking-[0.1em] transition-transform hover:-translate-y-px sm:ml-2 ${
               pathname.startsWith('/dashboard')
                 ? 'bg-malama-accent text-malama-bg ring-1 ring-malama-accent/60'
                 : 'bg-malama-accent text-malama-bg hover:shadow-[0_8px_24px_rgba(196,240,97,0.2)]'
             }`}
           >
-            Launch App
+            {dashLabel}
           </Link>
         </div>
       </div>

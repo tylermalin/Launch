@@ -282,7 +282,7 @@ export default function GenesisHexList({ className = '' }: { className?: string 
                             Reserve
                           </Link>
                         ) : (
-                          <span className="text-gray-600 text-[10px]">—</span>
+                          <span className="text-gray-600 text-[10px]">-</span>
                         )}
                       </td>
                     </tr>

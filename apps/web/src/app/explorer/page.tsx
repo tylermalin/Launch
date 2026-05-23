@@ -25,18 +25,23 @@ import type {
 } from '@/explorer/components/hex-map.types';
 
 /**
- * H3 indexes that should render as "reserved-founding" (held by the
- * Mālama Labs team) even though the upstream /api/hexes only flags the
- * Dallas HQ. Add IDs here as the team confirms which existing pool cells
- * correspond to each founder location. Currently empty — Dallas HQ will
- * still show as `reserved` per upstream data.
+ * The 5 Mālama Labs reserved nodes (one per region, H3 Res 3).
+ * These arrive pre-marked as `reserved` from /api/hexes — no override needed.
+ * Kept here as a lookup so the explorer can label them distinctly in the panel.
+ *
+ * Res-6 lab cells (~36 km² each — city-district scale):
+ *   8629a1d77ffffff → West Coast    (Los Angeles, CA)
+ *   865d144efffffff → Pacific       (Haiku, Maui, HI)
+ *   8628846e7ffffff → Mountain West (Idaho City, ID)
+ *   862740767ffffff → Midwest       (Sister Bay, WI)
+ *   8626cb917ffffff → South & East  (Dallas, TX)
  */
-const FOUNDING_HEX_OVERRIDES: Record<
-  string,
-  { operator: string; label: string; notes?: string }
-> = {
-  // Example shape — populate once we know the existing-pool H3 IDs:
-  // '8428abcffffffff': { operator: 'Tyler Malin', label: 'Los Angeles' },
+const MALAMA_RESERVED_HEX_LABELS: Record<string, { operator: string; label: string }> = {
+  '8629a1d77ffffff': { operator: 'Mālama Labs', label: 'Los Angeles'  },
+  '865d144efffffff': { operator: 'Mālama Labs', label: 'Haiku, Hawaii' },
+  '8628846e7ffffff': { operator: 'Mālama Labs', label: 'Idaho City'   },
+  '862740767ffffff': { operator: 'Mālama Labs', label: 'Sister Bay'   },
+  '8626cb917ffffff': { operator: 'Mālama Labs', label: 'Dallas'       },
 };
 
 // HexMap pulls in mapbox-gl which is browser-only; load it client-side only.
@@ -96,27 +101,6 @@ export default function ExplorerPage() {
     mapRef.current?.flyTo(dest.center, dest.zoom);
   };
 
-  // Founding-hex jump targets. Pulled from the manifest after any
-  // FOUNDING_HEX_OVERRIDES are applied — currently this returns just
-  // Dallas HQ (the only upstream `reserved` cell). Add overrides above
-  // as team locations get mapped to existing pool IDs.
-  const foundingDestinations = manifest.hexes
-    .filter((h) => h.status === 'reserved-founding' || h.status === 'reserved')
-    .map((h) => ({
-      key: `founding-${h.h3Index}`,
-      label: h.locality ?? h.region,
-      operator: h.operator ?? '',
-      center: [h.centroidLng, h.centroidLat] as [number, number],
-      zoom: 8,
-    }));
-
-  const handleFoundingClick = (key: string) => {
-    const dest = foundingDestinations.find((d) => d.key === key);
-    if (!dest) return;
-    setActiveRegion(`founding:${dest.label}`);
-    mapRef.current?.flyTo(dest.center, dest.zoom);
-  };
-
   return (
     <div style={{ display: 'flex', width: '100%', height: 'calc(100vh - 4rem)', background: '#0f0f0f' }}>
       <div style={{ flex: 1, position: 'relative' }}>
@@ -130,11 +114,6 @@ export default function ExplorerPage() {
           onHexClick={({ hex }) => setSelected(hex)}
         />
         <RegionJumpBar activeRegion={activeRegion} onSelect={handleRegionClick} />
-        <FoundingHexBar
-          destinations={foundingDestinations}
-          activeRegion={activeRegion}
-          onSelect={handleFoundingClick}
-        />
         <ReviewBanner />
       </div>
       {selected && (
@@ -142,8 +121,8 @@ export default function ExplorerPage() {
           <HexPanel
             hex={selected}
             links={{
-              erc721MetadataUrl: `/api/erc721/${selected.h3Index}`,
-              cardanoReferenceNftUrl: `/api/cardano/${selected.h3Index}`,
+              erc721MetadataUrl: `/api/nft/${selected.nodeNumber}?hexId=${selected.h3Index}`,
+              cardanoReferenceNftUrl: null, // Cardano metadata endpoint not yet live
               purchaseAgreementUrl: '/legal/hex-node-purchase-agreement',
               termsAndConditionsUrl: '/legal',
               tokenRewardsRiskUrl: '/legal/token-rewards-risk',
@@ -222,24 +201,33 @@ function buildManifestFromApi(fc: {
     if (byH3.has(h3Index)) return; // already counted from the other chain
 
     const [lat, lng] = cellToLatLng(h3Index);
-    const override = FOUNDING_HEX_OVERRIDES[h3Index];
-    const upstreamReserved = Boolean(p.sold) || p.status === 'reserved' || p.isHQ;
-    const status: Phase1Hex['status'] = override
+    const malamaLabel = MALAMA_RESERVED_HEX_LABELS[h3Index];
+    const upstreamReserved = Boolean(p.sold) || p.status === 'reserved' || p.isHQ || Boolean((p as Record<string,unknown>).isMalamaReserved);
+    const status: Phase1Hex['status'] = malamaLabel
       ? 'reserved-founding'
       : upstreamReserved
       ? 'reserved'
       : 'available';
+
+    // All Genesis Res-3 regions are US territory (West, Pacific/AK, Mountain, Midwest, South).
+    const country = 'US';
+
+    // TODO: wire population dataset to compute zoneClassification at build time.
+    // For now, leave null and emit a dev warning.
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[explorer] zoneClassification not computed for ${h3Index} — no population dataset wired.`);
+    }
 
     byH3.set(h3Index, {
       nodeNumber: idx + 1,
       h3Index,
       h3Resolution: getResolution(h3Index),
       status,
-      operator: override?.operator ?? (p.isHQ ? 'Mālama HQ' : null),
+      operator: malamaLabel?.operator ?? null,
       region: p.regionLabel ?? p.region,
-      country: 'US', // upstream regions are all US except London/Tokyo; refine later
+      country,
       administrativeArea: null,
-      locality: override?.label ?? null,
+      locality: malamaLabel?.label ?? null,
       postalCode: null,
       centroidLat: lat,
       centroidLng: lng,
@@ -248,7 +236,7 @@ function buildManifestFromApi(fc: {
       dataDemandScore: p.dataScore ?? null,
       listingReferenceUsd: p.startingBid ?? 2228,
       genesisReserveUsd: 2000,
-      notes: override?.notes,
+      notes: undefined,
     });
   });
 
@@ -258,13 +246,13 @@ function buildManifestFromApi(fc: {
   return {
     schemaVersion: '1.0.0',
     manifestName: 'Phase 1 Hex Node Launchpad (live from /api/hexes)',
-    h3Resolution: hexes[0]?.h3Resolution ?? 4,
+    h3Resolution: hexes[0]?.h3Resolution ?? 5,
     totalCells: hexes.length,
     soldOrReserved: reservedCount,
     externalAvailable: hexes.length - reservedCount,
     lastUpdated: new Date().toISOString().slice(0, 10),
     wavesPolicy: 'Live catalog from /api/hexes',
-    regions: ['Los Angeles', 'New York', 'London', 'Tokyo', 'Idaho', 'Dallas'],
+    regions: ['West Coast', 'Pacific & Alaska', 'Mountain West', 'Midwest', 'South & East'],
     statusVocabulary: {
       available: 'Open for reservation',
       upcoming: 'Held back for a future wave',
@@ -343,87 +331,6 @@ function RegionJumpBar({
   );
 }
 
-function FoundingHexBar({
-  destinations,
-  activeRegion,
-  onSelect,
-}: {
-  destinations: Array<{ key: string; label: string; operator: string; center: [number, number]; zoom: number }>;
-  activeRegion: string;
-  onSelect: (key: string) => void;
-}) {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: 64, // sits directly under the primary region pill bar
-        left: '50%',
-        transform: 'translateX(-50%)',
-        display: 'flex',
-        gap: 4,
-        background: 'rgba(15,15,15,0.92)',
-        border: '1px solid #2a2a2a',
-        borderRadius: 999,
-        padding: 4,
-        boxShadow: '0 4px 14px rgba(0,0,0,0.4)',
-        zIndex: 10,
-      }}
-    >
-      <div
-        style={{
-          padding: '8px 12px',
-          fontFamily: 'var(--font-mono, monospace)',
-          fontSize: 10,
-          color: '#e8b04a',
-          textTransform: 'uppercase',
-          letterSpacing: '0.12em',
-          alignSelf: 'center',
-        }}
-      >
-        Founders ·
-      </div>
-      {destinations.map((d) => {
-        const isActive = activeRegion === `founding:${d.label}`;
-        return (
-          <button
-            key={d.key}
-            onClick={() => onSelect(d.key)}
-            title={`${d.label} · ${d.operator}`}
-            style={{
-              padding: '8px 14px',
-              borderRadius: 999,
-              border: isActive ? '1px solid #e8b04a' : '1px solid transparent',
-              background: isActive ? '#2a1f0a' : 'transparent',
-              color: isActive ? '#e8b04a' : '#c8c8c8',
-              fontFamily: 'var(--font-mono, monospace)',
-              fontSize: 11,
-              fontWeight: isActive ? 600 : 500,
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              cursor: 'pointer',
-              transition: 'all 120ms ease',
-            }}
-            onMouseEnter={(e) => {
-              if (!isActive) {
-                (e.currentTarget as HTMLButtonElement).style.background = '#1f1500';
-                (e.currentTarget as HTMLButtonElement).style.color = '#e8b04a';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isActive) {
-                (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-                (e.currentTarget as HTMLButtonElement).style.color = '#c8c8c8';
-              }
-            }}
-          >
-            {d.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 function ReviewBanner() {
   return (
     <div
@@ -443,7 +350,7 @@ function ReviewBanner() {
         zIndex: 10,
       }}
     >
-      Review build · /explorer · 200 hexes seeded
+      Genesis Explorer · H3 Res 6 · 200 hexes · 5 regions
     </div>
   );
 }

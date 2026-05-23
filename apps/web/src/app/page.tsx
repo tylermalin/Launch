@@ -76,7 +76,7 @@ export default function Home() {
             custom={3}
             className="mb-10 max-w-2xl text-base leading-relaxed text-malama-ink-dim"
           >
-            The Genesis 200 program is the first and only opportunity to acquire a Hex Node validator license at founder pricing. 200 total nodes. $2,000 entry. 125,000 MLMA allocation. Hardware ships Q4 2026 · mainnet live Q4 2026 ahead of TGE.
+            The Genesis 200 program is the first and only opportunity to acquire a Hex Node validator license at founder pricing. 200 total nodes. $2,000 entry. 125,000 MLMA allocation. Hardware ships end of December 2026 · mainnet live Q4 2026 ahead of TGE.
           </motion.p>
 
           {/* Key fact pills */}
@@ -173,7 +173,7 @@ export default function Home() {
               </div>
               <h3 className="mb-3 font-serif text-2xl text-malama-ink">Carbon SaveCards</h3>
               <p className="mb-4 text-sm leading-relaxed text-malama-ink-dim">
-                Hardware-signed environmental telemetry direct from the field. Biochar, ERW, forestry, soil carbon. Every reading is ECDSA-signed by an ATECC608B secure enclave — private key burned at manufacture, never exported from the silicon.{' '}
+                Hardware-signed environmental telemetry direct from the field. Biochar, ERW, forestry, soil carbon. Every reading is ECDSA-signed by an ATECC608B secure enclave. Private key burned at manufacture, never exported from the silicon.{' '}
                 <a href={SOURCE_SAVECARDS} className="text-malama-accent underline-offset-2 hover:underline">
                   2,786+ on-chain SaveCards
                 </a>
@@ -260,7 +260,7 @@ export default function Home() {
               {
                 n: '01',
                 title: 'Direct Sensor Capture',
-                body: 'IoT sensors capture high-frequency data at the source. Mālama Genesis nodes for environmental sites. Rack-mount AI Power Sensors for data centers. Every reading is ECDSA-signed by an ATECC608B secure enclave with the private key burned at manufacture — never exported from the silicon. The signature exists before the data leaves the hardware.',
+                body: 'IoT sensors capture high-frequency data at the source. Mālama Genesis nodes for environmental sites. Rack-mount AI Power Sensors for data centers. Every reading is ECDSA-signed by an ATECC608B secure enclave with the private key burned at manufacture. Never exported from the silicon. The signature exists before the data leaves the hardware.',
               },
               {
                 n: '02',
@@ -449,11 +449,11 @@ export default function Home() {
             >
               <div className="mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-accent">
                 <span className="h-1.5 w-1.5 rounded-full bg-malama-accent" />
-                Genesis Phase · Years 1–3
+                Genesis Phase · Years 1-3
               </div>
               <h3 className="mb-4 font-serif text-2xl text-malama-ink">Founding cohort premium</h3>
               <ul className="space-y-3 text-sm leading-relaxed text-malama-ink-dim">
-                <li>Higher reward density — protocol is bootstrapping the validator network at 200 nodes.</li>
+                <li>Higher reward density. Protocol is bootstrapping the validator network at 200 nodes.</li>
                 <li>Genesis 200 operators receive lifetime protocol rights, including rights to future product streams added to the network.</li>
                 <li>Founding cohort receives preferential allocation in geographic cells with highest long-term multipliers.</li>
                 <li>Protocol emissions allocated at maximum bootstrap rate during network formation.</li>
@@ -470,7 +470,7 @@ export default function Home() {
             >
               <div className="mb-4 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-malama-ink-dim">
                 <span className="h-1.5 w-1.5 rounded-full bg-malama-ink-dim" />
-                Steady State · Years 4–5
+                Steady State · Years 4-5
               </div>
               <h3 className="mb-4 font-serif text-2xl text-malama-ink">Fee-based revenue model</h3>
               <ul className="space-y-3 text-sm leading-relaxed text-malama-ink-dim">
@@ -614,7 +614,7 @@ export default function Home() {
               The Hex Node Hardware
             </motion.h2>
             <p className="mb-12 text-center text-lg text-malama-ink-dim">
-              Everything you need to validate carbon and compute data — shipped to your door.
+              Everything you need to validate carbon and compute data. Shipped to your door.
             </p>
             <div className="flex flex-col gap-8">
               <motion.div
@@ -627,7 +627,7 @@ export default function Home() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/hardware-exploded.png"
-                  alt="Mālama Hex Node — full hardware exploded view"
+                  alt="Mālama Hex Node. Full hardware exploded view"
                   className="h-auto w-full object-cover"
                 />
               </motion.div>
@@ -642,7 +642,7 @@ export default function Home() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/hardware-views.png"
-                  alt="Mālama Hex Node — enclosure, power system, sensor and network views"
+                  alt="Mālama Hex Node. Enclosure, power system, sensor and network views"
                   className="h-auto w-full object-cover"
                 />
               </motion.div>
@@ -699,7 +699,6 @@ export default function Home() {
                       ['Secure element', 'ATECC608B', 'ATECC608B'],
                       ['OS', 'Ubuntu 22.04 LTS', 'Ubuntu 24.04 LTS'],
                       ['Uptime', '99.0%', '99.9%+ for bonus'],
-                      ['Anchoring', 'Cardano + Base', 'Cardano + Hedera + Base'],
                     ].map(([c, min, rec]) => (
                       <tr key={c} className="border-b border-malama-line last:border-0">
                         <td className="px-4 py-3 font-semibold text-malama-ink">{c}</td>
@@ -803,7 +802,7 @@ export default function Home() {
                 { label: 'Available', value: '195' },
                 { label: 'Entry price', value: '$2,000' },
                 { label: 'MLMA allocation', value: '125,000' },
-                { label: 'Delivery', value: 'Q4 2026' },
+                { label: 'Delivery', value: 'End of Dec 2026' },
               ].map(({ label, value }) => (
                 <div key={label} className="card-hover rounded-malama border border-malama-line bg-malama-elev p-4 text-center">
                   <div className="font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">{label}</div>

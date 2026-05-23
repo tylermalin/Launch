@@ -167,7 +167,7 @@ export default function LaunchClient({ hasMagicPublishableKey }: { hasMagicPubli
     <div className="mx-auto max-w-lg px-4 py-16">
       <div className="mb-10 text-center">
         <Wallet className="mx-auto mb-4 h-14 w-14 text-malama-teal" />
-        <h1 className="text-3xl font-black text-white">Launch app — Magic wallet</h1>
+        <h1 className="text-3xl font-black text-white">Launch app. Magic wallet</h1>
         <p className="mt-2 text-gray-400 text-sm leading-relaxed">
           After paying with card, sign in with the <strong className="text-gray-200">same email</strong> you used at
           checkout. Magic will email you a one-time code (or magic link). Then we mint your Genesis NFT to your
@@ -190,13 +190,13 @@ export default function LaunchClient({ hasMagicPublishableKey }: { hasMagicPubli
 
       <label className="block mb-4">
         <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
-          Stripe checkout session <span className="text-gray-600 font-normal">(optional — paste if claim fails)</span>
+          Stripe checkout session <span className="text-gray-600 font-normal">(optional. Paste if claim fails)</span>
         </span>
         <input
           type="text"
           value={stripeSessionId}
           onChange={(e) => setStripeSessionId(e.target.value)}
-          placeholder="cs_test_… — from card-complete URL ?session_id=… (needed after server restart)"
+          placeholder="cs_test_…. From card-complete URL ?session_id=… (needed after server restart)"
           className="mt-1 w-full rounded-xl border border-gray-800 bg-black/50 px-4 py-3 font-mono text-sm text-white placeholder:text-gray-600"
           autoComplete="off"
           spellCheck={false}
@@ -233,7 +233,7 @@ export default function LaunchClient({ hasMagicPublishableKey }: { hasMagicPubli
       </button>
 
       <p className="mt-6 text-center text-xs text-gray-600">
-        Opens Magic Email OTP — enter the code from email to finish sign-in, then we claim your mint automatically.
+        Opens Magic Email OTP. Enter the code from email to finish sign-in, then we claim your mint automatically.
       </p>
 
       <Link href="/presale" className="mt-10 block text-center text-gray-500 hover:text-white text-sm">

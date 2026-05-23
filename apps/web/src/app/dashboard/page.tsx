@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, FormEvent } from 'react'
+import { useState, useEffect, FormEvent, ChangeEvent } from 'react'
 import { useWallet } from '@meshsdk/react'
 import { useAccount, useConnect } from 'wagmi'
 import {
@@ -14,8 +14,222 @@ import {
   TrendingUp,
   Lock,
   Mail,
+  Loader2,
+  Pencil,
 } from 'lucide-react'
 import Link from 'next/link'
+
+// ─── Shipping address (mirrors lib/shipping-store.ts) ────────────────────────
+
+interface ShippingAddress {
+  fullName: string
+  line1: string
+  line2?: string
+  city: string
+  state: string
+  postalCode: string
+  country: string
+  phone?: string
+  savedAt?: string
+}
+
+type ShippingPhase =
+  | { tag: 'idle' }
+  | { tag: 'loading' }
+  | { tag: 'view'; address: ShippingAddress }
+  | { tag: 'edit'; address: ShippingAddress | null }
+  | { tag: 'saving' }
+  | { tag: 'error'; message: string }
+
+function ShippingAddressSection({ email }: { email: string }) {
+  const [phase, setPhase] = useState<ShippingPhase>({ tag: 'loading' })
+  const [form, setForm] = useState({
+    fullName: '', line1: '', line2: '', city: '', state: '', postalCode: '', country: 'US', phone: '',
+  })
+
+  useEffect(() => {
+    if (!email) { setPhase({ tag: 'idle' }); return }
+    fetch(`/api/shipping?email=${encodeURIComponent(email)}`)
+      .then((r) => r.json())
+      .then((d: { address: ShippingAddress | null }) => {
+        if (d.address) {
+          setPhase({ tag: 'view', address: d.address })
+          setForm({
+            fullName: d.address.fullName,
+            line1: d.address.line1,
+            line2: d.address.line2 ?? '',
+            city: d.address.city,
+            state: d.address.state,
+            postalCode: d.address.postalCode,
+            country: d.address.country,
+            phone: d.address.phone ?? '',
+          })
+        } else {
+          setPhase({ tag: 'edit', address: null })
+        }
+      })
+      .catch(() => setPhase({ tag: 'edit', address: null }))
+  }, [email])
+
+  function fieldHandler(key: keyof typeof form) {
+    return (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+      setForm((f) => ({ ...f, [key]: e.target.value }))
+  }
+
+  async function save(e: FormEvent) {
+    e.preventDefault()
+    setPhase({ tag: 'saving' })
+    try {
+      const res = await fetch('/api/shipping', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, email, claimId: `dashboard-${email}` }),
+      })
+      const data = (await res.json()) as { ok?: boolean; address?: ShippingAddress; error?: string }
+      if (!res.ok || !data.ok) {
+        setPhase({ tag: 'error', message: data.error ?? 'Save failed — please try again.' })
+        return
+      }
+      setPhase({ tag: 'view', address: data.address! })
+    } catch {
+      setPhase({ tag: 'error', message: 'Network error — please try again.' })
+    }
+  }
+
+  const inputClass =
+    'w-full rounded-lg border border-gray-700 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-gray-600 focus:border-malama-teal focus:outline-none'
+  const labelClass = 'mb-0.5 block text-[10px] font-bold uppercase tracking-wider text-gray-500'
+
+  return (
+    <section className="rounded-3xl border border-gray-800 bg-malama-card p-8 shadow-xl">
+      <div className="mb-5 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <MapPin className="h-6 w-6 text-malama-teal" />
+          <h2 className="text-lg font-bold uppercase tracking-wider text-white">Shipping address</h2>
+        </div>
+        {phase.tag === 'view' && (
+          <button
+            type="button"
+            onClick={() => {
+              const a = phase.address
+              setForm({
+                fullName: a.fullName,
+                line1: a.line1,
+                line2: a.line2 ?? '',
+                city: a.city,
+                state: a.state,
+                postalCode: a.postalCode,
+                country: a.country,
+                phone: a.phone ?? '',
+              })
+              setPhase({ tag: 'edit', address: a })
+            }}
+            className="flex items-center gap-1.5 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-xs font-bold text-gray-400 transition hover:border-malama-teal hover:text-malama-teal"
+          >
+            <Pencil className="h-3 w-3" /> Edit
+          </button>
+        )}
+      </div>
+
+      {phase.tag === 'loading' && (
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Loader2 className="h-4 w-4 animate-spin" /> Loading…
+        </div>
+      )}
+
+      {phase.tag === 'view' && (
+        <div className="space-y-0.5 text-sm">
+          <p className="font-semibold text-gray-200">{phase.address.fullName}</p>
+          <p className="text-gray-400">{phase.address.line1}{phase.address.line2 ? `, ${phase.address.line2}` : ''}</p>
+          <p className="text-gray-400">{phase.address.city}, {phase.address.state} {phase.address.postalCode}</p>
+          <p className="text-gray-400">{phase.address.country}</p>
+          {phase.address.phone && <p className="pt-1 text-gray-500 text-xs">{phase.address.phone}</p>}
+        </div>
+      )}
+
+      {(phase.tag === 'edit' || phase.tag === 'saving' || phase.tag === 'error') && (
+        <form onSubmit={save} className="space-y-3">
+          {phase.tag === 'error' && (
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+              {phase.message}
+            </div>
+          )}
+          <div>
+            <label className={labelClass}>Full name</label>
+            <input className={inputClass} required placeholder="Jane Smith" value={form.fullName} onChange={fieldHandler('fullName')} />
+          </div>
+          <div>
+            <label className={labelClass}>Address line 1</label>
+            <input className={inputClass} required placeholder="123 Main St" value={form.line1} onChange={fieldHandler('line1')} />
+          </div>
+          <div>
+            <label className={labelClass}>Line 2 <span className="normal-case font-normal text-gray-600">(optional)</span></label>
+            <input className={inputClass} placeholder="Apt 4B" value={form.line2} onChange={fieldHandler('line2')} />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className={labelClass}>City</label>
+              <input className={inputClass} required placeholder="Los Angeles" value={form.city} onChange={fieldHandler('city')} />
+            </div>
+            <div>
+              <label className={labelClass}>State / Province</label>
+              <input className={inputClass} required placeholder="CA" value={form.state} onChange={fieldHandler('state')} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className={labelClass}>Postal code</label>
+              <input className={inputClass} required placeholder="90001" value={form.postalCode} onChange={fieldHandler('postalCode')} />
+            </div>
+            <div>
+              <label className={labelClass}>Country</label>
+              <select className={inputClass} value={form.country} onChange={fieldHandler('country')}>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="JP">Japan</option>
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+                <option value="SG">Singapore</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className={labelClass}>Phone <span className="normal-case font-normal text-gray-600">(optional)</span></label>
+            <input className={inputClass} type="tel" placeholder="+1 555 000 0000" value={form.phone} onChange={fieldHandler('phone')} />
+          </div>
+          <div className="flex gap-2 pt-1">
+            <button
+              type="submit"
+              disabled={phase.tag === 'saving'}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-malama-teal/50 bg-malama-teal/20 py-2.5 text-sm font-bold text-malama-teal transition hover:bg-malama-teal hover:text-black disabled:opacity-50"
+            >
+              {phase.tag === 'saving' && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+              {phase.tag === 'saving' ? 'Saving…' : 'Save address'}
+            </button>
+            {phase.tag !== 'saving' && (phase as { tag: string }).tag === 'edit' && (phase as { address: ShippingAddress | null }).address !== null && (
+              <button
+                type="button"
+                onClick={() => setPhase({ tag: 'view', address: (phase as { address: ShippingAddress }).address })}
+                className="rounded-lg border border-gray-700 px-4 text-sm font-bold text-gray-500 transition hover:text-white"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+      )}
+
+      {phase.tag === 'idle' && (
+        <p className="text-sm text-gray-600">Sign in to manage your shipping address.</p>
+      )}
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 function hexToAscii(hexStr: string | undefined) {
   if (!hexStr || typeof hexStr !== 'string') return ''
@@ -471,6 +685,8 @@ export default function Dashboard() {
         </div>
 
         <div className="space-y-8">
+          {emailUser && <ShippingAddressSection email={emailUser} />}
+
           <section className="rounded-3xl border border-gray-800 bg-malama-card p-8 shadow-xl">
             <div className="mb-6 flex items-center space-x-3">
               <TrendingUp className="h-8 w-8 text-malama-teal" />

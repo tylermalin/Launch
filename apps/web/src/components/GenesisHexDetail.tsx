@@ -154,7 +154,7 @@ export default function GenesisHexDetail({
           <h3 className="mb-3 text-xs font-black uppercase tracking-widest text-gray-500">Terms of sale</h3>
           <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed text-gray-400">
             <li>One-time Genesis entry covers hardware kit and geographic license for this H3 cell.</li>
-            <li>62,500 MLMA vests per operator schedule after verified hardware boot.</li>
+            <li>125,000 MLMA milestone-vested (boot · PONO · 6/9/12mo).</li>
             <li>Rewards depend on network data inflow; not guaranteed.</li>
             <li>
               Full preorder and purchase terms:{' '}
@@ -187,7 +187,7 @@ export default function GenesisHexDetail({
         {item.sold && (
           <p className="rounded-xl border border-gray-600/80 bg-gray-900/70 p-4 text-sm text-gray-300">
             <span className="font-black uppercase tracking-wider text-gray-400">SOLD</span>
-            {' — '}This Genesis NFT is not available for public purchase.
+            {'. '}This Genesis NFT is not available for public purchase.
           </p>
         )}
 
@@ -197,7 +197,7 @@ export default function GenesisHexDetail({
               href={`/presale?hex=${encodeURIComponent(item.hexId)}`}
               className="block w-full rounded-2xl bg-malama-accent py-4 text-center text-lg font-black text-white shadow-[0_0_30px_rgba(196,240,97,0.3)] transition-transform hover:scale-[1.02]"
             >
-              Reserve this hex — {formatGenesisListingUsd(GENESIS_ENTRY_USD)}
+              Reserve this hex. {formatGenesisListingUsd(GENESIS_ENTRY_USD)}
             </Link>
           ) : (
             <div className="rounded-2xl border border-gray-700 bg-gray-900/80 py-4 text-center text-sm font-bold text-gray-500">

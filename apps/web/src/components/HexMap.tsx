@@ -204,7 +204,7 @@ export default function HexMap() {
       const listing = Number(props.startingBid ?? 0)
       const listingLabel = formatGenesisListingUsd(listing)
       const id = String(props.id ?? '')
-      const score = props.dataScore ?? '—'
+      const score = props.dataScore ?? '-'
       const sold = props.sold === true || props.sold === 'true'
       const reserveLine = sold
         ? `<div class="mt-3 pt-3 border-t border-gray-700 text-[11px] text-gray-300 font-black uppercase tracking-wider">SOLD</div>`

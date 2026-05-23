@@ -6,7 +6,7 @@ import DocsPageShell from '../_shared/DocsPageShell'
 export const metadata: Metadata = {
   title: 'Pricing & Dynamics · Mālama Labs',
   description:
-    'Genesis 200 pricing — $2,000 entry, 125,000 MLMA milestone-conditional vesting, validation distribution formula, hex demand tiers, two economic phases. Aligned to Tokenomics Whitepaper v3.6.',
+    'Genesis 200 pricing. $2,000 entry, 125,000 MLMA milestone-conditional vesting, validation distribution formula, hex demand tiers, two economic phases. Aligned to Tokenomics Whitepaper v3.6.',
 }
 
 export default function PricingRoiPage() {
@@ -17,7 +17,7 @@ export default function PricingRoiPage() {
       eyebrowText="Genesis 200 · Pricing and dynamics"
       titleLead="Pricing &"
       titleEmphasis="Dynamics."
-      lede="Upfront cost, what you receive for it, and the mechanics that govern how validation distributions are calculated. Genesis 200 uses milestone-conditional vesting — 15% at boot, the remaining 85% earned across the first 12 months of operation."
+      lede="Upfront cost, what you receive for it, and the mechanics that govern how validation distributions are calculated. Genesis 200 uses milestone-conditional vesting. 15% at boot, the remaining 85% earned across the first 12 months of operation."
       metaRows={[
         { k: 'Entry', v: 'US$2,000', accent: true },
         { k: 'Hardware', v: '$380' },
@@ -86,7 +86,7 @@ export default function PricingRoiPage() {
                   <tr><td>Geographic license</td><td className="num"><strong>$1,620</strong></td><td>Non-exclusive operating rights for a specific H3 hex cell on the Mālama network. NFT-HEX minted on Cardano and Base at reservation.</td></tr>
                 </tbody>
               </table>
-              <p>Hardware ships <strong>September 2026</strong>. Geographic license is minted at reservation. Reservation window closes <strong>May 31, 2026</strong> or when all 195 external nodes are sold. Five nodes are reserved for Mālama Labs team and production use (Dallas / DFW area).</p>
+              <p>Hardware ships by <strong>end of December 2026</strong>. Geographic license is minted at reservation. Reservation closes when all 195 external nodes are sold. Five nodes are reserved for Mālama Labs team and production use (Dallas / DFW area).</p>
             </div>
           </section>
 
@@ -109,9 +109,9 @@ export default function PricingRoiPage() {
                 <tbody>
                   <tr><td>Boot tranche (registration)</td><td className="num">18,750 (15%)</td><td className="num">15%</td><td>Hardware registered, KYB complete, first signed reading recorded on Cardano</td></tr>
                   <tr><td>90-day PONO qualification</td><td className="num">18,750 (15%)</td><td className="num">30%</td><td>PONO credential issued per <Link href="/docs/operators#pono" style={{ color: 'var(--mlma-accent)' }}>Operator Guide</Link> requirements</td></tr>
-                  <tr><td>6-month operational</td><td className="num">25,000 (20%)</td><td className="num">50%</td><td>Continuous PONO eligibility, ≥99% uptime months 4 – 6, no tamper events, no falsification detected</td></tr>
-                  <tr><td>9-month operational</td><td className="num">25,000 (20%)</td><td className="num">70%</td><td>Continuous PONO eligibility, ≥99% uptime months 7 – 9, no tamper events, no falsification detected</td></tr>
-                  <tr><td>12-month operational</td><td className="num"><span className="accent">37,500 (30%)</span></td><td className="num"><span className="accent">100%</span></td><td>Continuous PONO eligibility, ≥99% uptime months 10 – 12, no tamper events, no falsification detected</td></tr>
+                  <tr><td>6-month operational</td><td className="num">25,000 (20%)</td><td className="num">50%</td><td>Continuous PONO eligibility, ≥99% uptime months 4-6, no tamper events, no falsification detected</td></tr>
+                  <tr><td>9-month operational</td><td className="num">25,000 (20%)</td><td className="num">70%</td><td>Continuous PONO eligibility, ≥99% uptime months 7-9, no tamper events, no falsification detected</td></tr>
+                  <tr><td>12-month operational</td><td className="num"><span className="accent">37,500 (30%)</span></td><td className="num"><span className="accent">100%</span></td><td>Continuous PONO eligibility, ≥99% uptime months 10-12, no tamper events, no falsification detected</td></tr>
                 </tbody>
               </table>
 
@@ -184,7 +184,7 @@ export default function PricingRoiPage() {
                   <tr><td>3</td><td className="num">800K MLMA</td><td>Expired</td><td className="num">800 to 1,200</td></tr>
                   <tr><td>4</td><td className="num">600K MLMA</td><td>Expired</td><td className="num">1,000 to 1,500</td></tr>
                   <tr><td>5</td><td className="num">400K MLMA</td><td>Expired</td><td className="num">1,200 to 1,800</td></tr>
-                  <tr><td>6 – 8</td><td className="num">Taper to ~67K</td><td>Expired</td><td className="num">1,500 to 2,500</td></tr>
+                  <tr><td>6-8</td><td className="num">Taper to ~67K</td><td>Expired</td><td className="num">1,500 to 2,500</td></tr>
                   <tr><td>9+</td><td className="num"><span className="warn-c">0 · revenue-funded</span></td><td>Expired</td><td className="num">Steady state</td></tr>
                 </tbody>
               </table>
@@ -197,9 +197,9 @@ export default function PricingRoiPage() {
               <table className="matrix">
                 <thead><tr><th>Phase</th><th>Period</th><th>Distribution source</th><th>Notes</th></tr></thead>
                 <tbody>
-                  <tr><td>Emission-dependent</td><td>Years 1 – 3</td><td>Predominantly emission pool</td><td>Year 1: 90% emissions / 10% revenue. Year 3: 55% / 45%.</td></tr>
-                  <tr><td>Transitioning</td><td>Years 4 – 5</td><td>Revenue-majority</td><td>Year 4: 35% emissions / 65% revenue. Year 5: 15% / 85%.</td></tr>
-                  <tr><td>Revenue-funded</td><td>Years 6 – 8</td><td>Predominantly revenue</td><td>Emissions taper to zero.</td></tr>
+                  <tr><td>Emission-dependent</td><td>Years 1-3</td><td>Predominantly emission pool</td><td>Year 1: 90% emissions / 10% revenue. Year 3: 55% / 45%.</td></tr>
+                  <tr><td>Transitioning</td><td>Years 4-5</td><td>Revenue-majority</td><td>Year 4: 35% emissions / 65% revenue. Year 5: 15% / 85%.</td></tr>
+                  <tr><td>Revenue-funded</td><td>Years 6-8</td><td>Predominantly revenue</td><td>Emissions taper to zero.</td></tr>
                   <tr><td>Permanent steady state</td><td>Years 9+</td><td><span className="accent">100% revenue</span></td><td>20% of protocol revenue distributed monthly to operators.</td></tr>
                 </tbody>
               </table>
@@ -245,7 +245,7 @@ export default function PricingRoiPage() {
               <p>MLMA is a utility token designed for network fee payment, staking, and governance. Regulatory classification varies by jurisdiction. Mālama Labs is engaged with qualified securities counsel on regulatory analysis prior to any public offering. <strong>Participation in Genesis 200 does not constitute an investment in a security.</strong> Consult qualified legal, tax, and financial advisors before reserving.</p>
 
               <div className="sig-strip">
-                <div className="label">— END OF PAGE</div>
+                <div className="label">- END OF PAGE</div>
                 <p className="text">Aligned with the MLMA Tokenomics Whitepaper. Actual distributions follow protocol rules and network conditions.</p>
                 <p className="footnote">No figures on this page constitute distribution guidance or forward-looking projections. Next: <Link href="/docs/phase-1-timeline" style={{ color: 'var(--mlma-accent)' }}>Phase 1 Timeline →</Link></p>
               </div>

@@ -26,8 +26,12 @@ import {
 } from '@/components/legal/PurchaseLegalAcknowledgement'
 
 // ─── Contract addresses ───────────────────────────────────────────────────────
-import { requireGenesisContract } from '@/lib/genesis-contract'
-const GENESIS_CONTRACT = requireGenesisContract()
+import { tryGetGenesisContract, GENESIS_CONTRACT_PLACEHOLDER } from '@/lib/genesis-contract'
+// Module-level fallback to placeholder so this client bundle builds + renders
+// even when the env var isn't set on a preview branch. The actual mint flow
+// (handleBasePayment) guards against the placeholder and surfaces a clear
+// error — so previews don't silently mint to a non-existent contract.
+const GENESIS_CONTRACT = (tryGetGenesisContract() ?? GENESIS_CONTRACT_PLACEHOLDER) as `0x${string}`
 const USDC_CONTRACT    = (process.env.NEXT_PUBLIC_MOCK_USDC_ADDRESS         ?? '0x1111111111111111111111111111111111111111') as `0x${string}`
 const PRICE_USDC       = parseUnits('2000', 6) // $2,000 USDC (6 decimals)
 
@@ -203,13 +207,23 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
         },
       })
     } catch (e) {
-      console.warn('wallet_watchAsset failed — manual import panel open', e)
+      console.warn('wallet_watchAsset failed. Manual import panel open', e)
     }
   }
 
   // ── Base payment flow ────────────────────────────────────────────────────
   const handleBasePayment = async () => {
     if (!publicClient || !evmAddress || !hexId) throw new Error('Wallet or hex not ready')
+
+    // Fail-fast at mint time if the env var wasn't set on this deployment.
+    // The placeholder address has no deployed contract — minting against it
+    // would silently fail or land in a confusing MetaMask "ownership details
+    // do not match" state. Surface the config error instead.
+    if (GENESIS_CONTRACT === GENESIS_CONTRACT_PLACEHOLDER) {
+      throw new Error(
+        'Mint not configured for this environment. NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS is missing. Set the deployed Genesis ERC-721 contract address on this Vercel project / branch and redeploy.',
+      )
+    }
 
     // 0. Enforce Base Sepolia — switch if needed
     const eth = (window as any).ethereum
@@ -259,7 +273,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
         args: [GENESIS_CONTRACT, PRICE_USDC],
       })
     } catch (e: any) {
-      throw new Error('USDC approval rejected — please approve in your wallet')
+      throw new Error('USDC approval rejected. Please approve in your wallet')
     }
     await publicClient.waitForTransactionReceipt({ hash: approveHash })
 
@@ -342,7 +356,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       } catch (err: any) {
         // CIP-30 error code 2 = user declined
         if (err?.code === 2 || err?.message?.toLowerCase().includes('declined')) {
-          throw new Error('Signing cancelled in Lace — mint aborted')
+          throw new Error('Signing cancelled in Lace. Mint aborted')
         }
         // Other errors (e.g. ProofGeneration) — log but allow mint to proceed
         console.warn('[CIP-8 signData]', err)
@@ -408,7 +422,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       setSuccessData(result)
       setStep(5)
     } catch (err: any) {
-      setError(err.message ?? 'Payment failed — please try again')
+      setError(err.message ?? 'Payment failed. Please try again')
     } finally {
       setLoading(false)
       setEvmTxStatus('')
@@ -450,8 +464,8 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                   Locate your HEX
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-400">
-                  Choose one of the 400 Genesis hex territories on the live map — 200 on Base, 200 on Cardano. You need a hex selected before you can
-                  pay with crypto or card.
+                  Choose one of the 200 Genesis hex zones on the live map. One mint per hex; credit-card purchases mirror across Base and Cardano. You need a hex
+                  selected before you can pay with crypto or card.
                 </p>
               </div>
 
@@ -468,7 +482,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-white">Selected hex</h3>
                   <p className={`mt-2 break-all font-mono text-sm ${hexId ? 'text-amber-400' : 'text-gray-500'}`}>
-                    {hexId ?? 'None yet — open the map to pick a territory'}
+                    {hexId ?? 'None yet. Open the map to pick a territory'}
                   </p>
                 </div>
                 <Link
@@ -511,7 +525,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-400">
                   Crypto: connect Cardano (Lace) and/or Base (MetaMask). Card: pay with Stripe, then open Launch App and
-                  sign in with Magic using the same email — your NFT mints to your embedded wallet on Base Sepolia.
+                  sign in with Magic using the same email. Your NFT mints to your embedded wallet on Base Sepolia.
                   Entry is $2,000 USDC or card checkout.
                 </p>
                 {hexId && (
@@ -551,7 +565,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 <div className="mx-auto max-w-xl space-y-6">
                   <p className="text-center text-sm leading-relaxed text-gray-500">
                     After checkout, your Genesis NFT is minted on Base to a new wallet we generate for you.
-                    You&apos;ll receive a private transfer link — treat it like a password — to send the NFT to
+                    You&apos;ll receive a private transfer link. Treat it like a password. To send the NFT to
                     MetaMask or another address when you want.
                   </p>
                   <label className="block text-left">
@@ -687,7 +701,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                   Complete setup to continue
                 </button>
                 <p className="text-xs font-bold uppercase tracking-widest text-gray-600">
-                  Mālama Genesis · 400 Total · 200 Base / 200 Cardano · One mint per hex
+                  200 hex zones · One mint per hex · Credit card purchases mirror across Base and Cardano
                 </p>
               </div>
             </motion.div>
@@ -721,7 +735,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 <div className="p-6 border-b border-gray-800 flex justify-between items-start gap-4">
                   <div>
                     <div className="font-bold text-white text-lg">Mālama Hex Node License NFT</div>
-                    <p className="text-sm text-gray-500 mt-1">Hardware + exclusive geographic license + 62,500 MLMA allocation + 12mo support</p>
+                    <p className="text-sm text-gray-500 mt-1">Hardware + exclusive geographic license + 125,000 MLMA milestone-vested allocation + 12mo support</p>
                     <p className="text-xs text-gray-600 mt-2 font-mono">Hex: {hexId}</p>
                     {paymentMode === 'card' && (
                       <p className="text-xs text-violet-400/90 mt-2 font-mono">Email: {cardEmail.trim()}</p>
@@ -742,7 +756,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
 
               <div className="grid grid-cols-3 gap-4 text-center">
                 {[
-                  { label: 'MLMA Allocation', value: '62.5K', sub: '25% at boot · 75% vested' },
+                  { label: 'MLMA Allocation', value: '125K', sub: 'milestone-vested (boot · PONO · 6/9/12mo)' },
                   {
                     label: 'Chain',
                     value: paymentMode === 'card' ? 'Base L2' : evmConnected ? 'Base L2' : 'Cardano',
@@ -753,7 +767,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                           ? 'ERC-721 NFT'
                           : 'CIP-25 Token',
                   },
-                  { label: 'Revenue Start', value: 'Oct 2026', sub: 'Hardware ships Sept' },
+                  { label: 'Revenue Start', value: '2027', sub: 'Hardware ships Dec 2026' },
                 ].map(({ label, value, sub }) => (
                   <div key={label} className="p-4 border border-gray-800 rounded-2xl bg-malama-deep">
                     <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">{label}</p>
@@ -903,7 +917,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 </p>
                 {successData.simulated && (
                   <p className="mt-2 text-xs text-amber-400/80 bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-1.5 inline-block">
-                    ⚠️ Dev simulation — set env vars for real on-chain mint
+                    ⚠️ Dev simulation. Set env vars for real on-chain mint
                   </p>
                 )}
               </div>

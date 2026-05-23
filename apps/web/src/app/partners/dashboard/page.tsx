@@ -306,7 +306,7 @@ function Dashboard({ data, onRefresh }: { data: DashboardData; onRefresh: () => 
                             <ExternalLink size={12} />
                           </a>
                         ) : (
-                          <span className="text-malama-ink-faint text-xs">—</span>
+                          <span className="text-malama-ink-faint text-xs">-</span>
                         )}
                       </td>
                     </tr>

@@ -182,7 +182,7 @@ function buildFoundingHex(founding) {
     dataDemandScore: null,
     listingReferenceUsd: 2228,
     genesisReserveUsd: 2000,
-    notes: founding.notes ?? 'Founding team test hex — held by Malama Labs Inc.',
+    notes: founding.notes ?? 'Founding team test hex. Held by Malama Labs Inc.',
   };
 }
 

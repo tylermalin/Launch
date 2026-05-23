@@ -58,7 +58,7 @@ export default function LegalIndexPage() {
                 <span className="status">In force</span>
               </div>
               <h3>Terms &amp; Conditions</h3>
-              <p>The binding agreement governing access to the Mālama website, dashboards, Hex Node sale flows, and broader network — including arbitration, opt-out, and token characterization.</p>
+              <p>The binding agreement governing access to the Mālama website, dashboards, Hex Node sale flows, and broader network. Including arbitration, opt-out, and token characterization.</p>
               <div className="footline">
                 <span>27 sections · ~18 min read</span>
                 <span className="read">Read →</span>
@@ -71,7 +71,7 @@ export default function LegalIndexPage() {
                 <span className="status">In force</span>
               </div>
               <h3>Privacy Policy</h3>
-              <p>How we collect, use, disclose, and protect Personal Data — and what public, immutable blockchain records mean for your GDPR and CCPA rights.</p>
+              <p>How we collect, use, disclose, and protect Personal Data. And what public, immutable blockchain records mean for your GDPR and CCPA rights.</p>
               <div className="footline">
                 <span>17 sections · ~14 min read</span>
                 <span className="read">Read →</span>
@@ -84,7 +84,7 @@ export default function LegalIndexPage() {
                 <span className="status">In force</span>
               </div>
               <h3>Hex Node Purchase &amp; Preorder Agreement</h3>
-              <p>Sale-specific terms for the Genesis 200 program — pricing, deployment window, MLMA vesting, the validation reward formula, and the mutable / immutable protocol parameters.</p>
+              <p>Sale-specific terms for the Genesis 200 program. Pricing, deployment window, MLMA vesting, the validation reward formula, and the mutable / immutable protocol parameters.</p>
               <div className="footline">
                 <span>18 sections · ~22 min read</span>
                 <span className="read">Read →</span>
@@ -117,16 +117,16 @@ export default function LegalIndexPage() {
                 <span className="status coming">In drafting</span>
               </div>
               <h3>Cookie Policy</h3>
-              <p>Detailed disclosure of cookies and similar technologies used across malamalabs.com, dashboards, and the launchpad — and the controls available to you per jurisdiction.</p>
+              <p>Detailed disclosure of cookies and similar technologies used across malamalabs.com, dashboards, and the launchpad. And the controls available to you per jurisdiction.</p>
               <div className="footline">
                 <span>Published with cookie banner</span>
-                <span>—</span>
+                <span>-</span>
               </div>
             </div>
           </div>
 
           <div className="sig-strip" style={{ marginTop: 72 }}>
-            <div className="label">— LEGAL CONTACT</div>
+            <div className="label">- LEGAL CONTACT</div>
             <p className="text">Mālama Labs, Inc. · 8 The Green, Suite A, Dover, Delaware 19901</p>
             <p className="footnote">
               General legal inquiries: <a href="mailto:legal@malamalabs.com" style={{ color: 'var(--mlma-accent)' }}>legal@malamalabs.com</a>{' '}

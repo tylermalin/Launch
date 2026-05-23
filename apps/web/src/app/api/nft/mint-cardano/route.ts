@@ -135,8 +135,8 @@ export async function POST(req: Request) {
           editionNumber,
           edition: 'Mālama Genesis',
           cohort: '200 Cardano',
-          mlmaAllocation: '62500',
-          vestingSchedule: cip25Str('25% at boot, 75% over 12 months'),
+          mlmaAllocation: '125000',
+          vestingSchedule: cip25Str('125,000 MLMA milestone-vested (boot · PONO · 6/9/12mo)'),
         },
       },
     }

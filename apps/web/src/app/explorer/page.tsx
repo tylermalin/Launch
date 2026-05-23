@@ -17,6 +17,7 @@ import { cellToLatLng, getResolution } from 'h3-js';
 
 import { HexPanel } from '@/explorer/components/HexPanel';
 import { REGION_DESTINATIONS } from '@/explorer/components/hex-map.constants';
+import { classifyZone, estimateWaterCoverage, detectRegion, REGION_LABELS } from '@/lib/hex-geo';
 import type { HexMapHandle } from '@/explorer/components/HexMap';
 import type {
   LandCellSet,
@@ -37,11 +38,11 @@ import type {
  *   8626cb917ffffff → South & East  (Dallas, TX)
  */
 const MALAMA_RESERVED_HEX_LABELS: Record<string, { operator: string; label: string }> = {
-  '8329a1fffffffff': { operator: 'Mālama Labs', label: 'Los Angeles'   },
-  '835d14fffffffff': { operator: 'Mālama Labs', label: 'Haiku, Hawaii' },
-  '832884fffffffff': { operator: 'Mālama Labs', label: 'Idaho / Boise' },
-  '832740fffffffff': { operator: 'Mālama Labs', label: 'Sister Bay'    },
-  '8326cbfffffffff': { operator: 'Mālama Labs', label: 'Dallas'        },
+  '8429a1dffffffff': { operator: 'Mālama Labs', label: 'Los Angeles'   },
+  '845d145ffffffff': { operator: 'Mālama Labs', label: 'Haiku, Hawaii' },
+  '8428847ffffffff': { operator: 'Mālama Labs', label: 'Idaho / Boise' },
+  '8427407ffffffff': { operator: 'Mālama Labs', label: 'Sister Bay'    },
+  '8426cb9ffffffff': { operator: 'Mālama Labs', label: 'Dallas'        },
 };
 
 // HexMap pulls in mapbox-gl which is browser-only; load it client-side only.
@@ -252,30 +253,33 @@ function buildManifestFromApi(fc: {
       ? 'reserved'
       : 'available';
 
-    // All Genesis Res-3 regions are US territory (West, Pacific/AK, Mountain, Midwest, South).
+    // All Genesis regions are US territory.
     const country = 'US';
+    const res = getResolution(h3Index);
 
-    // TODO: wire population dataset to compute zoneClassification at build time.
-    // For now, leave null and emit a dev warning.
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`[explorer] zoneClassification not computed for ${h3Index} — no population dataset wired.`);
-    }
+    // Auto-compute zone, water coverage, and region from centroid.
+    const { zone, multiplier } = classifyZone(lat, lng);
+    const waterCoveragePercent = estimateWaterCoverage(lat, lng, res);
+    const detectedRegionKey = detectRegion(lat, lng);
+    const detectedRegionLabel = REGION_LABELS[detectedRegionKey];
+    const region = p.regionLabel ?? p.region ?? detectedRegionLabel;
 
     byH3.set(h3Index, {
       nodeNumber: idx + 1,
       h3Index,
-      h3Resolution: getResolution(h3Index),
+      h3Resolution: res,
       status,
       operator: malamaLabel?.operator ?? null,
-      region: p.regionLabel ?? p.region,
+      region,
       country,
       administrativeArea: null,
       locality: malamaLabel?.label ?? null,
       postalCode: null,
       centroidLat: lat,
       centroidLng: lng,
-      zoneClassification: null,
-      geographicMultiplier: null,
+      zoneClassification: zone,
+      geographicMultiplier: multiplier,
+      waterCoveragePercent,
       dataDemandScore: p.dataScore ?? null,
       listingReferenceUsd: p.startingBid ?? 2228,
       genesisReserveUsd: 2000,
@@ -375,7 +379,7 @@ function RegionJumpBar({
 }
 
 function ReviewBanner({ inline = false }: { inline?: boolean }) {
-  const text = 'Genesis Explorer · H3 Res 3 · 200 hexes · 5 regions';
+  const text = 'Genesis Explorer · H3 Res 4 · 200 hexes · 5 regions';
   if (inline) {
     return (
       <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#c4f061', textTransform: 'uppercase', letterSpacing: '0.1em' }}>

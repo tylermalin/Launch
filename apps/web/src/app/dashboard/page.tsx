@@ -41,6 +41,68 @@ type ShippingPhase =
   | { tag: 'saving' }
   | { tag: 'error'; message: string }
 
+// ─── Referral link section ────────────────────────────────────────────────────
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://launch.malamalabs.com'
+
+/**
+ * Simple referral link for non-partner users.
+ * Earns reward points (not % commission — that's the KOL partner programme).
+ * The ref param is the SHA-256 prefix of the user's email (URL-safe, non-reversible).
+ */
+function ReferralLinkSection({ email }: { email: string }) {
+  const [copied, setCopied] = useState(false)
+  const [refId, setRefId] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Derive a short, non-reversible referral ID from the email
+    const encoder = new TextEncoder()
+    crypto.subtle.digest('SHA-256', encoder.encode(email.toLowerCase())).then((buf) => {
+      const hex = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('')
+      setRefId(hex.slice(0, 12))
+    })
+  }, [email])
+
+  const referralUrl = refId ? `${APP_URL}/presale?ref=${refId}` : null
+
+  const copy = () => {
+    if (!referralUrl) return
+    navigator.clipboard.writeText(referralUrl).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  return (
+    <section className="rounded-3xl border border-gray-800 bg-malama-card p-8 shadow-xl">
+      <div className="mb-4 flex items-center gap-3">
+        <span className="text-2xl">🔗</span>
+        <h2 className="text-xl font-bold uppercase tracking-wider text-white">Your Referral Link</h2>
+      </div>
+      <p className="mb-6 text-sm text-gray-400 leading-relaxed">
+        Share your personalised link — when someone reserves a Genesis Hex through it, you earn reward points toward future network benefits.{' '}
+        <a href="/partners/apply" className="text-malama-teal underline underline-offset-2">Apply to the Partner Programme</a>{' '}
+        to earn commission instead.
+      </p>
+      {referralUrl ? (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <code className="flex-1 rounded-lg border border-gray-700 bg-black/30 px-4 py-3 font-mono text-sm text-malama-teal break-all">
+            {referralUrl}
+          </code>
+          <button
+            onClick={copy}
+            className="shrink-0 rounded-lg border border-malama-teal/40 bg-malama-teal/10 px-5 py-3 font-mono text-sm font-bold text-malama-teal transition-colors hover:bg-malama-teal/20"
+          >
+            {copied ? '✓ Copied' : 'Copy Link'}
+          </button>
+        </div>
+      ) : (
+        <div className="h-10 w-full animate-pulse rounded-lg bg-gray-800" />
+      )}
+    </section>
+  )
+}
+
 function ShippingAddressSection({ email }: { email: string }) {
   const [phase, setPhase] = useState<ShippingPhase>({ tag: 'loading' })
   const [form, setForm] = useState({
@@ -686,6 +748,7 @@ export default function Dashboard() {
 
         <div className="space-y-8">
           {emailUser && <ShippingAddressSection email={emailUser} />}
+          {emailUser && <ReferralLinkSection email={emailUser} />}
 
           <section className="rounded-3xl border border-gray-800 bg-malama-card p-8 shadow-xl">
             <div className="mb-6 flex items-center space-x-3">

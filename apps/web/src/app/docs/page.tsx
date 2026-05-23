@@ -38,6 +38,9 @@ export default function DocsOverviewPage() {
             <Link href="/docs/pricing-roi">Pricing &amp; Dynamics</Link>
             <Link href="/docs/phase-1-timeline">Phase 1 Timeline</Link>
             <Link href="/docs/operators">Operator Guide</Link>
+            <Link href="/docs/data-demand-score-methodology">Data Demand Score</Link>
+            <Link href="/docs/pricing">Genesis Pricing</Link>
+            <Link href="/docs/validator-fees">Validator Fees</Link>
           </div>
         </div>
       </div>
@@ -95,7 +98,7 @@ export default function DocsOverviewPage() {
             </div>
             <div className="row">
               <span className="k">Pages</span>
-              <span className="v">5</span>
+              <span className="v">8</span>
             </div>
             <div className="row">
               <span className="k">Owner</span>
@@ -133,7 +136,7 @@ export default function DocsOverviewPage() {
 
           <div className="docs-meta-strip">
             <span>Documents in this hub</span>
-            <span className="count">5 pages</span>
+            <span className="count">8 pages</span>
           </div>
 
           {/* doc cards */}
@@ -200,6 +203,57 @@ export default function DocsOverviewPage() {
               </p>
               <div className="footline">
                 <span>Deploy · operate · qualify</span>
+                <span className="read">Read →</span>
+              </div>
+            </Link>
+
+            <Link className="doc-card" href="/docs/data-demand-score-methodology">
+              <div className="topline">
+                <span className="id">DOCS · 05</span>
+                <span className="status">v1.0 · Ratified</span>
+              </div>
+              <h3>Data Demand Score</h3>
+              <p>
+                Five-component scoring framework (0-100) measuring the commercial and
+                regulatory value of hardware-signed data from each hex. Inputs, update cadence,
+                multiplier formula, and worked examples.
+              </p>
+              <div className="footline">
+                <span>Score · multipliers · examples</span>
+                <span className="read">Read →</span>
+              </div>
+            </Link>
+
+            <Link className="doc-card" href="/docs/pricing">
+              <div className="topline">
+                <span className="id">DOCS · 06</span>
+                <span className="status">v1.0 · Ratified</span>
+              </div>
+              <h3>Genesis Pricing</h3>
+              <p>
+                Genesis reserve price ($2,000 flat), listing reference price formula,
+                three-multiplier reward calculation, cohort normalization, milestone vesting,
+                and buyer protections.
+              </p>
+              <div className="footline">
+                <span>Reserve · rewards · vesting</span>
+                <span className="read">Read →</span>
+              </div>
+            </Link>
+
+            <Link className="doc-card" href="/docs/validator-fees">
+              <div className="topline">
+                <span className="id">DOCS · 07</span>
+                <span className="status">v0.1 · Draft</span>
+              </div>
+              <h3>Validator Fees</h3>
+              <p>
+                USDC-denominated protocol revenue distributed to Genesis 200 operators from
+                commercial buyer relationships. Separate from MLMA emissions. Accrual logic,
+                distribution mechanics, and interaction with MLMA milestone vesting.
+              </p>
+              <div className="footline">
+                <span>Revenue · accruals · USDC</span>
                 <span className="read">Read →</span>
               </div>
             </Link>

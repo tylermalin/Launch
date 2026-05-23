@@ -25,18 +25,16 @@ import type {
 } from '@/explorer/components/hex-map.types';
 
 /**
- * H3 indexes that should render as "reserved-founding" (held by the
- * Mālama Labs team) even though the upstream /api/hexes only flags the
- * Dallas HQ. Add IDs here as the team confirms which existing pool cells
- * correspond to each founder location. Currently empty — Dallas HQ will
- * still show as `reserved` per upstream data.
+ * The 5 Mālama Labs reserved nodes (one per region, Res 5).
+ * These arrive pre-marked as `reserved` from /api/hexes — no override needed.
+ * Kept here as a lookup so the explorer can label them distinctly in the panel.
  */
-const FOUNDING_HEX_OVERRIDES: Record<
-  string,
-  { operator: string; label: string; notes?: string }
-> = {
-  // Example shape — populate once we know the existing-pool H3 IDs:
-  // '8428abcffffffff': { operator: 'Tyler Malin', label: 'Los Angeles' },
+const MALAMA_RESERVED_HEX_LABELS: Record<string, { operator: string; label: string }> = {
+  '8529a19bfffffff': { operator: 'Mālama Labs', label: 'Los Angeles' },
+  '852a100ffffffff': { operator: 'Mālama Labs', label: 'New York City' },
+  '85194ad3fffffff': { operator: 'Mālama Labs', label: 'London' },
+  '852f5aabfffffff': { operator: 'Mālama Labs', label: 'Tokyo' },
+  '8528846ffffffff': { operator: 'Mālama Labs', label: 'Idaho' },
 };
 
 // HexMap pulls in mapbox-gl which is browser-only; load it client-side only.
@@ -96,27 +94,6 @@ export default function ExplorerPage() {
     mapRef.current?.flyTo(dest.center, dest.zoom);
   };
 
-  // Founding-hex jump targets. Pulled from the manifest after any
-  // FOUNDING_HEX_OVERRIDES are applied — currently this returns just
-  // Dallas HQ (the only upstream `reserved` cell). Add overrides above
-  // as team locations get mapped to existing pool IDs.
-  const foundingDestinations = manifest.hexes
-    .filter((h) => h.status === 'reserved-founding' || h.status === 'reserved')
-    .map((h) => ({
-      key: `founding-${h.h3Index}`,
-      label: h.locality ?? h.region,
-      operator: h.operator ?? '',
-      center: [h.centroidLng, h.centroidLat] as [number, number],
-      zoom: 8,
-    }));
-
-  const handleFoundingClick = (key: string) => {
-    const dest = foundingDestinations.find((d) => d.key === key);
-    if (!dest) return;
-    setActiveRegion(`founding:${dest.label}`);
-    mapRef.current?.flyTo(dest.center, dest.zoom);
-  };
-
   return (
     <div style={{ display: 'flex', width: '100%', height: 'calc(100vh - 4rem)', background: '#0f0f0f' }}>
       <div style={{ flex: 1, position: 'relative' }}>
@@ -130,11 +107,6 @@ export default function ExplorerPage() {
           onHexClick={({ hex }) => setSelected(hex)}
         />
         <RegionJumpBar activeRegion={activeRegion} onSelect={handleRegionClick} />
-        <FoundingHexBar
-          destinations={foundingDestinations}
-          activeRegion={activeRegion}
-          onSelect={handleFoundingClick}
-        />
         <ReviewBanner />
       </div>
       {selected && (
@@ -222,24 +194,34 @@ function buildManifestFromApi(fc: {
     if (byH3.has(h3Index)) return; // already counted from the other chain
 
     const [lat, lng] = cellToLatLng(h3Index);
-    const override = FOUNDING_HEX_OVERRIDES[h3Index];
-    const upstreamReserved = Boolean(p.sold) || p.status === 'reserved' || p.isHQ;
-    const status: Phase1Hex['status'] = override
+    const malamaLabel = MALAMA_RESERVED_HEX_LABELS[h3Index];
+    const upstreamReserved = Boolean(p.sold) || p.status === 'reserved' || p.isHQ || Boolean((p as Record<string,unknown>).isMalamaReserved);
+    const status: Phase1Hex['status'] = malamaLabel
       ? 'reserved-founding'
       : upstreamReserved
       ? 'reserved'
       : 'available';
+
+    // Derive country from region key — London is GB, Tokyo is JP, all others US.
+    const regionKey = (p.region as string) ?? '';
+    const country = regionKey === 'london' ? 'GB' : regionKey === 'tokyo' ? 'JP' : 'US';
+
+    // TODO: wire population dataset to compute zoneClassification at build time.
+    // For now, leave null and emit a dev warning.
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[explorer] zoneClassification not computed for ${h3Index} — no population dataset wired.`);
+    }
 
     byH3.set(h3Index, {
       nodeNumber: idx + 1,
       h3Index,
       h3Resolution: getResolution(h3Index),
       status,
-      operator: override?.operator ?? (p.isHQ ? 'Mālama HQ' : null),
+      operator: malamaLabel?.operator ?? null,
       region: p.regionLabel ?? p.region,
-      country: 'US', // upstream regions are all US except London/Tokyo; refine later
+      country,
       administrativeArea: null,
-      locality: override?.label ?? null,
+      locality: malamaLabel?.label ?? null,
       postalCode: null,
       centroidLat: lat,
       centroidLng: lng,
@@ -248,7 +230,7 @@ function buildManifestFromApi(fc: {
       dataDemandScore: p.dataScore ?? null,
       listingReferenceUsd: p.startingBid ?? 2228,
       genesisReserveUsd: 2000,
-      notes: override?.notes,
+      notes: undefined,
     });
   });
 
@@ -258,13 +240,13 @@ function buildManifestFromApi(fc: {
   return {
     schemaVersion: '1.0.0',
     manifestName: 'Phase 1 Hex Node Launchpad (live from /api/hexes)',
-    h3Resolution: hexes[0]?.h3Resolution ?? 4,
+    h3Resolution: hexes[0]?.h3Resolution ?? 5,
     totalCells: hexes.length,
     soldOrReserved: reservedCount,
     externalAvailable: hexes.length - reservedCount,
     lastUpdated: new Date().toISOString().slice(0, 10),
     wavesPolicy: 'Live catalog from /api/hexes',
-    regions: ['Los Angeles', 'New York', 'London', 'Tokyo', 'Idaho', 'Dallas'],
+    regions: ['Los Angeles', 'New York', 'London', 'Tokyo', 'Idaho'],
     statusVocabulary: {
       available: 'Open for reservation',
       upcoming: 'Held back for a future wave',
@@ -336,87 +318,6 @@ function RegionJumpBar({
             }}
           >
             {r.name}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-function FoundingHexBar({
-  destinations,
-  activeRegion,
-  onSelect,
-}: {
-  destinations: Array<{ key: string; label: string; operator: string; center: [number, number]; zoom: number }>;
-  activeRegion: string;
-  onSelect: (key: string) => void;
-}) {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: 64, // sits directly under the primary region pill bar
-        left: '50%',
-        transform: 'translateX(-50%)',
-        display: 'flex',
-        gap: 4,
-        background: 'rgba(15,15,15,0.92)',
-        border: '1px solid #2a2a2a',
-        borderRadius: 999,
-        padding: 4,
-        boxShadow: '0 4px 14px rgba(0,0,0,0.4)',
-        zIndex: 10,
-      }}
-    >
-      <div
-        style={{
-          padding: '8px 12px',
-          fontFamily: 'var(--font-mono, monospace)',
-          fontSize: 10,
-          color: '#e8b04a',
-          textTransform: 'uppercase',
-          letterSpacing: '0.12em',
-          alignSelf: 'center',
-        }}
-      >
-        Founders ·
-      </div>
-      {destinations.map((d) => {
-        const isActive = activeRegion === `founding:${d.label}`;
-        return (
-          <button
-            key={d.key}
-            onClick={() => onSelect(d.key)}
-            title={`${d.label} · ${d.operator}`}
-            style={{
-              padding: '8px 14px',
-              borderRadius: 999,
-              border: isActive ? '1px solid #e8b04a' : '1px solid transparent',
-              background: isActive ? '#2a1f0a' : 'transparent',
-              color: isActive ? '#e8b04a' : '#c8c8c8',
-              fontFamily: 'var(--font-mono, monospace)',
-              fontSize: 11,
-              fontWeight: isActive ? 600 : 500,
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              cursor: 'pointer',
-              transition: 'all 120ms ease',
-            }}
-            onMouseEnter={(e) => {
-              if (!isActive) {
-                (e.currentTarget as HTMLButtonElement).style.background = '#1f1500';
-                (e.currentTarget as HTMLButtonElement).style.color = '#e8b04a';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isActive) {
-                (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-                (e.currentTarget as HTMLButtonElement).style.color = '#c8c8c8';
-              }
-            }}
-          >
-            {d.label}
           </button>
         );
       })}

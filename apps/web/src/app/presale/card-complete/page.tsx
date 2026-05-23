@@ -1,9 +1,219 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import { useEffect, useState, Suspense, FormEvent } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { CheckCircle2, Loader2, AlertCircle, ExternalLink } from 'lucide-react'
+import { CheckCircle2, Loader2, AlertCircle, ExternalLink, MapPin } from 'lucide-react'
+
+// ─── Shipping address types (mirrors lib/shipping-store.ts) ──────────────────
+
+interface ShippingAddress {
+  fullName: string
+  line1: string
+  line2?: string
+  city: string
+  state: string
+  postalCode: string
+  country: string
+  phone?: string
+  savedAt?: string
+}
+
+type ShippingPhase =
+  | { tag: 'loading' }
+  | { tag: 'form' }
+  | { tag: 'saving' }
+  | { tag: 'saved'; address: ShippingAddress }
+  | { tag: 'error'; message: string }
+
+function ShippingAddressCapture({ claimId, email }: { claimId: string; email: string }) {
+  const [phase, setPhase] = useState<ShippingPhase>({ tag: 'loading' })
+  const [form, setForm] = useState({
+    fullName: '',
+    line1: '',
+    line2: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    country: 'US',
+    phone: '',
+  })
+
+  useEffect(() => {
+    if (!claimId) { setPhase({ tag: 'form' }); return }
+    fetch(`/api/shipping?claimId=${encodeURIComponent(claimId)}`)
+      .then((r) => r.json())
+      .then((d: { address: ShippingAddress | null }) => {
+        if (d.address) setPhase({ tag: 'saved', address: d.address })
+        else setPhase({ tag: 'form' })
+      })
+      .catch(() => setPhase({ tag: 'form' }))
+  }, [claimId])
+
+  function field(key: keyof typeof form) {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+      setForm((f) => ({ ...f, [key]: e.target.value }))
+  }
+
+  async function submit(e: FormEvent) {
+    e.preventDefault()
+    setPhase({ tag: 'saving' })
+    try {
+      const res = await fetch('/api/shipping', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, claimId, email }),
+      })
+      const data = (await res.json()) as { ok?: boolean; address?: ShippingAddress; error?: string }
+      if (!res.ok || !data.ok) {
+        setPhase({ tag: 'error', message: data.error ?? 'Save failed — please try again.' })
+        return
+      }
+      setPhase({ tag: 'saved', address: data.address! })
+    } catch {
+      setPhase({ tag: 'error', message: 'Network error — please try again.' })
+    }
+  }
+
+  const inputClass =
+    'w-full rounded-lg border border-gray-700 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-malama-accent focus:outline-none'
+  const labelClass = 'mb-1 block text-[10px] font-bold uppercase tracking-wider text-gray-500'
+
+  if (phase.tag === 'loading') {
+    return (
+      <div className="mt-10 flex items-center justify-center gap-2 text-sm text-gray-600">
+        <Loader2 className="h-4 w-4 animate-spin" /> Checking shipping info…
+      </div>
+    )
+  }
+
+  if (phase.tag === 'saved') {
+    const a = phase.address
+    return (
+      <div className="mt-10 w-full rounded-2xl border border-malama-accent/30 bg-malama-accent/5 p-6 text-left">
+        <div className="mb-3 flex items-center gap-2">
+          <CheckCircle2 className="h-5 w-5 text-malama-accent" />
+          <p className="font-bold text-malama-accent">Shipping address saved</p>
+        </div>
+        <p className="text-sm text-gray-300">{a.fullName}</p>
+        <p className="text-sm text-gray-300">{a.line1}{a.line2 ? `, ${a.line2}` : ''}</p>
+        <p className="text-sm text-gray-300">{a.city}, {a.state} {a.postalCode} · {a.country}</p>
+        {a.phone && <p className="mt-1 text-sm text-gray-500">{a.phone}</p>}
+        <button
+          type="button"
+          onClick={() => setPhase({ tag: 'form' })}
+          className="mt-4 text-xs font-bold text-malama-accent/70 hover:text-malama-accent underline underline-offset-2"
+        >
+          Edit address
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-10 w-full rounded-2xl border border-gray-800 bg-malama-card p-6 text-left">
+      <div className="mb-4 flex items-center gap-2">
+        <MapPin className="h-5 w-5 text-malama-accent" />
+        <div>
+          <p className="font-bold text-white">Shipping address</p>
+          <p className="text-xs text-gray-500">Required for hardware fulfillment</p>
+        </div>
+      </div>
+
+      {phase.tag === 'error' && (
+        <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+          {phase.message}
+        </div>
+      )}
+
+      <form onSubmit={submit} className="space-y-3">
+        <div>
+          <label className={labelClass}>Full name</label>
+          <input
+            className={inputClass}
+            required
+            placeholder="Jane Smith"
+            value={form.fullName}
+            onChange={field('fullName')}
+          />
+        </div>
+
+        <div>
+          <label className={labelClass}>Address line 1</label>
+          <input
+            className={inputClass}
+            required
+            placeholder="123 Main St"
+            value={form.line1}
+            onChange={field('line1')}
+          />
+        </div>
+
+        <div>
+          <label className={labelClass}>Address line 2 <span className="normal-case font-normal text-gray-600">(optional)</span></label>
+          <input
+            className={inputClass}
+            placeholder="Apt 4B"
+            value={form.line2}
+            onChange={field('line2')}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className={labelClass}>City</label>
+            <input className={inputClass} required placeholder="Los Angeles" value={form.city} onChange={field('city')} />
+          </div>
+          <div>
+            <label className={labelClass}>State / Province</label>
+            <input className={inputClass} required placeholder="CA" value={form.state} onChange={field('state')} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className={labelClass}>Postal code</label>
+            <input className={inputClass} required placeholder="90001" value={form.postalCode} onChange={field('postalCode')} />
+          </div>
+          <div>
+            <label className={labelClass}>Country</label>
+            <select className={inputClass} value={form.country} onChange={field('country')}>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="GB">United Kingdom</option>
+              <option value="AU">Australia</option>
+              <option value="JP">Japan</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="SG">Singapore</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label className={labelClass}>Phone <span className="normal-case font-normal text-gray-600">(optional — for shipping notifications)</span></label>
+          <input
+            className={inputClass}
+            type="tel"
+            placeholder="+1 555 000 0000"
+            value={form.phone}
+            onChange={field('phone')}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={phase.tag === 'saving'}
+          className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-malama-accent py-3 font-bold text-black transition hover:opacity-90 disabled:opacity-50"
+        >
+          {phase.tag === 'saving' && <Loader2 className="h-4 w-4 animate-spin" />}
+          {phase.tag === 'saving' ? 'Saving…' : 'Save shipping address'}
+        </button>
+      </form>
+    </div>
+  )
+}
 
 type Status =
   | { state: 'loading' }
@@ -162,6 +372,7 @@ function CardCompleteInner() {
   const transferUrl = typeof d.transferUrl === 'string' ? d.transferUrl : ''
   const launchUrl = typeof d.launchUrl === 'string' ? d.launchUrl : ''
   const claimId = typeof d.claimId === 'string' ? d.claimId : ''
+  const purchaseEmail = typeof d.email === 'string' ? d.email : ''
   const custodial = typeof d.custodialAddress === 'string' ? d.custodialAddress : ''
   const explorerUrl = typeof d.explorerUrl === 'string' ? d.explorerUrl : ''
   const openSeaUrl = typeof d.openSeaUrl === 'string' ? d.openSeaUrl : ''
@@ -231,6 +442,10 @@ function CardCompleteInner() {
           </a>
         )}
       </div>
+
+      {claimId && purchaseEmail && (
+        <ShippingAddressCapture claimId={claimId} email={purchaseEmail} />
+      )}
 
       <Link href="/" className="mt-10 text-malama-accent font-bold hover:underline">
         Return home →

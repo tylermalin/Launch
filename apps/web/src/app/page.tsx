@@ -699,7 +699,6 @@ export default function Home() {
                       ['Secure element', 'ATECC608B', 'ATECC608B'],
                       ['OS', 'Ubuntu 22.04 LTS', 'Ubuntu 24.04 LTS'],
                       ['Uptime', '99.0%', '99.9%+ for bonus'],
-                      ['Anchoring', 'Cardano + Base', 'Cardano + Hedera + Base'],
                     ].map(([c, min, rec]) => (
                       <tr key={c} className="border-b border-malama-line last:border-0">
                         <td className="px-4 py-3 font-semibold text-malama-ink">{c}</td>

@@ -70,7 +70,7 @@ export default function TermsPage() {
                 <thead><tr><th>Term</th><th>Definition</th></tr></thead>
                 <tbody>
                   <tr><td>&ldquo;Account&rdquo;</td><td>A user account created to access certain parts of the Services.</td></tr>
-                  <tr><td>&ldquo;Blockchain&rdquo;</td><td>Any distributed ledger or similar public or permissioned system used in connection with the Services, including Cardano, Hedera, and Base as applicable.</td></tr>
+                  <tr><td>&ldquo;Blockchain&rdquo;</td><td>Any distributed ledger or similar public or permissioned system used in connection with the Services, including Cardano and Base as applicable.</td></tr>
                   <tr><td>&ldquo;Hex Node&rdquo;</td><td>A hardware device, software-enabled device, or other approved node infrastructure made available by Mālama for environmental data collection, signing, relaying, verification, or related network participation.</td></tr>
                   <tr><td>&ldquo;Network&rdquo;</td><td>The Mālama environmental data network, including related node infrastructure, software systems, data verification systems, and blockchain integrations.</td></tr>
                   <tr><td>&ldquo;Rewards&rdquo;</td><td>Any points, tokens, credits, incentives, or similar benefits that may be made available in connection with participation in the Network.</td></tr>

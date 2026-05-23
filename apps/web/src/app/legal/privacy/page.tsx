@@ -115,7 +115,7 @@ export default function PrivacyPage() {
 
               <div className="callout warn">
                 <span className="tag">▲ Important · Public, on-chain geolocation</span>
-                <p><strong>Geolocation is published on-chain by design.</strong> The H3 hex cell associated with each Hex Node License is published to the Cardano, Hedera, and/or Base blockchain as required to enforce geographic exclusivity and anchor signed sensor readings to their claimed location.</p>
+                <p><strong>Geolocation is published on-chain by design.</strong> The H3 hex cell associated with each Hex Node License is published to the Cardano and/or Base blockchain as required to enforce geographic exclusivity and anchor signed sensor readings to their claimed location.</p>
                 <p>H3 hex cells provide approximate geographic location (not precise coordinates). Because blockchain records are immutable and globally readable, the hex-cell association <strong>cannot be deleted, reversed, or restricted</strong> after it is recorded on-chain, even in response to a data-subject deletion request.</p>
                 <p>If you do not wish the approximate geographic area of your node to be publicly associated with your license, do not operate a Hex Node.</p>
               </div>
@@ -123,7 +123,7 @@ export default function PrivacyPage() {
               <h3>Blockchain Data</h3>
               <ul>
                 <li>Public wallet addresses.</li>
-                <li>Smart contract interactions on Cardano, Hedera, and Base.</li>
+                <li>Smart contract interactions on Cardano and Base.</li>
                 <li>Token holdings or reward eligibility indicators.</li>
                 <li>On-chain transaction history.</li>
               </ul>
@@ -198,7 +198,7 @@ export default function PrivacyPage() {
                   <tr><td>Ecosystem partners</td><td>Hardware manufacturers, environmental registry partners, infrastructure operators, and data verification entities. Engaged under appropriate agreements.</td></tr>
                   <tr><td>Authorities</td><td>Regulators, courts, and law enforcement where legally required or permitted.</td></tr>
                   <tr><td>Corporate transactions</td><td>Acquirers, successors, or financing parties in the event of a merger, acquisition, restructuring, or financing.</td></tr>
-                  <tr><td>Blockchain networks</td><td>Certain data is permanently recorded on public Cardano, Hedera, and/or Base networks and is accessible globally and indefinitely.</td></tr>
+                  <tr><td>Blockchain networks</td><td>Certain data is permanently recorded on public Cardano and/or Base networks and is accessible globally and indefinitely.</td></tr>
                 </tbody>
               </table>
               <div className="callout accent">
@@ -223,7 +223,7 @@ export default function PrivacyPage() {
             <div className="clause-head"><span className="num">§ 09</span><h2>International data transfers</h2><a className="anchor" href="#s9">#s9</a></div>
             <div className="clause-body">
               <p>Data may be processed in the United States and other jurisdictions. Where we transfer Personal Data outside the European Economic Area, United Kingdom, or Switzerland to countries not recognized as providing adequate protection, we implement appropriate safeguards including <strong>Standard Contractual Clauses</strong> approved by the European Commission, or equivalent mechanisms.</p>
-              <p>Distributed systems. Including Cardano, Hedera, Base, and cloud infrastructure. May involve global data propagation. Public blockchain data is accessible worldwide by construction and cannot be restricted by geographic transfer limitations.</p>
+              <p>Distributed systems. Including Cardano, Base, and cloud infrastructure. May involve global data propagation. Public blockchain data is accessible worldwide by construction and cannot be restricted by geographic transfer limitations.</p>
             </div>
           </section>
 
@@ -309,7 +309,7 @@ export default function PrivacyPage() {
             <div className="clause-body">
               <p>Due to the nature of Mālama&rsquo;s infrastructure:</p>
               <ul>
-                <li>Sensor data may be cryptographically signed and permanently recorded on public blockchains (Cardano, Hedera, Base).</li>
+                <li>Sensor data may be cryptographically signed and permanently recorded on public blockchains (Cardano and Base).</li>
                 <li>Environmental measurement data produced by your node. Including SaveCards used in carbon credit verification and AI compute energy attestation. May be used in regulatory, financial, or carbon market contexts by third parties.</li>
                 <li>Blockchain entries cannot be modified or erased by Mālama or any other party.</li>
                 <li>Third parties may independently analyze or derive insights from public blockchain data.</li>
@@ -357,7 +357,7 @@ export default function PrivacyPage() {
                   <tr><td>Personal Data</td><td>Information that identifies or can reasonably be linked to an identified or identifiable natural person, as defined by applicable law including GDPR and CCPA.</td></tr>
                   <tr><td>Controller</td><td>Entity that determines the purposes and means of processing Personal Data. Mālama Labs Inc. is the Controller for Personal Data collected through its Services.</td></tr>
                   <tr><td>Processor</td><td>Entity that processes Personal Data on behalf of the Controller. Mālama&rsquo;s service providers acting on written instructions under a DPA.</td></tr>
-                  <tr><td>Blockchain Data</td><td>Public, immutable ledger data recorded on Cardano, Hedera, Base, or other blockchain networks.</td></tr>
+                  <tr><td>Blockchain Data</td><td>Public, immutable ledger data recorded on Cardano, Base, or other blockchain networks.</td></tr>
                   <tr><td>DPA</td><td>Data Processing Agreement. A written agreement between Controller and Processor governing the terms of processing as required by GDPR Article 28.</td></tr>
                   <tr><td>LIA</td><td>Legitimate Interests Assessment. A balancing test conducted to document that Mālama&rsquo;s legitimate interests are not overridden by data-subject rights when relying on the legitimate interests lawful basis.</td></tr>
                   <tr><td>H3 Hex Cell</td><td>A geographic area defined by Uber&rsquo;s H3 geospatial indexing system. H3 hex cells used in the Mālama network provide approximate location, not precise GPS coordinates.</td></tr>

@@ -301,7 +301,7 @@ export default function HexNodePurchasePage() {
           <section className="clause" id="s11">
             <div className="clause-head"><span className="num">§ 11</span><h2>Tokens, wallets, and blockchain risk</h2><a className="anchor" href="#s11">#s11</a></div>
             <div className="clause-body">
-              <p>If your node interacts with blockchain systems, including Cardano, Hedera, and Base:</p>
+              <p>If your node interacts with blockchain systems, including Cardano and Base:</p>
               <ul>
                 <li>You are solely responsible for managing your wallet and private keys.</li>
                 <li>Blockchain transactions are irreversible.</li>

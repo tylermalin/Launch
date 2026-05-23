@@ -715,7 +715,7 @@ export default function TokenRewardsRiskPage() {
             </div>
             <div className="clause-body">
               <p>
-                The network uses Cardano, Hedera, and Base. If Rewards or system components
+                The network uses Cardano and Base. If Rewards or system components
                 interact with any of these blockchain networks:
               </p>
               <ul>
@@ -948,7 +948,7 @@ export default function TokenRewardsRiskPage() {
             <div className="clause-body">
               <p>
                 The network relies on third-party systems including cloud infrastructure
-                providers, Cardano, Hedera, and Base blockchain networks, hardware component
+                providers, Cardano and Base blockchain networks, hardware component
                 manufacturers, environmental data registries, oracle networks,{' '}
                 <strong>LayerZero cross-chain bridge infrastructure</strong>, and external
                 APIs. Failures, changes, or discontinuation in any of these systems may affect

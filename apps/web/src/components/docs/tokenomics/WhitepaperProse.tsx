@@ -134,12 +134,11 @@ export function WhitepaperProse() {
             ]}
           />
           <H3>2.3 Blockchain Architecture</H3>
-          <P>MLMA operates across a three-layer architecture, each serving a distinct function:</P>
+          <P>MLMA operates across a two-layer architecture, each serving a distinct function:</P>
           <Table
             headers={['Layer', 'Chain', 'Function']}
             rows={[
               ['Primary Archival', 'Cardano', 'Scientific proof, SaveCard custody, MLMA token issuance, 60-second Merkle anchoring via Hex Node quorum. CIP-25/CIP-68 NFT standard.'],
-              ['Institutional Settlement', 'Hedera', 'High-throughput settlement for registries, corporate buyers, and prediction market operators. ABFT consensus, deterministic finality.'],
               ['Market Liquidity', 'Base', 'Rewards distribution, governance voting, secondary market liquidity. LayerZero OApp handles cross-chain state synchronization.'],
             ]}
           />

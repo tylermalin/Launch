@@ -10,6 +10,7 @@ import {
   Hexagon,
   Menu,
   X,
+  ScrollText,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -18,8 +19,10 @@ const NAV: {
   label: string
   icon: typeof BookOpen
   exact?: boolean
+  external?: boolean
 }[] = [
   { href: '/docs', label: 'Overview', icon: BookOpen, exact: true },
+  { href: '/whitepaper', label: 'Whitepaper v1.0', icon: ScrollText },
   { href: '/docs/tokenomics', label: 'MLMA Tokenomics', icon: FileText },
   { href: '/docs/pricing-roi', label: 'Pricing & ROI', icon: Calculator },
   { href: '/docs/phase-1-timeline', label: 'Phase 1 Timeline', icon: CalendarRange },

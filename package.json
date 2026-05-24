@@ -5,8 +5,7 @@
   "description": "Cryptographic environmental data network",
   "workspaces": [
     "apps/web",
-    "contracts/evm",
-    "packages/sdk"
+    "contracts/evm"
   ],
   "scripts": {
     "dev": "npm run dev --workspace apps/web",
@@ -18,11 +17,12 @@
   },
   "overrides": {
     "libsodium-sumo": "0.8.4",
-    "libsodium-wrappers-sumo": "0.8.4"
+    "libsodium-wrappers-sumo": "0.8.4",
+    "@harmoniclabs/cbor": "^1.6.0"
   },
   "author": "Mālama Labs",
   "license": "UNLICENSED",
-  "dependencies": {
+  "devDependencies": {
     "vercel": "^51.2.1"
   }
 }

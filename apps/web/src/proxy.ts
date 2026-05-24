@@ -1,4 +1,3 @@
-import { auth0 } from './lib/auth0'
 import { NextResponse } from 'next/server'
 
 const ACCESS_COOKIE = 'malama_access'
@@ -32,14 +31,17 @@ export async function proxy(request: Request) {
     }
   }
 
-  // ── Auth0 middleware (runs after password gate passes) ───────────────────
-  return auth0.middleware(request)
+  // Auth0 removed — email session + Magic Link are the only auth paths.
+  // /auth/* routes redirect to /dashboard so old links don't 404.
+  if (pathname.startsWith('/auth/')) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
   matcher: [
-    // Do not run on /api — JSON handlers (Stripe, Magic, custodial) must not be intercepted.
-    // Password gate API route (/api/auth/password) is handled by isPublicPath() above.
     '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
 }

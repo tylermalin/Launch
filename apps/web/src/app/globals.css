@@ -20,16 +20,24 @@ html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   max-width: 100vw;
+  font-size: 17px; /* Base: scales all em/rem sizes up. Body text targets 16–18px. */
 }
 
 body {
   background-color: var(--bg);
   color: var(--ink);
+  font-size: 1rem;       /* 17px */
+  line-height: 1.6;      /* Body text: 1.5–1.6× per typography guidelines */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   max-width: 100vw;
 }
+
+/* Typography scale per brand guidelines */
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.15; }
+h2 { font-size: clamp(1.75rem, 3.5vw, 2.25rem); line-height: 1.2; }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); line-height: 1.3; }
 
 /* Soft lime glow + subtle grain (reference site atmosphere) */
 body::before {

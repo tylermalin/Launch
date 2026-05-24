@@ -27,13 +27,14 @@ export default function DocsOverviewPage() {
       {/* document switcher */}
       <div className="crumb">
         <div className="crumb-inner">
-          <Link className="back" href="/">
-            ← Mālama Labs
-          </Link>
+          <a className="back" href="https://malamalabs.com" target="_blank" rel="noopener noreferrer">
+            ← malamalabs.com
+          </a>
           <div className="switcher">
             <Link href="/docs" className="current">
               Overview
             </Link>
+            <Link href="/whitepaper">Whitepaper v1.0</Link>
             <Link href="/docs/tokenomics">Tokenomics</Link>
             <Link href="/docs/pricing-roi">Pricing &amp; Dynamics</Link>
             <Link href="/docs/phase-1-timeline">Phase 1 Timeline</Link>
@@ -98,7 +99,7 @@ export default function DocsOverviewPage() {
             </div>
             <div className="row">
               <span className="k">Pages</span>
-              <span className="v">8</span>
+              <span className="v">9</span>
             </div>
             <div className="row">
               <span className="k">Owner</span>
@@ -136,11 +137,42 @@ export default function DocsOverviewPage() {
 
           <div className="docs-meta-strip">
             <span>Documents in this hub</span>
-            <span className="count">8 pages</span>
+            <span className="count">9 pages</span>
           </div>
 
-          {/* doc cards */}
+          {/* doc cards — whitepaper spans full width as first item */}
           <div className="doc-grid">
+
+            {/* ── Featured: Institutional Whitepaper ── */}
+            <Link
+              href="/whitepaper"
+              className="doc-card"
+              style={{
+                gridColumn: '1 / -1',
+                background: 'linear-gradient(135deg, rgba(196,240,97,0.06) 0%, rgba(196,240,97,0.02) 100%)',
+                borderColor: 'rgba(196,240,97,0.22)',
+              }}
+            >
+              <div className="topline">
+                <span className="id">WP · v1.0</span>
+                <span className="status" style={{ color: 'var(--mlma-accent)', borderColor: 'rgba(196,240,97,0.3)', background: 'rgba(196,240,97,0.08)' }}>
+                  Institutional · May 2026
+                </span>
+              </div>
+              <h3>Whitepaper v1.0 — Six-Layer DePIN</h3>
+              <p>
+                The canonical institutional document. Hardware-verified truth for climate markets and AI
+                compute. Covers the full six-layer DePIN architecture, seven verticals (carbon dMRV,
+                energy telemetry, parametric insurance, AI compute accountability, supply chain, LCO₂
+                clearing, prediction markets), tokenomics, regulatory posture, and operational threat
+                model. 33 pages · Document MLM-WP-v1.0.
+              </p>
+              <div className="footline">
+                <span>Architecture · tokenomics · regulatory posture · appendices</span>
+                <span className="read" style={{ color: 'var(--mlma-accent)' }}>Read + Download →</span>
+              </div>
+            </Link>
+
             <Link className="doc-card" href="/docs/tokenomics">
               <div className="topline">
                 <span className="id">DOCS · 01</span>

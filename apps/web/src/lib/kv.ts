@@ -100,14 +100,24 @@ function makeUpstashKv(url: string, token: string): KVClient {
 
 // ── Factory ───────────────────────────────────────────────────────────────────
 
+/** Strip stray quote chars and whitespace that break the Upstash URL validator. */
+function sanitizeEnvString(v: string | undefined): string | undefined {
+  if (!v) return v
+  return v.trim().replace(/^["']|["']$/g, '').trim()
+}
+
 function makeKv(): KVClient {
-  // Accept both Vercel Marketplace naming and direct Upstash naming
-  const url =
+  // Accept both Vercel Marketplace naming and direct Upstash naming.
+  // Sanitize: env vars pasted with surrounding quotes or trailing newlines
+  // will fail the @upstash/redis URL validator ("must start with https").
+  const url = sanitizeEnvString(
     process.env.UPSTASH_REDIS_REST_URL ||
     process.env.KV_REST_API_URL
-  const token =
+  )
+  const token = sanitizeEnvString(
     process.env.UPSTASH_REDIS_REST_TOKEN ||
     process.env.KV_REST_API_TOKEN
+  )
 
   if (!url || !token) {
     if (process.env.NODE_ENV === 'production') {

@@ -1,22 +1,52 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import { WHITEPAPER_TOC } from './whitepaper-toc'
 
 function TocNav() {
+  const [activeId, setActiveId] = useState<string>(WHITEPAPER_TOC[0].id)
+  const observerRef = useRef<IntersectionObserver | null>(null)
+
+  useEffect(() => {
+    const headings = WHITEPAPER_TOC.map(({ id }) => document.getElementById(id)).filter(Boolean) as HTMLElement[]
+
+    observerRef.current?.disconnect()
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        // Find the topmost section that is intersecting
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        if (visible.length > 0) setActiveId(visible[0].target.id)
+      },
+      { rootMargin: '-10% 0px -70% 0px', threshold: 0 },
+    )
+    headings.forEach((el) => observerRef.current!.observe(el))
+    return () => observerRef.current?.disconnect()
+  }, [])
+
   return (
-    <nav className="rounded-2xl border border-gray-800 bg-[#0d1e35]/90 backdrop-blur p-4 xl:sticky xl:top-28">
+    <nav className="rounded-2xl border border-gray-800 bg-[#0d1e35]/90 backdrop-blur p-4 sticky top-28">
       <p className="text-xs font-black uppercase tracking-widest text-malama-accent/90 mb-3">On this page</p>
-      <ul className="space-y-1.5 text-sm max-h-[70vh] overflow-y-auto pr-1">
-        {WHITEPAPER_TOC.map((item) => (
-          <li key={item.id}>
-            <a
-              href={`#${item.id}`}
-              className="text-gray-400 hover:text-malama-accent transition-colors block py-0.5 border-l-2 border-transparent hover:border-malama-accent pl-2"
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
+      <ul className="space-y-0.5 text-sm">
+        {WHITEPAPER_TOC.map((item) => {
+          const active = item.id === activeId
+          return (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                onClick={() => setActiveId(item.id)}
+                className={`block py-1 pl-3 border-l-2 transition-all text-[13px] ${
+                  active
+                    ? 'border-malama-accent text-malama-accent font-semibold'
+                    : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-600'
+                }`}
+              >
+                {item.label}
+              </a>
+            </li>
+          )
+        })}
       </ul>
     </nav>
   )
@@ -88,7 +118,7 @@ function Callout({ title, children, variant = 'accent' }: { title?: string; chil
 
 export function WhitepaperProse() {
   return (
-    <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_200px] xl:gap-10 xl:items-start">
+    <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_200px] xl:gap-10">
       <div className="xl:hidden mb-8">
         <TocNav />
       </div>
@@ -117,12 +147,70 @@ export function WhitepaperProse() {
         {/* ── 2. Token Overview ── */}
         <section id="token-overview" className="scroll-mt-28 mb-16">
           <h2 className="text-2xl font-black text-white mb-4 border-b border-gray-800 pb-2">2. Token Overview</h2>
-          <H3>2.1 Name and Ticker</H3>
-          <ul className="list-disc pl-5 text-gray-300 space-y-2 text-sm md:text-[15px]">
-            <li><strong className="text-white">Name:</strong> Mālama. ʻŌlelo Hawaiʻi (Hawaiian). Meaning: to care for, to tend, to protect, to preserve. The name reflects the company's grounding in place-based stewardship and the mission to make ecological data trustworthy.</li>
-            <li><strong className="text-white">Ticker:</strong> MLMA</li>
-            <li><strong className="text-white">Precision:</strong> 18 decimals (Cardano native asset standard and ERC-20 compatible)</li>
-          </ul>
+          <H3>2.1 Token Identity</H3>
+
+          {/* ── Token Identity Card ── */}
+          <div className="my-6 rounded-2xl border border-gray-800 overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-4 bg-[#0A1628] border-b border-gray-800">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-malama-accent/15 border border-malama-accent/30 flex items-center justify-center">
+                  <span className="font-mono text-[11px] font-black text-malama-accent">ML</span>
+                </div>
+                <div>
+                  <p className="font-bold text-white text-base leading-none">Mālama</p>
+                  <p className="font-mono text-[10px] text-malama-accent/80 tracking-widest uppercase mt-0.5">MLMA</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-gray-500 mb-0.5">Hard Cap</p>
+                <p className="font-mono text-sm font-bold text-white">500,000,000</p>
+              </div>
+            </div>
+
+            {/* Identity rows */}
+            <div className="divide-y divide-gray-800/80">
+              {[
+                {
+                  field: 'Name',
+                  value: 'Mālama',
+                  note: 'ʻŌlelo Hawaiʻi · "To care for, to tend, to protect, to preserve"',
+                },
+                { field: 'Ticker', value: 'MLMA', note: null },
+                { field: 'Decimals', value: '18', note: 'ERC-20 & Cardano native asset standard' },
+                { field: 'Standard', value: 'ERC-20 + Cardano Native', note: 'Dual-chain architecture' },
+                { field: 'Primary chain', value: 'Cardano', note: 'Scientific proof · SaveCard custody · CIP-25/CIP-68' },
+                { field: 'Liquidity chain', value: 'Base', note: 'Rewards distribution · governance · secondary market' },
+                { field: 'Cross-chain', value: 'LayerZero OApp', note: 'State synchronisation between Cardano and Base' },
+                { field: 'Hard cap', value: '500,000,000 MLMA', note: 'No additional issuance beyond 500M via any governance vote' },
+              ].map(({ field, value, note }, i) => (
+                <div
+                  key={field}
+                  className={`flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0 px-5 py-3 hover:bg-white/[0.02] transition-colors ${
+                    i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.01]'
+                  }`}
+                >
+                  <p className="w-36 flex-shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-gray-500">
+                    {field}
+                  </p>
+                  <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-4">
+                    <span className="font-semibold text-white text-sm">{value}</span>
+                    {note && (
+                      <span className="text-xs text-gray-500 sm:text-right">{note}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div className="px-5 py-3 bg-[#0A1628] border-t border-gray-800 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-malama-accent animate-pulse flex-shrink-0" />
+              <p className="font-mono text-[10px] text-gray-500 uppercase tracking-[0.1em]">
+                Pre-launch · Contract address to be published at mainnet · Q3 2026
+              </p>
+            </div>
+          </div>
           <H3>2.2 Primary Functions</H3>
           <Table
             headers={['Function', 'Use Case', 'Recipient']}
@@ -167,7 +255,7 @@ export function WhitepaperProse() {
           <H3>3.3 Genesis 200 Allocation Detail</H3>
           <P>
             <strong className="text-white">125,000 MLMA per operator.</strong> Entry: $2,000 per node (hardware $380 + geographic hex license $1,620).
-            200 nodes total. 195 available to external operators; 5 reserved for Mālama Labs team and production use (Dallas / DFW area).
+            200 nodes total. 195 available to external operators; 5 reserved for Mālama Labs team and production use — one per region: Los Angeles (West), Honolulu (Pacific), Denver (Mountain), Chicago (Midwest), Dallas (South).
           </P>
           <P>
             Operators who do not deploy within 90 days of hardware receipt forfeit their geographic license and allocation to the protocol treasury.
@@ -592,7 +680,7 @@ Hard cap: 500M MLMA`}</CodeBlock>
         </footer>
       </article>
 
-      <aside className="hidden xl:block">
+      <aside className="hidden xl:block relative">
         <TocNav />
       </aside>
     </div>

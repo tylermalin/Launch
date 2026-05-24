@@ -29,6 +29,7 @@ export interface Phase1Hex {
     | null;
   geographicMultiplier: number | null; // 0.90 · 1.00 · 1.15 · 1.35 · 1.60 (urban-core → remote)
   dataDemandScore: number | null; // 0-100
+  waterCoveragePercent: number | null; // 0-100 — % of cell area over ocean/lake
   listingReferenceUsd: number;
   genesisReserveUsd: number;
   notes?: string;

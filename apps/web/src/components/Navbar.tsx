@@ -7,12 +7,14 @@ import { usePathname } from 'next/navigation'
 type SessionData = { auth: 'auth0' | 'email' | null }
 
 const topNavLinks = [
-  { href: '/presale',  label: 'Reserve',                 active: (p: string) => p.startsWith('/presale') },
-  { href: '/docs',     label: 'Docs',                    active: (p: string) => p.startsWith('/docs') },
-  { href: '/timeline', label: 'Timeline',                active: (p: string) => p.startsWith('/timeline') },
-  { href: '/explorer', label: 'Explorer',                active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
-  { href: '/partners', label: 'Become A Launch Partner', active: (p: string) => p.startsWith('/partners') },
+  { href: '/presale',  label: 'Reserve',   active: (p: string) => p.startsWith('/presale') },
+  { href: '/docs',     label: 'Docs',      active: (p: string) => p.startsWith('/docs') || p === '/whitepaper' },
+  { href: '/timeline', label: 'Timeline',  active: (p: string) => p.startsWith('/timeline') },
+  { href: '/explorer', label: 'Explorer',  active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
+  { href: '/partners', label: 'Partners',  active: (p: string) => p.startsWith('/partners') },
 ]
+
+const CORPORATE_URL = 'https://malamalabs.com'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -62,6 +64,17 @@ export default function Navbar() {
               {label}
             </Link>
           ))}
+          <a
+            href={CORPORATE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden lg:inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-sm px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-malama-ink-faint hover:text-malama-accent transition-colors sm:px-4"
+          >
+            malamalabs.com
+            <svg className="w-2.5 h-2.5 opacity-60" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M1 9L9 1M9 1H3M9 1V7"/>
+            </svg>
+          </a>
 
           <Link
             href="/dashboard"

@@ -2,37 +2,41 @@ import Link from 'next/link'
 
 const DISCORD_URL = 'https://discord.gg/PcKRRUcJ'
 const AIPOWER_URL = 'https://ai-energy-impact-opal.vercel.app/'
+const CORPORATE_URL = 'https://malamalabs.com'
 
 const footerSections: { title: string; links: { href: string; label: string; external?: boolean }[] }[] = [
   {
     title: 'Product',
     links: [
-      { href: '/presale', label: 'Reserve a node' },
+      { href: '/presale',  label: 'Reserve a node' },
       { href: '/explorer', label: 'Hex Map Explorer' },
       { href: '/timeline', label: 'Timeline' },
-      { href: '/docs', label: 'Documentation' },
+      { href: '/partners', label: 'Become a partner' },
     ],
   },
   {
     title: 'Documentation',
     links: [
-      { href: '/docs', label: 'Documentation hub' },
-      { href: '/whitepaper', label: 'Whitepaper' },
-      { href: '/legal/token-rewards-risk', label: 'Token & Rewards Risk Disclosure' },
-      { href: '/docs/operators', label: 'Operator docs' },
+      { href: '/whitepaper',          label: 'Whitepaper v1.0' },
+      { href: '/docs',                label: 'Docs hub' },
+      { href: '/docs/tokenomics',     label: 'MLMA Tokenomics' },
+      { href: '/docs/pricing-roi',    label: 'Pricing & ROI' },
+      { href: '/docs/operators',      label: 'Operator Guide' },
     ],
   },
   {
     title: 'Community',
     links: [
-      { href: DISCORD_URL, label: 'Discord', external: true },
-      { href: '/docs/operators#faq', label: 'Operator FAQ' },
-      { href: 'mailto:hello@malamalabs.com?subject=Hex%20Node%20call', label: 'Schedule a Call', external: true },
+      { href: DISCORD_URL,  label: 'Discord',          external: true },
+      { href: 'mailto:hello@malamalabs.com?subject=Hex%20Node%20call', label: 'Schedule a call', external: true },
     ],
   },
   {
     title: 'Legal',
-    links: [{ href: '/legal', label: 'Legal center' }],
+    links: [
+      { href: '/legal',                      label: 'Legal center' },
+      { href: '/legal/token-rewards-risk',   label: 'Token & Rewards Risk Disclosure' },
+    ],
   },
 ]
 
@@ -54,6 +58,14 @@ export default function SiteFooter() {
             >
               <span className="h-1.5 w-1.5 rounded-full bg-malama-accent animate-pulse" />
               Live data stream → aipower.fyi
+            </a>
+            <a
+              href={CORPORATE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-malama-ink-faint hover:text-malama-accent transition-colors"
+            >
+              ← malamalabs.com
             </a>
           </div>
           {footerSections.map((section) => (

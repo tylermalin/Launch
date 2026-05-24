@@ -3,7 +3,7 @@
  *
  * Server-side proxy for the KOL admin endpoints. Keeps ADMIN_SECRET
  * off the client. Requires the caller to be authenticated as an admin
- * email (ADMIN_EMAILS env var, comma-separated) via Auth0 or email session.
+ * email (ADMIN_EMAILS env var, comma-separated) via email session.
  *
  * GET  ?action=list            → all partners with stats
  * GET  ?action=get&id=<slug>   → single partner detail
@@ -22,15 +22,7 @@ const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? 'tyler@malamaproject.org')
   .split(',')
   .map((e) => e.trim().toLowerCase());
 
-async function getCallerEmail(req: NextRequest): Promise<string | null> {
-  // Try Auth0 session first
-  try {
-    const { auth0 } = await import('@/lib/auth0');
-    const session = await auth0.getSession();
-    if (session?.user?.email) return (session.user.email as string).toLowerCase();
-  } catch { /* no Auth0 */ }
-
-  // Fall back to email session cookie
+async function getCallerEmail(_req: NextRequest): Promise<string | null> {
   const jar = await cookies();
   const raw = jar.get('malama_email_session')?.value;
   if (raw) {

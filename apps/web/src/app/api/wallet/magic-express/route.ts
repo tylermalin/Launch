@@ -1,37 +1,18 @@
 import { NextResponse } from 'next/server'
-import { auth0 } from '@/lib/auth0'
-import { magicExpressGetOrCreateWallet } from '@/lib/magic-express'
 
 export const runtime = 'nodejs'
 
 /**
- * Server-only: calls Magic Express `POST /v1/wallet` using the logged-in user's Auth0 access token.
- * Requires Auth0 session + access token (configure API audience / scopes as needed).
- * Does not expose Magic keys to the client.
+ * Magic Express wallet endpoint.
+ *
+ * Requires an OIDC provider (Auth0, Firebase, Clerk, etc.) to supply
+ * an access token for Magic's server-side wallet creation. Auth0 has
+ * been removed from this project — this endpoint is disabled until an
+ * OIDC provider is re-configured or Magic OTP replaces the flow.
  */
 export async function POST() {
-  try {
-    const session = await auth0.getSession()
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Sign in with Auth0 first' }, { status: 401 })
-    }
-
-    const { token } = await auth0.getAccessToken()
-    if (!token) {
-      return NextResponse.json(
-        {
-          error:
-            'No OAuth access token. Ensure AUTH0_AUDIENCE matches your Magic IDP API identifier and the user granted scopes.',
-        },
-        { status: 403 }
-      )
-    }
-
-    const { publicAddress, raw } = await magicExpressGetOrCreateWallet(token)
-    return NextResponse.json({ publicAddress, express: raw })
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Magic Express wallet error'
-    console.error('[magic-express wallet]', e)
-    return NextResponse.json({ error: msg }, { status: 502 })
-  }
+  return NextResponse.json(
+    { error: 'Magic Express wallet requires an OIDC provider. Auth0 has been removed. Configure an OIDC provider or use Magic Email OTP instead.' },
+    { status: 501 },
+  )
 }

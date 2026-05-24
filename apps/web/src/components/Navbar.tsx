@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
-type SessionData = { auth: 'auth0' | 'email' | null }
+type SessionData = { auth: 'email' | null }
 
 const topNavLinks = [
   { href: '/presale',  label: 'Reserve',   active: (p: string) => p.startsWith('/presale') },

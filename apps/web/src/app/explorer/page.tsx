@@ -26,16 +26,16 @@ import type {
 } from '@/explorer/components/hex-map.types';
 
 /**
- * The 5 Mālama Labs reserved nodes (one per region, H3 Res 3).
+ * The 5 Mālama Labs reserved nodes (one per region, H3 Res 4).
  * These arrive pre-marked as `reserved` from /api/hexes — no override needed.
  * Kept here as a lookup so the explorer can label them distinctly in the panel.
  *
- * Res-6 lab cells (~36 km² each — city-district scale):
- *   8629a1d77ffffff → West Coast    (Los Angeles, CA)
- *   865d144efffffff → Pacific       (Haiku, Maui, HI)
- *   8628846e7ffffff → Mountain West (Idaho City, ID)
- *   862740767ffffff → Midwest       (Sister Bay, WI)
- *   8626cb917ffffff → South & East  (Dallas, TX)
+ * Res-4 lab cells (~1,770 km² each — city-metro scale):
+ *   8429a1dffffffff → West Coast    (Los Angeles, CA)
+ *   84464b9ffffffff → Pacific       (Honolulu, HI)
+ *   84268cdffffffff → Mountain West (Denver, CO)
+ *   842664dffffffff → Midwest       (Chicago, IL)
+ *   8426cb9ffffffff → South & East  (Dallas, TX)
  */
 const MALAMA_RESERVED_HEX_LABELS: Record<string, { operator: string; label: string }> = {
   '8429a1dffffffff': { operator: 'Mālama Labs', label: 'Los Angeles' },

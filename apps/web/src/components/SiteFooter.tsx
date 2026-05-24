@@ -17,7 +17,7 @@ const footerSections: { title: string; links: { href: string; label: string; ext
     title: 'Documentation',
     links: [
       { href: '/docs', label: 'Documentation hub' },
-      { href: '/docs/tokenomics', label: 'Whitepaper' },
+      { href: '/whitepaper', label: 'Whitepaper' },
       { href: '/legal/token-rewards-risk', label: 'Token & Rewards Risk Disclosure' },
       { href: '/docs/operators', label: 'Operator docs' },
     ],

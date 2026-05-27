@@ -362,6 +362,7 @@ export default function Dashboard() {
       }
       if (data.email) setEmailUser(data.email)
       setSessionAuth('email')
+      window.dispatchEvent(new Event('malama:auth'))
     } catch {
       setEmailError('Network error')
     } finally {
@@ -374,6 +375,7 @@ export default function Dashboard() {
     setEmailUser(null)
     setSessionAuth(null)
     setEmailInput('')
+    window.dispatchEvent(new Event('malama:auth'))
   }
 
   // ── Inventory: single source of truth from /api/user ──────────────────────

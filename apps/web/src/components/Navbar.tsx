@@ -34,7 +34,15 @@ export default function Navbar() {
       .catch(() => setSession({ auth: null }))
   }, [])
 
-  useEffect(() => { fetchSession() }, [fetchSession])
+  // Re-fetch on mount and whenever the route changes
+  useEffect(() => { fetchSession() }, [fetchSession, pathname])
+
+  // Re-fetch whenever any part of the app signals an auth state change
+  useEffect(() => {
+    const handler = () => fetchSession()
+    window.addEventListener('malama:auth', handler)
+    return () => window.removeEventListener('malama:auth', handler)
+  }, [fetchSession])
 
   const isAuthed  = session?.auth != null
   const isLoading = session === undefined

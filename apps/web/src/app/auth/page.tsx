@@ -4,6 +4,7 @@ import { useState, useEffect, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAccount, useConnect } from 'wagmi'
 import { injected } from 'wagmi/connectors'
+import { useWallet } from '@meshsdk/react'
 import Link from 'next/link'
 import { Mail, Loader2, Wallet, Globe } from 'lucide-react'
 
@@ -13,6 +14,9 @@ export default function AuthPage() {
   const router = useRouter()
   const { isConnected: evmConnected } = useAccount()
   const { connect: connectEvm, isPending: isEvmConnecting } = useConnect()
+  // MeshSDK connect so Cardano wallet state persists to the dashboard page.
+  // The context is always available (safe default values when MeshProvider hasn't loaded).
+  const { connect: meshConnect } = useWallet()
 
   const [email, setEmail]               = useState('')
   const [submitting, setSubmitting]     = useState(false)
@@ -85,6 +89,10 @@ export default function AuthPage() {
           setTimeout(() => reject(new Error('timeout')), 12_000)
         ),
       ])
+
+      // Also connect via MeshSDK so the dashboard's isCardanoConnected stays true.
+      // The wallet is already enabled so this re-enable is instant (no second popup).
+      await meshConnect(walletKey).catch(() => {})
 
       window.dispatchEvent(new Event('malama:auth'))
       router.push('/dashboard')

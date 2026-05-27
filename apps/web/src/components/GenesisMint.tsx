@@ -32,7 +32,8 @@ import { tryGetGenesisContract, GENESIS_CONTRACT_PLACEHOLDER } from '@/lib/genes
 // (handleBasePayment) guards against the placeholder and surfaces a clear
 // error — so previews don't silently mint to a non-existent contract.
 const GENESIS_CONTRACT = (tryGetGenesisContract() ?? GENESIS_CONTRACT_PLACEHOLDER) as `0x${string}`
-const USDC_CONTRACT    = (process.env.NEXT_PUBLIC_MOCK_USDC_ADDRESS         ?? '0x1111111111111111111111111111111111111111') as `0x${string}`
+// Real USDC on Base Sepolia. Override with NEXT_PUBLIC_MOCK_USDC_ADDRESS for local testing.
+const USDC_CONTRACT    = (process.env.NEXT_PUBLIC_MOCK_USDC_ADDRESS         ?? '0x036CbD53842c5426634e7929541eC2318f3dCF7e') as `0x${string}`
 const PRICE_USDC       = parseUnits('2000', 6) // $2,000 USDC (6 decimals)
 
 const USDC_ABI = parseAbi([

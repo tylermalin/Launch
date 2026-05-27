@@ -370,7 +370,7 @@ export default function Dashboard() {
     connecting: isCardanoConnecting,
   } = useWallet()
 
-  const { isConnected: isEvmConnected, address: evmAddress } = useAccount()
+  const { isConnected: isEvmConnected, address: evmAddress, status: evmStatus } = useAccount()
   const { connectors, connect: connectEvm, isPending: isEvmConnecting } = useConnect()
 
   const [emailUser, setEmailUser] = useState<string | null>(null)
@@ -416,18 +416,24 @@ export default function Dashboard() {
       .finally(() => setSessionChecked(true))
   }, [])
 
-  // If session check is done and no auth found, give wallets 1.5s to
-  // reconnect, then redirect to the sign-in page.
+  // If session check is done and no auth found, redirect to /auth.
+  // Deps include wallet states so we always read the latest values (no stale closure).
+  // We also wait for wagmi to finish reconnecting (evmStatus !== 'reconnecting')
+  // before deciding — otherwise a fresh page load would redirect before wagmi
+  // rehydrates the connection from localStorage.
   useEffect(() => {
     if (!sessionChecked) return
+    if (evmStatus === 'reconnecting') return  // wagmi still rehydrating — hold off
+    if (isEvmConnected || isCardanoConnected || emailUser) return  // already authed
+
+    // Not authenticated yet. Give a short grace period for slower reconnects.
     const t = setTimeout(() => {
-      const walletConnected = isCardanoConnected || isEvmConnected
-      const authenticated   = walletConnected || !!emailUser
-      if (!authenticated) router.replace('/auth')
+      if (!isEvmConnected && !isCardanoConnected && !emailUser) {
+        router.replace('/auth')
+      }
     }, 1500)
     return () => clearTimeout(t)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionChecked])
+  }, [sessionChecked, isEvmConnected, isCardanoConnected, emailUser, evmStatus, router])
 
   async function signInWithEmail(e: FormEvent) {
     e.preventDefault()

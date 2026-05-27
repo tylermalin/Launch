@@ -38,18 +38,17 @@ export async function POST(req: Request) {
       )
     }
 
-    // Resolve claim — in dev the in-memory registry resets on server restart,
-    // so fall back to hex lookup then re-issue rather than hard-failing with 404.
-    let claim = claimId ? getClaimByClaimId(claimId) : null
+    // Resolve claim — fall back to hex lookup then re-issue if not found.
+    let claim = claimId ? await getClaimByClaimId(claimId) : null
 
     if (!claim) {
-      // Maybe the server restarted; try looking up by hex
-      const existing = getClaimByHex(hexId)
+      // Try looking up by hex
+      const existing = await getClaimByHex(hexId)
       if (existing && (existing.chain === 'cardano' || existing.chain === 'base')) {
         claim = existing
       } else {
         // Re-issue a fresh Cardano claim
-        const issued = issueClaim(hexId, 'cardano', cardanoAddress)
+        const issued = await issueClaim(hexId, 'cardano', cardanoAddress)
         if (!issued.ok) {
           return NextResponse.json(
             { error: issued.error ?? 'Hex already claimed on another chain' },

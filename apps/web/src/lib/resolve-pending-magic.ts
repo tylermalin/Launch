@@ -9,11 +9,11 @@ import {
 } from '@/lib/custodial-store'
 
 /**
- * Resolve pending Magic checkout: memory, or recover from Stripe after dev server restart.
+ * Resolve pending Magic checkout: KV store, or recover from Stripe after cold start.
  */
 export async function resolvePendingMagicPurchase(
   transferToken: string,
-  stripeCheckoutSessionId?: string | null
+  stripeCheckoutSessionId?: string | null,
 ): Promise<
   | { ok: true; pending: PendingMagicCardPurchase }
   | {
@@ -21,12 +21,12 @@ export async function resolvePendingMagicPurchase(
       reason: 'not_found' | 'already_claimed' | 'stripe_error' | 'not_paid' | 'metadata_mismatch'
     }
 > {
-  const rec = getCustodialByTransferToken(transferToken)
+  const rec = await getCustodialByTransferToken(transferToken)
   if (rec?.custody === 'magic') {
     return { ok: false, reason: 'already_claimed' }
   }
 
-  let pending = getPendingMagicByTransferToken(transferToken)
+  let pending = await getPendingMagicByTransferToken(transferToken)
   if (pending) {
     return { ok: true, pending }
   }
@@ -72,7 +72,7 @@ export async function resolvePendingMagicPurchase(
     transferToken: metaToken,
     createdAt: new Date().toISOString(),
   }
-  savePendingMagicPurchase(pending)
-  setSessionAwaitingMagic(session.id, pending)
+  await savePendingMagicPurchase(pending)
+  await setSessionAwaitingMagic(session.id, pending)
   return { ok: true, pending }
 }

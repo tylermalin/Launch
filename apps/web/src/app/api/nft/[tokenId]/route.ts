@@ -11,7 +11,7 @@ export async function GET(
   const { searchParams } = new URL(req.url)
   const hexFromQuery = searchParams.get('hexId')
   const { tokenId } = await params
-  const claim = getClaimForEvmToken(Number(tokenId))
+  const claim = await getClaimForEvmToken(Number(tokenId))
   const malamaCustody =
     claim?.buyerAddress?.toLowerCase() === MALAMA_GENESIS_WALLET.toLowerCase()
 

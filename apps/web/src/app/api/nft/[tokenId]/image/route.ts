@@ -14,9 +14,9 @@ export async function GET(
   const claimIdQ   = searchParams.get('claimId')
   const chain      = searchParams.get('chain') ?? 'base'
 
-  let claim = claimIdQ ? getClaimByClaimId(claimIdQ) : undefined
-  if (!claim && chain === 'base')    claim = getClaimForEvmToken(Number(tokenIdParam))
-  if (!claim && chain === 'cardano') claim = getClaimByEdition(Number(tokenIdParam))
+  let claim = claimIdQ ? await getClaimByClaimId(claimIdQ) : undefined
+  if (!claim && chain === 'base')    claim = await getClaimForEvmToken(Number(tokenIdParam)) ?? undefined
+  if (!claim && chain === 'cardano') claim = await getClaimByEdition(Number(tokenIdParam)) ?? undefined
 
   const hexId        = claim?.hexId ?? searchParams.get('hexId') ?? `genesis-${tokenIdParam}`
   const parsed       = Number(tokenIdParam)

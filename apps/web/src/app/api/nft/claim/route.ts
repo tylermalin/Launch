@@ -7,6 +7,7 @@ import {
   updateClaimTxHash,
   bindEvmTokenToClaim,
 } from '@/lib/genesis-claim-registry'
+import { getCustodialRecordsByEmail } from '@/lib/custodial-store'
 
 // ─────────────────────────────────────────────────────────────────────────────
 export async function POST(req: Request) {
@@ -16,18 +17,18 @@ export async function POST(req: Request) {
     if (!hexId || !chain || !buyerAddress) {
       return NextResponse.json(
         { error: 'Missing required fields: hexId, chain, buyerAddress' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
     if (chain !== 'base' && chain !== 'cardano') {
       return NextResponse.json(
         { error: 'chain must be "base" or "cardano"' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
-    const result = issueClaim(hexId, chain, buyerAddress)
+    const result = await issueClaim(hexId, chain, buyerAddress)
     if (!result.ok) {
       if (result.existing) {
         return NextResponse.json(
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
             claimId: result.existing.claimId,
             editionNumber: result.existing.editionNumber,
           },
-          { status: 409 }
+          { status: 409 },
         )
       }
       return NextResponse.json({ error: result.error }, { status: 410 })
@@ -71,17 +72,17 @@ export async function PATCH(req: Request) {
     if (!txHash || (!claimId && !hexId)) {
       return NextResponse.json(
         { error: 'Missing txHash and (claimId or hexId)' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
-    const updated = updateClaimTxHash({ claimId, hexId, txHash })
+    const updated = await updateClaimTxHash({ claimId, hexId, txHash })
     if (!updated) {
       return NextResponse.json({ error: 'Claim not found' }, { status: 404 })
     }
 
     if (typeof tokenId === 'number' && claimId) {
-      bindEvmTokenToClaim(claimId, tokenId)
+      await bindEvmTokenToClaim(claimId, tokenId)
     }
 
     return NextResponse.json({ success: true })
@@ -95,21 +96,27 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const hexId = searchParams.get('hexId')
   const claimId = searchParams.get('claimId')
+  const email = searchParams.get('email')
 
-  if (!hexId && !claimId) {
-    const { total, issued, remaining } = getStats()
+  if (!hexId && !claimId && !email) {
+    const { total, issued, remaining } = await getStats()
     return NextResponse.json({ total, issued, remaining })
   }
 
+  if (email) {
+    const records = await getCustodialRecordsByEmail(email)
+    return NextResponse.json({ claims: records })
+  }
+
   if (claimId) {
-    const claim = getClaimByClaimId(claimId)
+    const claim = await getClaimByClaimId(claimId)
     if (!claim) {
       return NextResponse.json({ claimed: false }, { status: 404 })
     }
     return NextResponse.json({ claimed: true, ...claim })
   }
 
-  const claim = hexId ? getClaimByHex(hexId) : undefined
+  const claim = hexId ? await getClaimByHex(hexId) : undefined
   return NextResponse.json({
     claimed: !!claim,
     ...(claim ?? {}),

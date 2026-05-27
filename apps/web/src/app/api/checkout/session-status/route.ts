@@ -55,7 +55,7 @@ export async function GET(req: Request) {
           : `${appUrl}/launch?token=${encodeURIComponent(rec.transferToken)}`,
     })
 
-  let local = getSessionStatus(sessionId)
+  let local = await getSessionStatus(sessionId)
   if (local?.state === 'awaiting_magic') {
     return respondAwaitingMagic(local.pending, sessionId)
   }
@@ -69,7 +69,7 @@ export async function GET(req: Request) {
   /** Stripe paid but this server has no terminal state yet (first poll, sync missed, or cold instance). */
   await reconcilePaidCheckoutSession(sessionId)
 
-  local = getSessionStatus(sessionId)
+  local = await getSessionStatus(sessionId)
   if (local?.state === 'awaiting_magic') {
     return respondAwaitingMagic(local.pending, sessionId)
   }

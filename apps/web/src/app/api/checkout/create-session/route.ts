@@ -44,12 +44,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Valid email required' }, { status: 400 })
     }
 
-    const items = buildGenesisHexListItems(regionsData)
+    const items = await buildGenesisHexListItems(regionsData)
     const item = items.find((i) => i.hexId === hexId)
     if (!item || item.sold || item.status !== 'available') {
       return NextResponse.json({ error: 'This hex is not available for purchase' }, { status: 400 })
     }
-    if (getClaimByHex(hexId)) {
+    if (await getClaimByHex(hexId)) {
       return NextResponse.json({ error: 'This hex is already reserved' }, { status: 409 })
     }
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
     if (session.id) {
       setSessionProcessing(session.id)
       if (getCardCustodyMode() === 'magic') {
-        if (!lockHexForMagicCheckout(hexId, session.id)) {
+        if (!(await lockHexForMagicCheckout(hexId, session.id))) {
           try {
             await stripe.checkout.sessions.expire(session.id)
           } catch {

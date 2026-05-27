@@ -5,6 +5,14 @@ import {
   calculateGenesisListingPriceDeterministic,
   GENESIS_ENTRY_USD,
 } from '@/lib/h3'
+import { getClaimByHex } from '@/lib/genesis-claim-registry'
+import { isHexLockedForMagicCheckout } from '@/lib/custodial-store'
+import {
+  MALAMA_RESERVED_HEX_IDS,
+  MALAMA_RESERVED_HEX_SET,
+  getMalamaWalletReservedHexIds,
+  getMalamaWalletReservedHexSet,
+} from '@/lib/genesis-constants'
 
 export type RegionsData = {
   west?:     { cells: string[] }
@@ -33,37 +41,8 @@ export const GENESIS_REGION_LABELS: Record<GenesisRegionKey, string> = {
   south:    'South & East',
 }
 
-/**
- * Five Mālama Labs reserved nodes — one per region, locked at launch.
- * These are always status='reserved'; never available for external purchase.
- *
- * Resolution 4 lab cells (H3 Res 4, ~1,770 km² each — city-cluster scale):
- *   8429a1dffffffff → West       (Los Angeles, CA)
- *   84464b9ffffffff → Pacific    (Honolulu, HI)
- *   84268cdffffffff → Mountain   (Denver, CO)
- *   842664dffffffff → Midwest    (Chicago, IL)
- *   8426cb9ffffffff → South      (Dallas, TX)
- */
-export const MALAMA_RESERVED_HEX_IDS = [
-  '8429a1dffffffff', // Los Angeles
-  '84464b9ffffffff', // Honolulu
-  '84268cdffffffff', // Denver
-  '842664dffffffff', // Chicago
-  '8426cb9ffffffff', // Dallas
-] as const
-
-export const MALAMA_RESERVED_HEX_SET = new Set<string>(MALAMA_RESERVED_HEX_IDS)
-
 /** @deprecated Res-5 IDs from the v2 reseed. Kept for reference only. */
 export const MALAMA_HQ_HEX = '8726cb912ffffff'
-
-export function getMalamaWalletReservedHexIds(_regions?: RegionsData): string[] {
-  return [...MALAMA_RESERVED_HEX_IDS]
-}
-
-export function getMalamaWalletReservedHexSet(_regions?: RegionsData): Set<string> {
-  return MALAMA_RESERVED_HEX_SET
-}
 
 export function getGenesisRegionLabelForHex(hexId: string, regions: RegionsData): string | null {
   for (const key of GENESIS_REGION_KEYS) {
@@ -123,37 +102,48 @@ export type GenesisHexListItem = {
   genesisPriceUsd: number
 }
 
-export function buildGenesisHexListItems(regions: RegionsData): GenesisHexListItem[] {
+export async function buildGenesisHexListItems(regions: RegionsData): Promise<GenesisHexListItem[]> {
   const entries = getGenesisHexIds(regions)
-  return entries.map(({ id, region, chain }) => {
-    const [lat, lng] = cellToLatLng(id)
-    const isMalamaReserved = MALAMA_RESERVED_HEX_SET.has(id)
-    const status = isMalamaReserved ? ('reserved' as const) : ('available' as const)
-    const dataScore = calculateDataScoreDeterministic(lat, lng, id)
-    const startingBid = calculateGenesisListingPriceDeterministic(lat, lng, id)
-    return {
-      hexId: id,
-      region,
-      regionLabel: GENESIS_REGION_LABELS[region],
-      lat,
-      lng,
-      status,
-      sold: isMalamaReserved,
-      chain,
-      isMalamaReserved,
-      dataScore,
-      startingBid,
-      activeSensors: isMalamaReserved ? 1 : 0,
-      uptime: isMalamaReserved ? 99 : 0,
-      overlap: false,
-      genesisEdition: true,
-      genesisPriceUsd: GENESIS_ENTRY_USD,
-    }
-  })
+  return Promise.all(
+    entries.map(async ({ id, region, chain }) => {
+      const [lat, lng] = cellToLatLng(id)
+      const claim = await getClaimByHex(id)
+      const isClaimed = Boolean(claim)
+      const isLocked = await isHexLockedForMagicCheckout(id)
+      const isMalamaReserved = MALAMA_RESERVED_HEX_SET.has(id)
+      
+      const status = (isMalamaReserved || isClaimed || isLocked)
+        ? ('reserved' as const)
+        : ('available' as const)
+      
+      const sold = isMalamaReserved || isClaimed || isLocked
+      const dataScore = calculateDataScoreDeterministic(lat, lng, id)
+      const startingBid = calculateGenesisListingPriceDeterministic(lat, lng, id)
+      
+      return {
+        hexId: id,
+        region,
+        regionLabel: GENESIS_REGION_LABELS[region],
+        lat,
+        lng,
+        status,
+        sold,
+        chain,
+        isMalamaReserved,
+        dataScore,
+        startingBid,
+        activeSensors: (isMalamaReserved || isClaimed) ? 1 : 0,
+        uptime: (isMalamaReserved || isClaimed) ? 99 : 0,
+        overlap: false,
+        genesisEdition: true,
+        genesisPriceUsd: GENESIS_ENTRY_USD,
+      }
+    })
+  )
 }
 
-export function buildGenesisHexFeatureCollection(regions: RegionsData) {
-  const items = buildGenesisHexListItems(regions)
+export async function buildGenesisHexFeatureCollection(regions: RegionsData) {
+  const items = await buildGenesisHexListItems(regions)
   const features = items.map((item) => {
     const geojson = hexToGeoJSON(item.hexId)
     Object.assign(geojson.properties as Record<string, unknown>, {

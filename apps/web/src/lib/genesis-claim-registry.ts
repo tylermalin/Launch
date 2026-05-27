@@ -1,10 +1,14 @@
 /**
- * In-memory Genesis 200 claim registry (swap for Vercel KV in production).
- * Canonical identifier: claimId — e.g. G200-001 … G200-200
+ * KV-backed Genesis 200 claim registry.
+ * All mutations are async and persist to Upstash Redis (memKv fallback for local dev).
+ *
+ * Atomicity: sadd(K.claimed, hexId) is a single Redis command — returns 1 on first
+ * insert, 0 if already present. This makes hex reservation race-safe even across
+ * concurrent serverless invocations. The 200-slot overflow guard is theoretical:
+ * the fixed 200-hex inventory makes it unreachable.
  */
 
-import regionsData from '@/data/regions.json'
-import { getMalamaWalletReservedHexIds } from '@/lib/genesis-hexes'
+import { kv } from '@/lib/kv'
 
 export const GENESIS_TOTAL = 200
 
@@ -26,35 +30,60 @@ export type GenesisClaim = {
   referrerId?: string
 }
 
-const byHex = new Map<string, GenesisClaim>()
-const byClaimId = new Map<string, GenesisClaim>()
-/** Edition 1–200 → claim (for image/metadata by edition path) */
-const byEdition = new Map<number, GenesisClaim>()
-/** EVM tokenId (on-chain) → claimId */
-const evmTokenToClaimId = new Map<number, string>()
+// ── KV key schema ─────────────────────────────────────────────────────────────
+// genesis:issued            → number  (monotonic edition counter)
+// genesis:claimed           → Set<hexId>  (atomic reservation via sadd)
+// genesis:claim:hex:<id>    → GenesisClaim
+// genesis:claim:id:<id>     → GenesisClaim
+// genesis:claim:edition:<n> → GenesisClaim
+// genesis:evm:<tokenId>     → claimId string
 
-let issued = 0
+const K = {
+  issued:  'genesis:issued',
+  claimed: 'genesis:claimed',
+  hex:     (id: string) => `genesis:claim:hex:${id}`,
+  claimId: (id: string) => `genesis:claim:id:${id}`,
+  edition: (n: number)  => `genesis:claim:edition:${n}`,
+  evm:     (t: number)  => `genesis:evm:${t}`,
+}
 
 function makeClaimId(edition: number) {
   return `G200-${String(edition).padStart(3, '0')}`
 }
 
-export function issueClaim(
+/** Write claim to all lookup indexes in parallel. */
+async function persistClaim(claim: GenesisClaim): Promise<void> {
+  await Promise.all([
+    kv.set(K.hex(claim.hexId), claim),
+    kv.set(K.claimId(claim.claimId), claim),
+    kv.set(K.edition(claim.editionNumber), claim),
+  ])
+}
+
+// ── Public API ────────────────────────────────────────────────────────────────
+
+export async function issueClaim(
   hexId: string,
   chain: 'base' | 'cardano',
   buyerAddress: string,
-  referrerId?: string
-):
+  referrerId?: string,
+): Promise<
   | { ok: true; claim: GenesisClaim }
-  | { ok: false; error: string; existing?: GenesisClaim } {
-  if (byHex.has(hexId)) {
-    return { ok: false, error: 'Hex already claimed', existing: byHex.get(hexId) }
+  | { ok: false; error: string; existing?: GenesisClaim }
+> {
+  // sadd is atomic: returns 0 if hexId was already in the set (already claimed).
+  const added = await kv.sadd(K.claimed, hexId)
+  if (added === 0) {
+    const existing = await kv.get<GenesisClaim>(K.hex(hexId))
+    return { ok: false, error: 'Hex already claimed', existing: existing ?? undefined }
   }
-  if (issued >= GENESIS_TOTAL) {
+
+  const editionNumber = await kv.incr(K.issued)
+  if (editionNumber > GENESIS_TOTAL) {
+    // Theoretical: can't happen when inventory === GENESIS_TOTAL, but guard anyway.
     return { ok: false, error: 'All 200 Genesis nodes have been allocated' }
   }
-  issued++
-  const editionNumber = issued
+
   const claim: GenesisClaim = {
     claimId: makeClaimId(editionNumber),
     editionNumber,
@@ -64,72 +93,61 @@ export function issueClaim(
     claimedAt: new Date().toISOString(),
     referrerId,
   }
-  byHex.set(hexId, claim)
-  byClaimId.set(claim.claimId, claim)
-  byEdition.set(editionNumber, claim)
+  await persistClaim(claim)
   return { ok: true, claim }
 }
 
-export function getClaimByHex(hexId: string) {
-  return byHex.get(hexId)
+export async function getClaimByHex(hexId: string): Promise<GenesisClaim | null> {
+  return kv.get<GenesisClaim>(K.hex(hexId))
 }
 
-export function getClaimByClaimId(claimId: string) {
-  return byClaimId.get(claimId)
+export async function getClaimByClaimId(claimId: string): Promise<GenesisClaim | null> {
+  return kv.get<GenesisClaim>(K.claimId(claimId))
 }
 
-export function getClaimForEvmToken(tokenId: number) {
-  const cid = evmTokenToClaimId.get(tokenId)
-  return cid ? byClaimId.get(cid) : undefined
+export async function getClaimForEvmToken(tokenId: number): Promise<GenesisClaim | null> {
+  const claimId = await kv.get<string>(K.evm(tokenId))
+  if (!claimId) return null
+  return kv.get<GenesisClaim>(K.claimId(claimId))
 }
 
-export function getClaimByEdition(editionNumber: number) {
-  return byEdition.get(editionNumber)
+export async function getClaimByEdition(editionNumber: number): Promise<GenesisClaim | null> {
+  return kv.get<GenesisClaim>(K.edition(editionNumber))
 }
 
-export function bindEvmTokenToClaim(claimId: string, tokenId: number) {
-  const c = byClaimId.get(claimId)
-  if (!c) return false
-  c.evmTokenId = tokenId
-  evmTokenToClaimId.set(tokenId, claimId)
+export async function bindEvmTokenToClaim(claimId: string, tokenId: number): Promise<boolean> {
+  const claim = await kv.get<GenesisClaim>(K.claimId(claimId))
+  if (!claim) return false
+  const updated: GenesisClaim = { ...claim, evmTokenId: tokenId }
+  await Promise.all([
+    persistClaim(updated),
+    kv.set(K.evm(tokenId), claimId),
+  ])
   return true
 }
 
-export function updateClaimTxHash(opts: {
+export async function updateClaimTxHash(opts: {
   hexId?: string
   claimId?: string
   txHash: string
-}) {
-  const c = opts.claimId
-    ? byClaimId.get(opts.claimId)
+}): Promise<boolean> {
+  const claim = opts.claimId
+    ? await kv.get<GenesisClaim>(K.claimId(opts.claimId))
     : opts.hexId
-      ? byHex.get(opts.hexId)
-      : undefined
-  if (!c) return false
-  c.txHash = opts.txHash
+      ? await kv.get<GenesisClaim>(K.hex(opts.hexId))
+      : null
+  if (!claim) return false
+  const updated: GenesisClaim = { ...claim, txHash: opts.txHash }
+  await persistClaim(updated)
   return true
 }
 
-export function getStats() {
-  return {
-    total: GENESIS_TOTAL,
-    issued,
-    remaining: GENESIS_TOTAL - issued,
-  }
+export async function getStats(): Promise<{
+  total: number
+  issued: number
+  remaining: number
+}> {
+  const raw = await kv.get<number>(K.issued)
+  const issued = typeof raw === 'number' ? raw : 0
+  return { total: GENESIS_TOTAL, issued, remaining: GENESIS_TOTAL - issued }
 }
-
-/** Pre-mint registry entries + on-chain token binding for Malama Wallet custody hexes (editions 1–5 → tokenIds 1–5). */
-function seedMalamaWalletGenesisNfts() {
-  const hexIds = getMalamaWalletReservedHexIds(regionsData)
-  for (const hexId of hexIds) {
-    let claim = byHex.get(hexId)
-    if (!claim) {
-      const r = issueClaim(hexId, 'base', MALAMA_GENESIS_WALLET)
-      if (!r.ok) continue
-      claim = r.claim
-    }
-    bindEvmTokenToClaim(claim.claimId, claim.editionNumber)
-  }
-}
-
-seedMalamaWalletGenesisNfts()

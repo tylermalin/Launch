@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'sessionId required' }, { status: 400 })
     }
 
-    if (getSessionStatus(sessionId)?.state === 'complete') {
+    if ((await getSessionStatus(sessionId))?.state === 'complete') {
       return NextResponse.json({ ok: true, source: 'already_complete' })
     }
 

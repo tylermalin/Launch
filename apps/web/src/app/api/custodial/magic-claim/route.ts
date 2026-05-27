@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       )
     }
 
-    const reserved = issueClaim(pending.hexId, 'base', publicAddress)
+    const reserved = await issueClaim(pending.hexId, 'base', publicAddress)
     if (!reserved.ok) {
       return NextResponse.json(
         { error: reserved.error ?? 'Could not reserve hex — it may no longer be available.' },
@@ -97,8 +97,8 @@ export async function POST(req: Request) {
       recipient: publicAddress,
     })
 
-    bindEvmTokenToClaim(claimId, tokenId)
-    updateClaimTxHash({ claimId, txHash })
+    await bindEvmTokenToClaim(claimId, tokenId)
+    await updateClaimTxHash({ claimId, txHash })
 
     const record: CustodialRecord = {
       claimId,
@@ -114,11 +114,11 @@ export async function POST(req: Request) {
       stripeCheckoutSessionId: pending.stripeSessionId,
     }
 
-    removePendingMagicPurchase(pending)
-    unlockHexForMagicCheckout(pending.hexId, pending.stripeSessionId)
-    saveCustodialRecord(record)
-    setSessionComplete(pending.stripeSessionId, record)
-    markStripeSessionProcessed(pending.stripeSessionId)
+    await removePendingMagicPurchase(pending)
+    await unlockHexForMagicCheckout(pending.hexId, pending.stripeSessionId)
+    await saveCustodialRecord(record)
+    await setSessionComplete(pending.stripeSessionId, record)
+    await markStripeSessionProcessed(pending.stripeSessionId)
 
     return NextResponse.json({
       ok: true,

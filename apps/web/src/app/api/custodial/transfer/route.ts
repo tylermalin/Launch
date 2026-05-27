@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid destination address' }, { status: 400 })
     }
 
-    const rec = getCustodialByClaimId(claimId)
+    const rec = await getCustodialByClaimId(claimId)
     if (!rec || rec.transferToken !== transferToken) {
       return NextResponse.json({ error: 'Invalid claim or transfer link' }, { status: 403 })
     }

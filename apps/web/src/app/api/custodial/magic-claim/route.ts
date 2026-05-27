@@ -10,6 +10,7 @@ import {
   unlockHexForMagicCheckout,
 } from '@/lib/custodial-store'
 import { verifyMagicDidToken } from '@/lib/magic-server'
+import { upsertUserAccount } from '@/lib/user-account'
 import { resolvePendingMagicPurchase } from '@/lib/resolve-pending-magic'
 
 export const runtime = 'nodejs'
@@ -119,6 +120,13 @@ export async function POST(req: Request) {
     await saveCustodialRecord(record)
     await setSessionComplete(pending.stripeSessionId, record)
     await markStripeSessionProcessed(pending.stripeSessionId)
+
+    // Upsert user account — email is anchor, Magic wallet address is the EVM address
+    await upsertUserAccount({
+      email: pending.email,
+      evmAddress: publicAddress,
+      hexId: pending.hexId,
+    }).catch((err) => console.error('[magic-claim] user account upsert failed:', err))
 
     return NextResponse.json({
       ok: true,

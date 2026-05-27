@@ -20,6 +20,7 @@ import {
   unlockHexForMagicCheckout,
 } from '@/lib/custodial-store'
 import { issueKOLCommission } from '@/lib/kol-registry'
+import { upsertUserAccount } from '@/lib/user-account'
 
 const SALE_AMOUNT_USD = 2000
 
@@ -131,6 +132,11 @@ export async function fulfillCardPurchase(opts: {
     await saveCustodialRecord(record)
     await setSessionComplete(stripeSessionId, record)
     await markStripeSessionProcessed(stripeSessionId)
+
+    // Upsert user account — email is the anchor for card purchases
+    await upsertUserAccount({ email, evmAddress: address, hexId }).catch((err) =>
+      console.error('[fulfillCardPurchase] user account upsert failed:', err)
+    )
 
     // Issue KOL commission if a referrer was captured — fire-and-forget, non-blocking
     if (referrerId) {

@@ -310,7 +310,7 @@ export default function Dashboard() {
     connecting: isCardanoConnecting,
   } = useWallet()
 
-  const { isConnected: isEvmConnected } = useAccount()
+  const { isConnected: isEvmConnected, address: evmAddress } = useAccount()
   const { connectors, connect: connectEvm, isPending: isEvmConnecting } = useConnect()
 
   const [emailUser, setEmailUser] = useState<string | null>(null)
@@ -376,49 +376,52 @@ export default function Dashboard() {
     setEmailInput('')
   }
 
+  // ── Inventory: single source of truth from /api/user ──────────────────────
+  // When the user signs in with email, fetch their account record (hexIds is
+  // the authoritative list regardless of payment method used at purchase).
+  // When a wallet connects without email, link it to the account server-side.
   useEffect(() => {
-    async function resolveAssets() {
-      if (isCardanoConnected && cardanoWallet) {
-        setLoadingAssets(true)
-        try {
-          const rawAssets = await cardanoWallet.getAssets()
-          const assets = Array.isArray(rawAssets) ? rawAssets : []
-          const foundHexes: string[] = []
-
-          for (const asset of assets) {
-            if (asset && asset.unit && typeof asset.unit === 'string') {
-              const assetNameHex = asset.unit.length > 56 ? asset.unit.slice(56) : ''
-              if (assetNameHex.length > 0) {
-                try {
-                  const decodedName = hexToAscii(assetNameHex)
-                  if (decodedName.startsWith('Hex')) {
-                    const rawTty = decodedName.replace('Hex', '')
-                    foundHexes.push(rawTty)
-                  }
-                } catch {
-                  /* ignore */
-                }
-              }
-            }
-          }
-          setHexes(foundHexes)
-        } catch (e) {
-          console.error('Failed to fetch Cardano assets', e)
-        } finally {
-          setLoadingAssets(false)
-        }
-      } else if (isEvmConnected) {
-        setLoadingAssets(true)
-        setTimeout(() => {
-          setHexes(['EVM-Mock-Tty'])
-          setLoadingAssets(false)
-        }, 1200)
-      } else {
-        setHexes([])
-      }
+    if (!emailUser) {
+      setHexes([])
+      return
     }
-    resolveAssets()
-  }, [isCardanoConnected, cardanoWallet, isEvmConnected])
+    setLoadingAssets(true)
+    fetch('/api/user', { credentials: 'include' })
+      .then((r) => r.ok ? r.json() : Promise.reject(r.status))
+      .then((data: { account?: { hexIds?: string[] } }) => {
+        setHexes(data.account?.hexIds ?? [])
+      })
+      .catch((e) => console.error('[dashboard] failed to load user account:', e))
+      .finally(() => setLoadingAssets(false))
+  }, [emailUser])
+
+  // Link a newly connected wallet to the account (fire-and-forget)
+  useEffect(() => {
+    if (!emailUser) return
+    if (evmAddress) {
+      fetch('/api/user', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ evmAddress }),
+      }).catch(() => {})
+    }
+  }, [emailUser, evmAddress])
+
+  useEffect(() => {
+    if (!emailUser || !isCardanoConnected || !cardanoWallet) return
+    Promise.resolve(cardanoWallet.getChangeAddress?.())
+      .then((cardanoAddress: string | undefined) => {
+        if (!cardanoAddress) return
+        fetch('/api/user', {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cardanoAddress }),
+        }).catch(() => {})
+      })
+      .catch(() => {})
+  }, [emailUser, isCardanoConnected, cardanoWallet])
 
   const firstConnector = connectors[0]
 

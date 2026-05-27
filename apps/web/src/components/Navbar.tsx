@@ -7,11 +7,12 @@ import { usePathname, useRouter } from 'next/navigation'
 type SessionData = { auth: 'email' | null; email?: string | null }
 
 const topNavLinks = [
-  { href: '/presale',  label: 'Reserve',   active: (p: string) => p.startsWith('/presale') },
-  { href: '/docs',     label: 'Docs',      active: (p: string) => p.startsWith('/docs') || p === '/whitepaper' },
-  { href: '/timeline', label: 'Timeline',  active: (p: string) => p.startsWith('/timeline') },
-  { href: '/explorer', label: 'Explorer',  active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
-  { href: '/partners', label: 'Partners',  active: (p: string) => p.startsWith('/partners') },
+  { href: '/presale',   label: 'Reserve',   active: (p: string) => p.startsWith('/presale') },
+  { href: '/docs',      label: 'Docs',      active: (p: string) => p.startsWith('/docs') || p === '/whitepaper' },
+  { href: '/timeline',  label: 'Timeline',  active: (p: string) => p.startsWith('/timeline') },
+  { href: '/explorer',  label: 'Explorer',  active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
+  { href: '/partners',  label: 'Partners',  active: (p: string) => p.startsWith('/partners') },
+  { href: '/dashboard', label: 'Dashboard', active: (p: string) => p.startsWith('/dashboard'), authOnly: true },
 ]
 
 const CORPORATE_URL = 'https://malamalabs.com'
@@ -83,17 +84,19 @@ export default function Navbar() {
         <div className="flex min-w-0 items-center justify-end gap-0.5 sm:gap-2">
 
           {/* Nav links */}
-          {topNavLinks.map(({ href, label, active }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`shrink-0 whitespace-nowrap rounded-sm px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.1em] transition-colors sm:px-4 ${
-                active(pathname) ? 'text-malama-accent' : 'text-malama-ink-dim hover:text-malama-accent'
-              }`}
-            >
-              {label}
-            </Link>
-          ))}
+          {topNavLinks
+            .filter(({ authOnly }) => !authOnly || isAuthed)
+            .map(({ href, label, active }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`shrink-0 whitespace-nowrap rounded-sm px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.1em] transition-colors sm:px-4 ${
+                  active(pathname) ? 'text-malama-accent' : 'text-malama-ink-dim hover:text-malama-accent'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
 
           {/* Corporate link */}
           <a
@@ -108,31 +111,16 @@ export default function Navbar() {
             </svg>
           </a>
 
-          {/* ── Auth buttons — don't render until session resolves ── */}
+          {/* ── Auth button — don't render until session resolves ── */}
           {!isLoading && (
             isAuthed ? (
-              <div className="ml-1 sm:ml-2 flex items-center gap-2">
-                {/* Dashboard link */}
-                <Link
-                  href="/dashboard"
-                  className={`${NAV_BTN} ${
-                    pathname.startsWith('/dashboard')
-                      ? 'bg-malama-accent text-malama-bg ring-1 ring-malama-accent/60'
-                      : 'bg-malama-accent text-malama-bg hover:shadow-[0_8px_24px_rgba(196,240,97,0.2)]'
-                  }`}
-                >
-                  Dashboard
-                </Link>
-
-                {/* Sign out */}
-                <button
-                  onClick={handleSignOut}
-                  disabled={signingOut}
-                  className={`${NAV_BTN} border border-malama-line text-malama-ink-dim hover:border-red-500/50 hover:text-red-400 disabled:opacity-40`}
-                >
-                  {signingOut ? 'Signing out…' : 'Sign Out'}
-                </button>
-              </div>
+              <button
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className={`ml-1 sm:ml-2 ${NAV_BTN} border border-malama-line text-malama-ink-dim hover:border-red-500/50 hover:text-red-400 disabled:opacity-40`}
+              >
+                {signingOut ? 'Signing out…' : 'Log Out'}
+              </button>
             ) : (
               <Link
                 href="/dashboard"

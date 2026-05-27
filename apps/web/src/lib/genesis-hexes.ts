@@ -14,6 +14,19 @@ import {
   getMalamaWalletReservedHexSet,
 } from '@/lib/genesis-constants'
 
+// Import the client-safe constants for use within this file, and re-export
+// them so server-side callers can still import from genesis-hexes directly.
+// Client components must import from '@/lib/genesis-hexes.constants' instead —
+// this file transitively imports redis (Node.js-only) and cannot be bundled for the browser.
+import {
+  GENESIS_HEX_CAP,
+  GENESIS_REGION_KEYS,
+  GENESIS_REGION_LABELS,
+} from '@/lib/genesis-hexes.constants'
+import type { GenesisRegionKey } from '@/lib/genesis-hexes.constants'
+export type { GenesisRegionKey }
+export { GENESIS_HEX_CAP, GENESIS_REGION_KEYS, GENESIS_REGION_LABELS }
+
 export type RegionsData = {
   west?:     { cells: string[] }
   pacific?:  { cells: string[] }
@@ -28,18 +41,9 @@ export type RegionsData = {
  * entries.  Credit-card purchases mirror across both chains.  Crypto purchases
  * mint one chain; the other position locks once the hex sells.
  */
-export const GENESIS_HEX_CAP = 400
 
-export const GENESIS_REGION_KEYS = ['west', 'pacific', 'mountain', 'midwest', 'south'] as const
-export type GenesisRegionKey = (typeof GENESIS_REGION_KEYS)[number]
-
-export const GENESIS_REGION_LABELS: Record<GenesisRegionKey, string> = {
-  west:     'West Coast',
-  pacific:  'Pacific & Alaska',
-  mountain: 'Mountain West',
-  midwest:  'Midwest',
-  south:    'South & East',
-}
+// GENESIS_HEX_CAP, GENESIS_REGION_KEYS, GENESIS_REGION_LABELS, GenesisRegionKey
+// are re-exported from '@/lib/genesis-hexes.constants' above (client-safe split).
 
 /** @deprecated Res-5 IDs from the v2 reseed. Kept for reference only. */
 export const MALAMA_HQ_HEX = '8726cb912ffffff'

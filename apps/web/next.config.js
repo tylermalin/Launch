@@ -38,6 +38,10 @@ mergeRootEnv()
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: [
+    // node-redis uses node: built-in URIs (node:assert, node:crypto, etc.)
+    // which webpack cannot bundle for the browser. Keep them server-only.
+    'redis',
+    '@redis/client',
     '@meshsdk/core',
     '@meshsdk/core-cst',
     '@meshsdk/wallet',
@@ -80,7 +84,19 @@ const nextConfig = {
     NEXT_PUBLIC_MAGIC_API_KEY: process.env.NEXT_PUBLIC_MAGIC_API_KEY,
     NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
+    // Prevent node-redis (and its node: built-in URIs) from being bundled
+    // for the browser. If a client component accidentally imports a server-only
+    // module that reaches redis, webpack will get a missing-module error
+    // instead of a cryptic "node:assert is not handled" crash.
+    if (!isServer) {
+      config.externals = [
+        ...(Array.isArray(config.externals) ? config.externals : []),
+        'redis',
+        '@redis/client',
+      ]
+    }
+
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,

@@ -12,8 +12,14 @@ import {
   ArrowUpDown,
   PanelRight,
 } from 'lucide-react'
-import type { GenesisHexListItem, GenesisRegionKey } from '@/lib/genesis-hexes'
-import { GENESIS_REGION_KEYS, GENESIS_REGION_LABELS } from '@/lib/genesis-hexes'
+import type { GenesisHexListItem } from '@/lib/genesis-hexes'
+// Client-safe constants live in a separate file; genesis-hexes.ts imports redis
+// (Node.js built-ins) and cannot be bundled for the browser.
+import {
+  GENESIS_REGION_KEYS,
+  GENESIS_REGION_LABELS,
+} from '@/lib/genesis-hexes.constants'
+import type { GenesisRegionKey } from '@/lib/genesis-hexes.constants'
 import type { GenesisClaim } from '@/lib/genesis-claim-registry'
 import { formatGenesisListingUsd } from '@/lib/h3'
 import GenesisHexDetail from './GenesisHexDetail'

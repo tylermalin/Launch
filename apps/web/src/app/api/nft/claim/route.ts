@@ -8,6 +8,7 @@ import {
   bindEvmTokenToClaim,
 } from '@/lib/genesis-claim-registry'
 import { getCustodialRecordsByEmail } from '@/lib/custodial-store'
+import { upsertUserAccount } from '@/lib/user-account'
 
 // ─────────────────────────────────────────────────────────────────────────────
 export async function POST(req: Request) {
@@ -45,6 +46,16 @@ export async function POST(req: Request) {
     }
 
     const { claim } = result
+
+    // Upsert user account — wallet address is the anchor for direct crypto purchases
+    const accountOpts =
+      claim.chain === 'base'
+        ? { evmAddress: buyerAddress, hexId: claim.hexId }
+        : { cardanoAddress: buyerAddress, hexId: claim.hexId }
+    upsertUserAccount(accountOpts).catch((err) =>
+      console.error('[/api/nft/claim] user account upsert failed:', err)
+    )
+
     return NextResponse.json({
       success: true,
       claimId: claim.claimId,

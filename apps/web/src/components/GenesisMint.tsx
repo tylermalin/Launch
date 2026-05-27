@@ -290,7 +290,21 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       body: JSON.stringify({ hexId, chain: 'base', buyerAddress: evmAddress }),
     })
     const claimData = await claimRes.json()
-    if (!claimRes.ok) throw new Error(claimData.error ?? 'Hex already claimed on another chain')
+    // 409 means the claim was already registered — most likely a retry after
+    // MetaMask stalled or the user abandoned the gas confirmation.
+    // If the existing claim is on the same chain (base), treat it as a resume
+    // and continue with the existing claimId / editionNumber rather than blocking.
+    if (!claimRes.ok) {
+      if (
+        claimRes.status === 409 &&
+        claimData.claimId &&
+        claimData.claimedOnChain === 'base'
+      ) {
+        // Resume — fall through using the existing claim IDs below
+      } else {
+        throw new Error(claimData.error ?? 'Hex already claimed on another chain')
+      }
+    }
     const { claimId, editionNumber } = claimData as { claimId: string; editionNumber: number }
 
     // 2. USDC approve
@@ -372,7 +386,18 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       body: JSON.stringify({ hexId, chain: 'cardano', buyerAddress: cardanoAddress }),
     })
     const claimData = await claimRes.json()
-    if (!claimRes.ok) throw new Error(claimData.error ?? 'Hex already claimed on another chain')
+    // 409 on Cardano path — resume if same chain, block if stolen by Base
+    if (!claimRes.ok) {
+      if (
+        claimRes.status === 409 &&
+        claimData.claimId &&
+        claimData.claimedOnChain === 'cardano'
+      ) {
+        // Resume existing Cardano claim
+      } else {
+        throw new Error(claimData.error ?? 'Hex already claimed on another chain')
+      }
+    }
     const { claimId, editionNumber } = claimData as { claimId: string; editionNumber: number }
 
     // 2. CIP-8 message signing — pops Lace's signing dialog so the user

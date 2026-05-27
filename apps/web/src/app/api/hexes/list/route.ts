@@ -6,7 +6,7 @@ import {
 } from '@/lib/genesis-hexes'
 
 export async function GET() {
-  const items = buildGenesisHexListItems(regionsData)
+  const items = await buildGenesisHexListItems(regionsData)
   return NextResponse.json({
     genesisHexCap: GENESIS_HEX_CAP,
     count: items.length,

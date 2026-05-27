@@ -109,6 +109,8 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
   const { connected: cardanoConnected, wallet: cardanoWallet, name: cardanoWalletName, connect: connectCardano } = useCardanoWallet()
   const [cardanoWallets, setCardanoWallets] = useState<{ name: string; icon: string }[]>([])
   const [showCardanoPicker, setShowCardanoPicker] = useState(false)
+  const [cardanoConnectError, setCardanoConnectError] = useState<string | null>(null)
+  const [cardanoConnecting, setCardanoConnecting] = useState(false)
   // Raw CIP-30 API object — stored after window.cardano[name].enable() succeeds.
   // Used for signData() calls (triggers Lace signing popup) without going through MeshSDK.
   const [cardanoCip30Api, setCardanoCip30Api] = useState<{
@@ -147,15 +149,33 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
 
   // ── Direct CIP-30 connect — triggers Lace's "Connect this dApp?" popup ──
   const connectCardanoWallet = async (walletKey: string) => {
-    const win = window as typeof window & {
-      cardano?: Record<string, { name?: string; icon?: string; enable: () => Promise<any> }>
+    setCardanoConnectError(null)
+    setCardanoConnecting(true)
+    try {
+      const win = window as typeof window & {
+        cardano?: Record<string, { name?: string; icon?: string; enable: () => Promise<any> }>
+      }
+      if (!win.cardano?.[walletKey]) {
+        throw new Error(`${walletKey} wallet not found. Make sure the extension is installed and enabled.`)
+      }
+      const api = await win.cardano[walletKey].enable()
+      setCardanoCip30Api(api)
+      // Also connect via MeshSDK so cardanoWallet/cardanoConnected state updates
+      await connectCardano(walletKey).catch(() => {
+        // MeshSDK may warn internally but the raw API is already stored above
+      })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      if (msg.toLowerCase().includes('user declined') || msg.toLowerCase().includes('rejected') || msg.toLowerCase().includes('cancelled')) {
+        setCardanoConnectError('Connection cancelled — please approve the request in your Lace wallet.')
+      } else if (msg.includes('not found')) {
+        setCardanoConnectError('Lace wallet not detected. Install it from lace.io, then refresh this page.')
+      } else {
+        setCardanoConnectError(`Wallet error: ${msg}`)
+      }
+    } finally {
+      setCardanoConnecting(false)
     }
-    const api = await win.cardano![walletKey].enable()
-    setCardanoCip30Api(api)
-    // Also connect via MeshSDK so cardanoWallet/cardanoConnected state updates
-    await connectCardano(walletKey).catch(() => {
-      // MeshSDK may warn internally but the raw API is already stored
-    })
   }
 
   // ── Add NFT to MetaMask ──────────────────────────────────────────────────
@@ -601,50 +621,69 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                       ✓ READY TO MINT
                     </div>
                   ) : (
-                    <div className="relative w-full">
+                    <div className="w-full space-y-2">
                       <button
-                        onClick={async () => {
+                        disabled={cardanoConnecting}
+                        onClick={() => {
+                          setCardanoConnectError(null)
+                          setShowCardanoPicker(false)
                           const win = window as typeof window & {
                             cardano?: Record<string, { name?: string; icon?: string; enable: () => Promise<any> }>
                           }
                           const detected = Object.entries(win.cardano ?? {}).map(([key, w]) => ({
                             name: key,
-                            icon: w.icon ?? '',
+                            icon: (w as { icon?: string }).icon ?? '',
                           }))
                           if (detected.length === 0) {
-                            setCardanoWallets([])
-                            setShowCardanoPicker(true)
+                            setCardanoConnectError('No Cardano wallet detected. Install Lace from lace.io, then refresh.')
                           } else if (detected.length === 1) {
-                            await connectCardanoWallet(detected[0].name)
+                            connectCardanoWallet(detected[0].name)
                           } else {
                             setCardanoWallets(detected)
                             setShowCardanoPicker(true)
                           }
                         }}
-                        className="w-full py-2 bg-malama-accent/10 border border-malama-accent/40 text-malama-accent rounded-lg font-bold text-xs hover:bg-malama-accent/20 transition-colors"
+                        className="w-full py-2 bg-malama-accent/10 border border-malama-accent/40 text-malama-accent rounded-lg font-bold text-xs hover:bg-malama-accent/20 transition-colors disabled:opacity-50"
                       >
-                        Connect Lace / Cardano
+                        {cardanoConnecting ? 'Connecting…' : 'Connect Lace / Cardano'}
                       </button>
+
+                      {/* Wallet picker — inline, not absolute */}
                       {showCardanoPicker && cardanoWallets.length > 0 && (
-                        <div className="absolute bottom-full mb-2 left-0 w-full bg-gray-900 border border-gray-700 rounded-xl overflow-hidden z-50 shadow-xl">
+                        <div className="w-full overflow-hidden rounded-xl border border-gray-700 bg-gray-900 shadow-xl">
+                          <p className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                            Choose wallet
+                          </p>
                           {cardanoWallets.map((w) => (
                             <button
                               key={w.name}
-                              onClick={async () => {
+                              onClick={() => {
                                 setShowCardanoPicker(false)
-                                await connectCardanoWallet(w.name)
+                                connectCardanoWallet(w.name)
                               }}
-                              className="flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-800 transition-colors text-left"
+                              className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-gray-800"
                             >
-                              {w.icon && <img src={w.icon} alt={w.name} className="w-5 h-5 rounded" />}
-                              <span className="text-white text-xs font-bold uppercase tracking-wider">{w.name}</span>
+                              {w.icon && <img src={w.icon} alt={w.name} className="h-5 w-5 rounded" />}
+                              <span className="text-xs font-bold uppercase tracking-wider text-white">{w.name}</span>
                             </button>
                           ))}
                         </div>
                       )}
-                      {showCardanoPicker && cardanoWallets.length === 0 && (
-                        <div className="absolute bottom-full mb-2 left-0 w-full bg-gray-900 border border-gray-700 rounded-xl p-4 z-50 shadow-xl text-center">
-                          <p className="text-gray-400 text-xs">No Cardano wallet detected.<br />Install Lace or Eternl.</p>
+
+                      {/* Error feedback — inline, always visible */}
+                      {cardanoConnectError && (
+                        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+                          {cardanoConnectError}
+                          {cardanoConnectError.includes('lace.io') && (
+                            <a
+                              href="https://lace.io"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="ml-1.5 font-bold text-malama-accent underline"
+                            >
+                              Install →
+                            </a>
+                          )}
                         </div>
                       )}
                     </div>

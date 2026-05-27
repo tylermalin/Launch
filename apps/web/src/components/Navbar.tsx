@@ -123,7 +123,7 @@ export default function Navbar() {
               </button>
             ) : (
               <Link
-                href="/dashboard"
+                href="/auth"
                 className={`ml-1 sm:ml-2 ${NAV_BTN} bg-malama-accent text-malama-bg hover:shadow-[0_8px_24px_rgba(196,240,97,0.2)]`}
               >
                 Log In / Register

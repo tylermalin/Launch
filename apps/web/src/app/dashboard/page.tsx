@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react'
+import { useRouter } from 'next/navigation'
 import { useWallet } from '@meshsdk/react'
 import { useAccount, useConnect } from 'wagmi'
 import {
@@ -359,6 +360,8 @@ function hexToAscii(hexStr: string | undefined) {
 }
 
 export default function Dashboard() {
+  const router = useRouter()
+
   const {
     connected: isCardanoConnected,
     wallet: cardanoWallet,
@@ -371,6 +374,7 @@ export default function Dashboard() {
 
   const [emailUser, setEmailUser] = useState<string | null>(null)
   const [sessionAuth, setSessionAuth] = useState<'email' | null>(null)
+  const [sessionChecked, setSessionChecked] = useState(false)
   const [emailInput, setEmailInput] = useState('')
   const [emailSubmitting, setEmailSubmitting] = useState(false)
   const [emailError, setEmailError] = useState<string | null>(null)
@@ -408,7 +412,21 @@ export default function Dashboard() {
         else setSessionAuth(null)
       })
       .catch(() => {})
+      .finally(() => setSessionChecked(true))
   }, [])
+
+  // If session check is done and no auth found, give wallets 1.5s to
+  // reconnect, then redirect to the sign-in page.
+  useEffect(() => {
+    if (!sessionChecked) return
+    const t = setTimeout(() => {
+      const walletConnected = isCardanoConnected || isEvmConnected
+      const authenticated   = walletConnected || !!emailUser
+      if (!authenticated) router.replace('/auth')
+    }, 1500)
+    return () => clearTimeout(t)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionChecked])
 
   async function signInWithEmail(e: FormEvent) {
     e.preventDefault()

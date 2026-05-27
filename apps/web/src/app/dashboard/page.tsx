@@ -17,7 +17,8 @@ import {
   Mail,
   Loader2,
   Pencil,
-  X,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -762,49 +763,93 @@ export default function Dashboard() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {hexes.map((hex, i) => (
-                  <div
-                    key={`${hex}-${i}`}
-                    className="group relative overflow-hidden rounded-xl border border-gray-700 bg-malama-deep p-5"
-                  >
-                    <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-malama-amber/5 blur-2xl" />
+              <div className="space-y-3">
+                {hexes.map((hex, i) => {
+                  const isExpanded = detailHex?.h3Index === hex
+                  return (
+                    <div key={`${hex}-${i}`}>
+                      {/* ── Hex card ── */}
+                      <div
+                        className={`group relative overflow-hidden bg-malama-deep p-5 transition-all ${
+                          isExpanded
+                            ? 'rounded-t-xl border border-b-0 border-yellow-500/40'
+                            : 'rounded-xl border border-gray-700'
+                        }`}
+                      >
+                        <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-malama-amber/5 blur-2xl" />
 
-                    <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <span className="rounded px-2 py-1 text-[10px] font-bold bg-yellow-500/20 text-yellow-400">
-                            GENESIS TIER
-                          </span>
+                        <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <span className="rounded px-2 py-1 text-[10px] font-bold bg-yellow-500/20 text-yellow-400">
+                                GENESIS TIER
+                              </span>
+                            </div>
+                            <p className="mt-2 font-mono text-2xl font-bold text-white">{hex}</p>
+                            <p className="mt-1 text-sm text-gray-500">Target Physical Coordinate Base</p>
+                          </div>
+
+                          <div className="flex flex-col items-end gap-2">
+                            <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Active Data Markets</p>
+                            <p className="text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
+                            <div className="flex items-center gap-2">
+                              {/* Toggle inline details panel */}
+                              <button
+                                type="button"
+                                onClick={() => isExpanded ? setDetailHex(null) : openDetail(hex)}
+                                className={`inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-bold transition-colors ${
+                                  isExpanded
+                                    ? 'border-yellow-400/60 bg-yellow-500/20 text-yellow-300'
+                                    : 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400 hover:border-yellow-400 hover:bg-yellow-500/20'
+                                }`}
+                              >
+                                {isExpanded
+                                  ? <><ChevronUp className="h-3 w-3" /> Hide Details</>
+                                  : <><ChevronDown className="h-3 w-3" /> See Details</>}
+                              </button>
+                              {/* Explorer map */}
+                              <Link
+                                href={`/explorer?hex=${hex}`}
+                                className="inline-flex items-center rounded-lg border border-malama-teal/20 bg-malama-teal/10 px-3 py-1.5 text-xs font-bold text-malama-teal transition-colors hover:border-malama-teal hover:text-white"
+                              >
+                                <MapPin className="mr-1 h-3 w-3" /> View on Map
+                              </Link>
+                            </div>
+                          </div>
                         </div>
-                        <p className="mt-2 font-mono text-2xl font-bold text-white">{hex}</p>
-                        <p className="mt-1 text-sm text-gray-500">Target Physical Coordinate Base</p>
                       </div>
 
-                      <div className="flex flex-col items-end gap-2">
-                        <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Active Data Markets</p>
-                        <p className="text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
-                        <div className="flex items-center gap-2">
-                          {/* See full node details (same panel as presented at sale) */}
-                          <button
-                            type="button"
-                            onClick={() => openDetail(hex)}
-                            className="inline-flex items-center rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-1.5 text-xs font-bold text-yellow-400 transition-colors hover:border-yellow-400 hover:bg-yellow-500/20"
-                          >
-                            See Details
-                          </button>
-                          {/* Open explorer map zoomed to this hex */}
-                          <Link
-                            href={`/explorer?hex=${hex}`}
-                            className="inline-flex items-center rounded-lg border border-malama-teal/20 bg-malama-teal/10 px-3 py-1.5 text-xs font-bold text-malama-teal transition-colors hover:border-malama-teal hover:text-white"
-                          >
-                            <MapPin className="mr-1 h-3 w-3" /> View on Map
-                          </Link>
+                      {/* ── Inline details — renders flush below the card ── */}
+                      {isExpanded && (
+                        <div className="rounded-b-xl border border-t-0 border-yellow-500/40 bg-[#0a0a0a] overflow-hidden">
+                          {detailLoading || !detailHex?.h3Resolution ? (
+                            <div className="flex items-center justify-center gap-2 p-10 font-mono text-sm text-gray-500">
+                              <Loader2 className="h-4 w-4 animate-spin" /> Loading node details…
+                            </div>
+                          ) : (
+                            <div className="max-w-full">
+                              <HexPanel
+                                hex={detailHex}
+                                links={{
+                                  erc721MetadataUrl: `/api/nft/${detailHex.nodeNumber}?hexId=${detailHex.h3Index}`,
+                                  cardanoReferenceNftUrl: null,
+                                  purchaseAgreementUrl: '/legal/hex-node-purchase-agreement',
+                                  termsAndConditionsUrl: '/legal',
+                                  tokenRewardsRiskUrl: '/legal/token-rewards-risk',
+                                  zoneClassificationDocUrl: '/docs/zone-classification',
+                                  dataDemandScoreDocUrl: '/docs/data-demand-score-methodology',
+                                  pricingMethodologyDocUrl: '/docs/pricing',
+                                }}
+                                onReserveClick={() => {}}
+                                onClose={() => setDetailHex(null)}
+                              />
+                            </div>
+                          )}
                         </div>
-                      </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
 
@@ -877,49 +922,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* ── Hex Detail Modal ─────────────────────────────────────────────── */}
-      {detailHex && (
-        <div
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-          onClick={() => setDetailHex(null)}
-        >
-          <div
-            className="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto rounded-2xl border border-gray-700 bg-[#0c0c0c] shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={() => setDetailHex(null)}
-              className="absolute right-3 top-3 z-10 rounded-lg p-1.5 text-gray-500 hover:bg-gray-800 hover:text-white transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
-
-            {detailLoading || !detailHex.h3Resolution ? (
-              <div className="flex items-center justify-center gap-2 p-12 text-gray-500 font-mono text-sm">
-                <Loader2 className="h-4 w-4 animate-spin" /> Loading node details…
-              </div>
-            ) : (
-              <HexPanel
-                hex={detailHex}
-                links={{
-                  erc721MetadataUrl: `/api/nft/${detailHex.nodeNumber}?hexId=${detailHex.h3Index}`,
-                  cardanoReferenceNftUrl: null,
-                  purchaseAgreementUrl: '/legal/hex-node-purchase-agreement',
-                  termsAndConditionsUrl: '/legal',
-                  tokenRewardsRiskUrl: '/legal/token-rewards-risk',
-                  zoneClassificationDocUrl: '/docs/zone-classification',
-                  dataDemandScoreDocUrl: '/docs/data-demand-score-methodology',
-                  pricingMethodologyDocUrl: '/docs/pricing',
-                }}
-                onReserveClick={() => {}} // already owned — no-op
-                onClose={() => setDetailHex(null)}
-              />
-            )}
-          </div>
-        </div>
-      )}
     </div>
   )
 }

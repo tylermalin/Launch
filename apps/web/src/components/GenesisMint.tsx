@@ -156,20 +156,31 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
         cardano?: Record<string, { name?: string; icon?: string; enable: () => Promise<any> }>
       }
       if (!win.cardano?.[walletKey]) {
-        throw new Error(`${walletKey} wallet not found. Make sure the extension is installed and enabled.`)
+        throw new Error(`not_found`)
       }
-      const api = await win.cardano[walletKey].enable()
+
+      // Race enable() against a 12 s timeout.
+      // Lace's MV3 background service worker restarts periodically; the first
+      // enable() call sometimes hangs until it wakes back up. On timeout the
+      // user sees a friendly "try again" message — a second click usually works.
+      const api = await Promise.race([
+        win.cardano[walletKey].enable() as Promise<any>,
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), 12_000)
+        ),
+      ])
+
       setCardanoCip30Api(api)
-      // Also connect via MeshSDK so cardanoWallet/cardanoConnected state updates
-      await connectCardano(walletKey).catch(() => {
-        // MeshSDK may warn internally but the raw API is already stored above
-      })
+      // Also connect via MeshSDK so cardanoWallet/cardanoConnected state syncs
+      await connectCardano(walletKey).catch(() => {})
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err)
-      if (msg.toLowerCase().includes('user declined') || msg.toLowerCase().includes('rejected') || msg.toLowerCase().includes('cancelled')) {
+      if (msg === 'timeout') {
+        setCardanoConnectError('Lace is still starting up — click Connect again in a moment.')
+      } else if (msg === 'not_found') {
+        setCardanoConnectError('Lace wallet not detected. Install it from lace.io, then refresh.')
+      } else if (/declined|rejected|cancelled|user denied/i.test(msg)) {
         setCardanoConnectError('Connection cancelled — please approve the request in your Lace wallet.')
-      } else if (msg.includes('not found')) {
-        setCardanoConnectError('Lace wallet not detected. Install it from lace.io, then refresh this page.')
       } else {
         setCardanoConnectError(`Wallet error: ${msg}`)
       }

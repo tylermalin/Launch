@@ -75,19 +75,30 @@ export default function AuthPage() {
       const win = window as typeof window & {
         cardano?: Record<string, { enable: () => Promise<unknown> }>
       }
-      if (!win.cardano?.[walletKey]) throw new Error(`${walletKey} wallet not found`)
-      await win.cardano[walletKey].enable()
+      if (!win.cardano?.[walletKey]) throw new Error('not_found')
+
+      // Lace's MV3 background restarts periodically — race with a 12 s timeout
+      // so the UI doesn't hang. Second click almost always succeeds.
+      await Promise.race([
+        win.cardano[walletKey].enable(),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), 12_000)
+        ),
+      ])
+
       window.dispatchEvent(new Event('malama:auth'))
       router.push('/dashboard')
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Connection rejected'
-      setCardanoError(
-        msg.toLowerCase().includes('user declined') || msg.toLowerCase().includes('rejected')
-          ? 'Connection cancelled — please approve in your wallet.'
-          : msg.includes('not found')
-          ? 'Lace wallet not detected. Install it at lace.io'
-          : `Wallet error: ${msg}`,
-      )
+      if (msg === 'timeout') {
+        setCardanoError('Lace is still starting up — click Connect again in a moment.')
+      } else if (msg === 'not_found') {
+        setCardanoError('Lace wallet not detected. Install it at lace.io')
+      } else if (/declined|rejected|cancelled|user denied/i.test(msg)) {
+        setCardanoError('Connection cancelled — please approve in your wallet.')
+      } else {
+        setCardanoError(`Wallet error: ${msg}`)
+      }
     } finally {
       setCardanoConnecting(false)
     }

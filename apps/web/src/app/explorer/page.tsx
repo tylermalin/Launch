@@ -11,12 +11,13 @@
  *   /explorer   → new HexMap + HexPanel (this file)
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 import { cellToLatLng, getResolution } from 'h3-js';
 
 import { HexPanel } from '@/explorer/components/HexPanel';
-import { REGION_DESTINATIONS } from '@/explorer/components/hex-map.constants';
+import { REGION_DESTINATIONS, type HexStatus } from '@/explorer/components/hex-map.constants';
 import { classifyZone, estimateWaterCoverage, detectRegion, REGION_LABELS } from '@/lib/hex-geo';
 import type { HexMapHandle } from '@/explorer/components/HexMap';
 import type {
@@ -52,12 +53,17 @@ const HexMap = dynamic(
 );
 
 export default function ExplorerPage() {
+  const searchParams = useSearchParams();
+  const hexParam = searchParams.get('hex');
+
   const [selected, setSelected] = useState<Phase1Hex | null>(null);
   const [activeRegion, setActiveRegion] = useState<string>(REGION_DESTINATIONS[0].name);
   const [manifest, setManifest] = useState<Phase1Manifest | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [listFilter, setListFilter] = useState<string>('all');
+  const [userHexIds, setUserHexIds] = useState<string[]>([]);
+  const [hexParamHandled, setHexParamHandled] = useState(false);
   const mapRef = useRef<HexMapHandle | null>(null);
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? '';
   const isPlaceholder =
@@ -87,13 +93,52 @@ export default function ExplorerPage() {
     };
   }, []);
 
+  // Fetch the logged-in user's owned hex IDs so we can colour them yellow.
+  useEffect(() => {
+    fetch('/api/user', { credentials: 'include' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { account?: { hexIds?: string[] } } | null) => {
+        if (d?.account?.hexIds?.length) setUserHexIds(d.account.hexIds);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Overlay user-owned hexes with 'reserved-user' status (yellow) so they
+  // stand out from other red reserved nodes.
+  const enrichedManifest = useMemo<Phase1Manifest | null>(() => {
+    if (!manifest) return null;
+    if (!userHexIds.length) return manifest;
+    return {
+      ...manifest,
+      hexes: manifest.hexes.map((h) =>
+        userHexIds.includes(h.h3Index)
+          ? { ...h, status: 'reserved-user' as HexStatus }
+          : h,
+      ),
+    };
+  }, [manifest, userHexIds]);
+
+  // When the page receives ?hex=HEXID (e.g. from dashboard "View Explorer"),
+  // select the hex and fly to it once the manifest and map are ready.
+  useEffect(() => {
+    if (!enrichedManifest || !hexParam || hexParamHandled) return;
+    const hex = enrichedManifest.hexes.find((h) => h.h3Index === hexParam);
+    if (!hex) return;
+    setSelected(hex);
+    setHexParamHandled(true);
+    // Give Mapbox ~800 ms to finish initialising before flying
+    setTimeout(() => {
+      mapRef.current?.flyTo([hex.centroidLng, hex.centroidLat], 8);
+    }, 800);
+  }, [enrichedManifest, hexParam, hexParamHandled]);
+
   if (!token || isPlaceholder) {
     return <MissingToken isPlaceholder={isPlaceholder} />;
   }
   if (loadError) {
     return <LoadError message={loadError} />;
   }
-  if (!manifest) {
+  if (!enrichedManifest) {
     return <MapLoading />;
   }
 
@@ -154,7 +199,7 @@ export default function ExplorerPage() {
               <HexMap
                 ref={mapRef}
                 accessToken={token}
-                manifest={manifest}
+                manifest={enrichedManifest}
                 landCells={{} as { r1?: LandCellSet; r3?: LandCellSet; r5?: LandCellSet }}
                 onHexClick={({ hex }) => setSelected(hex)}
               />
@@ -173,7 +218,7 @@ export default function ExplorerPage() {
           </>
         ) : (
           <HexListView
-            manifest={manifest}
+            manifest={enrichedManifest}
             selected={selected}
             filter={listFilter}
             onFilterChange={setListFilter}
@@ -310,6 +355,7 @@ function buildManifestFromApi(fc: {
       upcoming: 'Held back for a future wave',
       reserved: 'Purchased by an operator or held by Mālama HQ',
       'reserved-founding': 'Held by the Mālama Labs founding team',
+      'reserved-user': 'Your Genesis Node',
       activated: 'Hardware booted and signing on-chain',
       'future-phase': 'Land cell not yet in any Phase',
       restricted: 'Sales prohibited in this jurisdiction',
@@ -418,11 +464,12 @@ function ReviewBanner({ inline = false }: { inline?: boolean }) {
 // ── Hex List View ─────────────────────────────────────────────────────────────
 
 const STATUS_COLORS: Record<string, string> = {
-  'available':        '#3b82f6',
-  'reserved':         '#dc2626',
-  'reserved-founding':'#dc2626',
-  'activated':        '#c4f061',
-  'upcoming':         '#60a5fa',
+  'available':        '#22c55e', // green — open
+  'reserved':         '#dc2626', // red   — taken
+  'reserved-founding':'#dc2626', // red   — founding team
+  'reserved-user':    '#eab308', // yellow — your hex
+  'activated':        '#c4f061', // brand accent
+  'upcoming':         '#4ade80',
   'future-phase':     '#2a2a2a',
   'restricted':       '#2a2a2a',
 };

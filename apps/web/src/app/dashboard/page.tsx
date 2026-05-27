@@ -16,8 +16,64 @@ import {
   Mail,
   Loader2,
   Pencil,
+  X,
 } from 'lucide-react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import { cellToLatLng, getResolution } from 'h3-js'
+import { classifyZone, estimateWaterCoverage, detectRegion, REGION_LABELS } from '@/lib/hex-geo'
+import type { Phase1Hex } from '@/explorer/components/hex-map.types'
+
+// HexPanel has no Mapbox dep but uses h3-js WASM — load client-side only
+const HexPanel = dynamic(
+  () => import('@/explorer/components/HexPanel').then((m) => m.HexPanel),
+  { ssr: false, loading: () => (
+    <div className="flex items-center justify-center p-12 text-gray-500 font-mono text-sm">
+      Loading details…
+    </div>
+  )},
+)
+
+/** Build a Phase1Hex from an h3Index alone (all fields derivable server-free). */
+async function buildHexFromId(hexId: string): Promise<Phase1Hex> {
+  const [lat, lng] = cellToLatLng(hexId)
+  const res = getResolution(hexId)
+  const { zone, multiplier } = classifyZone(lat, lng)
+  const waterCoveragePercent = estimateWaterCoverage(lat, lng, res)
+  const regionKey = detectRegion(lat, lng)
+  const region = REGION_LABELS[regionKey] ?? 'United States'
+
+  // Pull edition number from claim registry so nodeNumber is accurate
+  let nodeNumber = 0
+  try {
+    const r = await fetch(`/api/nft/claim?hexId=${hexId}`)
+    if (r.ok) {
+      const d = (await r.json()) as { editionNumber?: number }
+      if (d.editionNumber) nodeNumber = d.editionNumber
+    }
+  } catch { /* non-fatal */ }
+
+  return {
+    nodeNumber,
+    h3Index: hexId,
+    h3Resolution: res,
+    status: 'reserved',
+    operator: null,
+    region,
+    country: 'US',
+    administrativeArea: null,
+    locality: null,
+    postalCode: null,
+    centroidLat: lat,
+    centroidLng: lng,
+    zoneClassification: zone,
+    geographicMultiplier: multiplier,
+    waterCoveragePercent,
+    dataDemandScore: null,
+    listingReferenceUsd: 2228,
+    genesisReserveUsd: 2000,
+  }
+}
 
 // ─── Shipping address (mirrors lib/shipping-store.ts) ────────────────────────
 
@@ -324,6 +380,21 @@ export default function Dashboard() {
 
   const [hexes, setHexes] = useState<string[]>([])
   const [loadingAssets, setLoadingAssets] = useState(false)
+
+  // ── Hex detail modal ──────────────────────────────────────────────────────
+  const [detailHex, setDetailHex] = useState<Phase1Hex | null>(null)
+  const [detailLoading, setDetailLoading] = useState(false)
+
+  async function openDetail(hexId: string) {
+    setDetailLoading(true)
+    setDetailHex(null)
+    // Show the modal shell immediately while data loads
+    setDetailHex({ h3Index: hexId } as Phase1Hex)
+    const full = await buildHexFromId(hexId)
+    setDetailHex(full)
+    setDetailLoading(false)
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   const currentStatus = hexes.length > 0 ? 'Hardware Pending' : 'Awaiting Genesis License'
   const activePredictionMarkets = hexes.length > 0 ? 8 : 0
@@ -684,11 +755,7 @@ export default function Dashboard() {
                     <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
                       <div>
                         <div className="flex items-center space-x-2">
-                          <span
-                            className={`rounded px-2 py-1 text-[10px] font-bold ${
-                              isEvmConnected ? 'bg-blue-500/20 text-blue-400' : 'bg-malama-teal/20 text-malama-teal'
-                            }`}
-                          >
+                          <span className="rounded px-2 py-1 text-[10px] font-bold bg-yellow-500/20 text-yellow-400">
                             GENESIS TIER
                           </span>
                         </div>
@@ -696,15 +763,26 @@ export default function Dashboard() {
                         <p className="mt-1 text-sm text-gray-500">Target Physical Coordinate Base</p>
                       </div>
 
-                      <div className="text-right">
+                      <div className="flex flex-col items-end gap-2">
                         <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Active Data Markets</p>
-                        <p className="mb-2 text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
-                        <Link
-                          href={`/explorer?hex=${hex}`}
-                          className="inline-flex items-center rounded-lg border border-malama-teal/20 bg-malama-teal/10 px-3 py-1.5 text-xs font-bold text-malama-teal transition-colors hover:border-malama-teal hover:text-white"
-                        >
-                          <MapPin className="mr-1 h-3 w-3" /> View Explorer
-                        </Link>
+                        <p className="text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
+                        <div className="flex items-center gap-2">
+                          {/* See full node details (same panel as presented at sale) */}
+                          <button
+                            type="button"
+                            onClick={() => openDetail(hex)}
+                            className="inline-flex items-center rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-1.5 text-xs font-bold text-yellow-400 transition-colors hover:border-yellow-400 hover:bg-yellow-500/20"
+                          >
+                            See Details
+                          </button>
+                          {/* Open explorer map zoomed to this hex */}
+                          <Link
+                            href={`/explorer?hex=${hex}`}
+                            className="inline-flex items-center rounded-lg border border-malama-teal/20 bg-malama-teal/10 px-3 py-1.5 text-xs font-bold text-malama-teal transition-colors hover:border-malama-teal hover:text-white"
+                          >
+                            <MapPin className="mr-1 h-3 w-3" /> View on Map
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -780,6 +858,50 @@ export default function Dashboard() {
           </section>
         </div>
       </div>
+
+      {/* ── Hex Detail Modal ─────────────────────────────────────────────── */}
+      {detailHex && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          onClick={() => setDetailHex(null)}
+        >
+          <div
+            className="relative w-full max-w-[420px] max-h-[90vh] overflow-y-auto rounded-2xl border border-gray-700 bg-[#0c0c0c] shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={() => setDetailHex(null)}
+              className="absolute right-3 top-3 z-10 rounded-lg p-1.5 text-gray-500 hover:bg-gray-800 hover:text-white transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            {detailLoading || !detailHex.h3Resolution ? (
+              <div className="flex items-center justify-center gap-2 p-12 text-gray-500 font-mono text-sm">
+                <Loader2 className="h-4 w-4 animate-spin" /> Loading node details…
+              </div>
+            ) : (
+              <HexPanel
+                hex={detailHex}
+                links={{
+                  erc721MetadataUrl: `/api/nft/${detailHex.nodeNumber}?hexId=${detailHex.h3Index}`,
+                  cardanoReferenceNftUrl: null,
+                  purchaseAgreementUrl: '/legal/hex-node-purchase-agreement',
+                  termsAndConditionsUrl: '/legal',
+                  tokenRewardsRiskUrl: '/legal/token-rewards-risk',
+                  zoneClassificationDocUrl: '/docs/zone-classification',
+                  dataDemandScoreDocUrl: '/docs/data-demand-score-methodology',
+                  pricingMethodologyDocUrl: '/docs/pricing',
+                }}
+                onReserveClick={() => {}} // already owned — no-op
+                onClose={() => setDetailHex(null)}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

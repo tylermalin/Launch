@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { useEffect, useState, useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { useAccount, useDisconnect } from 'wagmi'
+import { useWallet } from '@meshsdk/react'
 
 type SessionData = { auth: 'email' | null; email?: string | null }
 
@@ -20,10 +22,25 @@ const CORPORATE_URL = 'https://malamalabs.com'
 const NAV_BTN =
   'shrink-0 whitespace-nowrap rounded-malama-sm px-[18px] py-[11px] text-center font-mono text-[11px] font-semibold uppercase tracking-[0.1em] transition-all hover:-translate-y-px'
 
+// Small dot colored by auth method
+function AuthDot({ method }: { method: 'evm' | 'cardano' | 'email' }) {
+  const color =
+    method === 'evm'     ? 'bg-blue-400'          :
+    method === 'cardano' ? 'bg-malama-accent'      :
+                           'bg-emerald-400'
+  return <span className={`inline-block h-1.5 w-1.5 rounded-full ${color} shrink-0`} />
+}
+
 export default function Navbar() {
   const pathname = usePathname()
   const router   = useRouter()
 
+  // ── Wallet state (client-side) ────────────────────────────────────────────
+  const { address: evmAddress, isConnected: evmConnected } = useAccount()
+  const { disconnect: disconnectEvm } = useDisconnect()
+  const { connected: cardanoConnected, name: cardanoWalletName, disconnect: cardanoDisconnect } = useWallet()
+
+  // ── Server session state ──────────────────────────────────────────────────
   // undefined = not yet resolved (avoids flash)
   const [session, setSession] = useState<SessionData | undefined>(undefined)
   const [signingOut, setSigningOut] = useState(false)
@@ -45,16 +62,43 @@ export default function Navbar() {
     return () => window.removeEventListener('malama:auth', handler)
   }, [fetchSession])
 
-  const isAuthed  = session?.auth != null
+  // ── Combine all auth sources ──────────────────────────────────────────────
+  const isAuthed  = session?.auth != null || evmConnected || cardanoConnected
   const isLoading = session === undefined
 
+  // Auth method for display
+  const authMethod: 'evm' | 'cardano' | 'email' | null =
+    evmConnected    ? 'evm'     :
+    cardanoConnected ? 'cardano' :
+    session?.auth === 'email' ? 'email' :
+    null
+
+  // Short identity string shown in the chip
+  let authIdentity: string | null = null
+  if (evmConnected && evmAddress) {
+    authIdentity = `${evmAddress.slice(0, 6)}…${evmAddress.slice(-4)}`
+  } else if (cardanoConnected && cardanoWalletName) {
+    authIdentity = cardanoWalletName.charAt(0).toUpperCase() + cardanoWalletName.slice(1)
+  } else if (session?.email) {
+    authIdentity = session.email.length > 22
+      ? `${session.email.slice(0, 20)}…`
+      : session.email
+  }
+
+  // ── Sign out ──────────────────────────────────────────────────────────────
   async function handleSignOut() {
     setSigningOut(true)
-    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
-    setSession({ auth: null })
-    setSigningOut(false)
-    router.push('/')
-    router.refresh()
+    try {
+      if (evmConnected) disconnectEvm()
+      if (cardanoConnected) cardanoDisconnect()
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+      setSession({ auth: null })
+      window.dispatchEvent(new Event('malama:auth'))
+      router.push('/')
+      router.refresh()
+    } finally {
+      setSigningOut(false)
+    }
   }
 
   return (
@@ -111,16 +155,28 @@ export default function Navbar() {
             </svg>
           </a>
 
-          {/* ── Auth button — don't render until session resolves ── */}
+          {/* ── Auth section — don't render until session resolves ── */}
           {!isLoading && (
             isAuthed ? (
-              <button
-                onClick={handleSignOut}
-                disabled={signingOut}
-                className={`ml-1 sm:ml-2 ${NAV_BTN} border border-malama-line text-malama-ink-dim hover:border-red-500/50 hover:text-red-400 disabled:opacity-40`}
-              >
-                {signingOut ? 'Signing out…' : 'Log Out'}
-              </button>
+              <div className="ml-1 sm:ml-2 flex items-center gap-1.5">
+
+                {/* Identity chip — shows wallet address / wallet name / email */}
+                {authIdentity && authMethod && (
+                  <span className="hidden md:inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-malama-sm border border-malama-line bg-malama-card px-3 py-[11px] font-mono text-[10px] text-malama-ink-dim tracking-wide">
+                    <AuthDot method={authMethod} />
+                    {authIdentity}
+                  </span>
+                )}
+
+                {/* Log Out */}
+                <button
+                  onClick={handleSignOut}
+                  disabled={signingOut}
+                  className={`${NAV_BTN} border border-malama-line text-malama-ink-dim hover:border-red-500/50 hover:text-red-400 disabled:opacity-40`}
+                >
+                  {signingOut ? 'Signing out…' : 'Log Out'}
+                </button>
+              </div>
             ) : (
               <Link
                 href="/auth"

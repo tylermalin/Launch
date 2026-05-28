@@ -8,6 +8,7 @@ import { getClaimByHex } from '@/lib/genesis-claim-registry'
 import { setSessionProcessing, lockHexForMagicCheckout } from '@/lib/custodial-store'
 import { getCardCustodyMode } from '@/lib/card-custody'
 import { getStripeSecretKey } from '@/lib/stripe-server'
+import { resolveAppUrl } from '@/lib/resolve-app-url'
 
 const KOL_ID_RE = /^[a-zA-Z0-9_-]{1,48}$/
 
@@ -52,17 +53,7 @@ export async function POST(req: Request) {
     if (await getClaimByHex(hexId)) {
       return NextResponse.json({ error: 'This hex is already reserved' }, { status: 409 })
     }
-    // Derive the app URL for Stripe success/cancel redirects.
-    // Priority: explicit env var → Vercel prod URL → Vercel preview URL → request origin.
-    // Never fall back to localhost on an actual Vercel deployment.
-    const appUrl = (() => {
-      if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL
-      if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
-      const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host')
-      if (host) return `https://${host}`
-      return 'http://localhost:3000'
-    })()
+    const appUrl = resolveAppUrl(req)
     const transferToken = randomUUID()
 
     const stripe = new Stripe(secret)

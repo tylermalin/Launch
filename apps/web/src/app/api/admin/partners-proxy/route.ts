@@ -15,6 +15,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { parseEmailSessionToken } from '@/lib/email-session';
+import { resolveAppUrl } from '@/lib/resolve-app-url';
 
 // ── Admin auth ────────────────────────────────────────────────────────────────
 
@@ -39,7 +40,7 @@ function isAdmin(email: string | null): boolean {
 
 // ── KOL API forwarding ────────────────────────────────────────────────────────
 
-const KOL_BASE = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+const KOL_BASE = resolveAppUrl();
 
 async function kolFetch(path: string, init?: RequestInit) {
   const secret = process.env.ADMIN_SECRET ?? '';

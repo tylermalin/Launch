@@ -5,6 +5,7 @@ import type { CustodialRecord } from '@/lib/custodial-store'
 import { getSessionStatus } from '@/lib/custodial-store'
 import { getStripeSecretKey } from '@/lib/stripe-server'
 import { requireGenesisContract } from '@/lib/genesis-contract'
+import { resolveAppUrl } from '@/lib/resolve-app-url'
 
 export const runtime = 'nodejs'
 
@@ -19,7 +20,7 @@ export async function GET(req: Request) {
   // build "Collect page data" when the env var isn't set on a preview branch.
   const GENESIS_CONTRACT = requireGenesisContract()
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const appUrl = resolveAppUrl(req)
 
   const respondAwaitingMagic = (p: { transferToken: string }, stripeCheckoutSessionId: string) =>
     NextResponse.json({

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import GenesisMint from '@/components/GenesisMintDynamic'
+import { resolveAppUrl } from '@/lib/resolve-app-url'
 
 export const metadata: Metadata = {
   title: 'Reserve with Crypto or Card | Mālama Genesis | Mālama Labs',
@@ -83,7 +84,7 @@ async function PresaleStats() {
   let remaining = 195
   let reserved = 5
   try {
-    const base = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const base = resolveAppUrl()
     const res = await fetch(`${base}/api/presale`, { cache: 'no-store' })
     const data = await res.json()
     total = data.total ?? 200

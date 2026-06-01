@@ -16,6 +16,7 @@ export function resolveAppUrl(req?: Request): string {
   const isPreview = process.env.VERCEL_ENV === 'preview'
 
   if (isPreview) {
+    if (process.env.VERCEL_BRANCH_URL) return `https://${process.env.VERCEL_BRANCH_URL}`
     if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
     if (req) {
       const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host')

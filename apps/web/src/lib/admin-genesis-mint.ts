@@ -24,9 +24,20 @@ export async function adminMintToAddress(opts: {
   hexId: string
   recipient: `0x${string}`
 }): Promise<{ txHash: `0x${string}`; tokenId: number | null }> {
-  const ownerKey = process.env.GENESIS_OWNER_PRIVATE_KEY
+  const ownerKey = process.env.GENESIS_OWNER_PRIVATE_KEY?.trim()
   const rpc = getRpc()
   const isPlaceholderContract = GENESIS_CONTRACT === '0x2222222222222222222222222222222222222222'
+
+  if (process.env.NODE_ENV === 'production') {
+    if (!ownerKey || !rpc || isPlaceholderContract) {
+      const missing = [
+        !ownerKey && 'GENESIS_OWNER_PRIVATE_KEY',
+        !rpc && 'BASE_SEPOLIA_RPC_URL',
+        isPlaceholderContract && 'NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS',
+      ].filter(Boolean).join(', ')
+      throw new Error(`CRITICAL: Production minting requires valid configuration but env is missing: ${missing}. Simulation is strictly forbidden.`)
+    }
+  }
 
   if (!ownerKey || !rpc || isPlaceholderContract) {
     if (process.env.MINT_SIMULATION !== 'true') {

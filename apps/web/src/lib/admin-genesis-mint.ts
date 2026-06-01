@@ -5,7 +5,7 @@ import {
   http,
   parseAbi,
 } from 'viem'
-import { privateKeyToAccount } from 'viem/accounts'
+import { mnemonicToAccount } from 'viem/accounts'
 import { baseSepolia } from 'viem/chains'
 
 const MHNL_ABI = parseAbi([
@@ -23,15 +23,15 @@ export async function adminMintToAddress(opts: {
   hexId: string
   recipient: `0x${string}`
 }): Promise<{ txHash: `0x${string}`; tokenId: number }> {
-  const pk = process.env.GENESIS_ADMIN_PRIVATE_KEY
+  const mnemonic = process.env.TREASURY_MNEMONIC
   const rpc = process.env.BASE_SEPOLIA_RPC_URL || process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
   const isPlaceholderContract = GENESIS_CONTRACT === '0x2222222222222222222222222222222222222222'
 
-  // Dev simulation: if admin key, RPC, or real contract address are missing, return a
+  // Dev simulation: if mnemonic, RPC, or real contract address are missing, return a
   // mock result so the full custodial claim flow can be exercised locally.
-  if (!pk || !pk.startsWith('0x') || !rpc || isPlaceholderContract) {
+  if (!mnemonic || !rpc || isPlaceholderContract) {
     const missing = [
-      (!pk || !pk.startsWith('0x')) && 'GENESIS_ADMIN_PRIVATE_KEY',
+      !mnemonic && 'TREASURY_MNEMONIC',
       !rpc && 'BASE_SEPOLIA_RPC_URL',
       isPlaceholderContract && 'NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS',
     ].filter(Boolean).join(', ')
@@ -43,7 +43,8 @@ export async function adminMintToAddress(opts: {
     }
   }
 
-  const account = privateKeyToAccount(pk as `0x${string}`)
+  const account = mnemonicToAccount(mnemonic)
+  console.log('[admin-mint] signer', account.address)
   const publicClient = createPublicClient({ chain: baseSepolia, transport: http(rpc) })
   const walletClient = createWalletClient({
     account,

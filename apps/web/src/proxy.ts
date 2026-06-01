@@ -9,7 +9,10 @@ function isPublicPath(pathname: string) {
     pathname === '/password' ||
     pathname.startsWith('/api/auth/password') ||
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon')
+    pathname.startsWith('/favicon') ||
+    pathname === '/presale' ||
+    pathname.startsWith('/presale/') ||
+    pathname.startsWith('/launch')
   )
 }
 

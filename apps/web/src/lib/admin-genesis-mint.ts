@@ -16,27 +16,29 @@ const MHNL_ABI = parseAbi([
 const GENESIS_CONTRACT = (process.env.NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS ??
   '0x2222222222222222222222222222222222222222') as `0x${string}`
 
-/**
- * Owner-only mint for card / off-chain settlement (matches GenesisValidator.adminSecureNode).
- */
+function getRpc() {
+  return process.env.BASE_SEPOLIA_RPC_URL || process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
+}
+
 export async function adminMintToAddress(opts: {
   hexId: string
   recipient: `0x${string}`
-}): Promise<{ txHash: `0x${string}`; tokenId: number }> {
+}): Promise<{ txHash: `0x${string}`; tokenId: number | null }> {
   const ownerKey = process.env.GENESIS_OWNER_PRIVATE_KEY
-  const rpc = process.env.BASE_SEPOLIA_RPC_URL || process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
+  const rpc = getRpc()
   const isPlaceholderContract = GENESIS_CONTRACT === '0x2222222222222222222222222222222222222222'
 
-  // Dev simulation: if ownerKey, RPC, or real contract address are missing, return a
-  // mock result so the full custodial claim flow can be exercised locally.
   if (!ownerKey || !rpc || isPlaceholderContract) {
-    const missing = [
-      !ownerKey && 'GENESIS_OWNER_PRIVATE_KEY',
-      !rpc && 'BASE_SEPOLIA_RPC_URL',
-      isPlaceholderContract && 'NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS',
-    ].filter(Boolean).join(', ')
-    console.warn(`⚠️  MINT SIMULATED (missing: ${missing}). Set env vars for real minting.`)
-    await new Promise(r => setTimeout(r, 1500))
+    if (process.env.MINT_SIMULATION !== 'true') {
+      const missing = [
+        !ownerKey && 'GENESIS_OWNER_PRIVATE_KEY',
+        !rpc && 'BASE_SEPOLIA_RPC_URL',
+        isPlaceholderContract && 'NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS',
+      ].filter(Boolean).join(', ')
+      throw new Error(`Mint misconfigured (missing: ${missing}). Set MINT_SIMULATION=true to simulate.`)
+    }
+    console.warn('MINT SIMULATED (MINT_SIMULATION=true).')
+    await new Promise(r => setTimeout(r, 500))
     return {
       txHash: `0xmock_${opts.hexId}_${Date.now()}` as `0x${string}`,
       tokenId: Math.floor(Math.random() * 300) + 1,
@@ -45,7 +47,6 @@ export async function adminMintToAddress(opts: {
 
   const account = privateKeyToAccount(ownerKey as `0x${string}`)
   console.log('[admin-mint] signer', account.address)
-  const publicClient = createPublicClient({ chain: baseSepolia, transport: http(rpc) })
   const walletClient = createWalletClient({
     account,
     chain: baseSepolia,
@@ -59,18 +60,27 @@ export async function adminMintToAddress(opts: {
     args: [opts.recipient, opts.hexId],
   })
 
-  const receipt = await publicClient.waitForTransactionReceipt({ hash })
-  let tokenId = 1
-  for (const log of receipt.logs) {
-    try {
-      const decoded = decodeEventLog({ abi: MHNL_ABI, ...log })
-      if (decoded.eventName === 'NodeSecured') {
-        tokenId = Number((decoded.args as { tokenId: bigint }).tokenId)
-      }
-    } catch {
-      /* ignore */
-    }
-  }
+  return { txHash: hash, tokenId: null }
+}
 
-  return { txHash: hash, tokenId }
+export async function resolveTokenIdFromTx(
+  hash: `0x${string}`,
+): Promise<number | null> {
+  const rpc = getRpc()
+  if (!rpc || hash.startsWith('0xmock_')) return null
+  const publicClient = createPublicClient({ chain: baseSepolia, transport: http(rpc) })
+  try {
+    const receipt = await publicClient.waitForTransactionReceipt({ hash, timeout: 30_000 })
+    for (const log of receipt.logs) {
+      try {
+        const decoded = decodeEventLog({ abi: MHNL_ABI, ...log })
+        if (decoded.eventName === 'NodeSecured') {
+          return Number((decoded.args as { tokenId: bigint }).tokenId)
+        }
+      } catch { /* not our event */ }
+    }
+  } catch {
+    return null
+  }
+  return null
 }

@@ -1,7 +1,7 @@
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
 import { issueClaim, bindEvmTokenToClaim, updateClaimTxHash } from '@/lib/genesis-claim-registry'
 import { encryptPrivateKeyHex } from '@/lib/wallet-crypto'
-import { adminMintToAddress } from '@/lib/admin-genesis-mint'
+import { adminMintToAddress, resolveTokenIdFromTx } from '@/lib/admin-genesis-mint'
 import { getCardCustodyMode } from '@/lib/card-custody'
 import type { CustodialRecord } from '@/lib/custodial-store'
 import {
@@ -106,12 +106,11 @@ export async function fulfillCardPurchase(opts: {
 
     const encryptedPrivateKey = encryptPrivateKeyHex(pk)
 
-    const { txHash, tokenId } = await adminMintToAddress({
+    const { txHash } = await adminMintToAddress({
       hexId,
       recipient: address,
     })
 
-    await bindEvmTokenToClaim(claimId, tokenId)
     await updateClaimTxHash({ claimId, txHash })
 
     const record: CustodialRecord = {
@@ -121,7 +120,7 @@ export async function fulfillCardPurchase(opts: {
       address,
       encryptedPrivateKey,
       transferToken,
-      evmTokenId: tokenId,
+      evmTokenId: 0,
       txHash,
       createdAt: new Date().toISOString(),
       custody: 'server',
@@ -132,6 +131,15 @@ export async function fulfillCardPurchase(opts: {
     await saveCustodialRecord(record)
     await setSessionComplete(stripeSessionId, record)
     await markStripeSessionProcessed(stripeSessionId)
+
+    const tokenId = await resolveTokenIdFromTx(txHash)
+    if (tokenId !== null) {
+      await bindEvmTokenToClaim(claimId, tokenId)
+    } else {
+      void resolveTokenIdFromTx(txHash).then((tid) => {
+        if (tid !== null) bindEvmTokenToClaim(claimId, tid).catch(() => {})
+      })
+    }
 
     // Upsert user account — email is the anchor for card purchases
     await upsertUserAccount({ email, evmAddress: address, hexId }).catch((err) =>

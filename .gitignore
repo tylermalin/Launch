@@ -79,3 +79,5 @@ docker-volumes/
 *~
 .vercel
 .env*.local
+
+*.tsbuildinfo

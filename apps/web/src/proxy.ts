@@ -29,7 +29,7 @@ export async function proxy(request: Request) {
 
     if (!hasAccess) {
       const dest = new URL('/password', request.url)
-      dest.searchParams.set('from', pathname)
+      dest.searchParams.set('from', pathname + url.search)
       return NextResponse.redirect(dest)
     }
   }

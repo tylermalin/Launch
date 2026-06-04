@@ -37,7 +37,7 @@ export default function LegalIndexPage() {
           <aside className="meta-card" aria-label="Document index metadata">
             <div className="row"><span className="k">Entity</span><span className="v">Mālama Labs Inc.</span></div>
             <div className="row"><span className="k">Jurisdiction</span><span className="v">Delaware, USA</span></div>
-            <div className="row"><span className="k">Documents</span><span className="v">5 total · 4 live</span></div>
+            <div className="row"><span className="k">Documents</span><span className="v">5 total · 4 in force · 1 draft</span></div>
             <div className="row"><span className="k">Last review</span><span className="v">April 28, 2026</span></div>
             <div className="row"><span className="k">Contact</span><span className="v accent">legal@malamalabs.com</span></div>
           </aside>
@@ -106,8 +106,8 @@ export default function LegalIndexPage() {
           </div>
 
           <div className="docs-meta-strip coming">
-            <span>Coming with launch</span>
-            <span className="count">1 document · drafting</span>
+            <span>In drafting · available to read</span>
+            <span className="count">1 document · draft v0.1</span>
           </div>
 
           <div className="doc-grid">

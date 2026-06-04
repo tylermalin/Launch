@@ -97,7 +97,7 @@ export default function LegalIndexPage() {
                 <span className="status">In force</span>
               </div>
               <h3>Token &amp; Rewards Risk Disclosure</h3>
-              <p>Plain-language risk factors: token volatility, regulatory uncertainty, Genesis-200 forfeiture, audit gates, slashing, the Year-3 emissions cliff, and the 8-point acknowledgment.</p>
+              <p>Plain-language risk factors: token volatility, regulatory uncertainty, Genesis-200 forfeiture, audit gates, slashing, the Year 4-5 revenue-funding transition, and the 8-point acknowledgment.</p>
               <div className="footline">
                 <span>15 sections · ~20 min read</span>
                 <span className="read">Read →</span>

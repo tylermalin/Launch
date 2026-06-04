@@ -6,7 +6,7 @@ import TocScrollSpy from './TocScrollSpy'
 export const metadata: Metadata = {
   title: 'Token & Rewards Risk Disclosure | Mālama Labs',
   description:
-    'The plain-language risks of participating in the Mālama network. Token volatility, regulatory uncertainty, deployment forfeiture, audit gates, slashing, and the Year 3 emissions cliff.',
+    'The plain-language risks of participating in the Mālama network. Token volatility, regulatory uncertainty, deployment forfeiture, audit gates, slashing, and the revenue-funding transition.',
 }
 
 /**
@@ -72,7 +72,7 @@ export default function TokenRewardsRiskPage() {
             <p className="lede">
               The plain-language risks of participating in the Mālama network. Token
               volatility, regulatory uncertainty, deployment forfeiture, audit gates,
-              slashing, and the Year 3 emissions cliff.
+              slashing, and the revenue-funding transition.
             </p>
           </div>
 
@@ -618,27 +618,24 @@ export default function TokenRewardsRiskPage() {
                 <strong>
                   These economics are not sustainable or representative of long-term returns.
                 </strong>{' '}
-                The Genesis Multiplier expires permanently at the end of Year 1. Emissions
-                stop entirely after Year 3. Any projected earnings based on Year 1 Genesis
+                The Genesis Multiplier expires permanently at the end of Year 1. Emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8. Any projected earnings based on Year 1 Genesis
                 phase economics will not persist beyond that phase.
               </p>
 
-              <h3>Year 3 → Year 4 transition</h3>
+              <h3>Emission taper and revenue transition</h3>
               <div className="callout warn">
-                <span className="tag">▲ Emissions cliff · Year 4</span>
+                <span className="tag">▲ Revenue-funding transition</span>
                 <p>
-                  Token emissions end entirely after Year 3. From Year 4, all operator rewards
-                  come from <strong>protocol revenue only</strong>.
+                  Scheduled emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8. The network transitions to revenue-funded operator distributions by Years 4-5; from Year 9 all operator rewards come from <strong>protocol revenue only</strong>.
                 </p>
                 <p>
                   If protocol revenue in Years 4-5 is lower than projected. Whether due to
                   slower enterprise customer adoption, registry acceptance delays, or
                   competitive pressure. Operator rewards will be proportionally lower.{' '}
-                  <strong>There is no emission-funded floor in Years 4-5.</strong>
+                  <strong>Emissions taper toward zero over this period, so later-year distributions increasingly depend on actual protocol revenue.</strong>
                 </p>
                 <p>
-                  Operators who model Year 4-5 economics based on Year 1-3 token emission
-                  levels are modeling a different regime.
+                  Operators who model later-year economics based on peak early-year emission levels are modeling a different regime.
                 </p>
               </div>
 
@@ -845,8 +842,7 @@ export default function TokenRewardsRiskPage() {
                 network sustainability.
               </p>
               <p>
-                <strong>Immutable parameters</strong>. The 500M MLMA hard cap, the Year 3
-                emissions end date, the Genesis 200 supply cap, and hex exclusivity. Cannot
+                <strong>Immutable parameters</strong>. The 500M MLMA hard cap, the 8-year emission schedule (60M total), the Genesis 200 supply cap, and hex exclusivity. Cannot
                 be changed through governance. All other reward parameters are subject to
                 governance modification with notice as described in the{' '}
                 <Link

@@ -175,10 +175,15 @@ export default function HexNodePurchasePage() {
 
               <h3>Emission schedule</h3>
               <div className="spec-list">
-                <div className="row"><div className="k">Year 1</div><div className="v"><strong>9.0M MLMA</strong> · 750K / month.</div></div>
-                <div className="row"><div className="k">Year 2</div><div className="v"><strong>25.2M MLMA</strong> · 2.1M / month.</div></div>
-                <div className="row"><div className="k">Year 3</div><div className="v"><strong>45.0M MLMA</strong> · 3.75M / month.</div></div>
-                <div className="row"><div className="k">Years 4-5</div><div className="v"><strong>Zero emissions.</strong> All operator rewards funded by protocol revenue.</div></div>
+                <div className="row"><div className="k">Year 1</div><div className="v"><strong>12.0M MLMA</strong> · 1.000M / month.</div></div>
+                <div className="row"><div className="k">Year 2</div><div className="v"><strong>14.0M MLMA</strong> · 1.167M / month.</div></div>
+                <div className="row"><div className="k">Year 3</div><div className="v"><strong>12.0M MLMA</strong> · 1.000M / month.</div></div>
+                <div className="row"><div className="k">Year 4</div><div className="v"><strong>9.0M MLMA</strong> · 0.750M / month.</div></div>
+                <div className="row"><div className="k">Year 5</div><div className="v"><strong>6.0M MLMA</strong> · 0.500M / month.</div></div>
+                <div className="row"><div className="k">Year 6</div><div className="v"><strong>4.0M MLMA</strong> · 0.333M / month.</div></div>
+                <div className="row"><div className="k">Year 7</div><div className="v"><strong>2.0M MLMA</strong> · 0.167M / month.</div></div>
+                <div className="row"><div className="k">Year 8</div><div className="v"><strong>1.0M MLMA</strong> · 0.083M / month.</div></div>
+                <div className="row"><div className="k">Year 9+</div><div className="v"><strong>Zero emissions.</strong> All operator distributions funded by protocol revenue.</div></div>
               </div>
               <p>Emissions commence following Genesis Hex Sale audit clearance, not automatically at a calendar date.</p>
 
@@ -215,8 +220,8 @@ export default function HexNodePurchasePage() {
                   <div className="v">The MLMA token has a hard supply cap of <strong>500,000,000</strong>, enforced on-chain. No governance action can increase the total supply beyond this figure. <span className="pill immutable">▲ Immutable</span></div>
                 </div>
                 <div className="row">
-                  <div className="k">Emissions end after Year 3</div>
-                  <div className="v">Scheduled token emissions end entirely after Year 3. No governance action can extend the emission schedule. <strong>Years 4-5 are revenue-funded only.</strong> <span className="pill immutable">▲ Immutable</span></div>
+                  <div className="k">Fixed 8-year emission schedule</div>
+                  <div className="v">Scheduled emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8. No governance action can extend or alter the emission schedule. <strong>Operation is revenue-funded thereafter.</strong> <span className="pill immutable">▲ Immutable</span></div>
                 </div>
                 <div className="row">
                   <div className="k">Genesis 200 supply</div>
@@ -294,7 +299,7 @@ export default function HexNodePurchasePage() {
                 <p>A Hex Node is technical infrastructure, not a financial product. <strong>There is no guarantee of Rewards, Tokens, or earnings.</strong> Reward mechanisms may change or be discontinued through governance processes.</p>
               </div>
               <p>Validation rewards depend on network conditions, data volume in your hex zone, your Data Quality Score, Uptime Factor, Geographic Multiplier, the total active validator set, and MLMA market price. All of which vary and are outside Mālama&rsquo;s control or guarantee.</p>
-              <p>Year 1 Genesis phase reward levels are a deliberately <strong>front-loaded bootstrapping mechanism</strong>. They are not indicative of steady-state returns. Emissions stop entirely after Year 3. Nothing in this Agreement constitutes an investment contract, a promise of profit, or financial advice.</p>
+              <p>Year 1 Genesis phase reward levels are a deliberately <strong>front-loaded bootstrapping mechanism</strong>. They are not indicative of steady-state returns. Emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8. Nothing in this Agreement constitutes an investment contract, a promise of profit, or financial advice.</p>
             </div>
           </section>
 

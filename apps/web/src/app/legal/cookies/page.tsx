@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import '../legal-doc.css'
 import LegalPageShell from '../_shared/LegalPageShell'
+import ManageCookiesButton from '@/components/ManageCookiesButton'
 
 export const metadata: Metadata = {
   title: 'Cookie Policy · Mālama Labs',
@@ -120,6 +121,7 @@ export default function CookiePolicyPage() {
             <div className="clause-head"><span className="num">§ 07</span><h2>Your choices and controls</h2><a className="anchor" href="#s7">#s7</a></div>
             <div className="clause-body">
               <p>You can manage non-essential cookies through the consent banner&rsquo;s preference center, which lets you accept or reject each non-essential category and change your choice later. You can also control cookies through your browser settings, which allow you to block or delete cookies; blocking strictly necessary cookies may break parts of the Services. Mobile operating systems provide additional controls for advertising identifiers and tracking.</p>
+              <div style={{ marginTop: 16 }}><ManageCookiesButton /></div>
             </div>
           </section>
 

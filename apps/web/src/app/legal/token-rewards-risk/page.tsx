@@ -129,7 +129,7 @@ export default function TokenRewardsRiskPage() {
             <li>
               <a href="#s2a">
                 <span className="n">2A</span>
-                <span className="t">Utility token characterization</span>
+                <span className="t">Digital tool classification</span>
               </a>
             </li>
             <li>
@@ -349,16 +349,17 @@ export default function TokenRewardsRiskPage() {
           <section className="clause" id="s2a">
             <div className="clause-head">
               <span className="num">§ 2A</span>
-              <h2>Utility token characterization</h2>
+              <h2>Digital tool classification</h2>
               <a className="anchor" href="#s2a">
                 #s2a
               </a>
             </div>
             <div className="clause-body">
               <p>
-                MLMA is designed and intended to function as a{' '}
-                <strong>utility and governance token</strong> for a consumptive protocol. The
-                sources of its intended market demand and utility are:
+                MLMA is classified as a{' '}
+                <strong>digital tool under the March 17, 2026 SEC-CFTC Joint Interpretation
+                (S7-2026-09)</strong>: an asset used to perform a function in the network, not
+                held as an investment instrument. Its functions are:
               </p>
 
               <div className="spec-list">
@@ -375,7 +376,7 @@ export default function TokenRewardsRiskPage() {
                   <div className="k">Protocol fee burn</div>
                   <div className="v">
                     A portion of protocol revenue is used programmatically to purchase and
-                    permanently remove MLMA from circulation, creating a utility-driven demand
+                    permanently remove MLMA from circulation, creating a function-driven demand
                     mechanism.
                   </div>
                 </div>
@@ -397,13 +398,16 @@ export default function TokenRewardsRiskPage() {
               </div>
 
               <p>
-                Mālama designs and intends MLMA as a{' '}
+                Mālama classifies MLMA as a{' '}
                 <strong>
-                  utility token, not as a security, investment contract, share, deposit,
+                  digital tool under S7-2026-09: an asset used and consumed to perform a
+                  function in the network, not a security, investment contract, share, deposit,
                   savings product, or claim on revenue.
                 </strong>{' '}
-                The Company does not intend to undertake managerial efforts for the benefit of
-                MLMA holders and does not guarantee token value.
+                MLMA is not a &ldquo;utility token&rdquo; in the loose pre-Interpretation sense,
+                which is not a category under S7-2026-09. The Company does not undertake
+                managerial efforts for the benefit of MLMA holders and does not guarantee token
+                value.
               </p>
 
               <div className="callout warn">

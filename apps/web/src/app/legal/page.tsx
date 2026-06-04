@@ -14,7 +14,7 @@ export const metadata: Metadata = {
  *
  * Implementation of the claude.ai/design handoff (legal-index.html).
  * Single-column hub layout listing the 4 in-force legal docs as cards
- * plus 1 in-drafting placeholder (Cookie Policy).
+ * plus the Cookie Policy.
  */
 export default function LegalIndexPage() {
   return (
@@ -37,7 +37,7 @@ export default function LegalIndexPage() {
           <aside className="meta-card" aria-label="Document index metadata">
             <div className="row"><span className="k">Entity</span><span className="v">Mālama Labs Inc.</span></div>
             <div className="row"><span className="k">Jurisdiction</span><span className="v">Delaware, USA</span></div>
-            <div className="row"><span className="k">Documents</span><span className="v">5 total · 4 in force · 1 draft</span></div>
+            <div className="row"><span className="k">Documents</span><span className="v">5 total · 5 in force</span></div>
             <div className="row"><span className="k">Last review</span><span className="v">April 28, 2026</span></div>
             <div className="row"><span className="k">Contact</span><span className="v accent">legal@malamalabs.com</span></div>
           </aside>
@@ -48,7 +48,7 @@ export default function LegalIndexPage() {
         <article className="content">
           <div className="docs-meta-strip">
             <span>Currently in force</span>
-            <span className="count">4 documents</span>
+            <span className="count">5 documents</span>
           </div>
 
           <div className="doc-grid">
@@ -103,24 +103,17 @@ export default function LegalIndexPage() {
                 <span className="read">Read →</span>
               </div>
             </Link>
-          </div>
 
-          <div className="docs-meta-strip coming">
-            <span>In drafting · available to read</span>
-            <span className="count">1 document · draft v0.1</span>
-          </div>
-
-          <div className="doc-grid">
-            <Link className="doc-card coming" href="/legal/cookies">
+            <Link className="doc-card" href="/legal/cookies">
               <div className="topline">
-                <span className="id">MLMA-LEGAL-004 · draft</span>
-                <span className="status coming">In drafting</span>
+                <span className="id">MLMA-LEGAL-004 · v1</span>
+                <span className="status">In force</span>
               </div>
               <h3>Cookie Policy</h3>
-              <p>Detailed disclosure of cookies and similar technologies used across malamalabs.com, dashboards, and the launchpad. And the controls available to you per jurisdiction.</p>
+              <p>Disclosure of cookies and similar technologies used across malamalabs.com, dashboards, and the launchpad. And the controls available to you per jurisdiction.</p>
               <div className="footline">
-                <span>Draft v0.1 · publishes with cookie banner</span>
-                <span className="read">Read draft →</span>
+                <span>10 sections · ~7 min read</span>
+                <span className="read">Read →</span>
               </div>
             </Link>
           </div>

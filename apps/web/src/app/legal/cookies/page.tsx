@@ -4,9 +4,9 @@ import '../legal-doc.css'
 import LegalPageShell from '../_shared/LegalPageShell'
 
 export const metadata: Metadata = {
-  title: 'Cookie Policy (Draft) · Mālama Labs',
+  title: 'Cookie Policy · Mālama Labs',
   description:
-    'Draft disclosure of cookies and similar technologies used across malamalabs.com, the dashboards, and the launchpad, and the controls available to you per jurisdiction. MLMA-LEGAL-004, in drafting, pending the cookie banner and qualified counsel review.',
+    'Disclosure of cookies and similar technologies used across malamalabs.com, the dashboards, and the launchpad, and the controls available to you per jurisdiction. MLMA-LEGAL-004, in force.',
 }
 
 export default function CookiePolicyPage() {
@@ -17,17 +17,17 @@ export default function CookiePolicyPage() {
       eyebrowText="Legal · Cookie Policy"
       titleLead="Cookie"
       titleEmphasis="Policy."
-      lede="How Mālama Labs and our providers use cookies and similar technologies across the website, dashboards, and launchpad, and the controls available to you. This document is in drafting and publishes alongside the cookie consent banner."
+      lede="How Mālama Labs and our providers use cookies and similar technologies across the website, dashboards, and launchpad, and the controls available to you per jurisdiction."
       metaRows={[
-        { k: 'Status', v: 'In drafting', accent: true },
-        { k: 'Version', v: 'Draft v0.1' },
-        { k: 'Effective', v: 'On banner launch' },
+        { k: 'Status', v: 'In force', accent: true },
+        { k: 'Version', v: 'v1' },
+        { k: 'Effective', v: 'April 28, 2026' },
         { k: 'Applies to', v: 'malamalabs.com · dashboards · launchpad' },
         { k: 'Companion to', v: 'Privacy Policy' },
         { k: 'Reading time', v: '~7 min' },
       ]}
       docBar={{
-        version: 'Draft v0.1 · In drafting',
+        version: 'Version 1 · In force',
         docId: 'Doc · MLMA-LEGAL-004',
         category: 'Category · Privacy disclosure',
       }}
@@ -58,10 +58,6 @@ export default function CookiePolicyPage() {
 
         <article className="content">
           <div className="preamble">
-            <div className="callout warn">
-              <span className="tag">▲ Draft · In drafting</span>
-              <p>This Cookie Policy is published as <strong>Draft v0.1</strong> and is not yet in force. The specific cookie inventory is finalized when the cookie consent banner ships; until then the categories below describe the intended use. This draft is pending review by qualified counsel and should not be relied upon as the operative policy.</p>
-            </div>
             <p>
               This Cookie Policy explains how Mālama Labs, Inc. (&ldquo;Mālama,&rdquo; &ldquo;we,&rdquo; &ldquo;us&rdquo;) and our service providers use cookies and similar technologies on{' '}
               <strong>malamalabs.com</strong>, the operator and partner <strong>dashboards</strong>, and the Genesis 200 <strong>launchpad</strong> (together, the &ldquo;Services&rdquo;). It is a companion to the{' '}
@@ -95,7 +91,7 @@ export default function CookiePolicyPage() {
                   <tr><td>Analytics / performance</td><td>Aggregate, privacy-respecting measurement of page views and feature use to improve the Services.</td><td>Opt-in where required</td></tr>
                 </tbody>
               </table>
-              <p style={{ fontSize: 14, color: 'var(--mlma-ink-faint)' }}>The exact cookie names, providers, and durations will be enumerated in the consent banner&rsquo;s preference center when this policy moves to v1.0.</p>
+              <p style={{ fontSize: 14, color: 'var(--mlma-ink-faint)' }}>The exact cookie names, providers, and durations are enumerated in the consent banner&rsquo;s preference center.</p>
             </div>
           </section>
 
@@ -146,9 +142,9 @@ export default function CookiePolicyPage() {
             <div className="clause-body">
               <p>Questions about this Cookie Policy or your choices: <a href="mailto:privacy@malamalabs.com" style={{ color: 'var(--mlma-accent)' }}>privacy@malamalabs.com</a>. Mālama Labs, Inc., 8 The Green, Suite A, Dover, Delaware 19901.</p>
               <div className="sig-strip">
-                <div className="label">- DOCS · MLMA-LEGAL-004 · DRAFT v0.1</div>
-                <p className="text">Cookie Policy · In drafting · Companion to the Privacy Policy · Publishes with the cookie consent banner.</p>
-                <p className="footnote">This draft is informational and pending qualified counsel review; it is not the operative policy until it is marked in force.</p>
+                <div className="label">- DOCS · MLMA-LEGAL-004 · v1 · IN FORCE</div>
+                <p className="text">Cookie Policy · In force · Companion to the Privacy Policy.</p>
+                <p className="footnote">Cookie categories and controls are described here; the consent banner&rsquo;s preference center enumerates the specific cookies in use.</p>
               </div>
             </div>
           </section>

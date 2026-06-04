@@ -64,6 +64,7 @@ docker-volumes/
 !apps/web/public/*.png
 !apps/web/public/*.jpg
 !apps/web/public/whitepaper.pdf
+!apps/web/public/docs/*.pdf
 !apps/web/public/*.svg
 !apps/web/public/*.gif
 !apps/web/public/*.ico

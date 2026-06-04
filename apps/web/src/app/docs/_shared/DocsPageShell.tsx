@@ -92,7 +92,7 @@ export default function DocsPageShell({
           <div className="left">
             <span className="live">v4 · Canonical</span>
             <span className="sep">/</span>
-            <span>Aligned to Tokenomics Whitepaper v3.6</span>
+            <span>Aligned to the V1 document set</span>
             <span className="sep">/</span>
             <span>May 2026</span>
           </div>

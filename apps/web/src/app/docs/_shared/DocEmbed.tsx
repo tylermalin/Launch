@@ -1,13 +1,55 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 
-export const metadata: Metadata = {
-  title: 'Whitepaper v1.0 · Mālama Labs',
-  description:
-    'Mālama Labs institutional whitepaper — Hardware-verified truth for climate markets and AI compute. A six-layer DePIN architecture pairing edge-bound cryptographic hardware with a continuous, hardware-signed evidence pipeline.',
+/**
+ * DocEmbed — thin PDF-embed page for the document-class V1 docs.
+ *
+ * Replicates the /whitepaper page pattern: a header bar with a back link,
+ * doc name + version, and a download action; a title block with the
+ * canonical eyebrow, headline, document id, and metadata chips; and an
+ * in-page PDF viewer with a direct-open fallback.
+ *
+ * All metadata comes from the V1 PDF covers. Do not invent values here.
+ */
+
+export interface DocEmbedChip {
+  label: string
+  value: string
 }
 
-export default function WhitepaperPage() {
+export interface DocEmbedProps {
+  /** Short doc label for the header bar, e.g. "Tokenomics v1". */
+  navLabel: string
+  /** Monospace eyebrow, e.g. "Document 01 · Token Design and Economics". */
+  eyebrow: string
+  /** Headline. The fragment in `titleEmphasis` renders in the lime italic accent. */
+  titleLead: string
+  titleEmphasis: string
+  /** One-line descriptor under the headline. */
+  descriptor: string
+  /** Document id + date line, e.g. "MLM-DOCS-01 · June 2026 · Pre-Launch · 9 pages". */
+  metaLine: string
+  /** Metadata chips. Values come from the PDF cover. */
+  chips: DocEmbedChip[]
+  /** Public path to the PDF, e.g. "/docs/malama-tokenomics-v1.pdf". */
+  pdf: string
+  /** Download filename. */
+  downloadAs: string
+  /** Accessible iframe title. */
+  iframeTitle: string
+}
+
+export default function DocEmbed({
+  navLabel,
+  eyebrow,
+  titleLead,
+  titleEmphasis,
+  descriptor,
+  metaLine,
+  chips,
+  pdf,
+  downloadAs,
+  iframeTitle,
+}: DocEmbedProps) {
   return (
     <div className="min-h-screen bg-malama-bg">
       {/* ── Header bar ── */}
@@ -22,16 +64,16 @@ export default function WhitepaperPage() {
             </Link>
             <span className="text-malama-line">·</span>
             <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-malama-ink-dim">
-              Whitepaper v1.0
+              {navLabel}
             </span>
           </div>
           <a
-            href="/whitepaper.pdf"
-            download="Malama-Labs-Whitepaper-v1.pdf"
+            href={pdf}
+            download={downloadAs}
             className="inline-flex items-center gap-2 rounded-lg border border-malama-accent/40 bg-malama-accent/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-malama-accent hover:bg-malama-accent/20 transition-colors"
           >
             <svg className="w-3 h-3" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M8 12L3 7h3V1h4v6h3L8 12zM2 14h12v1.5H2z"/>
+              <path d="M8 12L3 7h3V1h4v6h3L8 12zM2 14h12v1.5H2z" />
             </svg>
             Download PDF
           </a>
@@ -41,28 +83,18 @@ export default function WhitepaperPage() {
       {/* ── Title block ── */}
       <div className="mx-auto max-w-7xl px-5 sm:px-10 pt-10 pb-6">
         <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-malama-accent/80 mb-3">
-          Institutional Whitepaper · Six-Layer DePIN
+          {eyebrow}
         </p>
         <h1 className="font-serif text-3xl sm:text-4xl font-medium text-malama-ink leading-tight max-w-2xl">
-          Hardware-verified truth for climate markets and AI compute.
+          {titleLead} <em className="text-malama-accent not-italic font-serif italic">{titleEmphasis}</em>
         </h1>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-malama-ink-dim">
-          Document <span className="font-mono">MLM-WP-v1.0</span> · June 2026 · Pre-Launch ·{' '}
-          <span className="text-malama-ink-faint">31 pages</span>
-        </p>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-malama-ink-dim">{descriptor}</p>
+        <p className="mt-3 max-w-2xl text-xs leading-relaxed text-malama-ink-faint font-mono">{metaLine}</p>
 
         {/* Metadata chips */}
         <div className="mt-6 flex flex-wrap gap-3">
-          {[
-            { label: 'Status', value: 'Pre-Launch' },
-            { label: 'Framework', value: 'Six-Layer DePIN' },
-            { label: 'Mainnet Target', value: 'Q4 2026' },
-            { label: 'Cardano Preprod', value: 'Active' },
-          ].map(({ label, value }) => (
-            <div
-              key={label}
-              className="rounded-lg border border-malama-line bg-malama-elev px-4 py-2"
-            >
+          {chips.map(({ label, value }) => (
+            <div key={label} className="rounded-lg border border-malama-line bg-malama-elev px-4 py-2">
               <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-malama-ink-faint mb-0.5">
                 {label}
               </p>
@@ -76,8 +108,8 @@ export default function WhitepaperPage() {
       <div className="mx-auto max-w-7xl px-5 sm:px-10 pb-16">
         <div className="rounded-2xl border border-malama-line overflow-hidden shadow-2xl">
           <iframe
-            src="/whitepaper.pdf"
-            title="Mālama Labs Whitepaper v1.0"
+            src={`${pdf}#view=FitH`}
+            title={iframeTitle}
             className="w-full"
             style={{ height: 'calc(100vh - 12rem)', minHeight: 600 }}
           />
@@ -85,9 +117,9 @@ export default function WhitepaperPage() {
 
         {/* Fallback / mobile note */}
         <p className="mt-4 text-center font-mono text-[11px] text-malama-ink-faint">
-          If the viewer doesn't load,{' '}
+          If the viewer doesn&apos;t load,{' '}
           <a
-            href="/whitepaper.pdf"
+            href={pdf}
             target="_blank"
             rel="noopener noreferrer"
             className="text-malama-accent hover:underline"

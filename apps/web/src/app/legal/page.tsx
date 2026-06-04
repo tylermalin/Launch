@@ -111,7 +111,7 @@ export default function LegalIndexPage() {
           </div>
 
           <div className="doc-grid">
-            <div className="doc-card coming">
+            <Link className="doc-card coming" href="/legal/cookies">
               <div className="topline">
                 <span className="id">MLMA-LEGAL-004 · draft</span>
                 <span className="status coming">In drafting</span>
@@ -119,10 +119,10 @@ export default function LegalIndexPage() {
               <h3>Cookie Policy</h3>
               <p>Detailed disclosure of cookies and similar technologies used across malamalabs.com, dashboards, and the launchpad. And the controls available to you per jurisdiction.</p>
               <div className="footline">
-                <span>Published with cookie banner</span>
-                <span>-</span>
+                <span>Draft v0.1 · publishes with cookie banner</span>
+                <span className="read">Read draft →</span>
               </div>
-            </div>
+            </Link>
           </div>
 
           <div className="sig-strip" style={{ marginTop: 72 }}>

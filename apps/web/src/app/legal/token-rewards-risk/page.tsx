@@ -528,16 +528,16 @@ export default function TokenRewardsRiskPage() {
                   <strong>zero validation rewards</strong> for that period.
                 </li>
                 <li>
-                  Data Quality Score (0.0-1.0) from validator confidence and cross-validation
-                  with neighboring nodes.
+                  Your hex&rsquo;s Hex Type multiplier (0.95× to 1.30×: Urban Core, Urban,
+                  Suburban, Rural, Remote), governance-reviewed and subject to change.
                 </li>
                 <li>
-                  Geographic Multiplier tier of your H3 hex cell, which is governance-voted and
-                  may change.
+                  Your hex&rsquo;s Data Demand Score multiplier (0.70× to 1.30×), recomputed
+                  quarterly from independent demand signals, not operator behavior.
                 </li>
                 <li>
-                  Total active validator count -{' '}
-                  <strong>rewards are competitive and relative, not fixed.</strong>
+                  Cohort composition -{' '}
+                  <strong>rewards are cohort-normalized to the 25M Genesis pool, relative and not fixed.</strong>
                 </li>
                 <li>
                   Protocol updates, third-party sensor deployments, and enterprise data demand
@@ -566,15 +566,14 @@ export default function TokenRewardsRiskPage() {
               <h3>Competitive reward dilution</h3>
               <p>
                 Rewards are competitive and relative to the entire active validator set, not
-                fixed per node. Each operator&rsquo;s monthly reward is their weighted score
-                divided by the sum of all active validator scores in the network.{' '}
+                fixed per node. Each operator&rsquo;s Final Earned MLMA is their Calculated Eligibility
+                divided by the cohort total, scaled to the fixed 25M Genesis pool.{' '}
                 <strong>
-                  As more validators join the network. Including during the Genesis phase and
-                  beyond. Each operator&rsquo;s share of the monthly emission pool decreases
-                  proportionally.
+                  As more Genesis operators qualify, each operator&rsquo;s share of the fixed
+                  25M pool adjusts proportionally.
                 </strong>{' '}
-                Joining early does not lock in a specific reward amount. Actual rewards will
-                vary month to month based on network size and composition.
+                Joining early does not lock in a specific reward amount. Final amounts depend
+                on the full cohort&rsquo;s composition.
               </p>
 
               <h3>Allocation forfeiture risk</h3>
@@ -613,7 +612,7 @@ export default function TokenRewardsRiskPage() {
               <p>
                 Year 1 reward levels are a deliberately temporary bootstrapping mechanism. The{' '}
                 <strong>1.5× Genesis Multiplier</strong>, constrained early validator
-                competition, and front-loaded emission pool produce elevated reward weight
+                competition, and front-loaded emission taper and the Year 1 Genesis multiplier produce elevated reward weight
                 during the cold-start phase.{' '}
                 <strong>
                   These economics are not sustainable or representative of long-term returns.
@@ -691,7 +690,7 @@ export default function TokenRewardsRiskPage() {
                 <li>Hardware failure, connectivity issues, power interruptions.</li>
                 <li>Firmware or software bugs and security vulnerabilities.</li>
                 <li>Incorrect configuration or installation errors.</li>
-                <li>Data transmission errors affecting Data Quality Score.</li>
+                <li>Data transmission errors affecting data quality and validation acceptance.</li>
                 <li>Incompatibility with required firmware or software updates.</li>
                 <li>
                   Physical damage from weather, flooding, or other environmental conditions.
@@ -837,7 +836,7 @@ export default function TokenRewardsRiskPage() {
             <div className="clause-body">
               <p>
                 Mālama and the veMLMA governance system reserve the right to modify reward
-                formulas, change Geographic Multiplier coefficients, alter distribution
+                formulas, change Hex Type or Data Demand Score coefficients, alter distribution
                 schedules, adjust eligibility requirements, or discontinue Rewards entirely. For technical optimization, fraud prevention, regulatory compliance, or
                 network sustainability.
               </p>

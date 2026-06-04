@@ -91,7 +91,7 @@ export default function Home() {
               { label: 'Total Nodes', value: '200' },
               { label: 'Entry Price', value: '$2,000' },
               { label: 'On-Chain SaveCards', value: '2,786+' },
-              { label: 'Max Multiplier', value: '3.0×' },
+              { label: 'Genesis Yr 1', value: '1.5×' },
             ].map(({ label, value }) => (
               <div key={label} className="card-hover rounded-malama border border-malama-line bg-malama-elev/60 p-4 text-left backdrop-blur">
                 <div className="font-mono text-[10px] uppercase tracking-widest text-malama-ink-faint">{label}</div>
@@ -363,7 +363,7 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Geographic multiplier table */}
+          {/* Hex Type multiplier table */}
           <motion.div
             variants={fadeUp}
             initial="hidden"
@@ -372,13 +372,13 @@ export default function Home() {
             className="mt-10 rounded-malama border border-malama-accent/30 bg-malama-accent/5 p-6"
           >
             <p className="mb-4 font-mono text-[11px] font-bold uppercase tracking-widest text-malama-accent">
-              Geographic multiplier
+              Hex Type multiplier
             </p>
             <div className="overflow-x-auto rounded-malama border border-malama-accent/20">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-malama-accent/20 bg-malama-accent/5 text-left">
-                    {['Zone', 'Multiplier', 'Allocation', 'Notes'].map((h) => (
+                    {['Hex type', 'Multiplier', 'Profile'].map((h) => (
                       <th key={h} className="px-4 py-3 font-mono text-[10px] font-bold uppercase tracking-wider text-malama-accent">
                         {h}
                       </th>
@@ -387,24 +387,23 @@ export default function Home() {
                 </thead>
                 <tbody className="divide-y divide-malama-accent/10">
                   {[
-                    ['Urban', '0.5×', '~40%', 'Most nodes'],
-                    ['Dense suburban', '1.0×', '~30%', 'Mid-tier'],
-                    ['Rural', '1.5×', '~20%', 'Limited'],
-                    ['Frontier', '2.0×', '~8%', 'Very limited'],
-                    ['Strategic gap', '3.0×', '~2%', 'Scarce'],
-                  ].map(([zone, mult, alloc, notes]) => (
+                    ['Urban Core', '0.95×', 'Dense metro core'],
+                    ['Urban', '1.00×', 'Metro, baseline'],
+                    ['Suburban', '1.10×', 'Mid-density'],
+                    ['Rural', '1.20×', 'Agricultural, scientific interest'],
+                    ['Remote', '1.30×', 'Undermonitored, highest scarcity value'],
+                  ].map(([zone, mult, profile]) => (
                     <tr key={zone}>
                       <td className="px-4 py-3 font-semibold text-malama-ink">{zone}</td>
                       <td className="px-4 py-3 font-mono font-bold text-malama-accent">{mult}</td>
-                      <td className="px-4 py-3 text-malama-ink-dim">{alloc}</td>
-                      <td className="px-4 py-3 text-malama-ink-dim">{notes}</td>
+                      <td className="px-4 py-3 text-malama-ink-dim">{profile}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
             <p className="mt-4 text-xs italic text-malama-ink-faint">
-              MLMA rewards are relative, not fixed. As the validator set grows, rewards per node are recalculated against total validated packet volume. Early operators benefit from network bootstrap density. Projected figures are illustrative only. Mālama does not publish projected operator earnings, token price forecasts, or payback timelines. See the{' '}
+              MLMA rewards are relative, not fixed. Genesis rewards are cohort-normalized to the fixed 25M pool, and a Data Demand Score multiplier (0.70×–1.30×) and the Year 1 Genesis multiplier (1.5×) also apply. Early operators benefit from network bootstrap density. Projected figures are illustrative only. Mālama does not publish projected operator earnings, token price forecasts, or payback timelines. See the{' '}
               <Link href="/legal/token-rewards-risk" className="underline underline-offset-2 hover:text-malama-ink-dim">
                 Token &amp; Rewards Risk Disclosure
               </Link>
@@ -771,7 +770,7 @@ export default function Home() {
                   H3 Resolution 5 cells are approximately 252.9 km² each, with 2,016,842 unique cells globally. Buying an NFT-HEX gives you the right and obligation to operate one Hex Node validator within that specific cell.
                 </p>
                 <p>
-                  Reward multipliers by zone: urban 0.5×, dense suburban 1.0×, rural 1.5×, frontier 2.0×, strategic gap up to 3.0×.
+                  Hex Type multiplier by zone: Urban Core 0.95×, Urban 1.00×, Suburban 1.10×, Rural 1.20×, Remote 1.30×. A Data Demand Score multiplier (0.70×–1.30×) and the Year 1 Genesis multiplier (1.5×) also apply, with Genesis rewards cohort-normalized to the 25M pool.
                 </p>
               </div>
             </SpecSection>

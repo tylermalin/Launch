@@ -66,8 +66,8 @@
   <p>Validation rewards, if any, depend on:</p>
   <ul style="padding-left: 20px;">
     <li>Node uptime above 90%. Nodes below this threshold earn zero validation rewards for that period</li>
-    <li>Data Quality Score (0.0-1.0) from validator confidence and cross-validation with neighboring nodes</li>
-    <li>Geographic Multiplier tier of your H3 hex cell, which is governance-voted and may change</li>
+    <li>Your hex's Hex Type multiplier (0.95×–1.30×: Urban Core, Urban, Suburban, Rural, Remote)</li>
+    <li>Your hex's Data Demand Score multiplier (0.70×–1.30×), recomputed quarterly from independent demand signals</li>
     <li>Total active validator count. Rewards are competitive and relative, not fixed</li>
     <li>Protocol updates, third-party sensor deployments, and enterprise data demand in your hex zone</li>
   </ul>
@@ -77,13 +77,13 @@
   <h2 style="color: #2c5282; margin-top: 36px; border-left: 4px solid #2c5282; padding-left: 14px; font-size: 20px;">5a. Genesis 200-Specific Risks</h2>
   <p>The following risks are specific to the Genesis 200 program and should be understood before reserving a node.</p>
 
-  <p><strong>Competitive reward dilution.</strong> Rewards are competitive and relative to the entire active validator set, not fixed per node. Each operator's monthly reward is their weighted score divided by the sum of all active validator scores in the network. As more validators join the network. Including during the Genesis phase and beyond. Each operator's share of the monthly emission pool decreases proportionally. Joining early does not lock in a specific reward amount. Actual rewards will vary month to month based on network size and composition.</p>
+  <p><strong>Competitive reward dilution.</strong> Rewards are competitive and relative to the entire active validator set, not fixed per node. Each operator's Final Earned MLMA is their Calculated Eligibility divided by the cohort total, scaled to the fixed 25M Genesis pool. As more Genesis operators qualify, each operator's share of the fixed 25M pool adjusts proportionally. Joining early does not lock in a specific reward amount. Actual rewards will vary month to month based on network size and composition.</p>
 
   <p><strong>Allocation forfeiture risk.</strong> Failure to deploy your Hex Node within 90 days of hardware delivery results in permanent forfeiture of your 125,000 MLMA allocation and your NFT-HEX License, with no refund. The 90-day window begins at hardware delivery, not at reservation. Hardware is estimated to ship by end of December 2026. If you cannot physically install and register your node within 90 days of receiving it, you risk losing both the hardware value and the entire MLMA allocation. Extensions require written request to Mālama before the window expires.</p>
 
   <p><strong>Audit gate before emissions.</strong> MLMA validation rewards do not begin automatically at hardware boot. They begin following a Genesis Hex Sale audit in early 2027 that confirms your node is operational, compliant, and properly registered. If your node does not pass the audit initially, rewards are withheld until compliance is confirmed. Your 125,000 MLMA vesting allocation is not affected by audit status. Only validation rewards are withheld during the period of non-compliance.</p>
 
-  <p><strong>Genesis phase non-steady-state.</strong> Year 1 reward levels are a deliberately temporary bootstrapping mechanism. The 1.5× Genesis Multiplier, constrained early validator competition, and front-loaded emission pool produce elevated reward weight during the cold-start phase. These economics are not sustainable or representative of long-term returns. The Genesis Multiplier expires permanently at the end of Year 1. Emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8. Any projected earnings based on Year 1 Genesis phase economics will not persist beyond that phase.</p>
+  <p><strong>Genesis phase non-steady-state.</strong> Year 1 reward levels are a deliberately temporary bootstrapping mechanism. The 1.5× Genesis Multiplier, constrained early validator competition, and front-loaded emission taper and the Year 1 Genesis multiplier produce elevated reward weight during the cold-start phase. These economics are not sustainable or representative of long-term returns. The Genesis Multiplier expires permanently at the end of Year 1. Emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8. Any projected earnings based on Year 1 Genesis phase economics will not persist beyond that phase.</p>
 
   <p><strong>Emission taper and revenue transition.</strong> Scheduled emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8, transitioning to revenue-funded operator distributions by Years 4-5; from Year 9 all operator rewards come from protocol revenue only. If protocol revenue in Years 4-5 is lower than projected. Whether due to slower enterprise customer adoption, registry acceptance delays, or competitive pressure. Operator rewards will be proportionally lower. Emissions taper toward zero over this period, so later-year distributions increasingly depend on actual protocol revenue. Operators who model Year 4-5 economics based on peak early-year emission levels are modeling a different regime.</p>
 
@@ -100,7 +100,7 @@
     <li>Hardware failure, connectivity issues, power interruptions</li>
     <li>Firmware or software bugs and security vulnerabilities</li>
     <li>Incorrect configuration or installation errors</li>
-    <li>Data transmission errors affecting Data Quality Score</li>
+    <li>Data transmission errors affecting data quality and validation acceptance</li>
     <li>Incompatibility with required firmware or software updates</li>
     <li>Physical damage from weather, flooding, or other environmental conditions</li>
   </ul>
@@ -139,7 +139,7 @@
 
   <!-- 10 -->
   <h2 style="color: #2c5282; margin-top: 36px; border-left: 4px solid #2c5282; padding-left: 14px; font-size: 20px;">10. Changes to Reward Structures</h2>
-  <p>Mālama and the veMLMA governance system reserve the right to modify reward formulas, change Geographic Multiplier coefficients, alter distribution schedules, adjust eligibility requirements, or discontinue Rewards entirely. For technical optimization, fraud prevention, regulatory compliance, or network sustainability. Immutable parameters (the 500M MLMA hard cap, the 8-year emission schedule (60M total), the Genesis 200 supply cap, and hex exclusivity) cannot be changed through governance. All other reward parameters are subject to governance modification with notice as described in the Hex Node Purchase Agreement.</p>
+  <p>Mālama and the veMLMA governance system reserve the right to modify reward formulas, change Hex Type or Data Demand Score coefficients, alter distribution schedules, adjust eligibility requirements, or discontinue Rewards entirely. For technical optimization, fraud prevention, regulatory compliance, or network sustainability. Immutable parameters (the 500M MLMA hard cap, the 8-year emission schedule (60M total), the Genesis 200 supply cap, and hex exclusivity) cannot be changed through governance. All other reward parameters are subject to governance modification with notice as described in the Hex Node Purchase Agreement.</p>
 
   <!-- 11 -->
   <h2 style="color: #2c5282; margin-top: 36px; border-left: 4px solid #2c5282; padding-left: 14px; font-size: 20px;">11. Tax Responsibility</h2>

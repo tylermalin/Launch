@@ -129,7 +129,7 @@ export default function HexNodePurchasePage() {
 
               <div className="callout accent">
                 <span className="tag">● Notice · Material whitepaper amendments</span>
-                <p>The Whitepaper is incorporated by reference. Mālama will provide written notice to all registered License holders of any material amendment to parameters that affect operator economic rights or deployment obligations. Including changes to the Geographic Multiplier formula, reward pool sizing, or uptime requirements. At least <strong>thirty (30) days</strong> before such amendments take effect.</p>
+                <p>The Whitepaper is incorporated by reference. Mālama will provide written notice to all registered License holders of any material amendment to parameters that affect operator economic rights or deployment obligations. Including changes to the Hex Type or Data Demand Score multipliers, the 25M Genesis pool sizing, or uptime requirements. At least <strong>thirty (30) days</strong> before such amendments take effect.</p>
                 <p>This notice obligation does not apply to governance updates made through the veMLMA process described in the Whitepaper, for which operators may participate directly as token holders.</p>
               </div>
 
@@ -155,23 +155,22 @@ export default function HexNodePurchasePage() {
               </div>
 
               <h3>Reward formula</h3>
-              <p>MLMA validation rewards are computed per the formula in the Whitepaper:</p>
+              <p>Genesis 200 MLMA rewards follow the ratified Genesis Pricing v1.0 model in the Whitepaper. Each operator&rsquo;s eligibility is a fixed base scaled by three bounded multipliers, then normalized across the cohort to the 25M Genesis pool:</p>
 
               <div className="formula">
-                <div className="tag">VALIDATION REWARD · PER EPOCH</div>
+                <div className="tag">GENESIS 200 REWARD · GENESIS PRICING v1.0</div>
                 <div className="eq">
-                  <span className="lhs">R</span><span className="op">=</span>B<span className="op">×</span>DQS<span className="op">×</span>GM<span className="op">×</span>UF<span className="op">×</span>GX<span className="op">×</span>PoolFactor
+                  <span className="lhs">Eligibility</span><span className="op">=</span>125,000<span className="op">×</span>Genesis<span className="op">×</span>HexType<span className="op">×</span>DDS
                 </div>
                 <div className="vars">
-                  <div className="var"><span className="sym">B</span><span>Base rate from monthly emission pool.</span></div>
-                  <div className="var"><span className="sym">DQS</span><span>Data Quality Score · 0.0-1.0.</span></div>
-                  <div className="var"><span className="sym">GM</span><span>Geographic Multiplier · 0.5× to 3.0×.</span></div>
-                  <div className="var"><span className="sym">UF</span><span>Uptime Factor · 0 at &lt;90% uptime, 1.0 at 99%, 1.1× bonus at 99.9%+.</span></div>
-                  <div className="var"><span className="sym">GX</span><span>Genesis Multiplier · 1.5× Year 1 only, 1.0× thereafter.</span></div>
-                  <div className="var"><span className="sym">PF</span><span>PoolFactor · normalization so total payouts ≤ monthly emission pool.</span></div>
+                  <div className="var"><span className="sym">125,000</span><span>Base allocation per operator (MLMA).</span></div>
+                  <div className="var"><span className="sym">Genesis</span><span>Genesis Year 1 multiplier · 1.5× in Year 1 only.</span></div>
+                  <div className="var"><span className="sym">HexType</span><span>Hex Type multiplier · 0.95× to 1.30× (Urban Core, Urban, Suburban, Rural, Remote).</span></div>
+                  <div className="var"><span className="sym">DDS</span><span>Data Demand Score multiplier · 0.70× to 1.30× (0.70 + DDS × 0.006).</span></div>
+                  <div className="var"><span className="sym">Final</span><span>Final Earned = Eligibility × (25,000,000 / total cohort eligibility), cohort-normalized to the 25M Genesis pool.</span></div>
                 </div>
               </div>
-              <p>Rewards are <strong>competitive and relative to the active validator set</strong>, not fixed. Mālama does not guarantee any particular dollar or token return.</p>
+              <p>Rewards are <strong>relative and cohort-normalized, not fixed</strong>, and vest on the 15 / 15 / 20 / 20 / 30 milestone schedule over twelve months. There is <strong>no emission-pool draw and no geographic 0.5× to 3.0× multiplier</strong>. Separately, USDC validator fees are paid to operators on an ongoing basis, outside the 25M cap. Mālama does not guarantee any particular dollar or token return.</p>
 
               <h3>Emission schedule</h3>
               <div className="spec-list">
@@ -195,7 +194,7 @@ export default function HexNodePurchasePage() {
               </div>
 
               <h3>Uptime requirement</h3>
-              <p>Active operators must maintain at least <strong>90% uptime</strong> measured over any rolling 30-day window. Nodes below 90% uptime for an epoch earn zero validation rewards (UF = 0) for that period. Nodes offline for <strong>90 or more consecutive days</strong> without prior written notification to Mālama are subject to License suspension review under protocol rules.</p>
+              <p>Active operators must maintain at least <strong>90% uptime</strong> measured over any rolling 30-day window. Nodes below 90% uptime for an epoch earn zero validation rewards for that period. Nodes offline for <strong>90 or more consecutive days</strong> without prior written notification to Mālama are subject to License suspension review under protocol rules.</p>
 
               <h3>Deployment window</h3>
               <div className="callout warn">
@@ -209,7 +208,7 @@ export default function HexNodePurchasePage() {
               <p>Hex Nodes may not be physically relocated outside the H3 hex cell claimed under the License. Relocation invalidates the historical data baseline for that cell and may result in reputation slashing or License suspension under protocol rules. <strong>Contact support before any relocation attempt.</strong></p>
 
               <h3>Governance updates</h3>
-              <p>Geographic Multiplier coefficients, reward pool sizing, and methodology approvals may be modified through veMLMA governance processes described in the Whitepaper. Operators holding MLMA with a valid PONO credential may participate in governance votes on these parameters.</p>
+              <p>Hex Type and Data Demand Score multiplier coefficients, the Genesis pool sizing, and methodology approvals may be modified through veMLMA governance processes described in the Whitepaper. Operators holding MLMA with a valid PONO credential may participate in governance votes on these parameters.</p>
 
               <h3>Immutable protocol parameters</h3>
               <p>The following parameters are <strong>immutable and cannot be modified through governance.</strong> Changes to immutable parameters would require a new smart contract deployment and separate Customer consent.</p>
@@ -298,7 +297,7 @@ export default function HexNodePurchasePage() {
                 <span className="tag">▲ Technical infrastructure · Not a financial product</span>
                 <p>A Hex Node is technical infrastructure, not a financial product. <strong>There is no guarantee of Rewards, Tokens, or earnings.</strong> Reward mechanisms may change or be discontinued through governance processes.</p>
               </div>
-              <p>Validation rewards depend on network conditions, data volume in your hex zone, your Data Quality Score, Uptime Factor, Geographic Multiplier, the total active validator set, and MLMA market price. All of which vary and are outside Mālama&rsquo;s control or guarantee.</p>
+              <p>Validation rewards depend on network conditions, data volume in your hex zone, your Hex Type, your hex&rsquo;s Data Demand Score, your uptime and PONO standing, the cohort composition, and MLMA market conditions. All of which vary and are outside Mālama&rsquo;s control or guarantee.</p>
               <p>Year 1 Genesis phase reward levels are a deliberately <strong>front-loaded bootstrapping mechanism</strong>. They are not indicative of steady-state returns. Emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8. Nothing in this Agreement constitutes an investment contract, a promise of profit, or financial advice.</p>
             </div>
           </section>

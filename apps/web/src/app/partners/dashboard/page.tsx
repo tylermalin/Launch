@@ -56,8 +56,9 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
 }
 
 function StatusBadge({ status }: { status: ReferralCommission['status'] }) {
-  const map = {
+  const map: Record<ReferralCommission['status'], string> = {
     pending: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    processing: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
     paid: 'bg-malama-accent/10 text-malama-accent border-malama-accent/20',
     cancelled: 'bg-red-500/10 text-red-400 border-red-500/20',
   }

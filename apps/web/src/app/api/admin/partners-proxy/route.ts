@@ -51,6 +51,15 @@ async function kolFetch(path: string, init?: RequestInit) {
   });
 }
 
+/** Fetch any server-side admin API (keeps ADMIN_SECRET off the client). */
+async function adminApiFetch(path: string, init?: RequestInit) {
+  const secret = process.env.ADMIN_SECRET ?? '';
+  return fetch(`${KOL_BASE}${path}`, {
+    ...init,
+    headers: { ...(init?.headers ?? {}), 'x-admin-secret': secret, 'Content-Type': 'application/json' },
+  });
+}
+
 // ── Approved copy templates ───────────────────────────────────────────────────
 
 // Not exported — Next.js route files only allow HTTP-verb exports.
@@ -146,6 +155,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ templates: APPROVED_COPY_TEMPLATES });
   }
 
+  if (action === 'payouts') {
+    const res = await adminApiFetch('/api/admin/payouts');
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  }
+
   return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
 }
 
@@ -187,6 +202,17 @@ export async function POST(req: NextRequest) {
     const res = await kolFetch(`/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ approved: true }),
+    });
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  }
+
+  if (action === 'run-payouts') {
+    // Execute a payout batch. The approving admin's email is recorded in the audit.
+    const { commissionIds, kolId } = body as { commissionIds?: string[]; kolId?: string };
+    const res = await adminApiFetch('/api/admin/payouts', {
+      method: 'POST',
+      body: JSON.stringify({ approvedBy: email, commissionIds, kolId }),
     });
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });

@@ -47,6 +47,24 @@ interface CopyTemplate {
   body: string;
 }
 
+interface PayoutGroup {
+  kolId: string;
+  displayName: string;
+  walletAddress: string | null;
+  walletValid: boolean;
+  walletReason?: string;
+  commissionCount: number;
+  totalUsd: number;
+}
+
+interface PayoutsData {
+  config: { network: string; dryRun: boolean; maxBatchUsd: number; hasWallet: boolean };
+  hotWallet: { address: string; usdc: number; eth: string } | null;
+  totalPendingUsd: number;
+  pendingCount: number;
+  groups: PayoutGroup[];
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://launch.malamalabs.com';
@@ -76,6 +94,15 @@ export default function AdminPartnersPage() {
   const [showInvite, setShowInvite] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<CopyTemplate | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [payouts, setPayouts] = useState<PayoutsData | null>(null);
+  const [payoutBusy, setPayoutBusy] = useState<string | null>(null);
+  const [payoutMsg, setPayoutMsg] = useState<string | null>(null);
+
+  const loadPayouts = () =>
+    fetch('/api/admin/partners-proxy?action=payouts')
+      .then((r) => r.json())
+      .then((d) => { if (!d.error) setPayouts(d as PayoutsData); })
+      .catch(() => {});
 
   // ── Load data ──
   useEffect(() => {
@@ -90,6 +117,7 @@ export default function AdminPartnersPage() {
       })
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
+    loadPayouts();
   }, []);
 
   const copy = (text: string, id: string) => {
@@ -109,6 +137,41 @@ export default function AdminPartnersPage() {
       setPartners((prev) =>
         prev.map((p) => (p.id === id ? { ...p, approved: true } : p))
       );
+    }
+  };
+
+  const runPayout = async (group?: PayoutGroup) => {
+    if (!payouts) return;
+    const dry = payouts.config.dryRun;
+    const what = group
+      ? `$${group.totalUsd} to ${group.displayName}`
+      : `all pending ($${payouts.totalPendingUsd})`;
+    if (!window.confirm(`${dry ? '[DRY RUN] ' : '⚠️ LIVE — '}Send ${what} in USDC on ${payouts.config.network}?`)) return;
+    setPayoutBusy(group?.kolId ?? 'all');
+    setPayoutMsg(null);
+    try {
+      const res = await fetch('/api/admin/partners-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'run-payouts', ...(group ? { kolId: group.kolId } : {}) }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPayoutMsg(`✕ ${data.error ?? 'Payout failed'}`);
+      } else {
+        setPayoutMsg(
+          `${data.dryRun ? '[DRY RUN] ' : ''}Paid ${data.paidCount} · failed ${data.failedCount} · skipped ${data.skippedCount} · $${data.paidUsd}`
+        );
+        await loadPayouts();
+        fetch('/api/admin/partners-proxy?action=list')
+          .then((r) => r.json())
+          .then((d) => { if (!d.error) setPartners((d.partners ?? d.kols ?? []) as PartnerWithStats[]); })
+          .catch(() => {});
+      }
+    } catch (e) {
+      setPayoutMsg(`✕ ${String(e)}`);
+    } finally {
+      setPayoutBusy(null);
     }
   };
 
@@ -135,6 +198,83 @@ export default function AdminPartnersPage() {
           + Invite Partner
         </button>
       </div>
+
+      {/* ── Payouts ── */}
+      {payouts && (
+        <Section title="Partner Payouts · USDC on Base">
+          <div
+            style={{
+              display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center',
+              background: payouts.config.dryRun ? '#15240f' : '#2a1206',
+              border: `1px solid ${payouts.config.dryRun ? '#2a4a2a' : '#5a2a10'}`,
+              borderRadius: 6, padding: '10px 14px', marginBottom: 14,
+              fontFamily: 'monospace', fontSize: 12,
+            }}
+          >
+            <span style={{ color: payouts.config.dryRun ? '#c4f061' : '#f0a031', fontWeight: 700 }}>
+              {payouts.config.dryRun ? 'DRY RUN' : '● LIVE'}
+            </span>
+            <span style={{ color: '#888' }}>network: {payouts.config.network}</span>
+            <span style={{ color: '#888' }}>cap: ${payouts.config.maxBatchUsd}/batch</span>
+            <span style={{ color: '#888' }}>
+              wallet: {payouts.hotWallet
+                ? `${payouts.hotWallet.address.slice(0, 6)}…${payouts.hotWallet.address.slice(-4)} · ${payouts.hotWallet.usdc} USDC · ${Number(payouts.hotWallet.eth).toFixed(4)} ETH`
+                : (payouts.config.hasWallet ? 'configured' : '⚠ not configured')}
+            </span>
+          </div>
+
+          {payoutMsg && (
+            <p style={{ color: payoutMsg.startsWith('✕') ? '#f87171' : '#c4f061', fontFamily: 'monospace', fontSize: 13, margin: '0 0 12px' }}>
+              {payoutMsg}
+            </p>
+          )}
+
+          <p style={{ color: '#888', fontSize: 13, margin: '0 0 12px' }}>
+            {payouts.pendingCount} pending commission{payouts.pendingCount === 1 ? '' : 's'} · ${payouts.totalPendingUsd} total
+          </p>
+
+          {payouts.groups.length === 0 && (
+            <p style={{ color: '#555', fontFamily: 'monospace', fontSize: 13 }}>No pending commissions to pay.</p>
+          )}
+
+          {payouts.groups.map((g) => (
+            <div key={g.kolId} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+              background: '#141414', border: '1px solid #222', borderRadius: 6, padding: '10px 14px', marginBottom: 8,
+            }}>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ color: '#e8e8e8', fontSize: 14, margin: 0, fontWeight: 600 }}>{g.displayName}</p>
+                <p style={{ color: '#666', fontSize: 11, fontFamily: 'monospace', margin: '2px 0 0' }}>
+                  {g.commissionCount} sale{g.commissionCount === 1 ? '' : 's'} ·{' '}
+                  {g.walletValid
+                    ? `${g.walletAddress!.slice(0, 6)}…${g.walletAddress!.slice(-4)}`
+                    : <span style={{ color: '#f0a031' }}>⚠ {g.walletReason}</span>}
+                </p>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ color: '#c4f061', fontFamily: 'monospace', fontSize: 14 }}>${g.totalUsd}</span>
+                <button
+                  onClick={() => runPayout(g)}
+                  disabled={!g.walletValid || payoutBusy !== null}
+                  style={{ ...styles.chipBtn, opacity: (!g.walletValid || payoutBusy !== null) ? 0.4 : 1, cursor: (!g.walletValid || payoutBusy !== null) ? 'not-allowed' : 'pointer' }}
+                >
+                  {payoutBusy === g.kolId ? 'Paying…' : 'Approve & Pay'}
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {payouts.groups.some((g) => g.walletValid) && (
+            <button
+              onClick={() => runPayout()}
+              disabled={payoutBusy !== null}
+              style={{ ...styles.ctaBtn, marginTop: 10, opacity: payoutBusy !== null ? 0.4 : 1 }}
+            >
+              {payoutBusy === 'all' ? 'Paying all…' : `Pay all valid (${payouts.config.dryRun ? 'dry run' : 'LIVE'})`}
+            </button>
+          )}
+        </Section>
+      )}
 
       {/* ── Pending approvals ── */}
       {pending.length > 0 && (

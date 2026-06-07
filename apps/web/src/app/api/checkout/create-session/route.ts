@@ -16,6 +16,27 @@ export const runtime = 'nodejs'
 
 const PRICE_CENTS = 200_000 // $2,000.00
 
+/**
+ * Resolve the checkout amount in cents.
+ *
+ * For safe end-to-end LIVE testing, set CHECKOUT_TEST_PRICE_CENTS (e.g. 100 = $1.00)
+ * in a test/staging env so a real card flow can be exercised without a $2,000 charge.
+ * Safety: defaults to PRICE_CENTS if unset/invalid, and is clamped to
+ * [50 (Stripe USD minimum), PRICE_CENTS] so it can never exceed the real price.
+ * Logs a loud warning whenever the override is active — UNSET IT IN PRODUCTION.
+ */
+function resolveUnitAmount(): number {
+  const raw = process.env.CHECKOUT_TEST_PRICE_CENTS
+  if (!raw) return PRICE_CENTS
+  const cents = Number.parseInt(raw, 10)
+  if (!Number.isFinite(cents) || cents < 50 || cents > PRICE_CENTS) return PRICE_CENTS
+  console.warn(
+    `[checkout/create-session] ⚠️ TEST PRICE OVERRIDE active: $${(cents / 100).toFixed(2)} ` +
+      `(CHECKOUT_TEST_PRICE_CENTS=${cents}). This must be UNSET in production.`
+  )
+  return cents
+}
+
 export async function POST(req: Request) {
   try {
     const secret = getStripeSecretKey()
@@ -65,7 +86,7 @@ export async function POST(req: Request) {
         {
           price_data: {
             currency: 'usd',
-            unit_amount: PRICE_CENTS,
+            unit_amount: resolveUnitAmount(),
             product_data: {
               name: 'Mālama Genesis Hex Node License',
               description: `H3 territory: ${hexId.slice(0, 18)}…`,

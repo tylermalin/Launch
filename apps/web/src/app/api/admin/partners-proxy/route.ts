@@ -24,7 +24,7 @@ export const runtime = 'nodejs';
 
 // ── Admin auth ────────────────────────────────────────────────────────────────
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? 'tyler@malamaproject.org')
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? 'tyler@malamaproject.org,dagwell@malamalabs.com,jeffrey@malamalabs.com')
   .split(',')
   .map((e) => e.trim().toLowerCase());
 

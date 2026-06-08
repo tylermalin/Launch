@@ -24,23 +24,9 @@ export default function SystemSection() {
           </p>
         </div>
 
-        <div className="reveal" style={{ position: 'relative', borderRadius: '20px', overflow: 'hidden', marginBottom: '4rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="reveal" style={{ borderRadius: '20px', overflow: 'hidden', marginBottom: '4rem', border: '1px solid rgba(255,255,255,0.06)', background: '#0a0a0a' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/sensors/5_8e682334.png" alt="Mālama Sensor System — Core, Soil, Atmosphere deployment" style={{ width: '100%', height: '560px', objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(10,10,10,0.9) 100%)' }} />
-          <div style={{ position: 'absolute', top: '2rem', right: '2rem', padding: '0.75rem 1.25rem', background: 'rgba(10,10,10,0.85)', border: '1px solid rgba(139,255,71,0.25)', borderRadius: '10px', backdropFilter: 'blur(12px)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-              <div className="led-dot" style={{ width: '6px', height: '6px' }} />
-              <span className="mono-data" style={{ fontSize: '0.65rem' }}>SIGNAL: STRONG</span>
-            </div>
-            <div className="mono-data" style={{ fontSize: '0.65rem', color: 'rgba(139,255,71,0.7)' }}>LoRa: ACTIVE</div>
-            <div className="mono-data" style={{ fontSize: '0.65rem', color: 'rgba(139,255,71,0.5)' }}>POWER: SOLAR 6.2V</div>
-          </div>
-          <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-            {['SOIL ZONE', 'WEATHER STATION', 'SENSOR HUB'].map((label) => (
-              <div key={label} style={{ padding: '0.4rem 0.9rem', background: 'rgba(10,10,10,0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', fontFamily: "var(--font-jetbrains), monospace", fontSize: '0.65rem', color: 'rgba(245,245,245,0.7)', letterSpacing: '0.1em' }}>{label}</div>
-            ))}
-          </div>
+          <img src="/sensors/sign-the-measurement.png" alt="Hardware-signed MRV — sign the measurement, not the report" style={{ width: '100%', height: 'auto', display: 'block' }} />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>

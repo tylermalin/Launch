@@ -7,7 +7,7 @@ const products = [
   {
     id: 'gold', label: 'Gold Level System', title: 'Complete Sensor Suite', subtitle: 'Everything you need, right out of the box.',
     description: 'The Mālama Sensor System Gold Level delivers professional-grade environmental monitoring with dual-radio connectivity, solar power management, and a full-color touchscreen display. Designed for demanding agricultural, environmental, and research applications.',
-    image: '/sensors/4_deda1c38.png', imageAlt: 'Mālama Sensor System Gold Level with solar panel',
+    image: '/sensors/sensor-hub.jpg', imageAlt: 'Mālama sensor hub with probe',
     features: ['Dual-antenna LoRa + NB-IoT radio system', 'Full-color touchscreen status display', 'Solar charging with battery management', 'Dual sensor port configuration (A + B)', 'Industrial-grade weatherproof enclosure', 'Quantity discounts available'],
     reverse: false,
   },
@@ -21,7 +21,7 @@ const products = [
   {
     id: 'kit', label: 'Complete Kit', title: 'Everything Included', subtitle: 'Deploy in under 30 minutes.',
     description: 'The Mālama Sensor System ships as a complete deployment kit. Every cable, mount, fastener, and accessory is included. No additional purchases required — just unbox, configure, and deploy.',
-    image: '/sensors/1_1f6a1ba6.png', imageAlt: 'Mālama Sensor System complete kit contents',
+    image: '/sensors/sensor-kit.jpg', imageAlt: 'Mālama Sensor System complete kit contents',
     features: ['Main sensor hub unit', 'Mounting bracket + hardware', '12V power adapter', 'Waterproof cable set (15m)', 'Hose clamp + cable ties', 'Quick-start configuration guide'],
     reverse: false,
   },

@@ -12,6 +12,10 @@ import { kv } from '@/lib/kv'
 
 export const GENESIS_TOTAL = 200
 
+/** Reservations left unminted longer than this are treated as abandoned/orphaned
+ *  (e.g. a checkout whose mint timed out) and become reclaimable. */
+const STALE_RESERVATION_MS = 20 * 60 * 1000 // 20 minutes
+
 /** Custody address for the five protocol-reserved Genesis NFTs (env override). */
 export const MALAMA_GENESIS_WALLET = (process.env.NEXT_PUBLIC_MALAMA_GENESIS_WALLET ??
   '0x1111111111111111111111111111111111111111') as `0x${string}`
@@ -73,15 +77,29 @@ export async function issueClaim(
 > {
   // sadd is atomic: returns 0 if hexId was already in the set (already claimed).
   const added = await kv.sadd(K.claimed, hexId)
-  if (added === 0) {
-    const existing = await kv.get<GenesisClaim>(K.hex(hexId))
-    return { ok: false, error: 'Hex already claimed', existing: existing ?? undefined }
-  }
 
-  const editionNumber = await kv.incr(K.issued)
-  if (editionNumber > GENESIS_TOTAL) {
-    // Theoretical: can't happen when inventory === GENESIS_TOTAL, but guard anyway.
-    return { ok: false, error: 'All 200 Genesis nodes have been allocated' }
+  let editionNumber: number
+  if (added === 0) {
+    // Already reserved. Self-heal ORPHANED reservations: a claim never minted
+    // (no txHash / evmTokenId) and older than the grace window is an abandoned or
+    // timed-out checkout — reclaim it in place, reusing its edition number so the
+    // 200-cap counter never inflates. Minted or recent claims are protected and
+    // still return 409.
+    const existing = await kv.get<GenesisClaim>(K.hex(hexId))
+    const minted = !!(existing && (existing.txHash || existing.evmTokenId !== undefined))
+    const ageMs = existing ? Date.now() - Date.parse(existing.claimedAt) : Infinity
+    const orphaned = !minted && ageMs > STALE_RESERVATION_MS
+    if (existing && !orphaned) {
+      return { ok: false, error: 'Hex already claimed', existing }
+    }
+    console.warn(`[genesis] reclaiming orphaned reservation for hex ${hexId} (edition ${existing?.editionNumber ?? 'new'})`)
+    editionNumber = existing ? existing.editionNumber : await kv.incr(K.issued)
+  } else {
+    editionNumber = await kv.incr(K.issued)
+    if (editionNumber > GENESIS_TOTAL) {
+      // Theoretical: can't happen when inventory === GENESIS_TOTAL, but guard anyway.
+      return { ok: false, error: 'All 200 Genesis nodes have been allocated' }
+    }
   }
 
   const claim: GenesisClaim = {
@@ -95,6 +113,27 @@ export async function issueClaim(
   }
   await persistClaim(claim)
   return { ok: true, claim }
+}
+
+/**
+ * Release a hex reservation so it can be claimed again. Refuses to release a
+ * MINTED hex (one with a txHash / evmTokenId). Used by the admin release endpoint
+ * to clear stuck or abandoned (e.g. test) reservations immediately.
+ */
+export async function releaseClaim(
+  hexId: string,
+): Promise<{ ok: boolean; reason?: string }> {
+  const existing = await kv.get<GenesisClaim>(K.hex(hexId))
+  if (existing && (existing.txHash || existing.evmTokenId !== undefined)) {
+    return { ok: false, reason: 'Refusing to release a minted hex' }
+  }
+  await kv.srem(K.claimed, hexId)
+  await kv.del(K.hex(hexId))
+  if (existing) {
+    await kv.del(K.claimId(existing.claimId))
+    await kv.del(K.edition(existing.editionNumber))
+  }
+  return { ok: true }
 }
 
 export async function getClaimByHex(hexId: string): Promise<GenesisClaim | null> {

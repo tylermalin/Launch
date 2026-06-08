@@ -22,6 +22,7 @@ const footerSections: { title: string; links: { href: string; label: string; ext
       { href: '/docs/tokenomics',     label: 'MLMA Tokenomics' },
       { href: '/docs/pricing-roi',    label: 'Pricing & Dynamics' },
       { href: '/docs/operators',      label: 'Operator Guide' },
+      { href: 'https://docs.malamalabs.com', label: 'User Docs', external: true },
     ],
   },
   {

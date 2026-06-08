@@ -3,6 +3,7 @@ import { Inter_Tight, Fraunces, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import SiteFooter from '@/components/SiteFooter'
+import ChromeGate from '@/components/ChromeGate'
 import { Providers } from '@/components/Providers'
 import ReferralCapture from '@/components/ReferralCapture'
 import CookieConsent from '@/components/CookieConsent'
@@ -43,9 +44,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <Providers>
           <ReferralCapture />
-          <Navbar />
+          <ChromeGate><Navbar /></ChromeGate>
           <main className="flex-grow">{children}</main>
-          <SiteFooter />
+          <ChromeGate><SiteFooter /></ChromeGate>
           <CookieConsent />
         </Providers>
       </body>

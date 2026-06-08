@@ -16,6 +16,30 @@ export const runtime = 'nodejs'
 
 const PRICE_CENTS = 200_000 // $2,000.00
 
+/**
+ * Resolve checkout amount in cents.
+ *
+ * For safe end-to-end testing without a $2,000 charge, set CHECKOUT_TEST_PRICE_CENTS
+ * (e.g. 100 = $1.00) in a test/staging env. Defaults to the real price; clamped to
+ * [50 (Stripe USD min), PRICE_CENTS] so it can never exceed the real price; logs a
+ * loud warning when active. MUST be unset in production.
+ *
+ * For SELECTIVE testing on a live/prod env, prefer a Stripe promo code instead
+ * (allow_promotion_codes is enabled below) — create a coupon for $1999 off in the
+ * Stripe dashboard so a tester pays $1 while real buyers pay full price.
+ */
+function resolveUnitAmount(): number {
+  const raw = process.env.CHECKOUT_TEST_PRICE_CENTS
+  if (!raw) return PRICE_CENTS
+  const cents = Number.parseInt(raw, 10)
+  if (!Number.isFinite(cents) || cents < 50 || cents > PRICE_CENTS) return PRICE_CENTS
+  console.warn(
+    `[checkout/create-session] ⚠️ TEST PRICE OVERRIDE active: $${(cents / 100).toFixed(2)} ` +
+      `(CHECKOUT_TEST_PRICE_CENTS=${cents}). Unset in production.`
+  )
+  return cents
+}
+
 export async function POST(req: Request) {
   try {
     const secret = getStripeSecretKey()
@@ -58,14 +82,20 @@ export async function POST(req: Request) {
 
     const stripe = new Stripe(secret)
 
+    const unitAmount = resolveUnitAmount()
+    const isTestPrice = unitAmount !== PRICE_CENTS
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       customer_email: emailNorm,
+      // Let testers apply a Stripe promo code (e.g. a $1999-off coupon → $1) for
+      // selective live testing without changing the price for real buyers.
+      allow_promotion_codes: true,
       line_items: [
         {
           price_data: {
             currency: 'usd',
-            unit_amount: PRICE_CENTS,
+            unit_amount: unitAmount,
             product_data: {
               name: 'Mālama Genesis Hex Node License',
               description: `H3 territory: ${hexId.slice(0, 18)}…`,
@@ -80,6 +110,8 @@ export async function POST(req: Request) {
         hexId,
         email: emailNorm,
         transferToken,
+        unitAmountCents: String(unitAmount),
+        ...(isTestPrice ? { testCheckout: 'true' } : {}),
         ...(referrerId ? { referrerId } : {}),
       },
     })

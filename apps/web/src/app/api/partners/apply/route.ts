@@ -8,9 +8,18 @@
  */
 
 import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { registerKOL, getKOLByWallet, buildReferralUrl, buildVanityUrl } from '@/lib/kol-registry'
+import { parseEmailSessionToken } from '@/lib/email-session'
+import { makeUserId } from '@/lib/user-account'
 
 export const runtime = 'nodejs'
+
+const clean = (v: unknown): string | undefined => {
+  if (typeof v !== 'string') return undefined
+  const t = v.trim().replace(/^@/, '')
+  return t || undefined
+}
 
 function slugify(name: string): string {
   return name
@@ -29,7 +38,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { displayName, email, walletAddress, twitterHandle, bio, promoMethod } = body
+  const { displayName, email, walletAddress, twitterHandle, bio, promoMethod, telegram, linkedin, reddit } = body
+
+  // Associate with the signed-in account when present (email session cookie).
+  let sessionEmail: string | undefined
+  try {
+    const raw = (await cookies()).get('malama_email_session')?.value
+    if (raw) sessionEmail = parseEmailSessionToken(raw)?.email?.toLowerCase()
+  } catch { /* no session — public application */ }
+  const resolvedEmail = sessionEmail ?? (email ? String(email).trim().toLowerCase() : undefined)
 
   if (!displayName || typeof displayName !== 'string' || !displayName.trim()) {
     return NextResponse.json({ error: 'displayName is required' }, { status: 400 })
@@ -58,9 +75,14 @@ export async function POST(req: Request) {
     id,
     walletAddress: String(walletAddress),
     displayName: String(displayName).trim(),
-    email: email ? String(email).trim().toLowerCase() : undefined,
-    twitterHandle: twitterHandle ? String(twitterHandle).replace(/^@/, '') : undefined,
+    email: resolvedEmail,
+    twitterHandle: clean(twitterHandle),
+    telegram: clean(telegram),
+    linkedin: clean(linkedin),
+    reddit: clean(reddit),
     bio: bio ? String(bio).trim() : undefined,
+    promoMethod: promoMethod ? String(promoMethod).trim() : undefined,
+    userId: resolvedEmail ? makeUserId(resolvedEmail) : undefined,
     commissionBps: 1000, // default 10% — admin can adjust
     approved: false,     // requires admin approval
   })

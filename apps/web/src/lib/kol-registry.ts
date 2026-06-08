@@ -26,6 +26,14 @@ export type KOLPartner = {
   displayName: string
   bio?: string
   twitterHandle?: string
+  /** Social handles for amplification / community pushes */
+  telegram?: string
+  linkedin?: string
+  reddit?: string
+  /** How the partner plans to promote (captured at application) */
+  promoMethod?: string
+  /** Linked user account id (sha256 of email) when applied while signed in */
+  userId?: string
   /** Commission in basis points: 1000 = 10%, 1500 = 15%, 2000 = 20% */
   commissionBps: number
   /** Must be true before referral links go live */

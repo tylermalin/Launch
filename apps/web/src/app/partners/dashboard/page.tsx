@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import type { KOLPartner, ReferralCommission } from '@/lib/kol-registry'
+import { buildAmplifyPosts } from '@/lib/amplify'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 14 },
@@ -241,9 +242,65 @@ function Dashboard({ data, onRefresh }: { data: DashboardData; onRefresh: () => 
           </p>
         </motion.div>
 
-        {/* Commission history */}
+        {/* Amplify — push your link */}
         <motion.div
           initial="hidden" animate="show" variants={fadeUp} custom={5}
+          className="bg-malama-card border border-malama-line rounded-malama p-6"
+        >
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="font-black text-white text-sm uppercase tracking-wider">Amplify — push your link</h2>
+            <span className="text-[10px] font-black uppercase tracking-wider text-malama-accent">
+              Every sale = ${Math.round((2000 * data.partner.commissionBps) / 10000)} USDC
+            </span>
+          </div>
+          <p className="text-xs text-malama-ink-faint mb-4">
+            Ready-to-post copy with your link baked in. Post on X, Reddit DePIN subs, LinkedIn, Telegram and Discord —
+            the more you push, the more you earn. No caps, no waiting periods.
+          </p>
+          <div className="space-y-3">
+            {buildAmplifyPosts({ referralUrl: data.referralUrl, displayName: data.partner.displayName }).map((post) => (
+              <div key={post.channel} className="bg-malama-bg border border-malama-line rounded p-4">
+                <div className="flex items-center justify-between mb-2 gap-2">
+                  <p className="text-xs font-black uppercase tracking-wider text-malama-accent">{post.label}</p>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <CopyButton text={post.text} />
+                    {post.shareUrl && (
+                      <a
+                        href={post.shareUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider bg-malama-accent text-black rounded px-2.5 py-1 hover:opacity-90 transition-opacity"
+                      >
+                        Share →
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <p className="text-sm text-malama-ink-dim whitespace-pre-line leading-relaxed">{post.text}</p>
+                {post.subreddits && (
+                  <div className="flex flex-wrap gap-1.5 mt-2.5">
+                    {post.subreddits.map((s) => (
+                      <a
+                        key={s}
+                        href={`https://www.reddit.com/r/${s}/submit?url=${encodeURIComponent(data.referralUrl)}&title=${encodeURIComponent(post.title ?? '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[10px] font-mono text-malama-ink-faint border border-malama-line rounded px-1.5 py-0.5 hover:text-malama-accent hover:border-malama-accent/40 transition-colors"
+                      >
+                        r/{s}
+                      </a>
+                    ))}
+                  </div>
+                )}
+                <p className="text-[11px] text-malama-ink-faint mt-2">{post.hint}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Commission history */}
+        <motion.div
+          initial="hidden" animate="show" variants={fadeUp} custom={6}
           className="bg-malama-card border border-malama-line rounded-malama p-6"
         >
           <h2 className="font-black text-white text-sm uppercase tracking-wider mb-4">

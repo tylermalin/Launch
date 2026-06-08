@@ -407,14 +407,26 @@ function Dashboard({ data, onRefresh }: { data: DashboardData; onRefresh: () => 
 export default function PartnersDashboardPage() {
   const { address, isConnected } = useAccount()
   const [data, setData] = useState<DashboardData | null>(null)
-  const [status, setStatus] = useState<'loading' | 'found' | 'not-found' | 'idle'>('idle')
+  const [pendingName, setPendingName] = useState<string | null>(null)
+  const [status, setStatus] = useState<'loading' | 'found' | 'not-found' | 'pending' | 'idle'>('idle')
 
   const load = useCallback(async (addr: string) => {
     setStatus('loading')
     try {
       const res = await fetch(`/api/partners/me?address=${encodeURIComponent(addr)}`)
       if (res.status === 404) { setStatus('not-found'); return }
-      const json = await res.json()
+      const json = await res.json().catch(() => null)
+      // 403 = application exists but not yet approved → show pending, not the dashboard.
+      if (res.status === 403 || json?.status === 'pending') {
+        setPendingName(json?.partner?.displayName ?? null)
+        setStatus('pending')
+        return
+      }
+      // Only render the dashboard with a complete stats payload.
+      if (!res.ok || !json || typeof json.clicks !== 'number') {
+        setStatus('not-found')
+        return
+      }
       setData(json)
       setStatus('found')
     } catch {
@@ -441,6 +453,21 @@ export default function PartnersDashboardPage() {
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
           </svg>
           <span className="text-sm">Loading your dashboard…</span>
+        </div>
+      </div>
+    )
+  }
+  if (status === 'pending') {
+    return (
+      <div className="min-h-screen bg-malama-bg flex items-center justify-center px-6">
+        <div className="max-w-md w-full bg-malama-card border border-malama-line rounded-malama p-10 text-center">
+          <Clock size={36} className="text-amber-400 mx-auto mb-4" />
+          <h2 className="text-2xl font-serif font-black text-white mb-2">Application under review</h2>
+          <p className="text-malama-ink-dim text-sm leading-relaxed mb-6">
+            {pendingName ? `Thanks, ${pendingName}. ` : ''}Your partner application is pending approval. We review
+            within 24 hours — once approved, your stats, referral links, and the Amplify toolkit unlock here.
+          </p>
+          <Link href="/" className="text-sm font-bold text-malama-accent hover:underline">Return home</Link>
         </div>
       </div>
     )

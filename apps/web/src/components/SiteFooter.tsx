@@ -17,12 +17,12 @@ const footerSections: { title: string; links: { href: string; label: string; ext
   {
     title: 'Documentation',
     links: [
-      { href: '/whitepaper',          label: 'Whitepaper v1.0' },
-      { href: '/docs',                label: 'Docs hub' },
-      { href: '/docs/tokenomics',     label: 'MLMA Tokenomics' },
+      { href: '/docs',                label: 'Protocol Policy & Documentation' },
+      { href: '/whitepaper',          label: 'Whitepaper' },
+      { href: '/docs/tokenomics',     label: 'Tokenomics' },
       { href: '/docs/pricing-roi',    label: 'Pricing & Dynamics' },
       { href: '/docs/operators',      label: 'Operator Guide' },
-      { href: 'https://docs.malamalabs.com', label: 'User Docs', external: true },
+      { href: 'https://docs.malamalabs.com', label: 'User Documentation', external: true },
     ],
   },
   {

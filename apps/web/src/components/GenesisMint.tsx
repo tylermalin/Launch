@@ -175,14 +175,26 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
         throw new Error(`not_found`)
       }
 
-      // Race enable() against a 12 s timeout.
-      // Lace's MV3 background service worker restarts periodically; the first
-      // enable() call sometimes hangs until it wakes back up. On timeout the
-      // user sees a friendly "try again" message — a second click usually works.
+      // enable() resolves when the user approves in Lace (rejects if declined).
+      // Lace's MV3 service worker can be slow to wake and first-time unlock +
+      // approve often takes >12s, so we use a generous timeout. Critically, if
+      // enable() resolves LATE (after the timeout fired), we still connect and
+      // clear the error — instead of discarding a successful sign-in and leaving
+      // the user stuck on "click Connect again".
+      const enablePromise = win.cardano[walletKey].enable() as Promise<any>
+      enablePromise
+        .then((late) => {
+          setCardanoCip30Api(late)
+          setCardanoConnectError(null)
+          setCardanoConnecting(false)
+          connectCardano(walletKey).catch(() => {})
+        })
+        .catch(() => {})
+
       const api = await Promise.race([
-        win.cardano[walletKey].enable() as Promise<any>,
+        enablePromise,
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('timeout')), 12_000)
+          setTimeout(() => reject(new Error('timeout')), 60_000)
         ),
       ])
 

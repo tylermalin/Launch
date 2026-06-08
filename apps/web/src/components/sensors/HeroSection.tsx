@@ -56,7 +56,7 @@ export default function HeroSection() {
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', opacity: loaded ? 1 : 0, transform: loaded ? 'scale(1)' : 'scale(0.95)', transition: 'opacity 1s 0.2s cubic-bezier(0.23,1,0.32,1), transform 1s 0.2s cubic-bezier(0.23,1,0.32,1)' }}>
             <div style={{ position: 'absolute', inset: '-20%', background: 'radial-gradient(circle, rgba(139,255,71,0.08) 0%, transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/manus-storage/4_deda1c38.png" alt="Mālama Sensor System — Gold Level" className="product-float" style={{ width: '100%', maxWidth: '600px', height: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 40px 80px rgba(0,0,0,0.8))', position: 'relative', zIndex: 1 }} />
+            <img src="/sensors/4_deda1c38.png" alt="Mālama Sensor System — Gold Level" className="product-float" style={{ width: '100%', maxWidth: '600px', height: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 40px 80px rgba(0,0,0,0.8))', position: 'relative', zIndex: 1 }} />
           </div>
         </div>
       </div>

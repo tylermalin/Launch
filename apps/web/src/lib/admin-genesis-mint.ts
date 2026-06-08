@@ -74,6 +74,14 @@ export async function adminMintToAddress(opts: {
     args: [opts.recipient, opts.hexId],
   })
 
+  // Confirm the mint actually succeeded — a reverted tx must NOT be recorded as
+  // fulfilled (would mark a paid order as minted when no NFT exists).
+  const publicClient = createPublicClient({ chain: getEvmChain(), transport: http(getEvmRpcUrl()) })
+  const receipt = await publicClient.waitForTransactionReceipt({ hash, timeout: 120_000 })
+  if (receipt.status !== 'success') {
+    throw new Error(`Genesis mint reverted on-chain (tx ${hash})`)
+  }
+
   return { txHash: hash, tokenId: null }
 }
 

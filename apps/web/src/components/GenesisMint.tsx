@@ -329,13 +329,22 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
     // failing — and only surface an error (with the explorer link) if it truly isn't
     // mined yet. Set NEXT_PUBLIC_BASE[_SEPOLIA]_RPC_URL to a dedicated RPC to avoid this.
     const waitForTx = async (hash: `0x${string}`) => {
+      let receipt
       try {
-        return await publicClient.waitForTransactionReceipt({ hash, confirmations: 1, timeout: 180_000, pollingInterval: 4_000 })
+        receipt = await publicClient.waitForTransactionReceipt({ hash, confirmations: 1, timeout: 180_000, pollingInterval: 4_000 })
       } catch {
-        const r = await publicClient.getTransactionReceipt({ hash }).catch(() => null)
-        if (r) return r
-        throw new Error(`Transaction submitted but confirmation is taking longer than expected. It may still succeed — check ${getExplorerTxUrl(hash)} and your dashboard before retrying.`)
+        receipt = await publicClient.getTransactionReceipt({ hash }).catch(() => null)
+        if (!receipt) {
+          throw new Error(`Transaction submitted but confirmation is taking longer than expected. It may still succeed — check ${getExplorerTxUrl(hash)} and your dashboard before retrying.`)
+        }
       }
+      // CRITICAL: viem does NOT throw on a reverted tx — it returns a receipt with
+      // status 'reverted'. Without this check the UI would treat a failed payment
+      // (e.g. "ERC20: transfer amount exceeds balance") as a successful mint.
+      if (receipt.status !== 'success') {
+        throw new Error(`Transaction reverted on-chain — no node was minted. Most common cause: insufficient USDC balance or allowance. Tx: ${getExplorerTxUrl(hash)}`)
+      }
+      return receipt
     }
 
     // 2. USDC approve

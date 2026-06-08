@@ -19,7 +19,11 @@ import { getPayoutConfig, validatePayoutAddress, getHotWalletStatus, sendUsdc } 
 /** Pending commissions grouped by partner, with wallet validation + hot-wallet status. */
 export async function getPayoutsOverview() {
   const config = getPayoutConfig()
-  const [pending, hotWallet] = await Promise.all([listPendingCommissions(), getHotWalletStatus()])
+  // getHotWalletStatus hits an external RPC — never let it 500 the overview.
+  const [pending, hotWallet] = await Promise.all([
+    listPendingCommissions(),
+    getHotWalletStatus().catch((e) => { console.error('[payouts] hot-wallet status failed', e); return null }),
+  ])
 
   const byKol = new Map<string, ReferralCommission[]>()
   for (const c of pending) {

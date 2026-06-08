@@ -47,10 +47,25 @@ function isAdmin(email: string | null): boolean {
 
 async function listPartnersWithStats() {
   const partners = await listKOLs();
-  const stats = await Promise.all(partners.map((p) => getKOLStats(p.id)));
-  const response = stats
-    .filter(Boolean)
-    .map((s) => ({ ...s!, referralUrl: buildReferralUrl(s!.partner.id), vanityUrl: buildVanityUrl(s!.partner.id) }));
+  // Per-partner try/catch: a stats failure for ONE partner must never drop the
+  // whole registry. On error we still return the partner with zeroed stats.
+  const response = (
+    await Promise.all(
+      partners.map(async (p) => {
+        try {
+          const s = await getKOLStats(p.id);
+          if (!s) return null;
+          return { ...s, referralUrl: buildReferralUrl(p.id), vanityUrl: buildVanityUrl(p.id) };
+        } catch (e) {
+          console.error('[partners] stats failed for', p.id, e);
+          return {
+            partner: p, clicks: 0, conversions: 0, totalEarned: 0, pendingEarned: 0, paidEarned: 0, commissions: [],
+            referralUrl: buildReferralUrl(p.id), vanityUrl: buildVanityUrl(p.id),
+          };
+        }
+      }),
+    )
+  ).filter(Boolean);
   return { partners: response, count: response.length };
 }
 

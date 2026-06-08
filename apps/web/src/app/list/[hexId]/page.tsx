@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function GenesisHexDetailPage({ params }: Props) {
   const { hexId: raw } = await params
   const hexId = decodeURIComponent(raw)
-  const items = buildGenesisHexListItems(regionsData)
+  const items = await buildGenesisHexListItems(regionsData)
   const item = items.find((i) => i.hexId === hexId)
   if (!item) notFound()
-  const claim = getClaimByHex(hexId) ?? null
+  const claim = await getClaimByHex(hexId) ?? null
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-malama-deep">

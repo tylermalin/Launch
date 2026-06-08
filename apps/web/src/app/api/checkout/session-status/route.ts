@@ -5,6 +5,8 @@ import type { CustodialRecord } from '@/lib/custodial-store'
 import { getSessionStatus } from '@/lib/custodial-store'
 import { getStripeSecretKey } from '@/lib/stripe-server'
 import { requireGenesisContract } from '@/lib/genesis-contract'
+import { resolveAppUrl } from '@/lib/resolve-app-url'
+import { getExplorerTxUrl, getOpenSeaAssetUrl } from '@/lib/evm-network'
 
 export const runtime = 'nodejs'
 
@@ -19,7 +21,7 @@ export async function GET(req: Request) {
   // build "Collect page data" when the env var isn't set on a preview branch.
   const GENESIS_CONTRACT = requireGenesisContract()
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const appUrl = resolveAppUrl(req)
 
   const respondAwaitingMagic = (p: { transferToken: string }, stripeCheckoutSessionId: string) =>
     NextResponse.json({
@@ -41,8 +43,8 @@ export async function GET(req: Request) {
       custodialAddress: rec.address,
       evmTokenId: rec.evmTokenId,
       txHash: rec.txHash,
-      explorerUrl: `https://sepolia.basescan.org/tx/${rec.txHash}`,
-      openSeaUrl: `https://testnets.opensea.io/assets/base-sepolia/${GENESIS_CONTRACT}/${rec.evmTokenId}`,
+      explorerUrl: rec.txHash ? getExplorerTxUrl(rec.txHash) : undefined,
+      openSeaUrl: getOpenSeaAssetUrl(GENESIS_CONTRACT, rec.evmTokenId),
       transferUrl:
         rec.custody === 'server'
           ? `${appUrl}/custodial/transfer?claimId=${encodeURIComponent(rec.claimId)}&token=${encodeURIComponent(rec.transferToken)}`
@@ -55,7 +57,7 @@ export async function GET(req: Request) {
           : `${appUrl}/launch?token=${encodeURIComponent(rec.transferToken)}`,
     })
 
-  let local = getSessionStatus(sessionId)
+  let local = await getSessionStatus(sessionId)
   if (local?.state === 'awaiting_magic') {
     return respondAwaitingMagic(local.pending, sessionId)
   }
@@ -69,7 +71,7 @@ export async function GET(req: Request) {
   /** Stripe paid but this server has no terminal state yet (first poll, sync missed, or cold instance). */
   await reconcilePaidCheckoutSession(sessionId)
 
-  local = getSessionStatus(sessionId)
+  local = await getSessionStatus(sessionId)
   if (local?.state === 'awaiting_magic') {
     return respondAwaitingMagic(local.pending, sessionId)
   }

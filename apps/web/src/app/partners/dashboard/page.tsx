@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import type { KOLPartner, ReferralCommission } from '@/lib/kol-registry'
+import { buildAmplifyPosts, type AmplifyOverrides } from '@/lib/amplify'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 14 },
@@ -33,6 +34,7 @@ type DashboardData = {
   pendingEarned: number
   paidEarned: number
   commissions: ReferralCommission[]
+  amplifyOverrides?: AmplifyOverrides
   referralUrl: string
   vanityUrl: string
 }
@@ -56,8 +58,9 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
 }
 
 function StatusBadge({ status }: { status: ReferralCommission['status'] }) {
-  const map = {
+  const map: Record<ReferralCommission['status'], string> = {
     pending: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    processing: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
     paid: 'bg-malama-accent/10 text-malama-accent border-malama-accent/20',
     cancelled: 'bg-red-500/10 text-red-400 border-red-500/20',
   }
@@ -240,9 +243,65 @@ function Dashboard({ data, onRefresh }: { data: DashboardData; onRefresh: () => 
           </p>
         </motion.div>
 
-        {/* Commission history */}
+        {/* Amplify — push your link */}
         <motion.div
           initial="hidden" animate="show" variants={fadeUp} custom={5}
+          className="bg-malama-card border border-malama-line rounded-malama p-6"
+        >
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="font-black text-white text-sm uppercase tracking-wider">Amplify — push your link</h2>
+            <span className="text-[10px] font-black uppercase tracking-wider text-malama-accent">
+              Every sale = ${Math.round((2000 * data.partner.commissionBps) / 10000)} USDC
+            </span>
+          </div>
+          <p className="text-xs text-malama-ink-faint mb-4">
+            Ready-to-post copy with your link baked in. Post on X, Reddit DePIN subs, LinkedIn, Telegram and Discord —
+            the more you push, the more you earn. No caps, no waiting periods.
+          </p>
+          <div className="space-y-3">
+            {buildAmplifyPosts({ referralUrl: data.referralUrl, displayName: data.partner.displayName }, data.amplifyOverrides).map((post) => (
+              <div key={post.channel} className="bg-malama-bg border border-malama-line rounded p-4">
+                <div className="flex items-center justify-between mb-2 gap-2">
+                  <p className="text-xs font-black uppercase tracking-wider text-malama-accent">{post.label}</p>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <CopyButton text={post.text} />
+                    {post.shareUrl && (
+                      <a
+                        href={post.shareUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider bg-malama-accent text-black rounded px-2.5 py-1 hover:opacity-90 transition-opacity"
+                      >
+                        Share →
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <p className="text-sm text-malama-ink-dim whitespace-pre-line leading-relaxed">{post.text}</p>
+                {post.subreddits && (
+                  <div className="flex flex-wrap gap-1.5 mt-2.5">
+                    {post.subreddits.map((s) => (
+                      <a
+                        key={s}
+                        href={`https://www.reddit.com/r/${s}/submit?url=${encodeURIComponent(data.referralUrl)}&title=${encodeURIComponent(post.title ?? '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[10px] font-mono text-malama-ink-faint border border-malama-line rounded px-1.5 py-0.5 hover:text-malama-accent hover:border-malama-accent/40 transition-colors"
+                      >
+                        r/{s}
+                      </a>
+                    ))}
+                  </div>
+                )}
+                <p className="text-[11px] text-malama-ink-faint mt-2">{post.hint}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Commission history */}
+        <motion.div
+          initial="hidden" animate="show" variants={fadeUp} custom={6}
           className="bg-malama-card border border-malama-line rounded-malama p-6"
         >
           <h2 className="font-black text-white text-sm uppercase tracking-wider mb-4">
@@ -349,14 +408,26 @@ function Dashboard({ data, onRefresh }: { data: DashboardData; onRefresh: () => 
 export default function PartnersDashboardPage() {
   const { address, isConnected } = useAccount()
   const [data, setData] = useState<DashboardData | null>(null)
-  const [status, setStatus] = useState<'loading' | 'found' | 'not-found' | 'idle'>('idle')
+  const [pendingName, setPendingName] = useState<string | null>(null)
+  const [status, setStatus] = useState<'loading' | 'found' | 'not-found' | 'pending' | 'idle'>('idle')
 
   const load = useCallback(async (addr: string) => {
     setStatus('loading')
     try {
       const res = await fetch(`/api/partners/me?address=${encodeURIComponent(addr)}`)
       if (res.status === 404) { setStatus('not-found'); return }
-      const json = await res.json()
+      const json = await res.json().catch(() => null)
+      // 403 = application exists but not yet approved → show pending, not the dashboard.
+      if (res.status === 403 || json?.status === 'pending') {
+        setPendingName(json?.partner?.displayName ?? null)
+        setStatus('pending')
+        return
+      }
+      // Only render the dashboard with a complete stats payload.
+      if (!res.ok || !json || typeof json.clicks !== 'number') {
+        setStatus('not-found')
+        return
+      }
       setData(json)
       setStatus('found')
     } catch {
@@ -383,6 +454,21 @@ export default function PartnersDashboardPage() {
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
           </svg>
           <span className="text-sm">Loading your dashboard…</span>
+        </div>
+      </div>
+    )
+  }
+  if (status === 'pending') {
+    return (
+      <div className="min-h-screen bg-malama-bg flex items-center justify-center px-6">
+        <div className="max-w-md w-full bg-malama-card border border-malama-line rounded-malama p-10 text-center">
+          <Clock size={36} className="text-amber-400 mx-auto mb-4" />
+          <h2 className="text-2xl font-serif font-black text-white mb-2">Application under review</h2>
+          <p className="text-malama-ink-dim text-sm leading-relaxed mb-6">
+            {pendingName ? `Thanks, ${pendingName}. ` : ''}Your partner application is pending approval. We review
+            within 24 hours — once approved, your stats, referral links, and the Amplify toolkit unlock here.
+          </p>
+          <Link href="/" className="text-sm font-bold text-malama-accent hover:underline">Return home</Link>
         </div>
       </div>
     )

@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import SiteFooter from '@/components/SiteFooter'
 import { Providers } from '@/components/Providers'
 import ReferralCapture from '@/components/ReferralCapture'
+import CookieConsent from '@/components/CookieConsent'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 const interTight = Inter_Tight({
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navbar />
           <main className="flex-grow">{children}</main>
           <SiteFooter />
+          <CookieConsent />
         </Providers>
       </body>
     </html>

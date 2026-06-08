@@ -83,8 +83,8 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // Best-effort auth: if the in-memory custodial store is warm, verify the email matches.
-  const record = getCustodialByClaimId(claimId)
+  // Auth: verify the email matches the custodial record for this claimId.
+  const record = await getCustodialByClaimId(claimId)
   if (record && record.email.toLowerCase() !== email.toLowerCase().trim()) {
     return NextResponse.json({ error: 'Email does not match this claim' }, { status: 403 })
   }

@@ -26,6 +26,14 @@ export type KOLPartner = {
   displayName: string
   bio?: string
   twitterHandle?: string
+  /** Social handles for amplification / community pushes */
+  telegram?: string
+  linkedin?: string
+  reddit?: string
+  /** How the partner plans to promote (captured at application) */
+  promoMethod?: string
+  /** Linked user account id (sha256 of email) when applied while signed in */
+  userId?: string
   /** Commission in basis points: 1000 = 10%, 1500 = 15%, 2000 = 20% */
   commissionBps: number
   /** Must be true before referral links go live */
@@ -46,12 +54,36 @@ export type ReferralCommission = {
   /** Calculated: saleAmountUsd × commissionBps / 10_000 */
   commissionUsd: number
   commissionBps: number
-  status: 'pending' | 'paid' | 'cancelled'
+  /** processing = locked while a payout batch is executing (prevents double-send) */
+  status: 'pending' | 'processing' | 'paid' | 'cancelled'
   /** Set after USDC payout tx on Base */
   txHash?: string
   stripeSessionId?: string
   createdAt: number
   paidAt?: number
+}
+
+/** Audit record for a single payout batch run (admin-approved, system-sent). */
+export type PayoutAttempt = {
+  id: string
+  /** Admin email that approved the batch */
+  approvedBy: string
+  network: 'base' | 'base-sepolia'
+  dryRun: boolean
+  /** Per-commission outcomes */
+  results: Array<{
+    commissionId: string
+    kolId: string
+    toAddress: string
+    amountUsd: number
+    status: 'paid' | 'failed' | 'skipped'
+    txHash?: string
+    error?: string
+  }>
+  totalUsd: number
+  paidCount: number
+  failedCount: number
+  createdAt: number
 }
 
 // ── KV key helpers ───────────────────────────────────────────────────────────
@@ -64,6 +96,8 @@ const K = {
   commissionsByKol: (kolId: string) => `kol:commissions:by-kol:${kolId}`,
   commissionsAll: 'kol:commissions:all',
   clicks: (kolId: string) => `kol:clicks:${kolId}`,
+  payoutAttempt: (id: string) => `kol:payout:${id}`,
+  payoutAttemptsAll: 'kol:payouts:all',
 }
 
 // ── Partner CRUD ─────────────────────────────────────────────────────────────
@@ -201,6 +235,47 @@ export async function cancelCommission(id: string): Promise<ReferralCommission |
   const updated: ReferralCommission = { ...commission, status: 'cancelled' }
   await kv.set(K.commission(id), updated)
   return updated
+}
+
+// ── Payouts (admin-approved, system-sent) ──────────────────────────────────────
+
+/** All commissions awaiting payout, oldest first (FIFO payout order). */
+export async function listPendingCommissions(): Promise<ReferralCommission[]> {
+  const all = await listAllCommissions()
+  return all.filter((c) => c.status === 'pending').sort((a, b) => a.createdAt - b.createdAt)
+}
+
+/**
+ * Atomically-ish claim a commission for payout: pending → processing.
+ * Returns the locked commission, or null if it was not in `pending` (already
+ * paid / cancelled / being processed by another run). Guards against double-send.
+ */
+export async function lockCommissionForPayout(id: string): Promise<ReferralCommission | null> {
+  const commission = await kv.get<ReferralCommission>(K.commission(id))
+  if (!commission || commission.status !== 'pending') return null
+  const locked: ReferralCommission = { ...commission, status: 'processing' }
+  await kv.set(K.commission(id), locked)
+  return locked
+}
+
+/** Release a lock back to `pending` after a failed send so it can be retried. */
+export async function releaseCommissionLock(id: string): Promise<void> {
+  const commission = await kv.get<ReferralCommission>(K.commission(id))
+  if (commission && commission.status === 'processing') {
+    await kv.set(K.commission(id), { ...commission, status: 'pending' })
+  }
+}
+
+export async function recordPayoutAttempt(attempt: PayoutAttempt): Promise<void> {
+  await kv.set(K.payoutAttempt(attempt.id), attempt)
+  await kv.sadd(K.payoutAttemptsAll, attempt.id)
+}
+
+export async function listPayoutAttempts(): Promise<PayoutAttempt[]> {
+  const ids = await kv.smembers(K.payoutAttemptsAll)
+  if (!ids.length) return []
+  const results = await Promise.all(ids.map((id) => kv.get<PayoutAttempt>(K.payoutAttempt(id))))
+  return (results.filter(Boolean) as PayoutAttempt[]).sort((a, b) => b.createdAt - a.createdAt)
 }
 
 // ── Click tracking ───────────────────────────────────────────────────────────

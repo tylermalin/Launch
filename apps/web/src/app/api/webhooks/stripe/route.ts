@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const expired = event.data.object as Stripe.Checkout.Session
     const hexId = expired.metadata?.hexId
     if (getCardCustodyMode() === 'magic' && hexId && expired.id) {
-      unlockHexForMagicCheckout(hexId, expired.id)
+      await unlockHexForMagicCheckout(hexId, expired.id)
     }
     return NextResponse.json({ received: true })
   }
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 
   const session = event.data.object as Stripe.Checkout.Session
   const sessionId = session.id
-  if (isStripeSessionProcessed(sessionId)) {
+  if (await isStripeSessionProcessed(sessionId)) {
     return NextResponse.json({ received: true, duplicate: true })
   }
 

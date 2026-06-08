@@ -17,11 +17,12 @@ const footerSections: { title: string; links: { href: string; label: string; ext
   {
     title: 'Documentation',
     links: [
-      { href: '/whitepaper',          label: 'Whitepaper v1.0' },
-      { href: '/docs',                label: 'Docs hub' },
-      { href: '/docs/tokenomics',     label: 'MLMA Tokenomics' },
-      { href: '/docs/pricing-roi',    label: 'Pricing & ROI' },
+      { href: '/docs',                label: 'Protocol Policy & Documentation' },
+      { href: '/whitepaper',          label: 'Whitepaper' },
+      { href: '/docs/tokenomics',     label: 'Tokenomics' },
+      { href: '/docs/pricing-roi',    label: 'Pricing & Dynamics' },
       { href: '/docs/operators',      label: 'Operator Guide' },
+      { href: 'https://docs.malamalabs.com', label: 'User Documentation', external: true },
     ],
   },
   {
@@ -48,7 +49,9 @@ export default function SiteFooter() {
           <div className="lg:col-span-2">
             <p className="font-serif text-[1.65rem] font-medium tracking-tight text-malama-ink">Mālama Labs</p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-malama-ink-dim">
-              Cryptographic environmental intelligence. Hardware-signed data anchored to Cardano and Base.
+              <span className="text-malama-ink">Mālama Labs</span> is the trust anchor for physical-world data.
+              Two product lines today: carbon dMRV (proven) and AI compute monitoring (scaling). One signing
+              architecture across both.
             </p>
             <a
               href={AIPOWER_URL}
@@ -67,6 +70,44 @@ export default function SiteFooter() {
             >
               ← malamalabs.com
             </a>
+            <div className="mt-5 flex items-center gap-4">
+              <a
+                href="https://www.linkedin.com/company/malama-labs"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="text-malama-ink-faint transition-colors hover:text-malama-accent"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
+              </a>
+              <a
+                href="https://www.youtube.com/@malamalabs"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                className="text-malama-ink-faint transition-colors hover:text-malama-accent"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" /><path d="m10 15 5-3-5-3z" /></svg>
+              </a>
+              <a
+                href="https://medium.com/@malamalabs"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Medium"
+                className="text-malama-ink-faint transition-colors hover:text-malama-accent"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="7" cy="12" r="5" /><ellipse cx="16.5" cy="12" rx="2" ry="5" /><ellipse cx="21" cy="12" rx="0.5" ry="5" /></svg>
+              </a>
+              <a
+                href="https://twitter.com/malamalabs"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter / X"
+                className="text-malama-ink-faint transition-colors hover:text-malama-accent"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" /></svg>
+              </a>
+            </div>
           </div>
           {footerSections.map((section) => (
             <div key={section.title}>

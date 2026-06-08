@@ -1,7 +1,7 @@
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
 import { issueClaim, bindEvmTokenToClaim, updateClaimTxHash } from '@/lib/genesis-claim-registry'
 import { encryptPrivateKeyHex } from '@/lib/wallet-crypto'
-import { adminMintToAddress } from '@/lib/admin-genesis-mint'
+import { adminMintToAddress, resolveTokenIdFromTx } from '@/lib/admin-genesis-mint'
 import { getCardCustodyMode } from '@/lib/card-custody'
 import type { CustodialRecord } from '@/lib/custodial-store'
 import {
@@ -20,6 +20,7 @@ import {
   unlockHexForMagicCheckout,
 } from '@/lib/custodial-store'
 import { issueKOLCommission } from '@/lib/kol-registry'
+import { upsertUserAccount } from '@/lib/user-account'
 
 const SALE_AMOUNT_USD = 2000
 
@@ -35,23 +36,23 @@ export async function fulfillCardPurchase(opts: {
 }): Promise<void> {
   const { stripeSessionId, hexId, email, transferToken, referrerId } = opts
 
-  if (isStripeSessionProcessed(stripeSessionId)) return
-  if (getSessionStatus(stripeSessionId)?.state === 'complete') return
+  if (await isStripeSessionProcessed(stripeSessionId)) return
+  if ((await getSessionStatus(stripeSessionId))?.state === 'complete') return
   if (fulfillmentLocks.has(stripeSessionId)) return
   fulfillmentLocks.add(stripeSessionId)
 
   try {
     if (getCardCustodyMode() === 'magic') {
-      if (getPendingMagicBySession(stripeSessionId)) return
-      if (getSessionStatus(stripeSessionId)?.state === 'awaiting_magic') return
+      if (await getPendingMagicBySession(stripeSessionId)) return
+      if ((await getSessionStatus(stripeSessionId))?.state === 'awaiting_magic') return
       const hasMagicSecret =
         Boolean(process.env.MAGIC_SECRET_KEY?.trim()) || Boolean(process.env.MAGIC_SECRET?.trim())
       if (!hasMagicSecret) {
-        setSessionError(
+        await setSessionError(
           stripeSessionId,
-          'Magic server key not configured (set MAGIC_SECRET_KEY for DID verification)'
+          'Magic server key not configured (set MAGIC_SECRET_KEY for DID verification)',
         )
-        unlockHexForMagicCheckout(hexId, stripeSessionId)
+        await unlockHexForMagicCheckout(hexId, stripeSessionId)
         return
       }
       const pending = {
@@ -62,8 +63,8 @@ export async function fulfillCardPurchase(opts: {
         referrerId,
         createdAt: new Date().toISOString(),
       }
-      savePendingMagicPurchase(pending)
-      setSessionAwaitingMagic(stripeSessionId, pending)
+      await savePendingMagicPurchase(pending)
+      await setSessionAwaitingMagic(stripeSessionId, pending)
       return
     }
 
@@ -71,7 +72,7 @@ export async function fulfillCardPurchase(opts: {
     let claimId: string
     let address: `0x${string}`
 
-    const pending = getPendingStripeFulfillment(stripeSessionId)
+    const pending = await getPendingStripeFulfillment(stripeSessionId)
     if (pending && pending.hexId === hexId && pending.transferToken === transferToken) {
       pk = pending.privateKey
       claimId = pending.claimId
@@ -81,18 +82,18 @@ export async function fulfillCardPurchase(opts: {
       const account = privateKeyToAccount(pk)
       address = account.address
 
-      const reserved = issueClaim(hexId, 'base', address, referrerId)
+      const reserved = await issueClaim(hexId, 'base', address, referrerId)
       if (!reserved.ok) {
         const msg =
           reserved.error === 'Hex already claimed'
             ? 'Hex already claimed'
             : reserved.error ?? 'Could not reserve hex'
-        setSessionError(stripeSessionId, msg)
+        await setSessionError(stripeSessionId, msg)
         return
       }
 
       claimId = reserved.claim.claimId
-      setPendingStripeFulfillment(stripeSessionId, {
+      await setPendingStripeFulfillment(stripeSessionId, {
         hexId,
         claimId,
         email,
@@ -105,13 +106,12 @@ export async function fulfillCardPurchase(opts: {
 
     const encryptedPrivateKey = encryptPrivateKeyHex(pk)
 
-    const { txHash, tokenId } = await adminMintToAddress({
+    const { txHash } = await adminMintToAddress({
       hexId,
       recipient: address,
     })
 
-    bindEvmTokenToClaim(claimId, tokenId)
-    updateClaimTxHash({ claimId, txHash })
+    await updateClaimTxHash({ claimId, txHash })
 
     const record: CustodialRecord = {
       claimId,
@@ -120,17 +120,31 @@ export async function fulfillCardPurchase(opts: {
       address,
       encryptedPrivateKey,
       transferToken,
-      evmTokenId: tokenId,
+      evmTokenId: 0,
       txHash,
       createdAt: new Date().toISOString(),
       custody: 'server',
       referrerId,
     }
 
-    clearPendingStripeFulfillment(stripeSessionId)
-    saveCustodialRecord(record)
-    setSessionComplete(stripeSessionId, record)
-    markStripeSessionProcessed(stripeSessionId)
+    await clearPendingStripeFulfillment(stripeSessionId)
+    await saveCustodialRecord(record)
+    await setSessionComplete(stripeSessionId, record)
+    await markStripeSessionProcessed(stripeSessionId)
+
+    const tokenId = await resolveTokenIdFromTx(txHash)
+    if (tokenId !== null) {
+      await bindEvmTokenToClaim(claimId, tokenId)
+    } else {
+      void resolveTokenIdFromTx(txHash).then((tid) => {
+        if (tid !== null) bindEvmTokenToClaim(claimId, tid).catch(() => {})
+      })
+    }
+
+    // Upsert user account — email is the anchor for card purchases
+    await upsertUserAccount({ email, evmAddress: address, hexId }).catch((err) =>
+      console.error('[fulfillCardPurchase] user account upsert failed:', err)
+    )
 
     // Issue KOL commission if a referrer was captured — fire-and-forget, non-blocking
     if (referrerId) {
@@ -149,7 +163,7 @@ export async function fulfillCardPurchase(opts: {
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'Mint failed'
     console.error('[fulfillCardPurchase]', e)
-    setSessionError(stripeSessionId, msg)
+    await setSessionError(stripeSessionId, msg)
   } finally {
     fulfillmentLocks.delete(stripeSessionId)
   }

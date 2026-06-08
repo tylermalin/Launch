@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { issueClaim, bindEvmTokenToClaim, updateClaimTxHash } from '@/lib/genesis-claim-registry'
-import { adminMintToAddress } from '@/lib/admin-genesis-mint'
+import { adminMintToAddress, resolveTokenIdFromTx } from '@/lib/admin-genesis-mint'
 import type { CustodialRecord } from '@/lib/custodial-store'
 import {
   removePendingMagicPurchase,
@@ -10,15 +10,11 @@ import {
   unlockHexForMagicCheckout,
 } from '@/lib/custodial-store'
 import { verifyMagicDidToken } from '@/lib/magic-server'
+import { upsertUserAccount } from '@/lib/user-account'
 import { resolvePendingMagicPurchase } from '@/lib/resolve-pending-magic'
 
 export const runtime = 'nodejs'
 
-/**
- * After Stripe payment (magic custody), user completes Magic Email OTP and sends DID token + transfer token.
- * Server verifies Magic, matches email to the paid purchase, mints NFT to the Magic wallet.
- * If in-memory pending was lost (dev restart), pass `stripeSessionId` (cs_…) to recover from Stripe.
- */
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as {
@@ -45,10 +41,7 @@ export async function POST(req: Request) {
       }
       if (resolved.reason === 'metadata_mismatch') {
         return NextResponse.json(
-          {
-            error:
-              'Transfer token does not match this Stripe session. Use the link from card-complete or add ?session_id=cs_…',
-          },
+          { error: 'Transfer token does not match this Stripe session. Use the link from card-complete or add ?session_id=cs_.' },
           { status: 400 }
         )
       }
@@ -62,10 +55,7 @@ export async function POST(req: Request) {
         )
       }
       return NextResponse.json(
-        {
-          error:
-            'No pending purchase in memory (e.g. dev server restarted). Use /launch?token=…&session_id=cs_… — session_id is in your browser URL on card-complete after Stripe (e.g. …/presale/card-complete?session_id=cs_…).',
-        },
+        { error: 'No pending purchase in memory. Use /launch?token=.&session_id=cs_. from card-complete.' },
         { status: 404 }
       )
     }
@@ -74,15 +64,12 @@ export async function POST(req: Request) {
     const { email, publicAddress } = await verifyMagicDidToken(didToken)
     if (email !== pending.email) {
       return NextResponse.json(
-        {
-          error:
-            'Signed-in Magic email must match the email used at checkout. Use the same address you entered when paying with card.',
-        },
+        { error: 'Signed-in Magic email must match the email used at checkout.' },
         { status: 403 }
       )
     }
 
-    const reserved = issueClaim(pending.hexId, 'base', publicAddress)
+    const reserved = await issueClaim(pending.hexId, 'base', publicAddress)
     if (!reserved.ok) {
       return NextResponse.json(
         { error: reserved.error ?? 'Could not reserve hex — it may no longer be available.' },
@@ -92,13 +79,15 @@ export async function POST(req: Request) {
 
     const claimId = reserved.claim.claimId
 
-    const { txHash, tokenId } = await adminMintToAddress({
+    // Broadcast the mint. Returns on tx hash; tokenId unknown until receipt.
+    const { txHash } = await adminMintToAddress({
       hexId: pending.hexId,
       recipient: publicAddress,
     })
 
-    bindEvmTokenToClaim(claimId, tokenId)
-    updateClaimTxHash({ claimId, txHash })
+    // PERSIST IMMEDIATELY on txHash, before any receipt wait, so a slow
+    // receipt can never strand the record. tokenId backfilled below.
+    await updateClaimTxHash({ claimId, txHash })
 
     const record: CustodialRecord = {
       claimId,
@@ -107,25 +96,42 @@ export async function POST(req: Request) {
       address: publicAddress,
       encryptedPrivateKey: '',
       transferToken: pending.transferToken,
-      evmTokenId: tokenId,
+      evmTokenId: 0,
       txHash,
       createdAt: new Date().toISOString(),
       custody: 'magic',
       stripeCheckoutSessionId: pending.stripeSessionId,
     }
 
-    removePendingMagicPurchase(pending)
-    unlockHexForMagicCheckout(pending.hexId, pending.stripeSessionId)
-    saveCustodialRecord(record)
-    setSessionComplete(pending.stripeSessionId, record)
-    markStripeSessionProcessed(pending.stripeSessionId)
+    await removePendingMagicPurchase(pending)
+    await unlockHexForMagicCheckout(pending.hexId, pending.stripeSessionId)
+    await saveCustodialRecord(record)
+    await setSessionComplete(pending.stripeSessionId, record)
+    await markStripeSessionProcessed(pending.stripeSessionId)
+
+    await upsertUserAccount({
+      email: pending.email,
+      evmAddress: publicAddress,
+      hexId: pending.hexId,
+    }).catch((err) => console.error('[magic-claim] user account upsert failed:', err))
+
+    // Backfill tokenId from the NodeSecured event. Inline attempt with a budget;
+    // if the receipt is not ready, fire-and-forget so the response returns fast.
+    const tokenId = await resolveTokenIdFromTx(txHash)
+    if (tokenId !== null) {
+      await bindEvmTokenToClaim(claimId, tokenId)
+    } else {
+      void resolveTokenIdFromTx(txHash).then((tid) => {
+        if (tid !== null) bindEvmTokenToClaim(claimId, tid).catch(() => {})
+      })
+    }
 
     return NextResponse.json({
       ok: true,
       claimId,
       hexId: pending.hexId,
       address: publicAddress,
-      evmTokenId: tokenId,
+      evmTokenId: tokenId ?? 0,
       txHash,
     })
   } catch (e) {

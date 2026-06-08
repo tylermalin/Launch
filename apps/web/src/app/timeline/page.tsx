@@ -143,7 +143,7 @@ const phases: {
     badge: 'Rewards',
     items: [
       'Network metrics flow live. Validation checks process carbon SaveCards and AI compute attestations continuously.',
-      'Earn MLMA based on your Geographic Multiplier (0.5×-3.0×), Data Quality Score, and uptime. Rewards are relative to total network validation volume.',
+      'Earn MLMA under Genesis Pricing v1.0: a 125,000 base scaled by Hex Type (0.95×-1.30×), Data Demand Score (0.70×-1.30×), and the Year 1 Genesis multiplier (1.5×), cohort-normalized to the 25M pool. USDC validator fees are paid separately.',
       'PONO qualification (~90 days post-boot) unlocks the second tranche (15%) and governance eligibility.',
       'Operator economics depend on data demand in your hex cell and MLMA market conditions. See whitepaper for mechanics.',
     ],

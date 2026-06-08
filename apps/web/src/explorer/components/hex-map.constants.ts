@@ -1,10 +1,11 @@
 /**
  * Color, opacity, and zoom-step constants for the Hex Map Explorer.
  *
- * Palette is tuned for the launch.malamalabs.com dark theme. Available
- * hexes are bright blue; sold and reserved hexes are red. Founding-team
- * hexes share the red fill but carry an amber border to distinguish
- * "held by team" from "sold to external operator".
+ * Palette — dark theme:
+ *   Available  → green  (open for reservation)
+ *   Reserved   → red    (claimed by any operator)
+ *   Your Hex   → yellow (subset of reserved — owned by the logged-in user)
+ *   Founding   → red fill + amber border (Mālama Labs team nodes)
  */
 
 export type HexStatus =
@@ -12,6 +13,7 @@ export type HexStatus =
   | 'upcoming'
   | 'reserved'
   | 'reserved-founding'
+  | 'reserved-user'    // logged-in user's own hexes (yellow)
   | 'activated'
   | 'future-phase'
   | 'restricted';
@@ -28,24 +30,24 @@ export interface HexStateStyle {
 
 export const HEX_STATE_STYLES: Record<HexStatus, HexStateStyle> = {
   available: {
-    fillColor: '#3b82f6', // blue-500
+    fillColor: '#22c55e', // green-500 — open for reservation
     fillOpacity: 0.65,
-    borderColor: '#60a5fa', // blue-400
+    borderColor: '#4ade80', // green-400
     borderWidth: 1,
     interactive: true,
     label: 'Available',
   },
   upcoming: {
-    fillColor: '#3b82f6',
+    fillColor: '#22c55e',
     fillOpacity: 0.25,
-    borderColor: '#60a5fa',
+    borderColor: '#4ade80',
     borderWidth: 1,
     borderDasharray: [2, 2],
     interactive: false,
     label: 'Upcoming wave',
   },
   reserved: {
-    fillColor: '#dc2626', // red-600
+    fillColor: '#dc2626', // red-600 — taken by any operator
     fillOpacity: 0.7,
     borderColor: null,
     borderWidth: 0,
@@ -55,13 +57,21 @@ export const HEX_STATE_STYLES: Record<HexStatus, HexStateStyle> = {
   'reserved-founding': {
     fillColor: '#dc2626',
     fillOpacity: 0.7,
-    borderColor: '#e8b04a', // warm amber accent
+    borderColor: '#e8b04a', // warm amber — Mālama Labs founding nodes
     borderWidth: 2,
     interactive: true,
     label: 'Founding team',
   },
+  'reserved-user': {
+    fillColor: '#eab308', // yellow-500 — owned by logged-in user
+    fillOpacity: 0.85,
+    borderColor: '#facc15', // yellow-400
+    borderWidth: 2,
+    interactive: true,
+    label: 'Your Hex',
+  },
   activated: {
-    fillColor: '#c4f061', // brand accent green
+    fillColor: '#c4f061', // brand accent — hardware booted
     fillOpacity: 1.0,
     borderColor: '#c4f061',
     borderWidth: 1,
@@ -69,11 +79,11 @@ export const HEX_STATE_STYLES: Record<HexStatus, HexStateStyle> = {
     label: 'Activated',
   },
   'future-phase': {
-    fillColor: '#3a3a3a', // muted grey
+    fillColor: '#3a3a3a', // muted grey — decorative only
     fillOpacity: 0.2,
     borderColor: null,
     borderWidth: 0,
-    interactive: false, // decorative only — no click handler
+    interactive: false,
     label: 'Future phase',
   },
   restricted: {

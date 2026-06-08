@@ -6,7 +6,7 @@ import DocsHubScrollSpy from './DocsHubScrollSpy'
 export const metadata: Metadata = {
   title: 'Documentation · Mālama Labs',
   description:
-    'Genesis 200 documentation hub. MLMA tokenomics, pricing dynamics, Phase 1 timeline, operator guide. Aligned to Tokenomics Whitepaper v3.6.',
+    'Genesis 200 documentation hub. MLMA tokenomics, pricing and dynamics, Phase 1 timeline, operator guide. Aligned to the V1 document set.',
 }
 
 /**
@@ -50,9 +50,9 @@ export default function DocsOverviewPage() {
       <div className="docbar" id="top">
         <div className="docbar-inner">
           <div className="left">
-            <span className="live">v4 · Canonical</span>
+            <span className="live">V1 · Canonical</span>
             <span className="sep">/</span>
-            <span>Aligned to Tokenomics Whitepaper v3.6</span>
+            <span>Aligned to the V1 document set</span>
             <span className="sep">/</span>
             <span>May 2026</span>
           </div>
@@ -87,11 +87,11 @@ export default function DocsOverviewPage() {
           <aside className="meta-card" aria-label="Hub metadata">
             <div className="row">
               <span className="k">Hub version</span>
-              <span className="v accent">v4</span>
+              <span className="v accent">V1</span>
             </div>
             <div className="row">
               <span className="k">Aligned to</span>
-              <span className="v">Whitepaper v3.6</span>
+              <span className="v">V1 document set</span>
             </div>
             <div className="row">
               <span className="k">Updated</span>
@@ -126,12 +126,13 @@ export default function DocsOverviewPage() {
                 marginTop: 14,
               }}
             >
-              <strong style={{ color: 'var(--mlma-ink-dim)' }}>Material changes from v3:</strong>{' '}
-              Emissions extended from 3-year to 8-year smooth taper (60M total · 12% of
-              supply) · Genesis 200 vesting now milestone-conditional (15% boot + 15% PONO +
-              20/20/30 at operational milestones) · Standardized pools (30 / 20 / 15 / 35) ·
-              Revenue split 45 / 20 / 15 / 20 with 250M burn floor · MLMA on Base, SaveCards
-              on Cardano · Stewardship Pool (8.75M, FPIC-gated) · 10% UBO governance cap.
+              <strong style={{ color: 'var(--mlma-ink-dim)' }}>V1 canonical summary:</strong>{' '}
+              500M hard cap. Allocation: Community 45% (225M) · Investors 20% (100M) · Team
+              and Advisors 20% (100M) · Foundation 15% (75M). Emissions 60M over an 8-year
+              smooth taper (12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), then revenue-funded. Revenue
+              split 45 burn / 20 operators / 15 stakers / 20 Foundation, to a 250M burn floor.
+              MLMA on Base, SaveCards on Cardano (not bridged at TGE). Stewardship Pool (8.75M,
+              FPIC-gated). 10% UBO governance cap.
             </p>
           </div>
 
@@ -156,16 +157,17 @@ export default function DocsOverviewPage() {
               <div className="topline">
                 <span className="id">WP · v1.0</span>
                 <span className="status" style={{ color: 'var(--mlma-accent)', borderColor: 'rgba(196,240,97,0.3)', background: 'rgba(196,240,97,0.08)' }}>
-                  Institutional · May 2026
+                  Institutional · June 2026
                 </span>
               </div>
               <h3>Whitepaper v1.0 — Six-Layer DePIN</h3>
               <p>
                 The canonical institutional document. Hardware-verified truth for climate markets and AI
-                compute. Covers the full six-layer DePIN architecture, seven verticals (carbon dMRV,
-                energy telemetry, parametric insurance, AI compute accountability, supply chain, LCO₂
-                clearing, prediction markets), tokenomics, regulatory posture, and operational threat
-                model. 33 pages · Document MLM-WP-v1.0.
+                compute. Covers the full six-layer DePIN architecture, nine verticals (carbon verification,
+                AI compute emissions verification, energy-market data licensing, parametric insurance,
+                EUDR supply chain attestation, prediction market resolution, smart agriculture, Smart City,
+                and LCO₂ / VCO₂ settlement), tokenomics, regulatory posture, and operational threat
+                model. 31 pages · Document MLM-WP-v1.0.
               </p>
               <div className="footline">
                 <span>Architecture · tokenomics · regulatory posture · appendices</span>
@@ -180,8 +182,9 @@ export default function DocsOverviewPage() {
               </div>
               <h3>MLMA Tokenomics</h3>
               <p>
-                Token design, the 8-year emission schedule with KPI scaling, allocation pools,
-                governance, revenue distribution, and the 250M circulating-supply burn floor.
+                Token design, the 60M eight-year smooth emission taper, allocation pools,
+                governance, the 45 / 20 / 15 / 20 revenue split, and the 250M circulating-supply
+                burn floor.
               </p>
               <div className="footline">
                 <span>Supply · emissions · governance</span>
@@ -218,7 +221,7 @@ export default function DocsOverviewPage() {
                 milestones.
               </p>
               <div className="footline">
-                <span>May 2026 → October 2027</span>
+                <span>June 2026 → ~Q4 2027</span>
                 <span className="read">Read →</span>
               </div>
             </Link>
@@ -309,16 +312,18 @@ export default function DocsOverviewPage() {
                 Mālama Labs builds the measurement layer for markets that depend on
                 physical-world data. The same hardware-signed primitive. A sensor reading,
                 signed at the silicon level by an{' '}
-                <strong>ATECC608B-class secure element</strong> and anchored to Cardano. Produces verifiable evidence across seven markets:
+                <strong>ATECC608B-class secure element</strong> and anchored to Cardano. Produces verifiable evidence across nine verticals:
               </p>
               <ul>
-                <li>Carbon dMRV</li>
-                <li>AI compute emissions</li>
-                <li>Parametric insurance</li>
-                <li>Supply chain provenance</li>
+                <li>Carbon verification (dMRV)</li>
+                <li>AI compute emissions verification</li>
+                <li>Energy-market data licensing</li>
+                <li>Parametric insurance triggers</li>
+                <li>EUDR supply chain attestation</li>
                 <li>Prediction market resolution</li>
-                <li>Smart agriculture</li>
-                <li>Grid intelligence</li>
+                <li>Smart agriculture SaaS</li>
+                <li>Smart City (municipal / grid)</li>
+                <li>LCO₂ / VCO₂ settlement</li>
               </ul>
               <p>
                 <strong>Genesis 200</strong> is the first 200 hex-zoned validation nodes on
@@ -445,10 +450,9 @@ export default function DocsOverviewPage() {
               </div>
 
               <div className="sig-strip">
-                <div className="label">- DOCUMENTATION HUB · v4</div>
+                <div className="label">- DOCUMENTATION HUB · V1</div>
                 <p className="text">
-                  Mālama Labs, Inc. · Genesis 200 Documentation · Aligned to MLMA Tokenomics
-                  Whitepaper v3.6
+                  Mālama Labs, Inc. · Genesis 200 Documentation · Aligned to the V1 document set
                 </p>
                 <p className="footnote">
                   Companion to shipped hardware runbooks. Actual distributions follow

@@ -6,7 +6,7 @@ import {
   parseAbi,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { baseSepolia } from 'viem/chains'
+import { getEvmChain, getEvmRpcUrl, isMainnet } from '@/lib/evm-network'
 
 const MHNL_ABI = parseAbi([
   'function adminSecureNode(address to, string calldata hexId) external',
@@ -16,39 +16,55 @@ const MHNL_ABI = parseAbi([
 const GENESIS_CONTRACT = (process.env.NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS ??
   '0x2222222222222222222222222222222222222222') as `0x${string}`
 
-/**
- * Owner-only mint for card / off-chain settlement (matches GenesisValidator.adminSecureNode).
- */
+/** Raw configured RPC for the active network (undefined if not explicitly set). */
+function getRpc() {
+  return isMainnet()
+    ? process.env.NEXT_PUBLIC_BASE_RPC_URL?.trim() || process.env.BASE_RPC_URL?.trim()
+    : process.env.BASE_SEPOLIA_RPC_URL?.trim() || process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL?.trim()
+}
+
 export async function adminMintToAddress(opts: {
   hexId: string
   recipient: `0x${string}`
-}): Promise<{ txHash: `0x${string}`; tokenId: number }> {
-  const pk = process.env.GENESIS_ADMIN_PRIVATE_KEY
-  const rpc = process.env.BASE_SEPOLIA_RPC_URL || process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
+}): Promise<{ txHash: `0x${string}`; tokenId: number | null }> {
+  const ownerKey = process.env.GENESIS_OWNER_PRIVATE_KEY?.trim()
+  const rpc = getRpc()
   const isPlaceholderContract = GENESIS_CONTRACT === '0x2222222222222222222222222222222222222222'
 
-  // Dev simulation: if admin key, RPC, or real contract address are missing, return a
-  // mock result so the full custodial claim flow can be exercised locally.
-  if (!pk || !pk.startsWith('0x') || !rpc || isPlaceholderContract) {
-    const missing = [
-      (!pk || !pk.startsWith('0x')) && 'GENESIS_ADMIN_PRIVATE_KEY',
-      !rpc && 'BASE_SEPOLIA_RPC_URL',
-      isPlaceholderContract && 'NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS',
-    ].filter(Boolean).join(', ')
-    console.warn(`⚠️  MINT SIMULATED (missing: ${missing}). Set env vars for real minting.`)
-    await new Promise(r => setTimeout(r, 1500))
+  if (process.env.NODE_ENV === 'production') {
+    if (!ownerKey || !rpc || isPlaceholderContract) {
+      const missing = [
+        !ownerKey && 'GENESIS_OWNER_PRIVATE_KEY',
+        !rpc && (isMainnet() ? 'BASE_RPC_URL' : 'BASE_SEPOLIA_RPC_URL'),
+        isPlaceholderContract && 'NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS',
+      ].filter(Boolean).join(', ')
+      throw new Error(`CRITICAL: Production minting requires valid configuration but env is missing: ${missing}. Simulation is strictly forbidden.`)
+    }
+  }
+
+  if (!ownerKey || !rpc || isPlaceholderContract) {
+    if (process.env.MINT_SIMULATION !== 'true') {
+      const missing = [
+        !ownerKey && 'GENESIS_OWNER_PRIVATE_KEY',
+        !rpc && (isMainnet() ? 'BASE_RPC_URL' : 'BASE_SEPOLIA_RPC_URL'),
+        isPlaceholderContract && 'NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS',
+      ].filter(Boolean).join(', ')
+      throw new Error(`Mint misconfigured (missing: ${missing}). Set MINT_SIMULATION=true to simulate.`)
+    }
+    console.warn('MINT SIMULATED (MINT_SIMULATION=true).')
+    await new Promise(r => setTimeout(r, 500))
     return {
       txHash: `0xmock_${opts.hexId}_${Date.now()}` as `0x${string}`,
       tokenId: Math.floor(Math.random() * 300) + 1,
     }
   }
 
-  const account = privateKeyToAccount(pk as `0x${string}`)
-  const publicClient = createPublicClient({ chain: baseSepolia, transport: http(rpc) })
+  const account = privateKeyToAccount(ownerKey as `0x${string}`)
+  console.log('[admin-mint] signer', account.address)
   const walletClient = createWalletClient({
     account,
-    chain: baseSepolia,
-    transport: http(rpc),
+    chain: getEvmChain(),
+    transport: http(getEvmRpcUrl()),
   })
 
   const hash = await walletClient.writeContract({
@@ -58,18 +74,26 @@ export async function adminMintToAddress(opts: {
     args: [opts.recipient, opts.hexId],
   })
 
-  const receipt = await publicClient.waitForTransactionReceipt({ hash })
-  let tokenId = 1
-  for (const log of receipt.logs) {
-    try {
-      const decoded = decodeEventLog({ abi: MHNL_ABI, ...log })
-      if (decoded.eventName === 'NodeSecured') {
-        tokenId = Number((decoded.args as { tokenId: bigint }).tokenId)
-      }
-    } catch {
-      /* ignore */
-    }
-  }
+  return { txHash: hash, tokenId: null }
+}
 
-  return { txHash: hash, tokenId }
+export async function resolveTokenIdFromTx(
+  hash: `0x${string}`,
+): Promise<number | null> {
+  if (hash.startsWith('0xmock_')) return null
+  const publicClient = createPublicClient({ chain: getEvmChain(), transport: http(getEvmRpcUrl()) })
+  try {
+    const receipt = await publicClient.waitForTransactionReceipt({ hash, timeout: 30_000 })
+    for (const log of receipt.logs) {
+      try {
+        const decoded = decodeEventLog({ abi: MHNL_ABI, ...log })
+        if (decoded.eventName === 'NodeSecured') {
+          return Number((decoded.args as { tokenId: bigint }).tokenId)
+        }
+      } catch { /* not our event */ }
+    }
+  } catch {
+    return null
+  }
+  return null
 }

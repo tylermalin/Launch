@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react'
+import { useRouter } from 'next/navigation'
 import { useWallet } from '@meshsdk/react'
 import { useAccount, useConnect } from 'wagmi'
 import {
@@ -16,8 +17,65 @@ import {
   Mail,
   Loader2,
   Pencil,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import { cellToLatLng, getResolution } from 'h3-js'
+import { classifyZone, estimateWaterCoverage, detectRegion, REGION_LABELS } from '@/lib/hex-geo'
+import type { Phase1Hex } from '@/explorer/components/hex-map.types'
+
+// HexPanel has no Mapbox dep but uses h3-js WASM — load client-side only
+const HexPanel = dynamic(
+  () => import('@/explorer/components/HexPanel').then((m) => m.HexPanel),
+  { ssr: false, loading: () => (
+    <div className="flex items-center justify-center p-12 text-gray-500 font-mono text-sm">
+      Loading details…
+    </div>
+  )},
+)
+
+/** Build a Phase1Hex from an h3Index alone (all fields derivable server-free). */
+async function buildHexFromId(hexId: string): Promise<Phase1Hex> {
+  const [lat, lng] = cellToLatLng(hexId)
+  const res = getResolution(hexId)
+  const { zone, multiplier } = classifyZone(lat, lng)
+  const waterCoveragePercent = estimateWaterCoverage(lat, lng, res)
+  const regionKey = detectRegion(lat, lng)
+  const region = REGION_LABELS[regionKey] ?? 'United States'
+
+  // Pull edition number from claim registry so nodeNumber is accurate
+  let nodeNumber = 0
+  try {
+    const r = await fetch(`/api/nft/claim?hexId=${hexId}`)
+    if (r.ok) {
+      const d = (await r.json()) as { editionNumber?: number }
+      if (d.editionNumber) nodeNumber = d.editionNumber
+    }
+  } catch { /* non-fatal */ }
+
+  return {
+    nodeNumber,
+    h3Index: hexId,
+    h3Resolution: res,
+    status: 'reserved',
+    operator: null,
+    region,
+    country: 'US',
+    administrativeArea: null,
+    locality: null,
+    postalCode: null,
+    centroidLat: lat,
+    centroidLng: lng,
+    zoneClassification: zone,
+    geographicMultiplier: multiplier,
+    waterCoveragePercent,
+    dataDemandScore: null,
+    listingReferenceUsd: 2228,
+    genesisReserveUsd: 2000,
+  }
+}
 
 // ─── Shipping address (mirrors lib/shipping-store.ts) ────────────────────────
 
@@ -303,6 +361,8 @@ function hexToAscii(hexStr: string | undefined) {
 }
 
 export default function Dashboard() {
+  const router = useRouter()
+
   const {
     connected: isCardanoConnected,
     wallet: cardanoWallet,
@@ -310,11 +370,12 @@ export default function Dashboard() {
     connecting: isCardanoConnecting,
   } = useWallet()
 
-  const { isConnected: isEvmConnected } = useAccount()
+  const { isConnected: isEvmConnected, address: evmAddress, status: evmStatus } = useAccount()
   const { connectors, connect: connectEvm, isPending: isEvmConnecting } = useConnect()
 
   const [emailUser, setEmailUser] = useState<string | null>(null)
   const [sessionAuth, setSessionAuth] = useState<'email' | null>(null)
+  const [sessionChecked, setSessionChecked] = useState(false)
   const [emailInput, setEmailInput] = useState('')
   const [emailSubmitting, setEmailSubmitting] = useState(false)
   const [emailError, setEmailError] = useState<string | null>(null)
@@ -325,7 +386,22 @@ export default function Dashboard() {
   const [hexes, setHexes] = useState<string[]>([])
   const [loadingAssets, setLoadingAssets] = useState(false)
 
-  const currentStatus = hexes.length > 0 ? 'Hardware Pending' : 'Awaiting Genesis License'
+  // ── Hex detail modal ──────────────────────────────────────────────────────
+  const [detailHex, setDetailHex] = useState<Phase1Hex | null>(null)
+  const [detailLoading, setDetailLoading] = useState(false)
+
+  async function openDetail(hexId: string) {
+    setDetailLoading(true)
+    setDetailHex(null)
+    // Show the modal shell immediately while data loads
+    setDetailHex({ h3Index: hexId } as Phase1Hex)
+    const full = await buildHexFromId(hexId)
+    setDetailHex(full)
+    setDetailLoading(false)
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
+  const currentStatus = hexes.length > 0 ? 'Hardware Order & Customization Underway' : 'Awaiting Genesis License'
   const activePredictionMarkets = hexes.length > 0 ? 8 : 0
 
   useEffect(() => {
@@ -337,7 +413,27 @@ export default function Dashboard() {
         else setSessionAuth(null)
       })
       .catch(() => {})
+      .finally(() => setSessionChecked(true))
   }, [])
+
+  // If session check is done and no auth found, redirect to /auth.
+  // Deps include wallet states so we always read the latest values (no stale closure).
+  // We also wait for wagmi to finish reconnecting (evmStatus !== 'reconnecting')
+  // before deciding — otherwise a fresh page load would redirect before wagmi
+  // rehydrates the connection from localStorage.
+  useEffect(() => {
+    if (!sessionChecked) return
+    if (evmStatus === 'reconnecting') return  // wagmi still rehydrating — hold off
+    if (isEvmConnected || isCardanoConnected || emailUser) return  // already authed
+
+    // Not authenticated yet. Give a short grace period for slower reconnects.
+    const t = setTimeout(() => {
+      if (!isEvmConnected && !isCardanoConnected && !emailUser) {
+        router.replace('/auth')
+      }
+    }, 1500)
+    return () => clearTimeout(t)
+  }, [sessionChecked, isEvmConnected, isCardanoConnected, emailUser, evmStatus, router])
 
   async function signInWithEmail(e: FormEvent) {
     e.preventDefault()
@@ -362,6 +458,7 @@ export default function Dashboard() {
       }
       if (data.email) setEmailUser(data.email)
       setSessionAuth('email')
+      window.dispatchEvent(new Event('malama:auth'))
     } catch {
       setEmailError('Network error')
     } finally {
@@ -374,51 +471,55 @@ export default function Dashboard() {
     setEmailUser(null)
     setSessionAuth(null)
     setEmailInput('')
+    window.dispatchEvent(new Event('malama:auth'))
   }
 
+  // ── Inventory: single source of truth from /api/user ──────────────────────
+  // When the user signs in with email, fetch their account record (hexIds is
+  // the authoritative list regardless of payment method used at purchase).
+  // When a wallet connects without email, link it to the account server-side.
   useEffect(() => {
-    async function resolveAssets() {
-      if (isCardanoConnected && cardanoWallet) {
-        setLoadingAssets(true)
-        try {
-          const rawAssets = await cardanoWallet.getAssets()
-          const assets = Array.isArray(rawAssets) ? rawAssets : []
-          const foundHexes: string[] = []
-
-          for (const asset of assets) {
-            if (asset && asset.unit && typeof asset.unit === 'string') {
-              const assetNameHex = asset.unit.length > 56 ? asset.unit.slice(56) : ''
-              if (assetNameHex.length > 0) {
-                try {
-                  const decodedName = hexToAscii(assetNameHex)
-                  if (decodedName.startsWith('Hex')) {
-                    const rawTty = decodedName.replace('Hex', '')
-                    foundHexes.push(rawTty)
-                  }
-                } catch {
-                  /* ignore */
-                }
-              }
-            }
-          }
-          setHexes(foundHexes)
-        } catch (e) {
-          console.error('Failed to fetch Cardano assets', e)
-        } finally {
-          setLoadingAssets(false)
-        }
-      } else if (isEvmConnected) {
-        setLoadingAssets(true)
-        setTimeout(() => {
-          setHexes(['EVM-Mock-Tty'])
-          setLoadingAssets(false)
-        }, 1200)
-      } else {
-        setHexes([])
-      }
+    if (!emailUser) {
+      setHexes([])
+      return
     }
-    resolveAssets()
-  }, [isCardanoConnected, cardanoWallet, isEvmConnected])
+    setLoadingAssets(true)
+    fetch('/api/user', { credentials: 'include' })
+      .then((r) => r.ok ? r.json() : Promise.reject(r.status))
+      .then((data: { account?: { hexIds?: string[] } }) => {
+        setHexes(data.account?.hexIds ?? [])
+      })
+      .catch((e) => console.error('[dashboard] failed to load user account:', e))
+      .finally(() => setLoadingAssets(false))
+  }, [emailUser])
+
+  // Link a newly connected wallet to the account (fire-and-forget)
+  useEffect(() => {
+    if (!emailUser) return
+    if (evmAddress) {
+      fetch('/api/user', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ evmAddress }),
+      }).catch(() => {})
+    }
+  }, [emailUser, evmAddress])
+
+  useEffect(() => {
+    if (!emailUser || !isCardanoConnected || !cardanoWallet) return
+    Promise.resolve(cardanoWallet.getChangeAddress?.())
+      .then((cardanoAddress: string | undefined) => {
+        if (!cardanoAddress) return
+        fetch('/api/user', {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cardanoAddress }),
+        }).catch(() => {})
+      })
+      .catch(() => {})
+  }, [emailUser, isCardanoConnected, cardanoWallet])
 
   const firstConnector = connectors[0]
 
@@ -616,10 +717,10 @@ export default function Dashboard() {
                   <Box className={`h-4 w-4 ${hexes.length > 0 ? 'text-malama-teal' : 'text-gray-500'}`} />
                 </div>
                 <span className={`font-bold ${hexes.length > 0 ? 'text-malama-teal' : 'text-gray-500'}`}>
-                  Hardware Shipped
+                  Hardware Underway
                 </span>
                 <span className="mt-1 text-xs text-malama-teal/80">
-                  {hexes.length > 0 ? 'In Transit - Expected in 6 Months' : 'Pending Verification'}
+                  {hexes.length > 0 ? 'Order & customization underway · Shipment expected by Dec 31, 2026' : 'Pending Verification'}
                 </span>
               </div>
 
@@ -668,42 +769,93 @@ export default function Dashboard() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {hexes.map((hex, i) => (
-                  <div
-                    key={`${hex}-${i}`}
-                    className="group relative overflow-hidden rounded-xl border border-gray-700 bg-malama-deep p-5"
-                  >
-                    <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-malama-amber/5 blur-2xl" />
+              <div className="space-y-3">
+                {hexes.map((hex, i) => {
+                  const isExpanded = detailHex?.h3Index === hex
+                  return (
+                    <div key={`${hex}-${i}`}>
+                      {/* ── Hex card ── */}
+                      <div
+                        className={`group relative overflow-hidden bg-malama-deep p-5 transition-all ${
+                          isExpanded
+                            ? 'rounded-t-xl border border-b-0 border-yellow-500/40'
+                            : 'rounded-xl border border-gray-700'
+                        }`}
+                      >
+                        <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-malama-amber/5 blur-2xl" />
 
-                    <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <span
-                            className={`rounded px-2 py-1 text-[10px] font-bold ${
-                              isEvmConnected ? 'bg-blue-500/20 text-blue-400' : 'bg-malama-teal/20 text-malama-teal'
-                            }`}
-                          >
-                            GENESIS TIER
-                          </span>
+                        <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <span className="rounded px-2 py-1 text-[10px] font-bold bg-yellow-500/20 text-yellow-400">
+                                GENESIS TIER
+                              </span>
+                            </div>
+                            <p className="mt-2 font-mono text-2xl font-bold text-white">{hex}</p>
+                            <p className="mt-1 text-sm text-gray-500">Target Physical Coordinate Base</p>
+                          </div>
+
+                          <div className="flex flex-col items-end gap-2">
+                            <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Active Data Markets</p>
+                            <p className="text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
+                            <div className="flex items-center gap-2">
+                              {/* Toggle inline details panel */}
+                              <button
+                                type="button"
+                                onClick={() => isExpanded ? setDetailHex(null) : openDetail(hex)}
+                                className={`inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-bold transition-colors ${
+                                  isExpanded
+                                    ? 'border-yellow-400/60 bg-yellow-500/20 text-yellow-300'
+                                    : 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400 hover:border-yellow-400 hover:bg-yellow-500/20'
+                                }`}
+                              >
+                                {isExpanded
+                                  ? <><ChevronUp className="h-3 w-3" /> Hide Details</>
+                                  : <><ChevronDown className="h-3 w-3" /> See Details</>}
+                              </button>
+                              {/* Explorer map */}
+                              <Link
+                                href={`/explorer?hex=${hex}`}
+                                className="inline-flex items-center rounded-lg border border-malama-teal/20 bg-malama-teal/10 px-3 py-1.5 text-xs font-bold text-malama-teal transition-colors hover:border-malama-teal hover:text-white"
+                              >
+                                <MapPin className="mr-1 h-3 w-3" /> View on Map
+                              </Link>
+                            </div>
+                          </div>
                         </div>
-                        <p className="mt-2 font-mono text-2xl font-bold text-white">{hex}</p>
-                        <p className="mt-1 text-sm text-gray-500">Target Physical Coordinate Base</p>
                       </div>
 
-                      <div className="text-right">
-                        <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Active Data Markets</p>
-                        <p className="mb-2 text-2xl font-black text-malama-amber">{activePredictionMarkets}</p>
-                        <Link
-                          href={`/explorer?hex=${hex}`}
-                          className="inline-flex items-center rounded-lg border border-malama-teal/20 bg-malama-teal/10 px-3 py-1.5 text-xs font-bold text-malama-teal transition-colors hover:border-malama-teal hover:text-white"
-                        >
-                          <MapPin className="mr-1 h-3 w-3" /> View Explorer
-                        </Link>
-                      </div>
+                      {/* ── Inline details — renders flush below the card ── */}
+                      {isExpanded && (
+                        <div className="rounded-b-xl border border-t-0 border-yellow-500/40 bg-[#0a0a0a] overflow-hidden">
+                          {detailLoading || !detailHex?.h3Resolution ? (
+                            <div className="flex items-center justify-center gap-2 p-10 font-mono text-sm text-gray-500">
+                              <Loader2 className="h-4 w-4 animate-spin" /> Loading node details…
+                            </div>
+                          ) : (
+                            <div className="max-w-full">
+                              <HexPanel
+                                hex={detailHex}
+                                links={{
+                                  erc721MetadataUrl: `/api/nft/${detailHex.nodeNumber}?hexId=${detailHex.h3Index}`,
+                                  cardanoReferenceNftUrl: null,
+                                  purchaseAgreementUrl: '/legal/hex-node-purchase-agreement',
+                                  termsAndConditionsUrl: '/legal',
+                                  tokenRewardsRiskUrl: '/legal/token-rewards-risk',
+                                  zoneClassificationDocUrl: '/docs/zone-classification',
+                                  dataDemandScoreDocUrl: '/docs/data-demand-score-methodology',
+                                  pricingMethodologyDocUrl: '/docs/pricing',
+                                }}
+                                onReserveClick={() => {}}
+                                onClose={() => setDetailHex(null)}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
 
@@ -775,6 +927,7 @@ export default function Dashboard() {
           </section>
         </div>
       </div>
+
     </div>
   )
 }

@@ -47,8 +47,8 @@ export default function WhitepaperPage() {
           Hardware-verified truth for climate markets and AI compute.
         </h1>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-malama-ink-dim">
-          Document <span className="font-mono">MLM-WP-v1.0</span> · May 2026 · Pre-Launch ·{' '}
-          <span className="text-malama-ink-faint">33 pages</span>
+          Document <span className="font-mono">MLM-WP-v1.0</span> · June 2026 · Pre-Launch ·{' '}
+          <span className="text-malama-ink-faint">31 pages</span>
         </p>
 
         {/* Metadata chips */}
@@ -56,7 +56,7 @@ export default function WhitepaperPage() {
           {[
             { label: 'Status', value: 'Pre-Launch' },
             { label: 'Framework', value: 'Six-Layer DePIN' },
-            { label: 'Mainnet Target', value: 'Q3 2026' },
+            { label: 'Mainnet Target', value: 'Q4 2026' },
             { label: 'Cardano Preprod', value: 'Active' },
           ].map(({ label, value }) => (
             <div

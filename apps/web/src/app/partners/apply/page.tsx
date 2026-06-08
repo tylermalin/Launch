@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState, useEffect, FormEvent } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, CheckCircle2, AlertCircle, Twitter, Wallet, User, Mail, FileText } from 'lucide-react'
 import Link from 'next/link'
@@ -22,12 +22,32 @@ export default function ApplyPage() {
     email: '',
     walletAddress: '',
     twitterHandle: '',
+    telegram: '',
+    linkedin: '',
+    reddit: '',
     bio: '',
     promoMethod: '',
   })
+  const [prefilled, setPrefilled] = useState(false)
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }))
+
+  // Prefill from the signed-in account (email session + first owned EVM wallet).
+  useEffect(() => {
+    fetch('/api/user', { credentials: 'include' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { account?: { email?: string; evmAddresses?: string[] } } | null) => {
+        if (!d?.account) return
+        setForm((f) => ({
+          ...f,
+          email: f.email || d.account!.email || '',
+          walletAddress: f.walletAddress || d.account!.evmAddresses?.[0] || '',
+        }))
+        setPrefilled(true)
+      })
+      .catch(() => {})
+  }, [])
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -118,6 +138,11 @@ export default function ApplyPage() {
         </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {prefilled && (
+            <p className="text-[11px] text-malama-accent/80">
+              ✓ Linked to your signed-in account — email &amp; wallet prefilled.
+            </p>
+          )}
           {/* Name */}
           <motion.div initial="hidden" animate="show" variants={fadeUp} custom={1}>
             <label className="block text-xs font-black uppercase tracking-wider text-malama-ink-dim mb-2">
@@ -127,7 +152,7 @@ export default function ApplyPage() {
               required
               value={form.displayName}
               onChange={set('displayName')}
-              placeholder="Tyler Malin"
+              placeholder="Your name"
               className="w-full bg-malama-card border border-malama-line rounded-malama px-4 py-3 text-sm text-malama-ink placeholder-malama-ink-faint focus:outline-none focus:border-malama-accent/50 transition-colors"
             />
           </motion.div>
@@ -180,8 +205,38 @@ export default function ApplyPage() {
             </div>
           </motion.div>
 
-          {/* Bio */}
+          {/* Other channels */}
           <motion.div initial="hidden" animate="show" variants={fadeUp} custom={5}>
+            <label className="block text-xs font-black uppercase tracking-wider text-malama-ink-dim mb-2">
+              Other channels (optional)
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <input
+                value={form.telegram}
+                onChange={set('telegram')}
+                placeholder="Telegram @handle"
+                className="w-full bg-malama-card border border-malama-line rounded-malama px-4 py-3 text-sm text-malama-ink placeholder-malama-ink-faint focus:outline-none focus:border-malama-accent/50 transition-colors"
+              />
+              <input
+                value={form.linkedin}
+                onChange={set('linkedin')}
+                placeholder="LinkedIn URL"
+                className="w-full bg-malama-card border border-malama-line rounded-malama px-4 py-3 text-sm text-malama-ink placeholder-malama-ink-faint focus:outline-none focus:border-malama-accent/50 transition-colors"
+              />
+              <input
+                value={form.reddit}
+                onChange={set('reddit')}
+                placeholder="Reddit u/handle"
+                className="w-full bg-malama-card border border-malama-line rounded-malama px-4 py-3 text-sm text-malama-ink placeholder-malama-ink-faint focus:outline-none focus:border-malama-accent/50 transition-colors"
+              />
+            </div>
+            <p className="text-[11px] text-malama-ink-faint mt-1">
+              Once approved, your dashboard generates ready-to-post copy + one-click share links for each.
+            </p>
+          </motion.div>
+
+          {/* Bio */}
+          <motion.div initial="hidden" animate="show" variants={fadeUp} custom={6}>
             <label className="block text-xs font-black uppercase tracking-wider text-malama-ink-dim mb-2">
               <FileText size={11} className="inline mr-1" />Brief bio
             </label>

@@ -122,7 +122,7 @@ export default function OperatorsPage() {
               <table className="matrix">
                 <thead><tr><th>Silicon</th><th>Vendor</th><th>Status</th></tr></thead>
                 <tbody>
-                  <tr><td>ATECC608B</td><td>Microchip</td><td><span className="accent">Primary, deployed in Genesis 300</span></td></tr>
+                  <tr><td>ATECC608B</td><td>Microchip</td><td><span className="accent">Primary, deployed in Genesis 200</span></td></tr>
                   <tr><td>ATECC608A</td><td>Microchip</td><td>Drop-in compatible, secondary supply path</td></tr>
                   <tr><td>TA100</td><td>Microchip</td><td>Larger memory, planned for Genesis 400</td></tr>
                   <tr><td>SE050</td><td>NXP Semiconductors</td><td>Qualified alternative</td></tr>
@@ -289,7 +289,7 @@ export default function OperatorsPage() {
               <p>Your geographic license (NFT-HEX) is tied to a specific H3 hex cell. Relocation is governed by the NFT-HEX transfer and resale rules in your reservation agreement. <strong>Contact support before physically relocating.</strong> Unauthorized relocation may trigger PONO suspension and milestone forfeiture review.</p>
 
               <p><strong style={{ color: 'var(--mlma-ink)' }}>What if validation volume is low at my hex at launch?</strong></p>
-              <p>Network demand ramps as enterprise sensor deployments come online across carbon MRV, AI compute monitoring, and parametric insurance verticals. Your node also validates data from across the network, not only data produced in your specific hex zone. The Geographic Multiplier reflects the scarcity value of your zone and is applied to all validation work your node performs. No distribution guarantees are made.</p>
+              <p>Network demand ramps as enterprise sensor deployments come online across carbon MRV, AI compute monitoring, and parametric insurance verticals. Your node also validates data from across the network, not only data produced in your specific hex zone. Your Hex Type and Data Demand Score reflect the commercial, regulatory, and research value of your zone and feed the bounded reward calculation for the validation work your node performs. No distribution guarantees are made.</p>
 
               <p><strong style={{ color: 'var(--mlma-ink)' }}>My node has been offline for several days. What do I do?</strong></p>
               <p>Open a hardware ticket in Discord with your Device DID immediately. Brief outages reduce your uptime score but do not automatically forfeit milestones. During the 90-day qualifying period, 30 consecutive offline days restart the clock. Post-PONO, 30 consecutive offline days suspend PONO and reduce distributions to 0.5×. 90+ offline days trigger revocation review.</p>

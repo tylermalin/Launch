@@ -9,11 +9,11 @@ export async function GET(
 ) {
   const { hexId: raw } = await params
   const hexId = decodeURIComponent(raw)
-  const items = buildGenesisHexListItems(regionsData)
+  const items = await buildGenesisHexListItems(regionsData)
   const item = items.find((i) => i.hexId === hexId)
   if (!item) {
     return NextResponse.json({ error: 'Hex not in Genesis pool' }, { status: 404 })
   }
-  const claim = getClaimByHex(hexId)
+  const claim = await getClaimByHex(hexId)
   return NextResponse.json({ item, claim: claim ?? null })
 }

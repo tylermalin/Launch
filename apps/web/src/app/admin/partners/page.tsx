@@ -47,6 +47,24 @@ interface CopyTemplate {
   body: string;
 }
 
+interface PayoutGroup {
+  kolId: string;
+  displayName: string;
+  walletAddress: string | null;
+  walletValid: boolean;
+  walletReason?: string;
+  commissionCount: number;
+  totalUsd: number;
+}
+
+interface PayoutsData {
+  config: { network: string; dryRun: boolean; maxBatchUsd: number; hasWallet: boolean };
+  hotWallet: { address: string; usdc: number; eth: string } | null;
+  totalPendingUsd: number;
+  pendingCount: number;
+  groups: PayoutGroup[];
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://launch.malamalabs.com';
@@ -76,6 +94,55 @@ export default function AdminPartnersPage() {
   const [showInvite, setShowInvite] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<CopyTemplate | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [payouts, setPayouts] = useState<PayoutsData | null>(null);
+  const [payoutBusy, setPayoutBusy] = useState<string | null>(null);
+  const [payoutMsg, setPayoutMsg] = useState<string | null>(null);
+
+  const [amplify, setAmplify] = useState<{ hashtag?: string; posts?: Record<string, string> }>({});
+  const [amplifySaving, setAmplifySaving] = useState(false);
+  const [amplifyMsg, setAmplifyMsg] = useState<string | null>(null);
+
+  const loadPayouts = () =>
+    fetch('/api/admin/partners-proxy?action=payouts')
+      .then((r) => r.json())
+      .then((d) => { if (!d.error) setPayouts(d as PayoutsData); })
+      .catch(() => {});
+
+  const loadAmplify = () =>
+    fetch('/api/admin/partners-proxy?action=amplify-config')
+      .then((r) => r.json())
+      .then((d) => { if (!d.error) setAmplify(d.config ?? {}); })
+      .catch(() => {});
+
+  const AMPLIFY_CHANNELS: { key: string; label: string; placeholder: string }[] = [
+    { key: 'x', label: 'X / Twitter', placeholder: 'Tweet copy — include [REFERRAL_URL] via the auto-injected link' },
+    { key: 'reddit', label: 'Reddit (link-post title)', placeholder: 'Reddit post title' },
+    { key: 'linkedin', label: 'LinkedIn', placeholder: 'LinkedIn post commentary' },
+    { key: 'telegram', label: 'Telegram', placeholder: 'Telegram message' },
+    { key: 'discord', label: 'Discord', placeholder: 'Discord message' },
+  ];
+
+  const setAmplifyPost = (key: string, val: string) =>
+    setAmplify((a) => ({ ...a, posts: { ...(a.posts ?? {}), [key]: val } }));
+
+  const saveAmplify = async () => {
+    setAmplifySaving(true);
+    setAmplifyMsg(null);
+    try {
+      const res = await fetch('/api/admin/partners-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'set-amplify', config: amplify }),
+      });
+      const data = await res.json();
+      if (!res.ok) setAmplifyMsg(`✕ ${data.error ?? 'Save failed'}`);
+      else { setAmplify(data.config ?? {}); setAmplifyMsg('Saved — every partner now sees this copy.'); }
+    } catch (e) {
+      setAmplifyMsg(`✕ ${String(e)}`);
+    } finally {
+      setAmplifySaving(false);
+    }
+  };
 
   // ── Load data ──
   useEffect(() => {
@@ -90,6 +157,8 @@ export default function AdminPartnersPage() {
       })
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
+    loadPayouts();
+    loadAmplify();
   }, []);
 
   const copy = (text: string, id: string) => {
@@ -112,12 +181,55 @@ export default function AdminPartnersPage() {
     }
   };
 
+  const runPayout = async (group?: PayoutGroup) => {
+    if (!payouts) return;
+    const dry = payouts.config.dryRun;
+    const what = group
+      ? `$${group.totalUsd} to ${group.displayName}`
+      : `all pending ($${payouts.totalPendingUsd})`;
+    if (!window.confirm(`${dry ? '[DRY RUN] ' : '⚠️ LIVE — '}Send ${what} in USDC on ${payouts.config.network}?`)) return;
+    setPayoutBusy(group?.kolId ?? 'all');
+    setPayoutMsg(null);
+    try {
+      const res = await fetch('/api/admin/partners-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'run-payouts', ...(group ? { kolId: group.kolId } : {}) }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPayoutMsg(`✕ ${data.error ?? 'Payout failed'}`);
+      } else {
+        setPayoutMsg(
+          `${data.dryRun ? '[DRY RUN] ' : ''}Paid ${data.paidCount} · failed ${data.failedCount} · skipped ${data.skippedCount} · $${data.paidUsd}`
+        );
+        await loadPayouts();
+        fetch('/api/admin/partners-proxy?action=list')
+          .then((r) => r.json())
+          .then((d) => { if (!d.error) setPartners((d.partners ?? d.kols ?? []) as PartnerWithStats[]); })
+          .catch(() => {});
+      }
+    } catch (e) {
+      setPayoutMsg(`✕ ${String(e)}`);
+    } finally {
+      setPayoutBusy(null);
+    }
+  };
+
   if (loading) return <Shell><p style={{ color: '#666', fontFamily: 'monospace' }}>Loading partner registry…</p></Shell>;
   if (error === 'Forbidden') return <Shell><p style={{ color: '#f87171', fontFamily: 'monospace' }}>Access denied — admin only.</p></Shell>;
   if (error) return <Shell><p style={{ color: '#f87171', fontFamily: 'monospace' }}>Error: {error}</p></Shell>;
 
   const pending = partners.filter((p) => !p.approved);
   const active  = partners.filter((p) =>  p.approved);
+  const totals = partners.reduce(
+    (acc, p) => ({
+      clicks: acc.clicks + (p.stats?.clicks ?? 0),
+      conversions: acc.conversions + (p.stats?.conversions ?? 0),
+      earned: acc.earned + (p.stats?.totalEarned ?? 0),
+    }),
+    { clicks: 0, conversions: 0, earned: 0 },
+  );
 
   return (
     <Shell>
@@ -135,6 +247,99 @@ export default function AdminPartnersPage() {
           + Invite Partner
         </button>
       </div>
+
+      {/* ── Activity overview ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>
+        {[
+          { label: 'Partners', value: String(partners.length) },
+          { label: 'Active', value: String(active.length) },
+          { label: 'Total clicks', value: totals.clicks.toLocaleString() },
+          { label: 'Conversions', value: totals.conversions.toLocaleString() },
+          { label: 'Commissions', value: `$${totals.earned.toFixed(0)}` },
+        ].map((s) => (
+          <div key={s.label} style={{ background: '#141414', border: '1px solid #222', borderRadius: 8, padding: '12px 14px' }}>
+            <p style={{ color: '#666', fontSize: 11, margin: 0, textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'monospace' }}>{s.label}</p>
+            <p style={{ color: '#e8e8e8', fontSize: 22, fontWeight: 800, margin: '4px 0 0' }}>{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Payouts ── */}
+      {payouts && (
+        <Section title="Partner Payouts · USDC on Base">
+          <div
+            style={{
+              display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center',
+              background: payouts.config.dryRun ? '#15240f' : '#2a1206',
+              border: `1px solid ${payouts.config.dryRun ? '#2a4a2a' : '#5a2a10'}`,
+              borderRadius: 6, padding: '10px 14px', marginBottom: 14,
+              fontFamily: 'monospace', fontSize: 12,
+            }}
+          >
+            <span style={{ color: payouts.config.dryRun ? '#c4f061' : '#f0a031', fontWeight: 700 }}>
+              {payouts.config.dryRun ? 'DRY RUN' : '● LIVE'}
+            </span>
+            <span style={{ color: '#888' }}>network: {payouts.config.network}</span>
+            <span style={{ color: '#888' }}>cap: ${payouts.config.maxBatchUsd}/batch</span>
+            <span style={{ color: '#888' }}>
+              wallet: {payouts.hotWallet
+                ? `${payouts.hotWallet.address.slice(0, 6)}…${payouts.hotWallet.address.slice(-4)} · ${payouts.hotWallet.usdc} USDC · ${Number(payouts.hotWallet.eth).toFixed(4)} ETH`
+                : (payouts.config.hasWallet ? 'configured' : '⚠ not configured')}
+            </span>
+          </div>
+
+          {payoutMsg && (
+            <p style={{ color: payoutMsg.startsWith('✕') ? '#f87171' : '#c4f061', fontFamily: 'monospace', fontSize: 13, margin: '0 0 12px' }}>
+              {payoutMsg}
+            </p>
+          )}
+
+          <p style={{ color: '#888', fontSize: 13, margin: '0 0 12px' }}>
+            {payouts.pendingCount} pending commission{payouts.pendingCount === 1 ? '' : 's'} · ${payouts.totalPendingUsd} total
+          </p>
+
+          {payouts.groups.length === 0 && (
+            <p style={{ color: '#555', fontFamily: 'monospace', fontSize: 13 }}>No pending commissions to pay.</p>
+          )}
+
+          {payouts.groups.map((g) => (
+            <div key={g.kolId} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+              background: '#141414', border: '1px solid #222', borderRadius: 6, padding: '10px 14px', marginBottom: 8,
+            }}>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ color: '#e8e8e8', fontSize: 14, margin: 0, fontWeight: 600 }}>{g.displayName}</p>
+                <p style={{ color: '#666', fontSize: 11, fontFamily: 'monospace', margin: '2px 0 0' }}>
+                  {g.commissionCount} sale{g.commissionCount === 1 ? '' : 's'} ·{' '}
+                  {g.walletValid
+                    ? `${g.walletAddress!.slice(0, 6)}…${g.walletAddress!.slice(-4)}`
+                    : <span style={{ color: '#f0a031' }}>⚠ {g.walletReason}</span>}
+                </p>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ color: '#c4f061', fontFamily: 'monospace', fontSize: 14 }}>${g.totalUsd}</span>
+                <button
+                  onClick={() => runPayout(g)}
+                  disabled={!g.walletValid || payoutBusy !== null}
+                  style={{ ...styles.chipBtn, opacity: (!g.walletValid || payoutBusy !== null) ? 0.4 : 1, cursor: (!g.walletValid || payoutBusy !== null) ? 'not-allowed' : 'pointer' }}
+                >
+                  {payoutBusy === g.kolId ? 'Paying…' : 'Approve & Pay'}
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {payouts.groups.some((g) => g.walletValid) && (
+            <button
+              onClick={() => runPayout()}
+              disabled={payoutBusy !== null}
+              style={{ ...styles.ctaBtn, marginTop: 10, opacity: payoutBusy !== null ? 0.4 : 1 }}
+            >
+              {payoutBusy === 'all' ? 'Paying all…' : `Pay all valid (${payouts.config.dryRun ? 'dry run' : 'LIVE'})`}
+            </button>
+          )}
+        </Section>
+      )}
 
       {/* ── Pending approvals ── */}
       {pending.length > 0 && (
@@ -171,6 +376,49 @@ export default function AdminPartnersPage() {
       </Section>
 
       {/* ── Approved copy templates ── */}
+      {/* ── Amplify messaging editor ── */}
+      <Section title="Amplify Messaging — partner push copy">
+        <p style={{ color: '#666', fontSize: 13, margin: '0 0 14px' }}>
+          Edit the ready-to-post copy partners see in their dashboard&apos;s Amplify toolkit. Leave a field blank to use
+          the built-in default. Each partner&apos;s referral link is appended automatically.
+        </p>
+        <div style={{ marginBottom: 14 }}>
+          <label style={{ display: 'block', color: '#888', fontSize: 11, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
+            Campaign hashtag
+          </label>
+          <input
+            value={amplify.hashtag ?? ''}
+            onChange={(e) => setAmplify((a) => ({ ...a, hashtag: e.target.value }))}
+            placeholder="#DePIN"
+            style={{ width: '100%', maxWidth: 240, background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '8px 10px', color: '#e8e8e8', fontSize: 13 }}
+          />
+        </div>
+        {AMPLIFY_CHANNELS.map((ch) => (
+          <div key={ch.key} style={{ marginBottom: 12 }}>
+            <label style={{ display: 'block', color: '#c4f061', fontSize: 11, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
+              {ch.label}
+            </label>
+            <textarea
+              rows={ch.key === 'x' || ch.key === 'reddit' ? 2 : 3}
+              value={amplify.posts?.[ch.key] ?? ''}
+              onChange={(e) => setAmplifyPost(ch.key, e.target.value)}
+              placeholder={ch.placeholder}
+              style={{ width: '100%', background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '8px 10px', color: '#e8e8e8', fontSize: 13, fontFamily: 'inherit', resize: 'vertical' }}
+            />
+          </div>
+        ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+          <button onClick={saveAmplify} disabled={amplifySaving} style={{ ...styles.ctaBtn, opacity: amplifySaving ? 0.5 : 1 }}>
+            {amplifySaving ? 'Saving…' : 'Save messaging'}
+          </button>
+          {amplifyMsg && (
+            <span style={{ color: amplifyMsg.startsWith('✕') ? '#f87171' : '#c4f061', fontSize: 13, fontFamily: 'monospace' }}>
+              {amplifyMsg}
+            </span>
+          )}
+        </div>
+      </Section>
+
       <Section title="Approved Outreach Templates">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
           {templates.map((t) => (

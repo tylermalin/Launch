@@ -24,7 +24,7 @@ const NAV: {
   { href: '/docs', label: 'Overview', icon: BookOpen, exact: true },
   { href: '/whitepaper', label: 'Whitepaper v1.0', icon: ScrollText },
   { href: '/docs/tokenomics', label: 'MLMA Tokenomics', icon: FileText },
-  { href: '/docs/pricing-roi', label: 'Pricing & ROI', icon: Calculator },
+  { href: '/docs/pricing-roi', label: 'Pricing & Dynamics', icon: Calculator },
   { href: '/docs/phase-1-timeline', label: 'Phase 1 Timeline', icon: CalendarRange },
   { href: '/docs/operators', label: 'Operator Guide', icon: Hexagon },
 ]

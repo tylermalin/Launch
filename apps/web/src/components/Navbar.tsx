@@ -1,39 +1,111 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { useEffect, useState, useCallback } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useAccount, useDisconnect } from 'wagmi'
+import { useWallet } from '@meshsdk/react'
 
-type SessionData = { auth: 'email' | null }
+type SessionData = { auth: 'email' | null; email?: string | null }
 
 const topNavLinks = [
-  { href: '/presale',  label: 'Reserve',   active: (p: string) => p.startsWith('/presale') },
-  { href: '/docs',     label: 'Docs',      active: (p: string) => p.startsWith('/docs') || p === '/whitepaper' },
-  { href: '/timeline', label: 'Timeline',  active: (p: string) => p.startsWith('/timeline') },
-  { href: '/explorer', label: 'Explorer',  active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
-  { href: '/partners', label: 'Partners',  active: (p: string) => p.startsWith('/partners') },
+  { href: '/presale',   label: 'Reserve',   active: (p: string) => p.startsWith('/presale') },
+  { href: '/docs',      label: 'Docs',      active: (p: string) => p.startsWith('/docs') || p === '/whitepaper' },
+  { href: '/timeline',  label: 'Timeline',  active: (p: string) => p.startsWith('/timeline') },
+  { href: '/explorer',  label: 'Explorer',  active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
+  { href: '/partners',  label: 'Partners',  active: (p: string) => p.startsWith('/partners') },
+  { href: '/dashboard', label: 'Dashboard', active: (p: string) => p.startsWith('/dashboard'), authOnly: true },
 ]
 
 const CORPORATE_URL = 'https://malamalabs.com'
 
+const NAV_BTN =
+  'shrink-0 whitespace-nowrap rounded-malama-sm px-[18px] py-[11px] text-center font-mono text-[11px] font-semibold uppercase tracking-[0.1em] transition-all hover:-translate-y-px'
+
+// Small dot colored by auth method
+function AuthDot({ method }: { method: 'evm' | 'cardano' | 'email' }) {
+  const color =
+    method === 'evm'     ? 'bg-blue-400'          :
+    method === 'cardano' ? 'bg-malama-accent'      :
+                           'bg-emerald-400'
+  return <span className={`inline-block h-1.5 w-1.5 rounded-full ${color} shrink-0`} />
+}
+
 export default function Navbar() {
   const pathname = usePathname()
-  // null = session check not yet resolved; show Sign In until confirmed
-  const [session, setSession] = useState<SessionData | null>(null)
+  const router   = useRouter()
 
-  useEffect(() => {
+  // ── Wallet state (client-side) ────────────────────────────────────────────
+  const { address: evmAddress, isConnected: evmConnected } = useAccount()
+  const { disconnect: disconnectEvm } = useDisconnect()
+  const { connected: cardanoConnected, name: cardanoWalletName, disconnect: cardanoDisconnect } = useWallet()
+
+  // ── Server session state ──────────────────────────────────────────────────
+  // undefined = not yet resolved (avoids flash)
+  const [session, setSession] = useState<SessionData | undefined>(undefined)
+  const [signingOut, setSigningOut] = useState(false)
+
+  const fetchSession = useCallback(() => {
     fetch('/api/auth/session', { cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : { auth: null }))
       .then((d: SessionData) => setSession(d))
       .catch(() => setSession({ auth: null }))
   }, [])
 
-  const isAuthed  = session?.auth != null
-  const dashLabel = isAuthed ? 'User Dashboard' : 'Sign In'
+  // Re-fetch on mount and whenever the route changes
+  useEffect(() => { fetchSession() }, [fetchSession, pathname])
+
+  // Re-fetch whenever any part of the app signals an auth state change
+  useEffect(() => {
+    const handler = () => fetchSession()
+    window.addEventListener('malama:auth', handler)
+    return () => window.removeEventListener('malama:auth', handler)
+  }, [fetchSession])
+
+  // ── Combine all auth sources ──────────────────────────────────────────────
+  const isAuthed  = session?.auth != null || evmConnected || cardanoConnected
+  const isLoading = session === undefined
+
+  // Auth method for display
+  const authMethod: 'evm' | 'cardano' | 'email' | null =
+    evmConnected    ? 'evm'     :
+    cardanoConnected ? 'cardano' :
+    session?.auth === 'email' ? 'email' :
+    null
+
+  // Short identity string shown in the chip
+  let authIdentity: string | null = null
+  if (evmConnected && evmAddress) {
+    authIdentity = `${evmAddress.slice(0, 6)}…${evmAddress.slice(-4)}`
+  } else if (cardanoConnected && cardanoWalletName) {
+    authIdentity = cardanoWalletName.charAt(0).toUpperCase() + cardanoWalletName.slice(1)
+  } else if (session?.email) {
+    authIdentity = session.email.length > 22
+      ? `${session.email.slice(0, 20)}…`
+      : session.email
+  }
+
+  // ── Sign out ──────────────────────────────────────────────────────────────
+  async function handleSignOut() {
+    setSigningOut(true)
+    try {
+      if (evmConnected) disconnectEvm()
+      if (cardanoConnected) cardanoDisconnect()
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+      setSession({ auth: null })
+      window.dispatchEvent(new Event('malama:auth'))
+      router.push('/')
+      router.refresh()
+    } finally {
+      setSigningOut(false)
+    }
+  }
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-malama-line bg-malama-bg/80 backdrop-blur-[14px]">
       <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-5 py-[14px] sm:px-10">
+
+        {/* ── Logo ── */}
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-malama-accent/50"
@@ -52,18 +124,25 @@ export default function Navbar() {
           </span>
         </Link>
 
+        {/* ── Right side ── */}
         <div className="flex min-w-0 items-center justify-end gap-0.5 sm:gap-2">
-          {topNavLinks.map(({ href, label, active }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`shrink-0 whitespace-nowrap rounded-sm px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.1em] transition-colors sm:px-4 ${
-                active(pathname) ? 'text-malama-accent' : 'text-malama-ink-dim hover:text-malama-accent'
-              }`}
-            >
-              {label}
-            </Link>
-          ))}
+
+          {/* Nav links */}
+          {topNavLinks
+            .filter(({ authOnly }) => !authOnly || isAuthed)
+            .map(({ href, label, active }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`shrink-0 whitespace-nowrap rounded-sm px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.1em] transition-colors sm:px-4 ${
+                  active(pathname) ? 'text-malama-accent' : 'text-malama-ink-dim hover:text-malama-accent'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+
+          {/* Corporate link */}
           <a
             href={CORPORATE_URL}
             target="_blank"
@@ -76,16 +155,37 @@ export default function Navbar() {
             </svg>
           </a>
 
-          <Link
-            href="/dashboard"
-            className={`ml-1 min-w-[10rem] shrink-0 whitespace-nowrap rounded-malama-sm px-[18px] py-[11px] text-center font-mono text-[11px] font-semibold uppercase tracking-[0.1em] transition-transform hover:-translate-y-px sm:ml-2 ${
-              pathname.startsWith('/dashboard')
-                ? 'bg-malama-accent text-malama-bg ring-1 ring-malama-accent/60'
-                : 'bg-malama-accent text-malama-bg hover:shadow-[0_8px_24px_rgba(196,240,97,0.2)]'
-            }`}
-          >
-            {dashLabel}
-          </Link>
+          {/* ── Auth section — don't render until session resolves ── */}
+          {!isLoading && (
+            isAuthed ? (
+              <div className="ml-1 sm:ml-2 flex items-center gap-1.5">
+
+                {/* Identity chip — shows wallet address / wallet name / email */}
+                {authIdentity && authMethod && (
+                  <span className="hidden md:inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-malama-sm border border-malama-line bg-malama-card px-3 py-[11px] font-mono text-[10px] text-malama-ink-dim tracking-wide">
+                    <AuthDot method={authMethod} />
+                    {authIdentity}
+                  </span>
+                )}
+
+                {/* Log Out */}
+                <button
+                  onClick={handleSignOut}
+                  disabled={signingOut}
+                  className={`${NAV_BTN} border border-malama-line text-malama-ink-dim hover:border-red-500/50 hover:text-red-400 disabled:opacity-40`}
+                >
+                  {signingOut ? 'Signing out…' : 'Log Out'}
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/auth"
+                className={`ml-1 sm:ml-2 ${NAV_BTN} bg-malama-accent text-malama-bg hover:shadow-[0_8px_24px_rgba(196,240,97,0.2)]`}
+              >
+                Log In / Register
+              </Link>
+            )
+          )}
         </div>
       </div>
     </nav>

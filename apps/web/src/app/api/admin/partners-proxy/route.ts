@@ -15,6 +15,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { parseEmailSessionToken } from '@/lib/email-session';
+import { resolveAppUrl } from '@/lib/resolve-app-url';
 
 // ── Admin auth ────────────────────────────────────────────────────────────────
 
@@ -39,12 +40,21 @@ function isAdmin(email: string | null): boolean {
 
 // ── KOL API forwarding ────────────────────────────────────────────────────────
 
-const KOL_BASE = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+const KOL_BASE = resolveAppUrl();
 
 async function kolFetch(path: string, init?: RequestInit) {
   const secret = process.env.ADMIN_SECRET ?? '';
   const url = `${KOL_BASE}/api/admin/kol${path}`;
   return fetch(url, {
+    ...init,
+    headers: { ...(init?.headers ?? {}), 'x-admin-secret': secret, 'Content-Type': 'application/json' },
+  });
+}
+
+/** Fetch any server-side admin API (keeps ADMIN_SECRET off the client). */
+async function adminApiFetch(path: string, init?: RequestInit) {
+  const secret = process.env.ADMIN_SECRET ?? '';
+  return fetch(`${KOL_BASE}${path}`, {
     ...init,
     headers: { ...(init?.headers ?? {}), 'x-admin-secret': secret, 'Content-Type': 'application/json' },
   });
@@ -145,6 +155,18 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ templates: APPROVED_COPY_TEMPLATES });
   }
 
+  if (action === 'payouts') {
+    const res = await adminApiFetch('/api/admin/payouts');
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  }
+
+  if (action === 'amplify-config') {
+    const res = await adminApiFetch('/api/admin/amplify');
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  }
+
   return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
 }
 
@@ -186,6 +208,27 @@ export async function POST(req: NextRequest) {
     const res = await kolFetch(`/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({ approved: true }),
+    });
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  }
+
+  if (action === 'run-payouts') {
+    // Execute a payout batch. The approving admin's email is recorded in the audit.
+    const { commissionIds, kolId } = body as { commissionIds?: string[]; kolId?: string };
+    const res = await adminApiFetch('/api/admin/payouts', {
+      method: 'POST',
+      body: JSON.stringify({ approvedBy: email, commissionIds, kolId }),
+    });
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  }
+
+  if (action === 'set-amplify') {
+    const { config } = body as { config?: unknown };
+    const res = await adminApiFetch('/api/admin/amplify', {
+      method: 'POST',
+      body: JSON.stringify(config ?? {}),
     });
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });

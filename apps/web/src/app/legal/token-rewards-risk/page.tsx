@@ -6,7 +6,7 @@ import TocScrollSpy from './TocScrollSpy'
 export const metadata: Metadata = {
   title: 'Token & Rewards Risk Disclosure | Mālama Labs',
   description:
-    'The plain-language risks of participating in the Mālama network. Token volatility, regulatory uncertainty, deployment forfeiture, audit gates, slashing, and the Year 3 emissions cliff.',
+    'The plain-language risks of participating in the Mālama network. Token volatility, regulatory uncertainty, deployment forfeiture, audit gates, slashing, and the revenue-funding transition.',
 }
 
 /**
@@ -72,7 +72,7 @@ export default function TokenRewardsRiskPage() {
             <p className="lede">
               The plain-language risks of participating in the Mālama network. Token
               volatility, regulatory uncertainty, deployment forfeiture, audit gates,
-              slashing, and the Year 3 emissions cliff.
+              slashing, and the revenue-funding transition.
             </p>
           </div>
 
@@ -129,7 +129,7 @@ export default function TokenRewardsRiskPage() {
             <li>
               <a href="#s2a">
                 <span className="n">2A</span>
-                <span className="t">Utility token characterization</span>
+                <span className="t">Digital tool classification</span>
               </a>
             </li>
             <li>
@@ -349,16 +349,17 @@ export default function TokenRewardsRiskPage() {
           <section className="clause" id="s2a">
             <div className="clause-head">
               <span className="num">§ 2A</span>
-              <h2>Utility token characterization</h2>
+              <h2>Digital tool classification</h2>
               <a className="anchor" href="#s2a">
                 #s2a
               </a>
             </div>
             <div className="clause-body">
               <p>
-                MLMA is designed and intended to function as a{' '}
-                <strong>utility and governance token</strong> for a consumptive protocol. The
-                sources of its intended market demand and utility are:
+                MLMA is classified as a{' '}
+                <strong>digital tool under the March 17, 2026 SEC-CFTC Joint Interpretation
+                (S7-2026-09)</strong>: an asset used to perform a function in the network, not
+                held as an investment instrument. Its functions are:
               </p>
 
               <div className="spec-list">
@@ -375,7 +376,7 @@ export default function TokenRewardsRiskPage() {
                   <div className="k">Protocol fee burn</div>
                   <div className="v">
                     A portion of protocol revenue is used programmatically to purchase and
-                    permanently remove MLMA from circulation, creating a utility-driven demand
+                    permanently remove MLMA from circulation, creating a function-driven demand
                     mechanism.
                   </div>
                 </div>
@@ -397,13 +398,16 @@ export default function TokenRewardsRiskPage() {
               </div>
 
               <p>
-                Mālama designs and intends MLMA as a{' '}
+                Mālama classifies MLMA as a{' '}
                 <strong>
-                  utility token, not as a security, investment contract, share, deposit,
+                  digital tool under S7-2026-09: an asset used and consumed to perform a
+                  function in the network, not a security, investment contract, share, deposit,
                   savings product, or claim on revenue.
                 </strong>{' '}
-                The Company does not intend to undertake managerial efforts for the benefit of
-                MLMA holders and does not guarantee token value.
+                MLMA is not a &ldquo;utility token&rdquo; in the loose pre-Interpretation sense,
+                which is not a category under S7-2026-09. The Company does not undertake
+                managerial efforts for the benefit of MLMA holders and does not guarantee token
+                value.
               </p>
 
               <div className="callout warn">
@@ -524,16 +528,16 @@ export default function TokenRewardsRiskPage() {
                   <strong>zero validation rewards</strong> for that period.
                 </li>
                 <li>
-                  Data Quality Score (0.0-1.0) from validator confidence and cross-validation
-                  with neighboring nodes.
+                  Your hex&rsquo;s Hex Type multiplier (0.95× to 1.30×: Urban Core, Urban,
+                  Suburban, Rural, Remote), governance-reviewed and subject to change.
                 </li>
                 <li>
-                  Geographic Multiplier tier of your H3 hex cell, which is governance-voted and
-                  may change.
+                  Your hex&rsquo;s Data Demand Score multiplier (0.70× to 1.30×), recomputed
+                  quarterly from independent demand signals, not operator behavior.
                 </li>
                 <li>
-                  Total active validator count -{' '}
-                  <strong>rewards are competitive and relative, not fixed.</strong>
+                  Cohort composition -{' '}
+                  <strong>rewards are cohort-normalized to the 25M Genesis pool, relative and not fixed.</strong>
                 </li>
                 <li>
                   Protocol updates, third-party sensor deployments, and enterprise data demand
@@ -562,15 +566,14 @@ export default function TokenRewardsRiskPage() {
               <h3>Competitive reward dilution</h3>
               <p>
                 Rewards are competitive and relative to the entire active validator set, not
-                fixed per node. Each operator&rsquo;s monthly reward is their weighted score
-                divided by the sum of all active validator scores in the network.{' '}
+                fixed per node. Each operator&rsquo;s Final Earned MLMA is their Calculated Eligibility
+                divided by the cohort total, scaled to the fixed 25M Genesis pool.{' '}
                 <strong>
-                  As more validators join the network. Including during the Genesis phase and
-                  beyond. Each operator&rsquo;s share of the monthly emission pool decreases
-                  proportionally.
+                  As more Genesis operators qualify, each operator&rsquo;s share of the fixed
+                  25M pool adjusts proportionally.
                 </strong>{' '}
-                Joining early does not lock in a specific reward amount. Actual rewards will
-                vary month to month based on network size and composition.
+                Joining early does not lock in a specific reward amount. Final amounts depend
+                on the full cohort&rsquo;s composition.
               </p>
 
               <h3>Allocation forfeiture risk</h3>
@@ -609,32 +612,29 @@ export default function TokenRewardsRiskPage() {
               <p>
                 Year 1 reward levels are a deliberately temporary bootstrapping mechanism. The{' '}
                 <strong>1.5× Genesis Multiplier</strong>, constrained early validator
-                competition, and front-loaded emission pool produce elevated reward weight
+                competition, and front-loaded emission taper and the Year 1 Genesis multiplier produce elevated reward weight
                 during the cold-start phase.{' '}
                 <strong>
                   These economics are not sustainable or representative of long-term returns.
                 </strong>{' '}
-                The Genesis Multiplier expires permanently at the end of Year 1. Emissions
-                stop entirely after Year 3. Any projected earnings based on Year 1 Genesis
+                The Genesis Multiplier expires permanently at the end of Year 1. Emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8. Any projected earnings based on Year 1 Genesis
                 phase economics will not persist beyond that phase.
               </p>
 
-              <h3>Year 3 → Year 4 transition</h3>
+              <h3>Emission taper and revenue transition</h3>
               <div className="callout warn">
-                <span className="tag">▲ Emissions cliff · Year 4</span>
+                <span className="tag">▲ Revenue-funding transition</span>
                 <p>
-                  Token emissions end entirely after Year 3. From Year 4, all operator rewards
-                  come from <strong>protocol revenue only</strong>.
+                  Scheduled emissions follow a fixed 8-year smooth taper (60M MLMA total: 12 / 14 / 12 / 9 / 6 / 4 / 2 / 1M), winding down to zero after Year 8. The network transitions to revenue-funded operator distributions by Years 4-5; from Year 9 all operator rewards come from <strong>protocol revenue only</strong>.
                 </p>
                 <p>
                   If protocol revenue in Years 4-5 is lower than projected. Whether due to
                   slower enterprise customer adoption, registry acceptance delays, or
                   competitive pressure. Operator rewards will be proportionally lower.{' '}
-                  <strong>There is no emission-funded floor in Years 4-5.</strong>
+                  <strong>Emissions taper toward zero over this period, so later-year distributions increasingly depend on actual protocol revenue.</strong>
                 </p>
                 <p>
-                  Operators who model Year 4-5 economics based on Year 1-3 token emission
-                  levels are modeling a different regime.
+                  Operators who model later-year economics based on peak early-year emission levels are modeling a different regime.
                 </p>
               </div>
 
@@ -690,7 +690,7 @@ export default function TokenRewardsRiskPage() {
                 <li>Hardware failure, connectivity issues, power interruptions.</li>
                 <li>Firmware or software bugs and security vulnerabilities.</li>
                 <li>Incorrect configuration or installation errors.</li>
-                <li>Data transmission errors affecting Data Quality Score.</li>
+                <li>Data transmission errors affecting data quality and validation acceptance.</li>
                 <li>Incompatibility with required firmware or software updates.</li>
                 <li>
                   Physical damage from weather, flooding, or other environmental conditions.
@@ -836,13 +836,12 @@ export default function TokenRewardsRiskPage() {
             <div className="clause-body">
               <p>
                 Mālama and the veMLMA governance system reserve the right to modify reward
-                formulas, change Geographic Multiplier coefficients, alter distribution
+                formulas, change Hex Type or Data Demand Score coefficients, alter distribution
                 schedules, adjust eligibility requirements, or discontinue Rewards entirely. For technical optimization, fraud prevention, regulatory compliance, or
                 network sustainability.
               </p>
               <p>
-                <strong>Immutable parameters</strong>. The 500M MLMA hard cap, the Year 3
-                emissions end date, the Genesis 200 supply cap, and hex exclusivity. Cannot
+                <strong>Immutable parameters</strong>. The 500M MLMA hard cap, the 8-year emission schedule (60M total), the Genesis 200 supply cap, and hex exclusivity. Cannot
                 be changed through governance. All other reward parameters are subject to
                 governance modification with notice as described in the{' '}
                 <Link

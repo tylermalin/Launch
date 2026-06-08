@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useWallet as useCardanoWallet } from '@meshsdk/react'
 import {
@@ -27,13 +27,24 @@ import {
 
 // ─── Contract addresses ───────────────────────────────────────────────────────
 import { tryGetGenesisContract, GENESIS_CONTRACT_PLACEHOLDER } from '@/lib/genesis-contract'
+import {
+  getUsdcAddress,
+  getEvmChainId,
+  getAddEthereumChainParams,
+  getNetworkLabel,
+  getExplorerTxUrl,
+  getOpenSeaAssetUrl,
+} from '@/lib/evm-network'
 // Module-level fallback to placeholder so this client bundle builds + renders
 // even when the env var isn't set on a preview branch. The actual mint flow
 // (handleBasePayment) guards against the placeholder and surfaces a clear
 // error — so previews don't silently mint to a non-existent contract.
 const GENESIS_CONTRACT = (tryGetGenesisContract() ?? GENESIS_CONTRACT_PLACEHOLDER) as `0x${string}`
-const USDC_CONTRACT    = (process.env.NEXT_PUBLIC_MOCK_USDC_ADDRESS         ?? '0x1111111111111111111111111111111111111111') as `0x${string}`
+// USDC for the active network (lib/evm-network). Override with NEXT_PUBLIC_MOCK_USDC_ADDRESS for local testing.
+const USDC_CONTRACT    = (process.env.NEXT_PUBLIC_MOCK_USDC_ADDRESS ?? getUsdcAddress()) as `0x${string}`
 const PRICE_USDC       = parseUnits('2000', 6) // $2,000 USDC (6 decimals)
+// Active chain id as 0x-hex for wallet_switch/addEthereumChain.
+const ACTIVE_CHAIN_HEX = `0x${getEvmChainId().toString(16)}`
 
 const USDC_ABI = parseAbi([
   'function approve(address spender, uint256 amount) public returns (bool)',
@@ -100,6 +111,11 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
   const [cardEmail, setCardEmail]   = useState('')
   const [mmImportOpen, setMmImportOpen] = useState(false)
   const [mmCopied, setMmCopied]     = useState<'address' | 'tokenId' | null>(null)
+  // Synchronous re-entrancy lock for the pay flow. React's `loading` state is
+  // async, so a rapid double-trigger (or wallet re-fire) can slip through before
+  // it commits — that's what spams /api/nft/claim with repeated 409s. A ref flips
+  // immediately and blocks any concurrent run.
+  const payInFlightRef = useRef(false)
 
   const legalComplete = allLegalAcknowledged(legalAck)
 
@@ -109,6 +125,8 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
   const { connected: cardanoConnected, wallet: cardanoWallet, name: cardanoWalletName, connect: connectCardano } = useCardanoWallet()
   const [cardanoWallets, setCardanoWallets] = useState<{ name: string; icon: string }[]>([])
   const [showCardanoPicker, setShowCardanoPicker] = useState(false)
+  const [cardanoConnectError, setCardanoConnectError] = useState<string | null>(null)
+  const [cardanoConnecting, setCardanoConnecting] = useState(false)
   // Raw CIP-30 API object — stored after window.cardano[name].enable() succeeds.
   // Used for signData() calls (triggers Lace signing popup) without going through MeshSDK.
   const [cardanoCip30Api, setCardanoCip30Api] = useState<{
@@ -147,15 +165,56 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
 
   // ── Direct CIP-30 connect — triggers Lace's "Connect this dApp?" popup ──
   const connectCardanoWallet = async (walletKey: string) => {
-    const win = window as typeof window & {
-      cardano?: Record<string, { name?: string; icon?: string; enable: () => Promise<any> }>
+    setCardanoConnectError(null)
+    setCardanoConnecting(true)
+    try {
+      const win = window as typeof window & {
+        cardano?: Record<string, { name?: string; icon?: string; enable: () => Promise<any> }>
+      }
+      if (!win.cardano?.[walletKey]) {
+        throw new Error(`not_found`)
+      }
+
+      // enable() resolves when the user approves in Lace (rejects if declined).
+      // Lace's MV3 service worker can be slow to wake and first-time unlock +
+      // approve often takes >12s, so we use a generous timeout. Critically, if
+      // enable() resolves LATE (after the timeout fired), we still connect and
+      // clear the error — instead of discarding a successful sign-in and leaving
+      // the user stuck on "click Connect again".
+      const enablePromise = win.cardano[walletKey].enable() as Promise<any>
+      enablePromise
+        .then((late) => {
+          setCardanoCip30Api(late)
+          setCardanoConnectError(null)
+          setCardanoConnecting(false)
+          connectCardano(walletKey).catch(() => {})
+        })
+        .catch(() => {})
+
+      const api = await Promise.race([
+        enablePromise,
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), 60_000)
+        ),
+      ])
+
+      setCardanoCip30Api(api)
+      // Also connect via MeshSDK so cardanoWallet/cardanoConnected state syncs
+      await connectCardano(walletKey).catch(() => {})
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      if (msg === 'timeout') {
+        setCardanoConnectError('Lace is still starting up — click Connect again in a moment.')
+      } else if (msg === 'not_found') {
+        setCardanoConnectError('Lace wallet not detected. Install it from lace.io, then refresh.')
+      } else if (/declined|rejected|cancelled|user denied/i.test(msg)) {
+        setCardanoConnectError('Connection cancelled — please approve the request in your Lace wallet.')
+      } else {
+        setCardanoConnectError(`Wallet error: ${msg}`)
+      }
+    } finally {
+      setCardanoConnecting(false)
     }
-    const api = await win.cardano![walletKey].enable()
-    setCardanoCip30Api(api)
-    // Also connect via MeshSDK so cardanoWallet/cardanoConnected state updates
-    await connectCardano(walletKey).catch(() => {
-      // MeshSDK may warn internally but the raw API is already stored
-    })
   }
 
   // ── Add NFT to MetaMask ──────────────────────────────────────────────────
@@ -174,23 +233,17 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
     if (!eth) return // panel is open; user reads contract + tokenId manually
 
     try {
-      // Switch to Base Sepolia first
+      // Switch to the active network first
       const chainId: string = await eth.request({ method: 'eth_chainId' })
-      if (chainId !== '0x14a34') {
+      if (chainId !== ACTIVE_CHAIN_HEX) {
         await eth.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x14a34' }],
+          params: [{ chainId: ACTIVE_CHAIN_HEX }],
         }).catch(async (switchErr: any) => {
           if (switchErr.code === 4902) {
             await eth.request({
               method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: '0x14a34',
-                chainName: 'Base Sepolia',
-                nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-                rpcUrls: ['https://sepolia.base.org'],
-                blockExplorerUrls: ['https://sepolia.basescan.org'],
-              }],
+              params: [getAddEthereumChainParams()],
             })
           }
         })
@@ -225,27 +278,21 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       )
     }
 
-    // 0. Enforce Base Sepolia — switch if needed
+    // 0. Enforce the active network — switch if needed
     const eth = (window as any).ethereum
     if (eth) {
       const currentChain: string = await eth.request({ method: 'eth_chainId' })
-      if (currentChain !== '0x14a34') {
+      if (currentChain !== ACTIVE_CHAIN_HEX) {
         try {
-          await eth.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x14a34' }] })
+          await eth.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: ACTIVE_CHAIN_HEX }] })
         } catch (switchErr: any) {
           if (switchErr.code === 4902) {
             await eth.request({
               method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: '0x14a34',
-                chainName: 'Base Sepolia',
-                nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-                rpcUrls: ['https://sepolia.base.org'],
-                blockExplorerUrls: ['https://sepolia.basescan.org'],
-              }],
+              params: [getAddEthereumChainParams()],
             })
           } else {
-            throw new Error('Please switch to Base Sepolia in your wallet')
+            throw new Error(`Please switch to ${getNetworkLabel()} in your wallet`)
           }
         }
       }
@@ -259,7 +306,21 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       body: JSON.stringify({ hexId, chain: 'base', buyerAddress: evmAddress }),
     })
     const claimData = await claimRes.json()
-    if (!claimRes.ok) throw new Error(claimData.error ?? 'Hex already claimed on another chain')
+    // 409 means the claim was already registered — most likely a retry after
+    // MetaMask stalled or the user abandoned the gas confirmation.
+    // If the existing claim is on the same chain (base), treat it as a resume
+    // and continue with the existing claimId / editionNumber rather than blocking.
+    if (!claimRes.ok) {
+      if (
+        claimRes.status === 409 &&
+        claimData.claimId &&
+        claimData.claimedOnChain === 'base'
+      ) {
+        // Resume — fall through using the existing claim IDs below
+      } else {
+        throw new Error(claimData.error ?? 'Hex already claimed on another chain')
+      }
+    }
     const { claimId, editionNumber } = claimData as { claimId: string; editionNumber: number }
 
     // 2. USDC approve
@@ -318,8 +379,8 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       evmTokenId,
       txHash: mintHash,
       chain: 'base' as const,
-      explorerUrl: `https://sepolia.basescan.org/tx/${mintHash}`,
-      openSeaUrl: `https://testnets.opensea.io/assets/base-sepolia/${GENESIS_CONTRACT}/${evmTokenId}`,
+      explorerUrl: getExplorerTxUrl(mintHash),
+      openSeaUrl: getOpenSeaAssetUrl(GENESIS_CONTRACT, evmTokenId),
       nftImageUrl: `${appBase}/api/nft/${evmTokenId}/image?hexId=${encodeURIComponent(hexId)}&chain=base&claimId=${encodeURIComponent(claimId)}`,
     }
   }
@@ -341,7 +402,18 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       body: JSON.stringify({ hexId, chain: 'cardano', buyerAddress: cardanoAddress }),
     })
     const claimData = await claimRes.json()
-    if (!claimRes.ok) throw new Error(claimData.error ?? 'Hex already claimed on another chain')
+    // 409 on Cardano path — resume if same chain, block if stolen by Base
+    if (!claimRes.ok) {
+      if (
+        claimRes.status === 409 &&
+        claimData.claimId &&
+        claimData.claimedOnChain === 'cardano'
+      ) {
+        // Resume existing Cardano claim
+      } else {
+        throw new Error(claimData.error ?? 'Hex already claimed on another chain')
+      }
+    }
     const { claimId, editionNumber } = claimData as { claimId: string; editionNumber: number }
 
     // 2. CIP-8 message signing — pops Lace's signing dialog so the user
@@ -413,6 +485,8 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
 
   // ── Main payment dispatcher ───────────────────────────────────────────────
   const handlePayment = async () => {
+    if (payInFlightRef.current) return // re-entrancy guard — blocks duplicate claim POSTs / 409 spam
+    payInFlightRef.current = true
     setLoading(true)
     setError('')
     try {
@@ -424,6 +498,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
     } catch (err: any) {
       setError(err.message ?? 'Payment failed. Please try again')
     } finally {
+      payInFlightRef.current = false
       setLoading(false)
       setEvmTxStatus('')
     }
@@ -444,11 +519,46 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="w-full max-w-4xl mx-auto bg-malama-card border border-gray-800 rounded-3xl shadow-2xl overflow-hidden my-12">
-      {/* Progress: 1 Locate HEX · 2 Crypto/Card · 3 Review · 4 Pay · 5 Done */}
-      <div className="flex border-b border-gray-800 bg-gray-900/50">
-        {[1, 2, 3, 4, 5].map((s) => (
-          <div key={s} className={`flex-1 h-2 transition-colors duration-300 ${s <= step ? 'bg-malama-accent' : 'bg-transparent'}`} />
-        ))}
+      {/* Progress stepper — bound to the live wizard step (1..5). */}
+      <div className="flex items-center border-b border-gray-800 bg-gray-900/50 px-4 py-4 sm:px-8">
+        {[
+          { n: 1, label: 'Locate Hex' },
+          { n: 2, label: 'Crypto or Card' },
+          { n: 3, label: 'Review' },
+          { n: 4, label: 'Pay' },
+          { n: 5, label: 'Reserved' },
+        ].map((it, i) => {
+          const done = it.n < step
+          const current = it.n === step
+          return (
+            <React.Fragment key={it.n}>
+              <div className="flex shrink-0 items-center gap-2">
+                <div
+                  aria-current={current ? 'step' : undefined}
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-black transition-colors duration-300 ${
+                    current
+                      ? 'bg-malama-accent text-black shadow-[0_0_12px_rgba(196,240,97,0.5)]'
+                      : done
+                        ? 'border border-malama-accent/40 bg-malama-accent/20 text-malama-accent'
+                        : 'border border-gray-700 bg-gray-800 text-gray-500'
+                  }`}
+                >
+                  {done ? '✓' : it.n}
+                </div>
+                <span
+                  className={`hidden text-[11px] font-bold uppercase tracking-wider transition-colors duration-300 sm:inline ${
+                    current ? 'text-malama-accent' : done ? 'text-gray-300' : 'text-gray-600'
+                  }`}
+                >
+                  {it.label}
+                </span>
+              </div>
+              {i < 4 && (
+                <div className={`mx-2 h-px flex-1 transition-colors duration-300 ${it.n < step ? 'bg-malama-accent/40' : 'bg-gray-800'}`} />
+              )}
+            </React.Fragment>
+          )
+        })}
       </div>
 
       <div className="p-8 md:p-12 min-h-[500px] relative flex flex-col justify-center text-left">
@@ -525,7 +635,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-400">
                   Crypto: connect Cardano (Lace) and/or Base (MetaMask). Card: pay with Stripe, then open Launch App and
-                  sign in with Magic using the same email. Your NFT mints to your embedded wallet on Base Sepolia.
+                  sign in with Magic using the same email. Your NFT mints to your embedded wallet on Base.
                   Entry is $2,000 USDC or card checkout.
                 </p>
                 {hexId && (
@@ -601,50 +711,69 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                       ✓ READY TO MINT
                     </div>
                   ) : (
-                    <div className="relative w-full">
+                    <div className="w-full space-y-2">
                       <button
-                        onClick={async () => {
+                        disabled={cardanoConnecting}
+                        onClick={() => {
+                          setCardanoConnectError(null)
+                          setShowCardanoPicker(false)
                           const win = window as typeof window & {
                             cardano?: Record<string, { name?: string; icon?: string; enable: () => Promise<any> }>
                           }
                           const detected = Object.entries(win.cardano ?? {}).map(([key, w]) => ({
                             name: key,
-                            icon: w.icon ?? '',
+                            icon: (w as { icon?: string }).icon ?? '',
                           }))
                           if (detected.length === 0) {
-                            setCardanoWallets([])
-                            setShowCardanoPicker(true)
+                            setCardanoConnectError('No Cardano wallet detected. Install Lace from lace.io, then refresh.')
                           } else if (detected.length === 1) {
-                            await connectCardanoWallet(detected[0].name)
+                            connectCardanoWallet(detected[0].name)
                           } else {
                             setCardanoWallets(detected)
                             setShowCardanoPicker(true)
                           }
                         }}
-                        className="w-full py-2 bg-malama-accent/10 border border-malama-accent/40 text-malama-accent rounded-lg font-bold text-xs hover:bg-malama-accent/20 transition-colors"
+                        className="w-full py-2 bg-malama-accent/10 border border-malama-accent/40 text-malama-accent rounded-lg font-bold text-xs hover:bg-malama-accent/20 transition-colors disabled:opacity-50"
                       >
-                        Connect Lace / Cardano
+                        {cardanoConnecting ? 'Connecting…' : 'Connect Lace / Cardano'}
                       </button>
+
+                      {/* Wallet picker — inline, not absolute */}
                       {showCardanoPicker && cardanoWallets.length > 0 && (
-                        <div className="absolute bottom-full mb-2 left-0 w-full bg-gray-900 border border-gray-700 rounded-xl overflow-hidden z-50 shadow-xl">
+                        <div className="w-full overflow-hidden rounded-xl border border-gray-700 bg-gray-900 shadow-xl">
+                          <p className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                            Choose wallet
+                          </p>
                           {cardanoWallets.map((w) => (
                             <button
                               key={w.name}
-                              onClick={async () => {
+                              onClick={() => {
                                 setShowCardanoPicker(false)
-                                await connectCardanoWallet(w.name)
+                                connectCardanoWallet(w.name)
                               }}
-                              className="flex items-center gap-3 w-full px-4 py-3 hover:bg-gray-800 transition-colors text-left"
+                              className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-gray-800"
                             >
-                              {w.icon && <img src={w.icon} alt={w.name} className="w-5 h-5 rounded" />}
-                              <span className="text-white text-xs font-bold uppercase tracking-wider">{w.name}</span>
+                              {w.icon && <img src={w.icon} alt={w.name} className="h-5 w-5 rounded" />}
+                              <span className="text-xs font-bold uppercase tracking-wider text-white">{w.name}</span>
                             </button>
                           ))}
                         </div>
                       )}
-                      {showCardanoPicker && cardanoWallets.length === 0 && (
-                        <div className="absolute bottom-full mb-2 left-0 w-full bg-gray-900 border border-gray-700 rounded-xl p-4 z-50 shadow-xl text-center">
-                          <p className="text-gray-400 text-xs">No Cardano wallet detected.<br />Install Lace or Eternl.</p>
+
+                      {/* Error feedback — inline, always visible */}
+                      {cardanoConnectError && (
+                        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+                          {cardanoConnectError}
+                          {cardanoConnectError.includes('lace.io') && (
+                            <a
+                              href="https://lace.io"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="ml-1.5 font-bold text-malama-accent underline"
+                            >
+                              Install →
+                            </a>
+                          )}
                         </div>
                       )}
                     </div>
@@ -835,7 +964,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 </h2>
                 <p className="text-gray-400 mt-3 max-w-md mx-auto leading-relaxed">
                   {paymentMode === 'card'
-                    ? 'You will be redirected to Stripe Checkout. After payment clears, open Launch App, sign in with Magic (same email), and we mint your Genesis NFT to your embedded wallet on Base Sepolia.'
+                    ? 'You will be redirected to Stripe Checkout. After payment clears, open Launch App, sign in with Magic (same email), and we mint your Genesis NFT to your embedded wallet on Base.'
                     : evmConnected
                       ? 'Your wallet will prompt you to approve $2,000 USDC and then sign the mint transaction on Base.'
                       : 'The server will mint your Cardano CIP-25 NFT directly to your wallet. No gas required from you.'}
@@ -984,7 +1113,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                         <div className="space-y-2">
                           <div>
                             <p className="text-[10px] uppercase tracking-widest text-gray-600 mb-1">Network</p>
-                            <p className="text-xs text-orange-200 font-mono">Base Sepolia (chain 84532)</p>
+                            <p className="text-xs text-orange-200 font-mono">{getNetworkLabel()} (chain {getEvmChainId()})</p>
                           </div>
                           <div>
                             <p className="text-[10px] uppercase tracking-widest text-gray-600 mb-1">Contract Address</p>

@@ -9,7 +9,10 @@ function isPublicPath(pathname: string) {
     pathname === '/password' ||
     pathname.startsWith('/api/auth/password') ||
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon')
+    pathname.startsWith('/favicon') ||
+    pathname === '/presale' ||
+    pathname.startsWith('/presale/') ||
+    pathname.startsWith('/launch')
   )
 }
 
@@ -26,7 +29,7 @@ export async function proxy(request: Request) {
 
     if (!hasAccess) {
       const dest = new URL('/password', request.url)
-      dest.searchParams.set('from', pathname)
+      dest.searchParams.set('from', pathname + url.search)
       return NextResponse.redirect(dest)
     }
   }

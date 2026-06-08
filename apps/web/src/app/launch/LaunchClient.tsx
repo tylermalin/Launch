@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { Loader2, Wallet, ExternalLink, CheckCircle2, AlertCircle } from 'lucide-react'
 import { useMagic } from '@/components/magic/MagicProvider'
-import { getExplorerTxUrl, getOpenSeaAssetUrl, getNetworkLabel } from '@/lib/evm-network'
+import { getExplorerTxUrl, getOpenSeaAssetUrl } from '@/lib/evm-network'
 
 const GENESIS_CONTRACT = process.env.NEXT_PUBLIC_GENESIS_CONTRACT_ADDRESS ?? ''
 
@@ -123,7 +123,7 @@ export default function LaunchClient({ hasMagicPublishableKey }: { hasMagicPubli
         <CheckCircle2 className="mx-auto mb-6 h-16 w-16 text-malama-teal" />
         <h1 className="text-3xl font-black text-white mb-2">{claimResult.claimId}</h1>
         <p className="text-gray-400 mb-8">
-          Your Genesis NFT is in your Magic wallet on {getNetworkLabel()}. You can connect this app or any wallet UI that
+          Your Genesis NFT is in your Magic wallet on Base. You can connect this app or any wallet UI that
           supports Magic to manage it.
         </p>
         <div className="rounded-2xl border border-gray-800 bg-malama-card p-6 text-left space-y-3 mb-8">

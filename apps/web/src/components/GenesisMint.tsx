@@ -623,7 +623,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-400">
                   Crypto: connect Cardano (Lace) and/or Base (MetaMask). Card: pay with Stripe, then open Launch App and
-                  sign in with Magic using the same email. Your NFT mints to your embedded wallet on {getNetworkLabel()}.
+                  sign in with Magic using the same email. Your NFT mints to your embedded wallet on Base.
                   Entry is $2,000 USDC or card checkout.
                 </p>
                 {hexId && (
@@ -952,7 +952,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 </h2>
                 <p className="text-gray-400 mt-3 max-w-md mx-auto leading-relaxed">
                   {paymentMode === 'card'
-                    ? `You will be redirected to Stripe Checkout. After payment clears, open Launch App, sign in with Magic (same email), and we mint your Genesis NFT to your embedded wallet on ${getNetworkLabel()}.`
+                    ? 'You will be redirected to Stripe Checkout. After payment clears, open Launch App, sign in with Magic (same email), and we mint your Genesis NFT to your embedded wallet on Base.'
                     : evmConnected
                       ? 'Your wallet will prompt you to approve $2,000 USDC and then sign the mint transaction on Base.'
                       : 'The server will mint your Cardano CIP-25 NFT directly to your wallet. No gas required from you.'}

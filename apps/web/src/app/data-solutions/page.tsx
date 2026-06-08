@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './data-solutions.css'
 import DemandChart from '@/components/data-solutions/DemandChart'
+import DataRequestForm from '@/components/data-solutions/DataRequestForm'
 
 export const metadata: Metadata = {
   title: 'Data Solutions · Verifiable Environmental Data · Mālama Labs',
@@ -126,10 +127,8 @@ export default function DataSolutionsPage() {
         <div className="wrap">
           <div className="cta-inner">
             <h2>Ready to build on <em>verifiable world data?</em></h2>
-            <div className="cta-actions">
-              <a href="mailto:data@malamalabs.com?subject=Data%20Solutions%20Access" className="btn btn-primary">Create a buyer account →</a>
-              <a href="mailto:data@malamalabs.com?subject=Data%20Solutions%20%E2%80%94%20Talk%20to%20the%20team" className="btn btn-ghost">Talk to the data team</a>
-            </div>
+            <p className="section-lede" style={{ margin: '0 auto 32px', textAlign: 'center' }}>Request buyer access and our data team will scope datasets, coverage, and API access for your use case.</p>
+            <DataRequestForm />
           </div>
         </div>
       </section>

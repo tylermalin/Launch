@@ -15,7 +15,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { parseEmailSessionToken } from '@/lib/email-session';
-import { resolveAppUrl } from '@/lib/resolve-app-url';
+import { listKOLs, getKOLStats, registerKOL, updateKOL, buildReferralUrl, buildVanityUrl } from '@/lib/kol-registry';
+import { getAmplifyOverrides, setAmplifyOverrides } from '@/lib/amplify-config';
+import { getPayoutsOverview, runPayoutBatch } from '@/lib/payouts-admin';
+
+export const runtime = 'nodejs';
 
 // ── Admin auth ────────────────────────────────────────────────────────────────
 
@@ -38,26 +42,15 @@ function isAdmin(email: string | null): boolean {
   return ADMIN_EMAILS.includes(email);
 }
 
-// ── KOL API forwarding ────────────────────────────────────────────────────────
+// ── Partner list (direct, no self-fetch) ───────────────────────────────────────
 
-const KOL_BASE = resolveAppUrl();
-
-async function kolFetch(path: string, init?: RequestInit) {
-  const secret = process.env.ADMIN_SECRET ?? '';
-  const url = `${KOL_BASE}/api/admin/kol${path}`;
-  return fetch(url, {
-    ...init,
-    headers: { ...(init?.headers ?? {}), 'x-admin-secret': secret, 'Content-Type': 'application/json' },
-  });
-}
-
-/** Fetch any server-side admin API (keeps ADMIN_SECRET off the client). */
-async function adminApiFetch(path: string, init?: RequestInit) {
-  const secret = process.env.ADMIN_SECRET ?? '';
-  return fetch(`${KOL_BASE}${path}`, {
-    ...init,
-    headers: { ...(init?.headers ?? {}), 'x-admin-secret': secret, 'Content-Type': 'application/json' },
-  });
+async function listPartnersWithStats() {
+  const partners = await listKOLs();
+  const stats = await Promise.all(partners.map((p) => getKOLStats(p.id)));
+  const response = stats
+    .filter(Boolean)
+    .map((s) => ({ ...s!, referralUrl: buildReferralUrl(s!.partner.id), vanityUrl: buildVanityUrl(s!.partner.id) }));
+  return { partners: response, count: response.length };
 }
 
 // ── Approved copy templates ───────────────────────────────────────────────────
@@ -128,111 +121,89 @@ Use my link to explore the hex map and reserve: [REFERRAL_URL]`,
 
 type ApprovedCopyTemplate = typeof APPROVED_COPY_TEMPLATES[number];
 
+function slugify(name: string): string {
+  return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 32);
+}
+
 // ── GET ───────────────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
   const email = await getCallerEmail(req);
-  if (!isAdmin(email)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  if (!isAdmin(email)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const action = req.nextUrl.searchParams.get('action') ?? 'list';
   const id = req.nextUrl.searchParams.get('id');
 
-  if (action === 'list') {
-    const res = await kolFetch('');
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
+  try {
+    if (action === 'list') return NextResponse.json(await listPartnersWithStats());
+    if (action === 'get' && id) {
+      const stats = await getKOLStats(id);
+      if (!stats) return NextResponse.json({ error: 'KOL not found' }, { status: 404 });
+      return NextResponse.json({ ...stats, referralUrl: buildReferralUrl(id), vanityUrl: buildVanityUrl(id) });
+    }
+    if (action === 'templates') return NextResponse.json({ templates: APPROVED_COPY_TEMPLATES });
+    if (action === 'payouts') return NextResponse.json(await getPayoutsOverview());
+    if (action === 'amplify-config') return NextResponse.json({ config: await getAmplifyOverrides() });
+    return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+  } catch (e) {
+    console.error('[partners-proxy GET]', action, e);
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'Server error' }, { status: 500 });
   }
-
-  if (action === 'get' && id) {
-    const res = await kolFetch(`/${id}`);
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
-
-  if (action === 'templates') {
-    return NextResponse.json({ templates: APPROVED_COPY_TEMPLATES });
-  }
-
-  if (action === 'payouts') {
-    const res = await adminApiFetch('/api/admin/payouts');
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
-
-  if (action === 'amplify-config') {
-    const res = await adminApiFetch('/api/admin/amplify');
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
-
-  return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
 }
 
 // ── POST ──────────────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
   const email = await getCallerEmail(req);
-  if (!isAdmin(email)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  if (!isAdmin(email)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const body = await req.json() as Record<string, unknown>;
+  let body: Record<string, unknown>;
+  try {
+    body = (await req.json()) as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
   const action = body.action as string;
 
-  if (action === 'invite') {
-    // Create a new partner + return their referral link
-    const { partnerEmail, displayName, commissionBps = 1000 } = body as {
-      partnerEmail?: string;
-      displayName: string;
-      commissionBps?: number;
-    };
-    const res = await kolFetch('', {
-      method: 'POST',
-      body: JSON.stringify({
-        displayName,
-        email: partnerEmail,
+  try {
+    if (action === 'invite') {
+      const { partnerEmail, displayName, commissionBps = 1000 } = body as { partnerEmail?: string; displayName?: string; commissionBps?: number };
+      if (!displayName) return NextResponse.json({ error: 'displayName required' }, { status: 400 });
+      const id = slugify(String(displayName)) || `partner-${Date.now().toString(36)}`;
+      const partner = await registerKOL({
+        id,
+        displayName: String(displayName).trim(),
+        email: partnerEmail ? String(partnerEmail).toLowerCase() : undefined,
         walletAddress: '0x0000000000000000000000000000000000000000', // placeholder until partner provides
-        commissionBps,
+        commissionBps: typeof commissionBps === 'number' ? commissionBps : 1000,
         bio: '',
         approved: true, // admin-invited partners are pre-approved
-      }),
-    });
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
+      });
+      return NextResponse.json({ partner, referralUrl: buildReferralUrl(partner.id), vanityUrl: buildVanityUrl(partner.id) });
+    }
 
-  if (action === 'approve') {
-    const { id } = body as { id: string };
-    const res = await kolFetch(`/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ approved: true }),
-    });
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
+    if (action === 'approve') {
+      const { id } = body as { id: string };
+      const updated = await updateKOL(id, { approved: true });
+      if (!updated) return NextResponse.json({ error: 'KOL not found' }, { status: 404 });
+      return NextResponse.json({ partner: updated });
+    }
 
-  if (action === 'run-payouts') {
-    // Execute a payout batch. The approving admin's email is recorded in the audit.
-    const { commissionIds, kolId } = body as { commissionIds?: string[]; kolId?: string };
-    const res = await adminApiFetch('/api/admin/payouts', {
-      method: 'POST',
-      body: JSON.stringify({ approvedBy: email, commissionIds, kolId }),
-    });
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
+    if (action === 'run-payouts') {
+      const { commissionIds, kolId } = body as { commissionIds?: string[]; kolId?: string };
+      const r = await runPayoutBatch({ approvedBy: email ?? 'admin', commissionIds, kolId });
+      return NextResponse.json(r.body, { status: r.status });
+    }
 
-  if (action === 'set-amplify') {
-    const { config } = body as { config?: unknown };
-    const res = await adminApiFetch('/api/admin/amplify', {
-      method: 'POST',
-      body: JSON.stringify(config ?? {}),
-    });
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
+    if (action === 'set-amplify') {
+      const { config } = body as { config?: unknown };
+      const saved = await setAmplifyOverrides(config ?? {});
+      return NextResponse.json({ ok: true, config: saved });
+    }
 
-  return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+    return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+  } catch (e) {
+    console.error('[partners-proxy POST]', action, e);
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'Server error' }, { status: 500 });
+  }
 }

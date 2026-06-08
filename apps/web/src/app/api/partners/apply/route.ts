@@ -10,6 +10,7 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { registerKOL, getKOLByWallet, buildReferralUrl, buildVanityUrl } from '@/lib/kol-registry'
+import { sendEmail, emailLayout, escapeHtml, ADMIN_NOTIFY_EMAIL } from '@/lib/email'
 import { parseEmailSessionToken } from '@/lib/email-session'
 import { makeUserId } from '@/lib/user-account'
 
@@ -88,6 +89,19 @@ export async function POST(req: Request) {
   })
 
   console.log(`[partners/apply] New application: ${partner.id} (${walletAddress})`)
+
+  // Notify admin to review/approve. Fire-and-continue.
+  await sendEmail({
+    to: ADMIN_NOTIFY_EMAIL,
+    replyTo: resolvedEmail,
+    subject: `New partner application — ${partner.displayName}`,
+    html: emailLayout('New partner application (pending approval)', `
+      <p><strong>Name:</strong> ${escapeHtml(partner.displayName)}</p>
+      <p><strong>Wallet:</strong> ${escapeHtml(String(walletAddress))}</p>
+      ${resolvedEmail ? `<p><strong>Email:</strong> ${escapeHtml(resolvedEmail)}</p>` : ''}
+      ${promoMethod ? `<p><strong>How they'll promote:</strong><br/>${escapeHtml(String(promoMethod))}</p>` : ''}
+      <p>Approve in the admin dashboard: <a href="https://launch.malamalabs.com/admin/partners">/admin/partners</a></p>`),
+  }).catch(() => {})
 
   return NextResponse.json({
     id: partner.id,

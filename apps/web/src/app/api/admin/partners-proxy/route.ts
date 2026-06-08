@@ -18,6 +18,7 @@ import { parseEmailSessionToken } from '@/lib/email-session';
 import { listKOLs, getKOLStats, registerKOL, updateKOL, buildReferralUrl, buildVanityUrl } from '@/lib/kol-registry';
 import { getAmplifyOverrides, setAmplifyOverrides } from '@/lib/amplify-config';
 import { getPayoutsOverview, runPayoutBatch } from '@/lib/payouts-admin';
+import { sendEmail, emailLayout, escapeHtml } from '@/lib/email';
 
 export const runtime = 'nodejs';
 
@@ -208,6 +209,21 @@ export async function POST(req: NextRequest) {
       const { id } = body as { id: string };
       const updated = await updateKOL(id, { approved: true });
       if (!updated) return NextResponse.json({ error: 'KOL not found' }, { status: 404 });
+      // Welcome the partner with their live referral link.
+      if (updated.email) {
+        const ref = buildReferralUrl(id);
+        await sendEmail({
+          to: updated.email,
+          subject: 'You’re approved — Mālama Labs Partner Program',
+          html: emailLayout(`Welcome aboard, ${escapeHtml(updated.displayName)}`, `
+            <p>Your Mālama Labs partner account is approved and your referral link is live:</p>
+            <p><a href="${ref}">${escapeHtml(ref)}</a></p>
+            <p>Sign in to your dashboard for ready-to-post copy across X, LinkedIn, Reddit, Telegram,
+            and Discord, plus live tracking of your referrals and commissions:
+            <a href="https://launch.malamalabs.com/partners">launch.malamalabs.com/partners</a></p>
+            <p>Let’s go win. 🌍</p>`),
+        }).catch(() => {});
+      }
       return NextResponse.json({ partner: updated });
     }
 

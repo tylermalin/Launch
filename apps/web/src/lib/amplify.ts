@@ -36,7 +36,7 @@ export const DEPIN_SUBREDDITS = [
   'IoTeX',
 ] as const
 
-const CAMPAIGN_HASHTAG = '#DePIN'
+const CAMPAIGN_HASHTAG = '#MalamaNodes'
 
 /** Admin-set overrides for the amplify copy (stored in KV, edited from /admin/partners). */
 export type AmplifyOverrides = {
@@ -55,30 +55,49 @@ export function buildAmplifyPosts(
   const enc = encodeURIComponent
   const pick = (c: AmplifyChannel, def: string) => (ov[c]?.trim() || def)
 
-  // ── X / Twitter ──────────────────────────────────────────────────────────
+  // ── X / Twitter (high-energy, scarcity-driven, DePIN asset class) ─────────
   const xText =
-    `Mālama Genesis is live — hardware-signed environmental + AI-compute data ` +
-    `anchored on @base and @Cardano. 200 Genesis Hex Nodes. Reserve yours 👉 ${url} ${tag} #Mālama`
+    `Big environmental data is broken. @MalamaLabs is fixing it — by letting you own the infrastructure.\n\n` +
+    `Only 200 "Hex Node" territories are opening across the US. Each one gives you:\n` +
+    `🔋 Real-world hardware sensor kit\n` +
+    `🗺️ Geographic NFT license (~1,770 km²)\n` +
+    `🪙 125,000 $MLMA tokens (uptime-vested)\n\n` +
+    `Real data, on-chain. Lock in your hex before your region is claimed 👉 ${url}\n\n${tag} #VerifyTheEarth #DePIN`
 
-  // ── Reddit (link post to a DePIN sub) ────────────────────────────────────
+  // ── Reddit (native, utility-focused link-post title) ─────────────────────
   const redditTitle =
-    `Mālama Genesis — hardware-signed DePIN for carbon + AI-compute data (200 Genesis Hex Nodes, on Base & Cardano)`
+    `Own the environmental data grid: Mālama Labs is releasing 200 "Hex Node" hardware + NFT territories to map US air/water/soil on-chain`
 
-  // ── LinkedIn (professional framing) ──────────────────────────────────────
+  // ── LinkedIn (authoritative dMRV / RWA infrastructure framing) ────────────
   const linkedinText =
-    `Backing Mālama Labs — the trust anchor for physical-world data. Carbon dMRV (proven) ` +
-    `and AI-compute monitoring (scaling) on one hardware-signed architecture, anchored to Base ` +
-    `and Cardano. They're releasing 200 Genesis Hex Nodes. Reserve one: ${url}`
+    `The future of environmental data infrastructure isn't centralized — it's distributed.\n\n` +
+    `I'm supporting Mālama Labs as they launch their Genesis Nodes: a decentralized network of cryptographic ` +
+    `hardware sensors mapping real-time soil, water, and air quality directly on-chain.\n\n` +
+    `They're opening exactly 200 "Hex Node" territories across the US. Each pairs a physical hardware deployment ` +
+    `with a geographic NFT license (~1,770 km²) and a 125,000 $MLMA token uptime incentive.\n\n` +
+    `If you track the intersection of DePIN, climate tech, and real-world assets (RWAs), this is a deployment worth watching.\n\n` +
+    `Explore the live hex map and secure a territory 👉 ${url}`
 
-  // ── Telegram ─────────────────────────────────────────────────────────────
+  // ── Telegram (short, high-signal alpha) ──────────────────────────────────
   const telegramText =
-    `Mālama Genesis is live ⚡ 200 hardware-signed Hex Nodes for the physical-data network ` +
-    `(carbon dMRV + AI-compute), on Base + Cardano. Reserve yours 👉 ${url}`
+    `🚨 DePIN + Climate Tech launch 🚨\n\n` +
+    `@MalamaLabs is dropping Genesis Nodes to build an on-chain environmental data grid (water, air, soil).\n\n` +
+    `• Only 200 US "Hex Node" territories\n` +
+    `• $2,000 launch price → physical hardware + an NFT license for a ~1,770 km² territory\n` +
+    `• 125,000 $MLMA tokens tied to sensor uptime\n\n` +
+    `Real infrastructure yielding real data. Secure your region before it's locked 👉 ${url}`
 
-  // ── Discord ──────────────────────────────────────────────────────────────
+  // ── Discord (structured to stand out in announce/whitelist channels) ─────
   const discordText =
-    `**Mālama Genesis is live** — 200 hardware-signed Hex Nodes for the physical-data network ` +
-    `(carbon dMRV + AI-compute), anchored on Base + Cardano.\nReserve yours 👉 ${url}`
+    `🗺️ **Own a Piece of the On-Chain Environmental Data Grid** 🗺️\n\n` +
+    `Partnering with **Mālama Labs** for their Genesis Hex Nodes — physical hardware sensors that ` +
+    `cryptographically sign real-world environmental data (soil, air, water) straight to the blockchain.\n\n` +
+    `**TL;DR**\n` +
+    `• **Scarcity:** exactly 200 "Hex Node" territories across the US\n` +
+    `• **The asset:** $2,000 → hardware sensor kit + a geographic NFT license (~1,770 km²)\n` +
+    `• **Incentives:** 125,000 $MLMA tokens, vesting on sensor uptime milestones\n\n` +
+    `Bridges physical hardware (DePIN) with real-world climate utility.\n\n` +
+    `👉 View the live Hex Map & claim your territory: ${url}`
 
   // Apply admin overrides, then derive share URLs from the FINAL text so a
   // prefilled composer (X, Telegram) reflects edited copy.

@@ -60,62 +60,84 @@ async function listPartnersWithStats() {
 const APPROVED_COPY_TEMPLATES = [
   {
     id: 'intro-general',
-    label: 'General Introduction',
-    subject: 'Partnership Opportunity — Mālama Labs Genesis Nodes',
+    label: 'Partner Invite (1st touch)',
+    subject: 'Partner Invite: Launching Mālama Labs Genesis Nodes ([COMMISSION]% Commission)',
     body: `Hi [NAME],
 
-We're building the world's first hardware-signed environmental data network, and we'd love to have you as a launch partner.
+We're launching the first decentralized, hardware-signed environmental data network (DePIN), and we want to invite you as a founding launch partner.
 
-Mālama Labs Genesis Nodes are city-scale hex territories that operators own outright — each comes with a hardware kit, an NFT-HEX geographic licence, and a 125,000 MLMA vesting schedule tied to real-world sensor uptime.
+Mālama Labs is deploying 200 "Genesis Hex Nodes" across the US. For web3, climate-tech, and hardware audiences it's a rare double-play asset class: a physical environmental sensor kit combined with a Res-4 geographic NFT license (~1,770 km²) that earns 125,000 $MLMA tokens based on data-uptime milestones.
 
-We have 200 launch slots across 5 US regions. Your referral link earns you [COMMISSION]% on every reservation made through it.
+Why partner with us?
+• High-yield commissions: you earn [COMMISSION]% on every $2,000 node reservation made through your link.
+• Plug-and-play kit: we provide all the copy, graphics, and live-map tracking in your dashboard.
+• True scarcity: only 200 slots across 5 US regions — built-in urgency for your audience.
 
-Referral link: [REFERRAL_URL]
+Your unique partner link is ready: [REFERRAL_URL]
 
-Happy to jump on a call — let me know.
+Got 5 minutes for a quick alignment call this week?
 
-– Mālama Labs`,
+– The Mālama Labs Team`,
   },
   {
     id: 'follow-up',
-    label: 'Follow-up (2nd touch)',
-    subject: 'Re: Mālama Labs Genesis Nodes — Quick update',
+    label: 'Follow-up — 1.5× multiplier (2nd touch)',
+    subject: 'Re: Mālama Labs Genesis Nodes — the 1.5× multiplier is live',
     body: `Hi [NAME],
 
-Following up on our partnership note — we're now live at launch.malamalabs.com and reservations are open.
+Following up on our launch partnership — we're officially live and territories on the hex map are starting to lock down.
 
-Your personalised link: [REFERRAL_URL]
+Your personalized partner link: [REFERRAL_URL]
 
-A few things that have resonated with our early operators:
-• Hardware-signed data — each node cryptographically signs its environmental readings on-chain
-• City-scale territory — Res-4 hex licences (~1,770 km²) are large enough to matter commercially
-• Genesis pricing — $2,000 flat, with a 1.5× year-1 validation multiplier
+What's driving early traction with our network operators:
+• Cryptographic truth — sensors sign environmental data directly on-chain, eliminating greenwashing.
+• Massive territories — a single Res-4 hex (~1,770 km²) gives operators real regional data dominance.
+• Early-adopter edge — the $2,000 Genesis tier includes a 1.5× Year-1 validation token multiplier.
 
-Let me know if you have questions.
+Promotion is entirely plug-and-play in your dashboard toolkit. Want any custom graphics or data angles for your specific audience?
 
-– Mālama Labs`,
+– The Mālama Labs Team`,
   },
   {
     id: 'social-caption',
-    label: 'Social / Caption Copy',
+    label: 'KOL Social / Caption (for partners to post)',
     subject: null,
-    body: `I'm partnering with Mālama Labs — the first network where environmental sensors sign their own data on-chain 🌿
+    body: `Own the environmental data grid before it's mapped out. 🌍🛰️
 
-They're selling 200 city-scale "Hex Node" territories across the US right now. Each one comes with hardware, an NFT licence, and 125k MLMA tokens vesting over your first year of operation.
+I'm partnering with @MalamaLabs for the rollout of their Genesis Nodes — the first DePIN network where physical hardware sensors cryptographically sign real-world climate data directly on-chain.
 
-My link for early access → [REFERRAL_URL]`,
+They're releasing exactly 200 city-scale "Hex Node" territories across the US.
+
+What you get as an operator:
+📦 A physical environmental hardware sensor kit (air, water, soil)
+🗺️ A geographic NFT license for a ~1,770 km² territory
+🪙 125,000 $MLMA tokens vested via real-world uptime milestones
+⚡ A 1.5× token validation multiplier for Year 1
+
+Real infrastructure. Real data. Real-world rewards.
+
+Secure your hex on the live map before your region is claimed: [REFERRAL_URL]
+
+#MalamaNodes #VerifyTheEarth #DePIN`,
   },
   {
     id: 'newsletter-blurb',
-    label: 'Newsletter / Email Blurb',
-    subject: 'Something interesting in environmental data infrastructure',
-    body: `[NAME] — quick one for your audience.
+    label: 'KOL Newsletter / Email (for partners to send)',
+    subject: 'The infrastructure play bridging crypto and climate tech',
+    body: `[NAME] — quick one for you today if you've been tracking the DePIN (Decentralized Physical Infrastructure Networks) space.
 
-Mālama Labs is opening 200 "Hex Node" territories across the US. These are physical + digital assets: you get a hardware sensor kit AND a geographic NFT licence for a ~1,770 km² territory. The hardware cryptographically signs environmental data on-chain — water quality, air quality, soil conditions.
+Mālama Labs is opening exactly 200 "Hex Node" territories across the United States to build a decentralized, un-gameable environmental data grid.
 
-Launch price: $2,000. 125,000 MLMA tokens vest based on sensor uptime milestones.
+These are hybrid physical + digital infrastructure assets. For a launch price of $2,000, operators get:
+1. A physical hardware sensor kit that cryptographically signs environmental data (water quality, air, soil) directly to the blockchain.
+2. A geographic NFT license securing a ~1,770 km² territory.
+3. A 125,000 $MLMA token package that vests based on your sensor's real-world uptime milestones.
 
-Use my link to explore the hex map and reserve: [REFERRAL_URL]`,
+Only 200 slots across the country — territories are first-come, first-served.
+
+Use my link to view the live tracking map and claim your region before the Genesis tier closes:
+
+👉 Explore the Hex Map & Reserve Your Node: [REFERRAL_URL]`,
   },
 ] as const;
 

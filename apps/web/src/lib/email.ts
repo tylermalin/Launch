@@ -15,7 +15,7 @@ const FROM = process.env.RESEND_FROM?.trim() || 'Mālama Labs <noreply@malamalab
 
 /** Internal recipient for lead / application notifications. */
 export const ADMIN_NOTIFY_EMAIL =
-  (process.env.ADMIN_NOTIFY_EMAIL || process.env.RESEND_TO || 'hello@malamalabs.com').trim()
+  (process.env.ADMIN_NOTIFY_EMAIL || process.env.RESEND_TO || 'Info@malamaproject.org').trim()
 
 export function isEmailConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY?.trim())

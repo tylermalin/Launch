@@ -3,6 +3,7 @@ import './sensors.css'
 import SensorsNavbar from '@/components/sensors/Navbar'
 import HeroSection from '@/components/sensors/HeroSection'
 import SpecTicker from '@/components/sensors/SpecTicker'
+import UseCasesSection from '@/components/sensors/UseCasesSection'
 import FeaturesSection from '@/components/sensors/FeaturesSection'
 import ProductShowcase from '@/components/sensors/ProductShowcase'
 import TechSection from '@/components/sensors/TechSection'
@@ -27,6 +28,7 @@ export default function SensorsPage() {
       <SensorsNavbar />
       <HeroSection />
       <SpecTicker />
+      <UseCasesSection />
       <FeaturesSection />
       <ProductShowcase />
       <TechSection />

@@ -1,7 +1,7 @@
 const specs = [
-  'LoRa 915MHz', 'NB-IoT Connectivity', 'Solar Charging', 'IP67 Rated', 'Dual Sensor Ports',
-  'Real-Time Dashboard', 'Soil pH + Moisture', 'Atmospheric Sensing', 'GPS Tracking',
-  'OTA Updates', '5km+ Range', '48hr Battery Backup', 'Gold Level System', 'QTY Discounts Available',
+  'Sensors In Development', 'Hardware-Signed Data', 'Prediction Market Settlement', 'Parametric Insurance Triggers',
+  'Climate & Carbon MRV', 'LoRa 915MHz', 'NB-IoT Connectivity', 'Solar Charging', 'IP67 Rated',
+  'Tamper-Evident', 'Anchored On-Chain', 'Soil pH + Moisture', 'Atmospheric Sensing', 'Real-Time Telemetry',
 ]
 
 export default function SpecTicker() {
@@ -13,7 +13,7 @@ export default function SpecTicker() {
       <div className="ticker-track" style={{ display: 'flex', gap: '0', whiteSpace: 'nowrap' }}>
         {items.map((spec, i) => (
           <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '1.5rem' }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', fontWeight: 500, color: 'rgba(245,245,245,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '0 2rem' }}>{spec}</span>
+            <span style={{ fontFamily: "var(--font-jetbrains), monospace", fontSize: '0.72rem', fontWeight: 500, color: 'rgba(245,245,245,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', padding: '0 2rem' }}>{spec}</span>
             <span style={{ color: '#8bff47', fontSize: '0.5rem' }}>◆</span>
           </span>
         ))}

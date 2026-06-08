@@ -19,10 +19,10 @@ export default function FeaturesSection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="reveal" style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <div className="section-label" style={{ marginBottom: '1rem' }}>Why Mālama Labs</div>
-          <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3.5rem)', letterSpacing: '-0.03em', color: '#f5f5f5', lineHeight: 1.1, marginBottom: '1.25rem' }}>
+          <h2 style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3.5rem)', letterSpacing: '-0.03em', color: '#f5f5f5', lineHeight: 1.1, marginBottom: '1.25rem' }}>
             Built for the field.<br /><span className="text-gradient-green">Designed for scale.</span>
           </h2>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '1.1rem', color: 'rgba(245,245,245,0.55)', maxWidth: '560px', margin: '0 auto', lineHeight: 1.7 }}>
+          <p style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontSize: '1.1rem', color: 'rgba(245,245,245,0.55)', maxWidth: '560px', margin: '0 auto', lineHeight: 1.7 }}>
             Every component of the Mālama Sensor System is engineered to deliver reliable data from the most demanding environments on earth.
           </p>
         </div>
@@ -37,8 +37,8 @@ export default function FeaturesSection() {
                 {feature.icon}
               </div>
               <div className="section-label" style={{ marginBottom: '0.5rem', fontSize: '0.65rem' }}>{feature.label}</div>
-              <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: '1.2rem', color: '#f5f5f5', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>{feature.title}</h3>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(245,245,245,0.55)' }}>{feature.description}</p>
+              <h3 style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontWeight: 700, fontSize: '1.2rem', color: '#f5f5f5', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>{feature.title}</h3>
+              <p style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(245,245,245,0.55)' }}>{feature.description}</p>
             </div>
           ))}
         </div>

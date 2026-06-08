@@ -43,11 +43,11 @@ function StatCard({ stat, index }: { stat: (typeof stats)[0]; index: number }) {
   }, [])
   return (
     <div ref={ref} className={`reveal reveal-delay-${index + 1}`} style={{ textAlign: 'center', padding: '3rem 2rem', borderRight: index < stats.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 'clamp(3rem, 6vw, 5rem)', lineHeight: 1, letterSpacing: '-0.04em', color: '#f5f5f5', marginBottom: '0.5rem' }}>
+      <div style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontWeight: 800, fontSize: 'clamp(3rem, 6vw, 5rem)', lineHeight: 1, letterSpacing: '-0.04em', color: '#f5f5f5', marginBottom: '0.5rem' }}>
         {count}<span style={{ color: '#8bff47' }}>{stat.suffix}</span>
       </div>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: '1rem', color: '#f5f5f5', marginBottom: '0.25rem', letterSpacing: '-0.01em' }}>{stat.label}</div>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.7rem', color: 'rgba(245,245,245,0.4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{stat.sublabel}</div>
+      <div style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontWeight: 600, fontSize: '1rem', color: '#f5f5f5', marginBottom: '0.25rem', letterSpacing: '-0.01em' }}>{stat.label}</div>
+      <div style={{ fontFamily: "var(--font-jetbrains), monospace", fontSize: '0.7rem', color: 'rgba(245,245,245,0.4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{stat.sublabel}</div>
     </div>
   )
 }

@@ -15,7 +15,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { parseEmailSessionToken } from '@/lib/email-session';
-import { listKOLs, getKOLStats, registerKOL, updateKOL, buildReferralUrl, buildVanityUrl } from '@/lib/kol-registry';
+import { listKOLs, getKOLStats, registerKOL, updateKOL, buildReferralUrl, buildVanityUrl, recordKOLEmail } from '@/lib/kol-registry';
 import { getAmplifyOverrides, setAmplifyOverrides } from '@/lib/amplify-config';
 import { getPayoutsOverview, runPayoutBatch } from '@/lib/payouts-admin';
 import { sendEmail, emailLayout, escapeHtml } from '@/lib/email';
@@ -249,13 +249,19 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'send-email') {
-      const { to, subject, body: emailBody } = body as { to?: string; subject?: string; body?: string };
+      const { to, subject, body: emailBody, partnerId, templateId, templateLabel } = body as {
+        to?: string; subject?: string; body?: string; partnerId?: string; templateId?: string; templateLabel?: string;
+      };
       if (!to || !subject || !emailBody) {
         return NextResponse.json({ error: 'to, subject, and body are required' }, { status: 400 });
       }
       const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;font-size:14px;line-height:1.6">${escapeHtml(emailBody).replace(/\n/g, '<br/>')}</div>`;
       const r = await sendEmail({ to, subject, html, text: emailBody });
       if (!r.ok) return NextResponse.json({ error: r.error || 'Email send failed (check RESEND_API_KEY + verified domain)' }, { status: 502 });
+      // Track the send against the partner (audit + dashboard count).
+      if (partnerId) {
+        await recordKOLEmail(String(partnerId), { to, subject, templateId, templateLabel, sentBy: email ?? undefined }).catch(() => {});
+      }
       return NextResponse.json({ ok: true, id: r.id });
     }
 

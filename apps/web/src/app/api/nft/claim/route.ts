@@ -6,6 +6,7 @@ import {
   getStats,
   updateClaimTxHash,
   bindEvmTokenToClaim,
+  releaseClaim,
 } from '@/lib/genesis-claim-registry'
 import { getCustodialRecordsByEmail } from '@/lib/custodial-store'
 import { upsertUserAccount } from '@/lib/user-account'
@@ -132,4 +133,25 @@ export async function GET(req: Request) {
     claimed: !!claim,
     ...(claim ?? {}),
   })
+}
+
+// ─── Admin: release a (non-minted) hex reservation ──────────────────────────
+// Clears a stuck/abandoned reservation so the hex can be claimed again.
+// Guarded by x-admin-secret. Refuses to release a minted hex.
+//   curl -X DELETE "$URL/api/nft/claim?hexId=<hex>" -H "x-admin-secret: $ADMIN_SECRET"
+export async function DELETE(req: Request) {
+  const secret = process.env.ADMIN_SECRET?.trim()
+  if (!secret || req.headers.get('x-admin-secret')?.trim() !== secret) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  const { searchParams } = new URL(req.url)
+  const hexId = searchParams.get('hexId')
+  if (!hexId) {
+    return NextResponse.json({ error: 'hexId query param required' }, { status: 400 })
+  }
+  const result = await releaseClaim(hexId)
+  if (!result.ok) {
+    return NextResponse.json({ error: result.reason ?? 'Could not release' }, { status: 409 })
+  }
+  return NextResponse.json({ ok: true, released: hexId })
 }

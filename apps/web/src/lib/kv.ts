@@ -19,6 +19,7 @@ export interface KVClient {
   set(key: string, value: unknown, opts?: { ex?: number }): Promise<'OK'>
   incr(key: string): Promise<number>
   sadd(key: string, ...members: string[]): Promise<number>
+  srem(key: string, ...members: string[]): Promise<number>
   smembers(key: string): Promise<string[]>
   del(...keys: string[]): Promise<number>
 }
@@ -64,6 +65,13 @@ const memKv: KVClient = {
     for (const m of members) { if (!s.has(m)) { s.add(m); added++ } }
     return added
   },
+  async srem(key: string, ...members: string[]): Promise<number> {
+    const s = _sets.get(key)
+    if (!s) return 0
+    let removed = 0
+    for (const m of members) { if (s.delete(m)) removed++ }
+    return removed
+  },
   async smembers(key: string): Promise<string[]> {
     return Array.from(_sets.get(key) ?? [])
   },
@@ -108,6 +116,10 @@ async function makeNodeRedisKv(url: string): Promise<KVClient> {
       if (!members.length) return 0
       return client.sAdd(key, members)
     },
+    async srem(key: string, ...members: string[]): Promise<number> {
+      if (!members.length) return 0
+      return client.sRem(key, members)
+    },
     async smembers(key: string): Promise<string[]> {
       return client.sMembers(key)
     },
@@ -136,6 +148,10 @@ function makeUpstashKv(url: string, token: string): KVClient {
     sadd: async (key: string, ...members: string[]): Promise<number> => {
       if (!members.length) return 0
       return (await redis.sadd(key, members[0], ...members.slice(1))) as number
+    },
+    srem: async (key: string, ...members: string[]): Promise<number> => {
+      if (!members.length) return 0
+      return (await redis.srem(key, members[0], ...members.slice(1))) as number
     },
     smembers: (key: string) => redis.smembers(key),
     del: async (...keys: string[]): Promise<number> => {

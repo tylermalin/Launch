@@ -13,6 +13,7 @@ const topNavLinks = [
   { href: '/docs',      label: 'Docs',      active: (p: string) => p.startsWith('/docs') || p === '/whitepaper' },
   { href: '/timeline',  label: 'Timeline',  active: (p: string) => p.startsWith('/timeline') },
   { href: '/explorer',  label: 'Explorer',  active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
+  { href: '/data-solutions', label: 'Data', active: (p: string) => p.startsWith('/data-solutions') },
   { href: '/partners',  label: 'Partners',  active: (p: string) => p.startsWith('/partners') },
   { href: '/dashboard', label: 'Dashboard', active: (p: string) => p.startsWith('/dashboard'), authOnly: true },
 ]

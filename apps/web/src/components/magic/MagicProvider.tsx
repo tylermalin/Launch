@@ -2,6 +2,7 @@
 
 import { Magic } from 'magic-sdk'
 import { type ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { getEvmChainId, getEvmRpcUrl } from '@/lib/evm-network'
 
 type MagicContextType = { magic: InstanceType<typeof Magic> | null }
 
@@ -10,8 +11,6 @@ const MagicContext = createContext<MagicContextType>({ magic: null })
 export function useMagic() {
   return useContext(MagicContext)
 }
-
-const BASE_SEPOLIA_CHAIN_ID = 84532
 
 type Props = {
   children: ReactNode
@@ -27,17 +26,13 @@ export function MagicProvider({ children, publishableKey, rpcUrl }: Props) {
     const key =
       publishableKey?.trim() ||
       process.env.NEXT_PUBLIC_MAGIC_API_KEY?.trim()
-    const rpc =
-      rpcUrl?.trim() ||
-      process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL?.trim() ||
-      process.env.BASE_SEPOLIA_RPC_URL?.trim() ||
-      'https://sepolia.base.org'
+    const rpc = rpcUrl?.trim() || getEvmRpcUrl()
     if (!key) return
 
     const instance = new Magic(key, {
       network: {
         rpcUrl: rpc,
-        chainId: BASE_SEPOLIA_CHAIN_ID,
+        chainId: getEvmChainId(),
       },
     })
     setMagic(instance)

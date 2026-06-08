@@ -27,14 +27,24 @@ import {
 
 // ─── Contract addresses ───────────────────────────────────────────────────────
 import { tryGetGenesisContract, GENESIS_CONTRACT_PLACEHOLDER } from '@/lib/genesis-contract'
+import {
+  getUsdcAddress,
+  getEvmChainId,
+  getAddEthereumChainParams,
+  getNetworkLabel,
+  getExplorerTxUrl,
+  getOpenSeaAssetUrl,
+} from '@/lib/evm-network'
 // Module-level fallback to placeholder so this client bundle builds + renders
 // even when the env var isn't set on a preview branch. The actual mint flow
 // (handleBasePayment) guards against the placeholder and surfaces a clear
 // error — so previews don't silently mint to a non-existent contract.
 const GENESIS_CONTRACT = (tryGetGenesisContract() ?? GENESIS_CONTRACT_PLACEHOLDER) as `0x${string}`
-// Real USDC on Base Sepolia. Override with NEXT_PUBLIC_MOCK_USDC_ADDRESS for local testing.
-const USDC_CONTRACT    = (process.env.NEXT_PUBLIC_MOCK_USDC_ADDRESS         ?? '0x036CbD53842c5426634e7929541eC2318f3dCF7e') as `0x${string}`
+// USDC for the active network (lib/evm-network). Override with NEXT_PUBLIC_MOCK_USDC_ADDRESS for local testing.
+const USDC_CONTRACT    = (process.env.NEXT_PUBLIC_MOCK_USDC_ADDRESS ?? getUsdcAddress()) as `0x${string}`
 const PRICE_USDC       = parseUnits('2000', 6) // $2,000 USDC (6 decimals)
+// Active chain id as 0x-hex for wallet_switch/addEthereumChain.
+const ACTIVE_CHAIN_HEX = `0x${getEvmChainId().toString(16)}`
 
 const USDC_ABI = parseAbi([
   'function approve(address spender, uint256 amount) public returns (bool)',
@@ -206,23 +216,17 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
     if (!eth) return // panel is open; user reads contract + tokenId manually
 
     try {
-      // Switch to Base Sepolia first
+      // Switch to the active network first
       const chainId: string = await eth.request({ method: 'eth_chainId' })
-      if (chainId !== '0x14a34') {
+      if (chainId !== ACTIVE_CHAIN_HEX) {
         await eth.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x14a34' }],
+          params: [{ chainId: ACTIVE_CHAIN_HEX }],
         }).catch(async (switchErr: any) => {
           if (switchErr.code === 4902) {
             await eth.request({
               method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: '0x14a34',
-                chainName: 'Base Sepolia',
-                nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-                rpcUrls: ['https://sepolia.base.org'],
-                blockExplorerUrls: ['https://sepolia.basescan.org'],
-              }],
+              params: [getAddEthereumChainParams()],
             })
           }
         })
@@ -257,27 +261,21 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       )
     }
 
-    // 0. Enforce Base Sepolia — switch if needed
+    // 0. Enforce the active network — switch if needed
     const eth = (window as any).ethereum
     if (eth) {
       const currentChain: string = await eth.request({ method: 'eth_chainId' })
-      if (currentChain !== '0x14a34') {
+      if (currentChain !== ACTIVE_CHAIN_HEX) {
         try {
-          await eth.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x14a34' }] })
+          await eth.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: ACTIVE_CHAIN_HEX }] })
         } catch (switchErr: any) {
           if (switchErr.code === 4902) {
             await eth.request({
               method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: '0x14a34',
-                chainName: 'Base Sepolia',
-                nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-                rpcUrls: ['https://sepolia.base.org'],
-                blockExplorerUrls: ['https://sepolia.basescan.org'],
-              }],
+              params: [getAddEthereumChainParams()],
             })
           } else {
-            throw new Error('Please switch to Base Sepolia in your wallet')
+            throw new Error(`Please switch to ${getNetworkLabel()} in your wallet`)
           }
         }
       }
@@ -364,8 +362,8 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
       evmTokenId,
       txHash: mintHash,
       chain: 'base' as const,
-      explorerUrl: `https://sepolia.basescan.org/tx/${mintHash}`,
-      openSeaUrl: `https://testnets.opensea.io/assets/base-sepolia/${GENESIS_CONTRACT}/${evmTokenId}`,
+      explorerUrl: getExplorerTxUrl(mintHash),
+      openSeaUrl: getOpenSeaAssetUrl(GENESIS_CONTRACT, evmTokenId),
       nftImageUrl: `${appBase}/api/nft/${evmTokenId}/image?hexId=${encodeURIComponent(hexId)}&chain=base&claimId=${encodeURIComponent(claimId)}`,
     }
   }
@@ -582,7 +580,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 </h2>
                 <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-400">
                   Crypto: connect Cardano (Lace) and/or Base (MetaMask). Card: pay with Stripe, then open Launch App and
-                  sign in with Magic using the same email. Your NFT mints to your embedded wallet on Base Sepolia.
+                  sign in with Magic using the same email. Your NFT mints to your embedded wallet on {getNetworkLabel()}.
                   Entry is $2,000 USDC or card checkout.
                 </p>
                 {hexId && (
@@ -911,7 +909,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                 </h2>
                 <p className="text-gray-400 mt-3 max-w-md mx-auto leading-relaxed">
                   {paymentMode === 'card'
-                    ? 'You will be redirected to Stripe Checkout. After payment clears, open Launch App, sign in with Magic (same email), and we mint your Genesis NFT to your embedded wallet on Base Sepolia.'
+                    ? `You will be redirected to Stripe Checkout. After payment clears, open Launch App, sign in with Magic (same email), and we mint your Genesis NFT to your embedded wallet on ${getNetworkLabel()}.`
                     : evmConnected
                       ? 'Your wallet will prompt you to approve $2,000 USDC and then sign the mint transaction on Base.'
                       : 'The server will mint your Cardano CIP-25 NFT directly to your wallet. No gas required from you.'}
@@ -1060,7 +1058,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
                         <div className="space-y-2">
                           <div>
                             <p className="text-[10px] uppercase tracking-widest text-gray-600 mb-1">Network</p>
-                            <p className="text-xs text-orange-200 font-mono">Base Sepolia (chain 84532)</p>
+                            <p className="text-xs text-orange-200 font-mono">{getNetworkLabel()} (chain {getEvmChainId()})</p>
                           </div>
                           <div>
                             <p className="text-[10px] uppercase tracking-widest text-gray-600 mb-1">Contract Address</p>

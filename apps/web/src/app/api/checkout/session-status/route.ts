@@ -6,6 +6,7 @@ import { getSessionStatus } from '@/lib/custodial-store'
 import { getStripeSecretKey } from '@/lib/stripe-server'
 import { requireGenesisContract } from '@/lib/genesis-contract'
 import { resolveAppUrl } from '@/lib/resolve-app-url'
+import { getExplorerTxUrl, getOpenSeaAssetUrl } from '@/lib/evm-network'
 
 export const runtime = 'nodejs'
 
@@ -42,8 +43,8 @@ export async function GET(req: Request) {
       custodialAddress: rec.address,
       evmTokenId: rec.evmTokenId,
       txHash: rec.txHash,
-      explorerUrl: `https://sepolia.basescan.org/tx/${rec.txHash}`,
-      openSeaUrl: `https://testnets.opensea.io/assets/base-sepolia/${GENESIS_CONTRACT}/${rec.evmTokenId}`,
+      explorerUrl: rec.txHash ? getExplorerTxUrl(rec.txHash) : undefined,
+      openSeaUrl: getOpenSeaAssetUrl(GENESIS_CONTRACT, rec.evmTokenId),
       transferUrl:
         rec.custody === 'server'
           ? `${appUrl}/custodial/transfer?claimId=${encodeURIComponent(rec.claimId)}&token=${encodeURIComponent(rec.transferToken)}`

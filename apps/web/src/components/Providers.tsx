@@ -6,12 +6,15 @@ import { WagmiProvider, createConfig, http } from "wagmi";
 import { base, baseSepolia } from "wagmi/chains";
 import { injected, coinbaseWallet } from "wagmi/connectors";
 
+// Both chains stay supported; transports prefer configured RPCs (public defaults
+// are rate-limited). The active network is governed by lib/evm-network.ts and the
+// mint components, which switch the wallet to the right chain explicitly.
 const wagmiConfig = createConfig({
   chains: [base, baseSepolia],
   connectors: [injected(), coinbaseWallet({ appName: "Mālama Labs" })],
   transports: {
-    [base.id]: http(),
-    [baseSepolia.id]: http(),
+    [base.id]: http(process.env.NEXT_PUBLIC_BASE_RPC_URL?.trim() || undefined),
+    [baseSepolia.id]: http(process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL?.trim() || undefined),
   },
 });
 

@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server'
 import { isAddress } from 'viem'
 import { createWalletClient, http, parseAbi } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { baseSepolia } from 'viem/chains'
 import { getCustodialByClaimId } from '@/lib/custodial-store'
 import { decryptPrivateKeyHex } from '@/lib/wallet-crypto'
 import { requireGenesisContract } from '@/lib/genesis-contract'
+import { getEvmChain, getEvmRpcUrl, getExplorerTxUrl } from '@/lib/evm-network'
 
 export const runtime = 'nodejs'
 
@@ -55,15 +55,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Wallet mismatch' }, { status: 500 })
     }
 
-    const rpc = process.env.BASE_SEPOLIA_RPC_URL || process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL
-    if (!rpc) {
-      return NextResponse.json({ error: 'RPC not configured' }, { status: 503 })
-    }
-
     const walletClient = createWalletClient({
       account,
-      chain: baseSepolia,
-      transport: http(rpc),
+      chain: getEvmChain(),
+      transport: http(getEvmRpcUrl()),
     })
 
     const hash = await walletClient.writeContract({
@@ -76,7 +71,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       txHash: hash,
-      explorerUrl: `https://sepolia.basescan.org/tx/${hash}`,
+      explorerUrl: getExplorerTxUrl(hash),
     })
   } catch (e) {
     console.error('[custodial/transfer]', e)

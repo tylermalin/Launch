@@ -161,6 +161,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(data, { status: res.status });
   }
 
+  if (action === 'amplify-config') {
+    const res = await adminApiFetch('/api/admin/amplify');
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  }
+
   return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
 }
 
@@ -213,6 +219,16 @@ export async function POST(req: NextRequest) {
     const res = await adminApiFetch('/api/admin/payouts', {
       method: 'POST',
       body: JSON.stringify({ approvedBy: email, commissionIds, kolId }),
+    });
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  }
+
+  if (action === 'set-amplify') {
+    const { config } = body as { config?: unknown };
+    const res = await adminApiFetch('/api/admin/amplify', {
+      method: 'POST',
+      body: JSON.stringify(config ?? {}),
     });
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });

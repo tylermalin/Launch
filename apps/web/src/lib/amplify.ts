@@ -38,14 +38,22 @@ export const DEPIN_SUBREDDITS = [
 
 const CAMPAIGN_HASHTAG = '#DePIN'
 
-export function buildAmplifyPosts(opts: {
-  referralUrl: string
-  displayName?: string
+/** Admin-set overrides for the amplify copy (stored in KV, edited from /admin/partners). */
+export type AmplifyOverrides = {
   hashtag?: string
-}): AmplifyPost[] {
+  /** Per-channel replacement post text. Empty/missing → use the built-in default. */
+  posts?: Partial<Record<AmplifyChannel, string>>
+}
+
+export function buildAmplifyPosts(
+  opts: { referralUrl: string; displayName?: string; hashtag?: string },
+  overrides?: AmplifyOverrides,
+): AmplifyPost[] {
   const url = opts.referralUrl
-  const tag = opts.hashtag ?? CAMPAIGN_HASHTAG
+  const ov = overrides?.posts ?? {}
+  const tag = overrides?.hashtag ?? opts.hashtag ?? CAMPAIGN_HASHTAG
   const enc = encodeURIComponent
+  const pick = (c: AmplifyChannel, def: string) => (ov[c]?.trim() || def)
 
   // ── X / Twitter ──────────────────────────────────────────────────────────
   const xText =
@@ -72,41 +80,49 @@ export function buildAmplifyPosts(opts: {
     `**Mālama Genesis is live** — 200 hardware-signed Hex Nodes for the physical-data network ` +
     `(carbon dMRV + AI-compute), anchored on Base + Cardano.\nReserve yours 👉 ${url}`
 
+  // Apply admin overrides, then derive share URLs from the FINAL text so a
+  // prefilled composer (X, Telegram) reflects edited copy.
+  const xFinal = pick('x', xText)
+  const redditFinal = pick('reddit', redditTitle)
+  const linkedinFinal = pick('linkedin', linkedinText)
+  const telegramFinal = pick('telegram', telegramText)
+  const discordFinal = pick('discord', discordText)
+
   return [
     {
       channel: 'x',
       label: 'X / Twitter',
-      text: xText,
-      shareUrl: `https://twitter.com/intent/tweet?text=${enc(xText)}`,
+      text: xFinal,
+      shareUrl: `https://twitter.com/intent/tweet?text=${enc(xFinal)}`,
       hint: 'Opens the tweet composer prefilled. Post it, then pin or retweet from the Mālama account.',
     },
     {
       channel: 'reddit',
       label: 'Reddit (DePIN subs)',
-      text: redditTitle,
-      title: redditTitle,
+      text: redditFinal,
+      title: redditFinal,
       subreddits: [...DEPIN_SUBREDDITS],
-      shareUrl: `https://www.reddit.com/r/${DEPIN_SUBREDDITS[0]}/submit?url=${enc(url)}&title=${enc(redditTitle)}`,
+      shareUrl: `https://www.reddit.com/r/${DEPIN_SUBREDDITS[0]}/submit?url=${enc(url)}&title=${enc(redditFinal)}`,
       hint: 'Opens a link post in r/depin. Also share in r/CryptoCurrency, r/helium, r/Cardano, r/IoTeX. Read each sub’s self-promo rules first.',
     },
     {
       channel: 'linkedin',
       label: 'LinkedIn',
-      text: linkedinText,
+      text: linkedinFinal,
       shareUrl: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`,
       hint: 'LinkedIn only prefills the link — copy the text above and paste it as your post commentary.',
     },
     {
       channel: 'telegram',
       label: 'Telegram',
-      text: telegramText,
-      shareUrl: `https://t.me/share/url?url=${enc(url)}&text=${enc(telegramText)}`,
+      text: telegramFinal,
+      shareUrl: `https://t.me/share/url?url=${enc(url)}&text=${enc(telegramFinal)}`,
       hint: 'Opens Telegram’s share sheet. Post in DePIN / crypto groups you’re part of.',
     },
     {
       channel: 'discord',
       label: 'Discord',
-      text: discordText,
+      text: discordFinal,
       shareUrl: null,
       hint: 'Copy and paste into DePIN / crypto Discord servers (Mālama, Base, Cardano communities).',
     },

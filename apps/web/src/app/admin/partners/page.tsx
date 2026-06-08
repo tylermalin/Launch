@@ -98,11 +98,51 @@ export default function AdminPartnersPage() {
   const [payoutBusy, setPayoutBusy] = useState<string | null>(null);
   const [payoutMsg, setPayoutMsg] = useState<string | null>(null);
 
+  const [amplify, setAmplify] = useState<{ hashtag?: string; posts?: Record<string, string> }>({});
+  const [amplifySaving, setAmplifySaving] = useState(false);
+  const [amplifyMsg, setAmplifyMsg] = useState<string | null>(null);
+
   const loadPayouts = () =>
     fetch('/api/admin/partners-proxy?action=payouts')
       .then((r) => r.json())
       .then((d) => { if (!d.error) setPayouts(d as PayoutsData); })
       .catch(() => {});
+
+  const loadAmplify = () =>
+    fetch('/api/admin/partners-proxy?action=amplify-config')
+      .then((r) => r.json())
+      .then((d) => { if (!d.error) setAmplify(d.config ?? {}); })
+      .catch(() => {});
+
+  const AMPLIFY_CHANNELS: { key: string; label: string; placeholder: string }[] = [
+    { key: 'x', label: 'X / Twitter', placeholder: 'Tweet copy — include [REFERRAL_URL] via the auto-injected link' },
+    { key: 'reddit', label: 'Reddit (link-post title)', placeholder: 'Reddit post title' },
+    { key: 'linkedin', label: 'LinkedIn', placeholder: 'LinkedIn post commentary' },
+    { key: 'telegram', label: 'Telegram', placeholder: 'Telegram message' },
+    { key: 'discord', label: 'Discord', placeholder: 'Discord message' },
+  ];
+
+  const setAmplifyPost = (key: string, val: string) =>
+    setAmplify((a) => ({ ...a, posts: { ...(a.posts ?? {}), [key]: val } }));
+
+  const saveAmplify = async () => {
+    setAmplifySaving(true);
+    setAmplifyMsg(null);
+    try {
+      const res = await fetch('/api/admin/partners-proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'set-amplify', config: amplify }),
+      });
+      const data = await res.json();
+      if (!res.ok) setAmplifyMsg(`✕ ${data.error ?? 'Save failed'}`);
+      else { setAmplify(data.config ?? {}); setAmplifyMsg('Saved — every partner now sees this copy.'); }
+    } catch (e) {
+      setAmplifyMsg(`✕ ${String(e)}`);
+    } finally {
+      setAmplifySaving(false);
+    }
+  };
 
   // ── Load data ──
   useEffect(() => {
@@ -118,6 +158,7 @@ export default function AdminPartnersPage() {
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
     loadPayouts();
+    loadAmplify();
   }, []);
 
   const copy = (text: string, id: string) => {
@@ -181,6 +222,14 @@ export default function AdminPartnersPage() {
 
   const pending = partners.filter((p) => !p.approved);
   const active  = partners.filter((p) =>  p.approved);
+  const totals = partners.reduce(
+    (acc, p) => ({
+      clicks: acc.clicks + (p.stats?.clicks ?? 0),
+      conversions: acc.conversions + (p.stats?.conversions ?? 0),
+      earned: acc.earned + (p.stats?.totalEarned ?? 0),
+    }),
+    { clicks: 0, conversions: 0, earned: 0 },
+  );
 
   return (
     <Shell>
@@ -197,6 +246,22 @@ export default function AdminPartnersPage() {
         <button onClick={() => setShowInvite(true)} style={styles.ctaBtn}>
           + Invite Partner
         </button>
+      </div>
+
+      {/* ── Activity overview ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>
+        {[
+          { label: 'Partners', value: String(partners.length) },
+          { label: 'Active', value: String(active.length) },
+          { label: 'Total clicks', value: totals.clicks.toLocaleString() },
+          { label: 'Conversions', value: totals.conversions.toLocaleString() },
+          { label: 'Commissions', value: `$${totals.earned.toFixed(0)}` },
+        ].map((s) => (
+          <div key={s.label} style={{ background: '#141414', border: '1px solid #222', borderRadius: 8, padding: '12px 14px' }}>
+            <p style={{ color: '#666', fontSize: 11, margin: 0, textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'monospace' }}>{s.label}</p>
+            <p style={{ color: '#e8e8e8', fontSize: 22, fontWeight: 800, margin: '4px 0 0' }}>{s.value}</p>
+          </div>
+        ))}
       </div>
 
       {/* ── Payouts ── */}
@@ -311,6 +376,49 @@ export default function AdminPartnersPage() {
       </Section>
 
       {/* ── Approved copy templates ── */}
+      {/* ── Amplify messaging editor ── */}
+      <Section title="Amplify Messaging — partner push copy">
+        <p style={{ color: '#666', fontSize: 13, margin: '0 0 14px' }}>
+          Edit the ready-to-post copy partners see in their dashboard&apos;s Amplify toolkit. Leave a field blank to use
+          the built-in default. Each partner&apos;s referral link is appended automatically.
+        </p>
+        <div style={{ marginBottom: 14 }}>
+          <label style={{ display: 'block', color: '#888', fontSize: 11, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
+            Campaign hashtag
+          </label>
+          <input
+            value={amplify.hashtag ?? ''}
+            onChange={(e) => setAmplify((a) => ({ ...a, hashtag: e.target.value }))}
+            placeholder="#DePIN"
+            style={{ width: '100%', maxWidth: 240, background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '8px 10px', color: '#e8e8e8', fontSize: 13 }}
+          />
+        </div>
+        {AMPLIFY_CHANNELS.map((ch) => (
+          <div key={ch.key} style={{ marginBottom: 12 }}>
+            <label style={{ display: 'block', color: '#c4f061', fontSize: 11, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
+              {ch.label}
+            </label>
+            <textarea
+              rows={ch.key === 'x' || ch.key === 'reddit' ? 2 : 3}
+              value={amplify.posts?.[ch.key] ?? ''}
+              onChange={(e) => setAmplifyPost(ch.key, e.target.value)}
+              placeholder={ch.placeholder}
+              style={{ width: '100%', background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '8px 10px', color: '#e8e8e8', fontSize: 13, fontFamily: 'inherit', resize: 'vertical' }}
+            />
+          </div>
+        ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+          <button onClick={saveAmplify} disabled={amplifySaving} style={{ ...styles.ctaBtn, opacity: amplifySaving ? 0.5 : 1 }}>
+            {amplifySaving ? 'Saving…' : 'Save messaging'}
+          </button>
+          {amplifyMsg && (
+            <span style={{ color: amplifyMsg.startsWith('✕') ? '#f87171' : '#c4f061', fontSize: 13, fontFamily: 'monospace' }}>
+              {amplifyMsg}
+            </span>
+          )}
+        </div>
+      </Section>
+
       <Section title="Approved Outreach Templates">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
           {templates.map((t) => (

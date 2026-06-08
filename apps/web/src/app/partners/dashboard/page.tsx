@@ -19,7 +19,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import type { KOLPartner, ReferralCommission } from '@/lib/kol-registry'
-import { buildAmplifyPosts } from '@/lib/amplify'
+import { buildAmplifyPosts, type AmplifyOverrides } from '@/lib/amplify'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 14 },
@@ -34,6 +34,7 @@ type DashboardData = {
   pendingEarned: number
   paidEarned: number
   commissions: ReferralCommission[]
+  amplifyOverrides?: AmplifyOverrides
   referralUrl: string
   vanityUrl: string
 }
@@ -258,7 +259,7 @@ function Dashboard({ data, onRefresh }: { data: DashboardData; onRefresh: () => 
             the more you push, the more you earn. No caps, no waiting periods.
           </p>
           <div className="space-y-3">
-            {buildAmplifyPosts({ referralUrl: data.referralUrl, displayName: data.partner.displayName }).map((post) => (
+            {buildAmplifyPosts({ referralUrl: data.referralUrl, displayName: data.partner.displayName }, data.amplifyOverrides).map((post) => (
               <div key={post.channel} className="bg-malama-bg border border-malama-line rounded p-4">
                 <div className="flex items-center justify-between mb-2 gap-2">
                   <p className="text-xs font-black uppercase tracking-wider text-malama-accent">{post.label}</p>

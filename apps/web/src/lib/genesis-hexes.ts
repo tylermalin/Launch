@@ -27,6 +27,11 @@ import type { GenesisRegionKey } from '@/lib/genesis-hexes.constants'
 export type { GenesisRegionKey }
 export { GENESIS_HEX_CAP, GENESIS_REGION_KEYS, GENESIS_REGION_LABELS }
 
+// Native-reserved hexes (overlap US Census tribal land) — held for Native Tribes first.
+import nativeHexesData from '@/data/genesis-native-hexes.json'
+const NATIVE_HEX_MAP = nativeHexesData as Record<string, { name: string; region: string }>
+const NATIVE_HEX_SET = new Set(Object.keys(NATIVE_HEX_MAP))
+
 export type RegionsData = {
   west?:     { cells: string[] }
   pacific?:  { cells: string[] }
@@ -92,11 +97,15 @@ export type GenesisHexListItem = {
   regionLabel: string
   lat: number
   lng: number
-  status: 'available' | 'reserved'
+  status: 'available' | 'reserved' | 'native-reserved'
   sold?: boolean
   chain: 'base' | 'cardano'
   /** True if this hex is held by Mālama Labs (one of the 5 reserved nodes). */
   isMalamaReserved?: boolean
+  /** True if this hex sits on US Census tribal land — held for Native Tribes first. */
+  isNativeReserved?: boolean
+  /** Reservation/tribal-land name (present when isNativeReserved). */
+  nativeReservation?: string
   dataScore: number
   startingBid: number
   activeSensors: number
@@ -115,12 +124,16 @@ export async function buildGenesisHexListItems(regions: RegionsData): Promise<Ge
       const isClaimed = Boolean(claim)
       const isLocked = await isHexLockedForMagicCheckout(id)
       const isMalamaReserved = MALAMA_RESERVED_HEX_SET.has(id)
-      
+      const isNativeReserved = NATIVE_HEX_SET.has(id)
+
       const status = (isMalamaReserved || isClaimed || isLocked)
         ? ('reserved' as const)
-        : ('available' as const)
-      
-      const sold = isMalamaReserved || isClaimed || isLocked
+        : isNativeReserved
+          ? ('native-reserved' as const)
+          : ('available' as const)
+
+      // Native-reserved hexes are held for Native Tribes first — not publicly purchasable.
+      const sold = isMalamaReserved || isClaimed || isLocked || isNativeReserved
       const dataScore = calculateDataScoreDeterministic(lat, lng, id)
       const startingBid = calculateGenesisListingPriceDeterministic(lat, lng, id)
       
@@ -134,6 +147,8 @@ export async function buildGenesisHexListItems(regions: RegionsData): Promise<Ge
         sold,
         chain,
         isMalamaReserved,
+        isNativeReserved,
+        nativeReservation: isNativeReserved ? NATIVE_HEX_MAP[id]?.name : undefined,
         dataScore,
         startingBid,
         activeSensors: (isMalamaReserved || isClaimed) ? 1 : 0,

@@ -10,6 +10,9 @@ import {
 } from '@/lib/genesis-claim-registry'
 import { getCustodialRecordsByEmail } from '@/lib/custodial-store'
 import { upsertUserAccount } from '@/lib/user-account'
+import nativeHexesData from '@/data/genesis-native-hexes.json'
+
+const NATIVE_HEX_SET = new Set(Object.keys(nativeHexesData as Record<string, unknown>))
 
 // ─────────────────────────────────────────────────────────────────────────────
 export async function POST(req: Request) {
@@ -27,6 +30,14 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: 'chain must be "base" or "cardano"' },
         { status: 400 },
+      )
+    }
+
+    // Native-reserved hexes are held for Native Tribes first — not publicly claimable.
+    if (NATIVE_HEX_SET.has(hexId)) {
+      return NextResponse.json(
+        { error: 'This hex is on tribal land and reserved for Native Tribes', nativeReserved: true },
+        { status: 403 },
       )
     }
 

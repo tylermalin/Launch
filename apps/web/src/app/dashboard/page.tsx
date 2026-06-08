@@ -401,7 +401,7 @@ export default function Dashboard() {
   }
   // ─────────────────────────────────────────────────────────────────────────
 
-  const currentStatus = hexes.length > 0 ? 'Hardware Pending' : 'Awaiting Genesis License'
+  const currentStatus = hexes.length > 0 ? 'Hardware Order & Customization Underway' : 'Awaiting Genesis License'
   const activePredictionMarkets = hexes.length > 0 ? 8 : 0
 
   useEffect(() => {
@@ -717,10 +717,10 @@ export default function Dashboard() {
                   <Box className={`h-4 w-4 ${hexes.length > 0 ? 'text-malama-teal' : 'text-gray-500'}`} />
                 </div>
                 <span className={`font-bold ${hexes.length > 0 ? 'text-malama-teal' : 'text-gray-500'}`}>
-                  Hardware Shipped
+                  Hardware Underway
                 </span>
                 <span className="mt-1 text-xs text-malama-teal/80">
-                  {hexes.length > 0 ? 'In Transit - Expected in 6 Months' : 'Pending Verification'}
+                  {hexes.length > 0 ? 'Order & customization underway · Shipment expected by Dec 31, 2026' : 'Pending Verification'}
                 </span>
               </div>
 

@@ -74,12 +74,18 @@ export async function adminMintToAddress(opts: {
     args: [opts.recipient, opts.hexId],
   })
 
-  // Confirm the mint actually succeeded — a reverted tx must NOT be recorded as
-  // fulfilled (would mark a paid order as minted when no NFT exists).
+  // Confirm the mint didn't revert — a reverted tx must NOT be recorded as
+  // fulfilled. Cap the wait so a slow confirmation can't exceed the serverless
+  // function budget (which would gateway-502). On a CONFIRMED revert we throw;
+  // on a mere timeout we return the txHash and let the caller backfill the
+  // tokenId from the receipt asynchronously.
   const publicClient = createPublicClient({ chain: getEvmChain(), transport: http(getEvmRpcUrl()) })
-  const receipt = await publicClient.waitForTransactionReceipt({ hash, timeout: 120_000 })
-  if (receipt.status !== 'success') {
-    throw new Error(`Genesis mint reverted on-chain (tx ${hash})`)
+  try {
+    const receipt = await publicClient.waitForTransactionReceipt({ hash, timeout: 30_000 })
+    if (receipt.status !== 'success') throw new Error(`Genesis mint reverted on-chain (tx ${hash})`)
+  } catch (e) {
+    if (e instanceof Error && e.message.includes('reverted on-chain')) throw e
+    console.warn('[admin-mint] receipt not confirmed within budget; returning txHash', hash)
   }
 
   return { txHash: hash, tokenId: null }

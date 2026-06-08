@@ -4,12 +4,18 @@ const ACCESS_COOKIE = 'malama_access'
 const ACCESS_VALUE  = 'ml-launch-2026-authorized'
 
 // Paths that bypass the password gate entirely
+// Static assets (logo, brand images, PDFs, fonts, etc.) must bypass the gate —
+// otherwise the password page's own <img src="/logo-mark.png"> gets 307'd to
+// /password and renders broken.
+const STATIC_ASSET_RE = /\.(png|jpe?g|gif|svg|webp|avif|ico|pdf|woff2?|ttf|otf|eot|css|js|map|txt|xml|json|mp4|webm)$/i
+
 function isPublicPath(pathname: string) {
   return (
     pathname === '/password' ||
     pathname.startsWith('/api/auth/password') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/favicon') ||
+    STATIC_ASSET_RE.test(pathname) ||
     pathname === '/presale' ||
     pathname.startsWith('/presale/') ||
     pathname.startsWith('/launch')

@@ -6,6 +6,7 @@
 import { NextResponse } from 'next/server'
 import { randomUUID } from 'crypto'
 import { kv } from '@/lib/kv'
+import { sendEmail, emailLayout, escapeHtml, ADMIN_NOTIFY_EMAIL } from '@/lib/email'
 
 export const runtime = 'nodejs'
 
@@ -44,6 +45,30 @@ export async function POST(req: Request) {
     console.error('[sensors/quote] persist failed', e)
     return NextResponse.json({ error: 'Could not save — please try again' }, { status: 500 })
   }
+
+  // Notify the team + confirm to the lead. Never block the response on email.
+  await Promise.allSettled([
+    sendEmail({
+      to: ADMIN_NOTIFY_EMAIL,
+      replyTo: quote.email,
+      subject: `New sensor quote — ${quote.name}${quote.org ? ` (${quote.org})` : ''}`,
+      html: emailLayout('New sensor quote request', `
+        <p><strong>Name:</strong> ${escapeHtml(quote.name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(quote.email)}</p>
+        ${quote.org ? `<p><strong>Organization:</strong> ${escapeHtml(quote.org)}</p>` : ''}
+        ${quote.message ? `<p><strong>Message:</strong><br/>${escapeHtml(quote.message)}</p>` : ''}`),
+    }),
+    sendEmail({
+      to: quote.email,
+      subject: 'Thanks for your interest in Mālama sensors',
+      html: emailLayout(`Thanks, ${escapeHtml(quote.name.split(' ')[0] || quote.name)}`, `
+        <p>We received your request about the Mālama sensor system. The sensors are in active
+        development — our team will reach out as they move toward deployment.</p>
+        <p>In the meantime, explore the live network at
+        <a href="https://launch.malamalabs.com">launch.malamalabs.com</a>.</p>`),
+    }),
+  ])
+
   return NextResponse.json({ ok: true })
 }
 

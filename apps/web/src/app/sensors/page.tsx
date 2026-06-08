@@ -3,6 +3,14 @@ import './sensors.css'
 import SensorsNavbar from '@/components/sensors/Navbar'
 import HeroSection from '@/components/sensors/HeroSection'
 import SpecTicker from '@/components/sensors/SpecTicker'
+import FeaturesSection from '@/components/sensors/FeaturesSection'
+import ProductShowcase from '@/components/sensors/ProductShowcase'
+import TechSection from '@/components/sensors/TechSection'
+import SpecsSection from '@/components/sensors/SpecsSection'
+import SystemSection from '@/components/sensors/SystemSection'
+import DeploymentMap from '@/components/sensors/DeploymentMap'
+import StatsSection from '@/components/sensors/StatsSection'
+import CTASection from '@/components/sensors/CTASection'
 import SensorsFooter from '@/components/sensors/Footer'
 
 export const metadata: Metadata = {
@@ -19,7 +27,14 @@ export default function SensorsPage() {
       <SensorsNavbar />
       <HeroSection />
       <SpecTicker />
-      {/* Body sections (Features, ProductShowcase, Tech, Specs, System, DeploymentMap, Stats, CTA) ported next. */}
+      <FeaturesSection />
+      <ProductShowcase />
+      <TechSection />
+      <SpecsSection />
+      <SystemSection />
+      <DeploymentMap />
+      <StatsSection />
+      <CTASection />
       <SensorsFooter />
     </div>
   )

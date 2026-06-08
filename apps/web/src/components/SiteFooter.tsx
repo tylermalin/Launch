@@ -9,6 +9,7 @@ const footerSections: { title: string; links: { href: string; label: string; ext
     title: 'Product',
     links: [
       { href: '/presale',  label: 'Reserve a node' },
+      { href: '/sensors',  label: 'Sensor Systems' },
       { href: '/explorer', label: 'Hex Map Explorer' },
       { href: '/timeline', label: 'Timeline' },
       { href: '/partners', label: 'Become a partner' },

@@ -14,16 +14,32 @@ export default function CTASection() {
   const [form, setForm] = useState({ name: '', email: '', org: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const [sending, setSending] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!form.name || !form.email) {
       setError('Please fill in your name and email.')
       return
     }
     setError('')
-    setSubmitted(true)
-    // TODO: wire to a real lead endpoint (e.g. /api/sensors/quote) — currently a no-op confirmation.
+    setSending(true)
+    try {
+      const res = await fetch('/api/sensors/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Something went wrong')
+      }
+      setSubmitted(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not send — please try again')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -80,8 +96,8 @@ export default function CTASection() {
                     onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')} />
                 </div>
                 {error && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.8rem', color: '#ff6b6b' }}>{error}</div>}
-                <button type="submit" className="btn-malama btn-malama-solid" style={{ width: '100%', justifyContent: 'center', gap: '0.5rem' }}>
-                  <Send size={16} />Send Message
+                <button type="submit" disabled={sending} className="btn-malama btn-malama-solid" style={{ width: '100%', justifyContent: 'center', gap: '0.5rem', opacity: sending ? 0.6 : 1 }}>
+                  <Send size={16} />{sending ? 'Sending…' : 'Send Message'}
                 </button>
               </form>
             )}

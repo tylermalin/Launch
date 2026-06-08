@@ -98,6 +98,41 @@ const K = {
   clicks: (kolId: string) => `kol:clicks:${kolId}`,
   payoutAttempt: (id: string) => `kol:payout:${id}`,
   payoutAttemptsAll: 'kol:payouts:all',
+  emailLog: (kolId: string) => `kol:emails:${kolId}`,
+  emailEvent: (id: string) => `kol:email:${id}`,
+}
+
+// ── Outreach email tracking ──────────────────────────────────────────────────
+
+export type SentEmail = {
+  id: string
+  kolId: string
+  to: string
+  subject: string
+  templateId?: string
+  templateLabel?: string
+  sentBy?: string
+  sentAt: number
+}
+
+/** Record an outreach email sent to a partner (for the audit + dashboard count). */
+export async function recordKOLEmail(
+  kolId: string,
+  e: { to: string; subject: string; templateId?: string; templateLabel?: string; sentBy?: string },
+): Promise<SentEmail> {
+  const event: SentEmail = { id: randomUUID(), kolId, sentAt: Date.now(), ...e }
+  await kv.set(K.emailEvent(event.id), event)
+  await kv.sadd(K.emailLog(kolId), event.id)
+  return event
+}
+
+export async function getKOLEmails(kolId: string): Promise<SentEmail[]> {
+  const ids = await kv.smembers(K.emailLog(kolId))
+  if (!ids.length) return []
+  const results = await Promise.all(
+    ids.map((id) => kv.get<SentEmail>(K.emailEvent(id)).catch(() => null)),
+  )
+  return (results.filter(Boolean) as SentEmail[]).sort((a, b) => b.sentAt - a.sentAt)
 }
 
 // ── Partner CRUD ─────────────────────────────────────────────────────────────
@@ -303,10 +338,11 @@ export async function getKOLClickCount(kolId: string): Promise<number> {
 // ── Aggregated stats ─────────────────────────────────────────────────────────
 
 export async function getKOLStats(kolId: string) {
-  const [partner, commissions, clicks] = await Promise.all([
+  const [partner, commissions, clicks, emails] = await Promise.all([
     getKOL(kolId),
     getKOLCommissions(kolId),
     getKOLClickCount(kolId),
+    getKOLEmails(kolId).catch(() => []),
   ])
   if (!partner) return null
 
@@ -326,6 +362,8 @@ export async function getKOLStats(kolId: string) {
     pendingEarned,
     paidEarned,
     commissions,
+    emailsSent: emails.length,
+    lastEmailAt: emails[0]?.sentAt,
   }
 }
 

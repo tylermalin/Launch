@@ -33,6 +33,8 @@ interface KOLStats {
   totalEarned: number;
   pendingEarned: number;
   paidEarned: number;
+  emailsSent?: number;
+  lastEmailAt?: number;
 }
 
 interface PartnerWithStats extends KOLPartner {
@@ -665,13 +667,34 @@ function PartnerDrawer({
   copiedId: string | null;
 }) {
   const [selectedTpl, setSelectedTpl] = useState<CopyTemplate | null>(null);
+  const [sendingTpl, setSendingTpl] = useState<string | null>(null);
+  const [sendMsg, setSendMsg] = useState<string | null>(null);
+  const [sentCount, setSentCount] = useState(partner.stats?.emailsSent ?? 0);
   const url = referralUrl(partner.id);
 
-  const fillTemplate = (tpl: CopyTemplate) =>
-    tpl.body
-      .replace(/\[NAME\]/g, partner.displayName)
-      .replace(/\[REFERRAL_URL\]/g, url)
-      .replace(/\[COMMISSION\]/g, commissionLabel(partner.commissionBps));
+  const fill = (s: string) =>
+    s.replace(/\[NAME\]/g, partner.displayName).replace(/\[REFERRAL_URL\]/g, url).replace(/\[COMMISSION\]/g, commissionLabel(partner.commissionBps));
+  const fillTemplate = (tpl: CopyTemplate) => fill(tpl.body);
+  const fillSubject = (tpl: CopyTemplate) => fill(tpl.subject ?? `Mālama Labs — ${tpl.label}`);
+
+  async function sendTemplate(tpl: CopyTemplate) {
+    if (!partner.email) { setSendMsg('✕ This partner has no email on file'); return; }
+    setSendingTpl(tpl.id); setSendMsg(null);
+    try {
+      const res = await fetch('/api/admin/partners-proxy', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'send-email', to: partner.email, subject: fillSubject(tpl), body: fillTemplate(tpl), partnerId: partner.id, templateId: tpl.id, templateLabel: tpl.label }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Send failed');
+      setSendMsg(`✓ Sent “${tpl.label}” to ${partner.email}`);
+      setSentCount((n) => n + 1);
+    } catch (e) {
+      setSendMsg('✕ ' + (e instanceof Error ? e.message : 'Send failed'));
+    } finally {
+      setSendingTpl(null);
+    }
+  }
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 50, display: 'flex', justifyContent: 'flex-end' }}
@@ -716,7 +739,7 @@ function PartnerDrawer({
 
         {/* Message / copy composer */}
         <p style={{ color: '#555', fontSize: 11, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
-          Outreach Templates
+          Outreach Templates — click one, then Send{sentCount > 0 && <span style={{ color: '#7a9a4a' }}> · ✉ {sentCount} sent</span>}
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
           {templates.map((t) => (
@@ -749,15 +772,27 @@ function PartnerDrawer({
             <pre style={{ color: '#c8c8c8', fontSize: 12, whiteSpace: 'pre-wrap', lineHeight: 1.6, margin: '0 0 12px' }}>
               {fillTemplate(selectedTpl)}
             </pre>
-            <button
-              onClick={() => onCopy(
-                `${selectedTpl.subject ? `Subject: ${selectedTpl.subject.replace('[NAME]', partner.displayName)}\n\n` : ''}${fillTemplate(selectedTpl)}`,
-                `composed-${partner.id}-${selectedTpl.id}`
-              )}
-              style={styles.ctaBtn}
-            >
-              {copiedId === `composed-${partner.id}-${selectedTpl.id}` ? '✓ Copied to clipboard' : 'Copy personalised message'}
-            </button>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <button
+                onClick={() => sendTemplate(selectedTpl)}
+                disabled={!partner.email || sendingTpl === selectedTpl.id}
+                style={{ ...styles.ctaBtn, opacity: !partner.email || sendingTpl === selectedTpl.id ? 0.5 : 1 }}
+              >
+                {sendingTpl === selectedTpl.id ? 'Sending…' : partner.email ? `✉ Send to ${partner.email}` : 'No email on file'}
+              </button>
+              <button
+                onClick={() => onCopy(
+                  `${selectedTpl.subject ? `Subject: ${fillSubject(selectedTpl)}\n\n` : ''}${fillTemplate(selectedTpl)}`,
+                  `composed-${partner.id}-${selectedTpl.id}`,
+                )}
+                style={styles.chipBtn}
+              >
+                {copiedId === `composed-${partner.id}-${selectedTpl.id}` ? '✓ Copied' : 'Copy'}
+              </button>
+            </div>
+            {sendMsg && (
+              <p style={{ marginTop: 10, fontSize: 12, fontFamily: 'monospace', color: sendMsg.startsWith('✕') ? '#f87171' : '#c4f061' }}>{sendMsg}</p>
+            )}
           </div>
         )}
       </div>

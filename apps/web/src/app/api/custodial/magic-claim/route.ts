@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { issueClaim, bindEvmTokenToClaim, updateClaimTxHash } from '@/lib/genesis-claim-registry'
+import { issueClaim, bindEvmTokenToClaim, updateClaimTxHash, releaseClaim } from '@/lib/genesis-claim-registry'
 import { adminMintToAddress, resolveTokenIdFromTx } from '@/lib/admin-genesis-mint'
 import type { CustodialRecord } from '@/lib/custodial-store'
 import {
@@ -16,6 +16,8 @@ import { resolvePendingMagicPurchase } from '@/lib/resolve-pending-magic'
 export const runtime = 'nodejs'
 
 export async function POST(req: Request) {
+  // Track a reservation so a failed mint can release it (else retries 409 forever).
+  let reservedHexId: string | null = null
   try {
     const body = (await req.json()) as {
       didToken?: string
@@ -78,6 +80,7 @@ export async function POST(req: Request) {
     }
 
     const claimId = reserved.claim.claimId
+    reservedHexId = pending.hexId
 
     // Broadcast the mint. Returns on tx hash; tokenId unknown until receipt.
     const { txHash } = await adminMintToAddress({
@@ -136,6 +139,12 @@ export async function POST(req: Request) {
     })
   } catch (e) {
     console.error('[magic-claim]', e)
+    // Free the reservation so the buyer can retry. releaseClaim self-guards and
+    // refuses to release a hex that actually minted (txHash/tokenId present).
+    if (reservedHexId) {
+      const r = await releaseClaim(reservedHexId).catch(() => null)
+      if (r && !r.ok) console.warn('[magic-claim] reservation kept (already minted):', reservedHexId)
+    }
     const msg = e instanceof Error ? e.message : 'Claim failed'
     return NextResponse.json({ error: msg }, { status: 502 })
   }

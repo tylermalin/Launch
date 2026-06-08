@@ -4,14 +4,19 @@ import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { base, baseSepolia } from "wagmi/chains";
-import { injected, coinbaseWallet } from "wagmi/connectors";
+import { injected } from "wagmi/connectors";
 
 // Both chains stay supported; transports prefer configured RPCs (public defaults
 // are rate-limited). The active network is governed by lib/evm-network.ts and the
 // mint components, which switch the wallet to the right chain explicitly.
+//
+// Connectors: injected() + wagmi's EIP-6963 auto-discovery surface MetaMask AND the
+// Coinbase Wallet extension. The standalone coinbaseWallet (Smart Wallet) connector
+// was removed — it routed through chain-proxy.wallet.coinbase.com (400s + WalletLink
+// noise) and isn't needed for extension users. Re-add it if passkey Smart Wallet is wanted.
 const wagmiConfig = createConfig({
   chains: [base, baseSepolia],
-  connectors: [injected(), coinbaseWallet({ appName: "Mālama Labs" })],
+  connectors: [injected()],
   transports: {
     [base.id]: http(process.env.NEXT_PUBLIC_BASE_RPC_URL?.trim() || undefined),
     [baseSepolia.id]: http(process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL?.trim() || undefined),

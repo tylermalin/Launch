@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useWallet as useCardanoWallet } from '@meshsdk/react'
 import {
@@ -111,6 +111,11 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
   const [cardEmail, setCardEmail]   = useState('')
   const [mmImportOpen, setMmImportOpen] = useState(false)
   const [mmCopied, setMmCopied]     = useState<'address' | 'tokenId' | null>(null)
+  // Synchronous re-entrancy lock for the pay flow. React's `loading` state is
+  // async, so a rapid double-trigger (or wallet re-fire) can slip through before
+  // it commits — that's what spams /api/nft/claim with repeated 409s. A ref flips
+  // immediately and blocks any concurrent run.
+  const payInFlightRef = useRef(false)
 
   const legalComplete = allLegalAcknowledged(legalAck)
 
@@ -468,6 +473,8 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
 
   // ── Main payment dispatcher ───────────────────────────────────────────────
   const handlePayment = async () => {
+    if (payInFlightRef.current) return // re-entrancy guard — blocks duplicate claim POSTs / 409 spam
+    payInFlightRef.current = true
     setLoading(true)
     setError('')
     try {
@@ -479,6 +486,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
     } catch (err: any) {
       setError(err.message ?? 'Payment failed. Please try again')
     } finally {
+      payInFlightRef.current = false
       setLoading(false)
       setEvmTxStatus('')
     }

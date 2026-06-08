@@ -499,11 +499,46 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="w-full max-w-4xl mx-auto bg-malama-card border border-gray-800 rounded-3xl shadow-2xl overflow-hidden my-12">
-      {/* Progress: 1 Locate HEX · 2 Crypto/Card · 3 Review · 4 Pay · 5 Done */}
-      <div className="flex border-b border-gray-800 bg-gray-900/50">
-        {[1, 2, 3, 4, 5].map((s) => (
-          <div key={s} className={`flex-1 h-2 transition-colors duration-300 ${s <= step ? 'bg-malama-accent' : 'bg-transparent'}`} />
-        ))}
+      {/* Progress stepper — bound to the live wizard step (1..5). */}
+      <div className="flex items-center border-b border-gray-800 bg-gray-900/50 px-4 py-4 sm:px-8">
+        {[
+          { n: 1, label: 'Locate Hex' },
+          { n: 2, label: 'Crypto or Card' },
+          { n: 3, label: 'Review' },
+          { n: 4, label: 'Pay' },
+          { n: 5, label: 'Reserved' },
+        ].map((it, i) => {
+          const done = it.n < step
+          const current = it.n === step
+          return (
+            <React.Fragment key={it.n}>
+              <div className="flex shrink-0 items-center gap-2">
+                <div
+                  aria-current={current ? 'step' : undefined}
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-black transition-colors duration-300 ${
+                    current
+                      ? 'bg-malama-accent text-black shadow-[0_0_12px_rgba(196,240,97,0.5)]'
+                      : done
+                        ? 'border border-malama-accent/40 bg-malama-accent/20 text-malama-accent'
+                        : 'border border-gray-700 bg-gray-800 text-gray-500'
+                  }`}
+                >
+                  {done ? '✓' : it.n}
+                </div>
+                <span
+                  className={`hidden text-[11px] font-bold uppercase tracking-wider transition-colors duration-300 sm:inline ${
+                    current ? 'text-malama-accent' : done ? 'text-gray-300' : 'text-gray-600'
+                  }`}
+                >
+                  {it.label}
+                </span>
+              </div>
+              {i < 4 && (
+                <div className={`mx-2 h-px flex-1 transition-colors duration-300 ${it.n < step ? 'bg-malama-accent/40' : 'bg-gray-800'}`} />
+              )}
+            </React.Fragment>
+          )
+        })}
       </div>
 
       <div className="p-8 md:p-12 min-h-[500px] relative flex flex-col justify-center text-left">

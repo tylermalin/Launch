@@ -145,8 +145,19 @@ export async function updateKOL(
 export async function listKOLs(): Promise<KOLPartner[]> {
   const ids = await kv.smembers(K.partnerIndex)
   if (!ids.length) return []
-  const results = await Promise.all(ids.map((id) => kv.get<KOLPartner>(K.partner(id))))
-  return (results.filter(Boolean) as KOLPartner[]).sort((a, b) => b.createdAt - a.createdAt)
+  // Resilient: a single failed/slow read must not reject the whole list (which
+  // would 500 the admin registry and make every partner appear to vanish).
+  const results = await Promise.all(
+    ids.map((id) =>
+      kv.get<KOLPartner>(K.partner(id)).catch((e) => {
+        console.error('[kol] partner read failed for', id, e)
+        return null
+      }),
+    ),
+  )
+  return (results.filter(Boolean) as KOLPartner[]).sort(
+    (a, b) => Number(b.createdAt ?? 0) - Number(a.createdAt ?? 0),
+  )
 }
 
 // ── Commissions ──────────────────────────────────────────────────────────────

@@ -323,6 +323,21 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
     }
     const { claimId, editionNumber } = claimData as { claimId: string; editionNumber: number }
 
+    // Resilient confirmation wait. Public RPCs (sepolia.base.org / mainnet.base.org)
+    // rate-limit aggressively, so waitForTransactionReceipt can time out even when
+    // the tx confirmed on-chain. On timeout we re-fetch the receipt directly before
+    // failing — and only surface an error (with the explorer link) if it truly isn't
+    // mined yet. Set NEXT_PUBLIC_BASE[_SEPOLIA]_RPC_URL to a dedicated RPC to avoid this.
+    const waitForTx = async (hash: `0x${string}`) => {
+      try {
+        return await publicClient.waitForTransactionReceipt({ hash, confirmations: 1, timeout: 180_000, pollingInterval: 4_000 })
+      } catch {
+        const r = await publicClient.getTransactionReceipt({ hash }).catch(() => null)
+        if (r) return r
+        throw new Error(`Transaction submitted but confirmation is taking longer than expected. It may still succeed — check ${getExplorerTxUrl(hash)} and your dashboard before retrying.`)
+      }
+    }
+
     // 2. USDC approve
     setEvmTxStatus('approving')
     let approveHash: `0x${string}`
@@ -336,7 +351,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
     } catch (e: any) {
       throw new Error('USDC approval rejected. Please approve in your wallet')
     }
-    await publicClient.waitForTransactionReceipt({ hash: approveHash })
+    await waitForTx(approveHash)
 
     // 3. Mint NFT
     setEvmTxStatus('minting')
@@ -351,7 +366,7 @@ export default function GenesisMint({ hexId }: { hexId: string | null }) {
     } catch (e: any) {
       throw new Error('Mint transaction rejected or hex already taken on-chain')
     }
-    const receipt = await publicClient.waitForTransactionReceipt({ hash: mintHash })
+    const receipt = await waitForTx(mintHash)
 
     // 4. Extract tokenId from NodeSecured event
     let evmTokenId = editionNumber

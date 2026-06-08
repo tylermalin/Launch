@@ -23,6 +23,7 @@
   "author": "Mālama Labs",
   "license": "UNLICENSED",
   "devDependencies": {
+    "@turf/turf": "^7.3.5",
     "vercel": "^51.2.1"
   }
 }

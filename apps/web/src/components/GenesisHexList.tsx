@@ -34,12 +34,17 @@ type ApiResponse = {
 const STATUS_STYLES: Record<GenesisHexListItem['status'], string> = {
   available: 'bg-malama-accent/20 text-malama-accent border-malama-accent/30',
   reserved: 'bg-gray-600/40 text-gray-300 border-gray-600/50',
+  'native-reserved': 'bg-amber-600/20 text-amber-300 border-amber-500/40',
 }
 
 const SOLD_BADGE =
   'bg-gray-700/50 text-gray-200 border-gray-500/60'
 
+const NATIVE_BADGE = 'bg-amber-600/20 text-amber-300 border-amber-500/40'
+
 function statusBadge(row: GenesisHexListItem): { label: string; className: string } {
+  // Native-reserved takes precedence over the generic SOLD badge.
+  if (row.isNativeReserved) return { label: 'Native · Tribes first', className: NATIVE_BADGE }
   if (row.sold) return { label: 'SOLD', className: SOLD_BADGE }
   return { label: row.status, className: STATUS_STYLES[row.status] }
 }

@@ -1,0 +1,150 @@
+{
+  "842806dffffffff": {
+    "name": "Coyote Valley Reservation",
+    "region": "west"
+  },
+  "8428317ffffffff": {
+    "name": "Guidiville Rancheria",
+    "region": "west"
+  },
+  "8428f37ffffffff": {
+    "name": "Nisqually Reservation",
+    "region": "west"
+  },
+  "8428d57ffffffff": {
+    "name": "Port Madison Reservation",
+    "region": "west"
+  },
+  "8428c21ffffffff": {
+    "name": "Hoh Indian Reservation",
+    "region": "west"
+  },
+  "8429abdffffffff": {
+    "name": "Big Sandy Rancheria",
+    "region": "west"
+  },
+  "8428f33ffffffff": {
+    "name": "Chehalis Reservation",
+    "region": "west"
+  },
+  "8428c29ffffffff": {
+    "name": "Quinault Reservation",
+    "region": "west"
+  },
+  "84464e1ffffffff": {
+    "name": "Anahola (Agricultural) Hawaiian Home Land",
+    "region": "pacific"
+  },
+  "845d115ffffffff": {
+    "name": "Panaewa (Agricultural) Hawaiian Home Land",
+    "region": "pacific"
+  },
+  "845d101ffffffff": {
+    "name": "Honokaia Hawaiian Home Land",
+    "region": "pacific"
+  },
+  "845d103ffffffff": {
+    "name": "Honomu Hawaiian Home Land",
+    "region": "pacific"
+  },
+  "845d107ffffffff": {
+    "name": "Keahuolu Hawaiian Home Land",
+    "region": "pacific"
+  },
+  "84269bdffffffff": {
+    "name": "Ute Mountain Reservation",
+    "region": "mountain"
+  },
+  "8448c25ffffffff": {
+    "name": "Mescalero Reservation",
+    "region": "mountain"
+  },
+  "8426163ffffffff": {
+    "name": "Pine Ridge Reservation",
+    "region": "mountain"
+  },
+  "842614dffffffff": {
+    "name": "Cheyenne River Reservation",
+    "region": "mountain"
+  },
+  "8426159ffffffff": {
+    "name": "Lower Brule Reservation",
+    "region": "mountain"
+  },
+  "84279d7ffffffff": {
+    "name": "Northern Cheyenne Indian Reservation",
+    "region": "mountain"
+  },
+  "8426995ffffffff": {
+    "name": "Southern Ute Reservation",
+    "region": "mountain"
+  },
+  "8448d8bffffffff": {
+    "name": "Santa Ana Pueblo",
+    "region": "mountain"
+  },
+  "8427417ffffffff": {
+    "name": "Little River Reservation",
+    "region": "midwest"
+  },
+  "8444ca9ffffffff": {
+    "name": "Qualla Boundary",
+    "region": "midwest"
+  },
+  "8427435ffffffff": {
+    "name": "Oneida (WI) Reservation",
+    "region": "midwest"
+  },
+  "842624dffffffff": {
+    "name": "White Earth Reservation",
+    "region": "midwest"
+  },
+  "84275ebffffffff": {
+    "name": "Ho-Chunk Nation Reservation",
+    "region": "midwest"
+  },
+  "842b1ebffffffff": {
+    "name": "Indian Township Reservation",
+    "region": "midwest"
+  },
+  "8427419ffffffff": {
+    "name": "Grand Traverse Reservation",
+    "region": "midwest"
+  },
+  "842a337ffffffff": {
+    "name": "Mohegan Reservation",
+    "region": "midwest"
+  },
+  "8444451ffffffff": {
+    "name": "Coushatta Reservation",
+    "region": "south"
+  },
+  "844441dffffffff": {
+    "name": "Tunica-Biloxi Reservation",
+    "region": "south"
+  },
+  "84441a1ffffffff": {
+    "name": "Tampa Reservation",
+    "region": "south"
+  },
+  "8444ac9ffffffff": {
+    "name": "Big Cypress Reservation",
+    "region": "south"
+  },
+  "8444135ffffffff": {
+    "name": "Immokalee Reservation",
+    "region": "south"
+  },
+  "8444ac3ffffffff": {
+    "name": "Brighton Reservation",
+    "region": "south"
+  },
+  "8426ee5ffffffff": {
+    "name": "Osage Reservation",
+    "region": "south"
+  },
+  "84445ebffffffff": {
+    "name": "Mississippi Choctaw Reservation",
+    "region": "south"
+  }
+}

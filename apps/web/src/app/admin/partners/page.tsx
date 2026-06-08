@@ -102,6 +102,47 @@ export default function AdminPartnersPage() {
   const [amplifySaving, setAmplifySaving] = useState(false);
   const [amplifyMsg, setAmplifyMsg] = useState<string | null>(null);
 
+  // Send onboarding email (Resend)
+  const [emailTo, setEmailTo] = useState('');
+  const [emailName, setEmailName] = useState('');
+  const [emailRef, setEmailRef] = useState('');
+  const [emailCommission, setEmailCommission] = useState(10);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [emailBusy, setEmailBusy] = useState(false);
+  const [emailMsg, setEmailMsg] = useState<string | null>(null);
+
+  function pickEmailPartner(id: string) {
+    const p = partners.find((x) => x.id === id);
+    if (!p) return;
+    setEmailName(p.displayName);
+    setEmailTo(p.email ?? '');
+    setEmailRef(p.referralUrls?.base ?? referralUrl(p.id));
+    setEmailCommission((p.commissionBps ?? 1000) / 100);
+  }
+  function applyEmailTemplate(tpl: CopyTemplate | undefined) {
+    if (!tpl) return;
+    const fill = (s: string) =>
+      s.replaceAll('[NAME]', emailName || 'there').replaceAll('[REFERRAL_URL]', emailRef || '').replaceAll('[COMMISSION]', String(emailCommission));
+    setEmailSubject(fill(tpl.subject ?? ''));
+    setEmailBody(fill(tpl.body));
+  }
+  async function sendOnboardingEmail() {
+    if (!emailTo || !emailSubject || !emailBody) { setEmailMsg('✕ Recipient, subject, and body are required'); return; }
+    setEmailBusy(true); setEmailMsg(null);
+    try {
+      const res = await fetch('/api/admin/partners-proxy', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'send-email', to: emailTo, subject: emailSubject, body: emailBody }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Send failed');
+      setEmailMsg('✓ Sent to ' + emailTo);
+    } catch (e) {
+      setEmailMsg('✕ ' + (e instanceof Error ? e.message : 'Send failed'));
+    } finally { setEmailBusy(false); }
+  }
+
   const loadPayouts = () =>
     fetch('/api/admin/partners-proxy?action=payouts')
       .then((r) => r.json())
@@ -416,6 +457,41 @@ export default function AdminPartnersPage() {
               {amplifyMsg}
             </span>
           )}
+        </div>
+      </Section>
+
+      {/* ── Send onboarding email (Resend) ── */}
+      <Section title="Send Onboarding Email">
+        <p style={{ color: '#666', fontSize: 13, margin: '0 0 14px' }}>
+          Pick a partner (auto-fills their link + commission) or type any recipient, apply a template, tweak the copy, and send via Resend.
+        </p>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
+          <select onChange={(e) => pickEmailPartner(e.target.value)} defaultValue=""
+            style={{ background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '8px 10px', color: '#e8e8e8', fontSize: 13, minWidth: 220 }}>
+            <option value="" disabled>Select partner…</option>
+            {partners.map((p) => <option key={p.id} value={p.id}>{p.displayName}{p.email ? ` · ${p.email}` : ' · (no email)'}</option>)}
+          </select>
+          <select onChange={(e) => applyEmailTemplate(templates.find((t) => t.id === e.target.value))} defaultValue=""
+            style={{ background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '8px 10px', color: '#e8e8e8', fontSize: 13, minWidth: 220 }}>
+            <option value="" disabled>Apply template…</option>
+            {templates.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+          </select>
+        </div>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 10 }}>
+          <input value={emailTo} onChange={(e) => setEmailTo(e.target.value)} placeholder="recipient@email.com"
+            style={{ flex: 1, minWidth: 240, background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '8px 10px', color: '#e8e8e8', fontSize: 13 }} />
+          <input value={emailName} onChange={(e) => setEmailName(e.target.value)} placeholder="Recipient name"
+            style={{ minWidth: 160, background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '8px 10px', color: '#e8e8e8', fontSize: 13 }} />
+        </div>
+        <input value={emailSubject} onChange={(e) => setEmailSubject(e.target.value)} placeholder="Subject"
+          style={{ width: '100%', background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '8px 10px', color: '#e8e8e8', fontSize: 13, marginBottom: 10 }} />
+        <textarea rows={10} value={emailBody} onChange={(e) => setEmailBody(e.target.value)} placeholder="Email body… ([NAME], [REFERRAL_URL], [COMMISSION] are filled when you apply a template)"
+          style={{ width: '100%', background: '#0d0d0d', border: '1px solid #222', borderRadius: 6, padding: '10px 12px', color: '#e8e8e8', fontSize: 13, fontFamily: 'inherit', resize: 'vertical', marginBottom: 10 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <button onClick={sendOnboardingEmail} disabled={emailBusy} style={{ ...styles.ctaBtn, opacity: emailBusy ? 0.5 : 1 }}>
+            {emailBusy ? 'Sending…' : 'Send email'}
+          </button>
+          {emailMsg && <span style={{ color: emailMsg.startsWith('✕') ? '#f87171' : '#c4f061', fontSize: 13, fontFamily: 'monospace' }}>{emailMsg}</span>}
         </div>
       </Section>
 

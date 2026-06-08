@@ -17,7 +17,7 @@ export default function TechSection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="reveal" style={{ marginBottom: '5rem' }}>
           <div className="section-label" style={{ marginBottom: '1rem' }}>Engineering</div>
-          <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3.5rem)', letterSpacing: '-0.03em', color: '#f5f5f5', lineHeight: 1.1, maxWidth: '600px' }}>
+          <h2 style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontWeight: 800, fontSize: 'clamp(2rem, 4vw, 3.5rem)', letterSpacing: '-0.03em', color: '#f5f5f5', lineHeight: 1.1, maxWidth: '600px' }}>
             Precision engineering<br />at every layer.
           </h2>
         </div>
@@ -28,10 +28,10 @@ export default function TechSection() {
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.3) 50%, rgba(10,10,10,0.1) 100%)' }} />
           <div style={{ position: 'absolute', top: '50%', left: '3rem', transform: 'translateY(-50%)', maxWidth: '420px' }}>
             <div className="section-label" style={{ marginBottom: '0.75rem' }}>Mālama 200 Genesis</div>
-            <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', color: '#f5f5f5', letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: '1rem' }}>
+            <h3 style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontWeight: 800, fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', color: '#f5f5f5', letterSpacing: '-0.03em', lineHeight: 1.15, marginBottom: '1rem' }}>
               Engineered for<br /><span className="text-gradient-green">perpetual power.</span>
             </h3>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.95rem', color: 'rgba(245,245,245,0.65)', lineHeight: 1.65 }}>
+            <p style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontSize: '0.95rem', color: 'rgba(245,245,245,0.65)', lineHeight: 1.65 }}>
               High-efficiency monocrystalline solar cells with precision-machined aluminum frame. The Mālama 200 Genesis delivers reliable charging even in low-light conditions.
             </p>
           </div>
@@ -46,8 +46,8 @@ export default function TechSection() {
               <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(139,255,71,0.08)', border: '1px solid rgba(139,255,71,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8bff47', marginBottom: '1.25rem' }}>
                 {point.icon}
               </div>
-              <h4 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: '1rem', color: '#f5f5f5', marginBottom: '0.6rem', letterSpacing: '-0.02em' }}>{point.title}</h4>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.875rem', lineHeight: 1.65, color: 'rgba(245,245,245,0.55)' }}>{point.desc}</p>
+              <h4 style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontWeight: 700, fontSize: '1rem', color: '#f5f5f5', marginBottom: '0.6rem', letterSpacing: '-0.02em' }}>{point.title}</h4>
+              <p style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontSize: '0.875rem', lineHeight: 1.65, color: 'rgba(245,245,245,0.55)' }}>{point.desc}</p>
             </div>
           ))}
         </div>

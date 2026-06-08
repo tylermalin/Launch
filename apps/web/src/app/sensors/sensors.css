@@ -4,7 +4,6 @@
  * Components use inline styles + these custom classes + the two fonts below.
  * Scoped: only loaded by the /sensors route.
  */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* ── Keyframes ── */
 @keyframes sensors-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
@@ -26,7 +25,7 @@
 .btn-malama {
   display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 2rem;
   border: 1.5px solid #8bff47; color: #8bff47; background: transparent;
-  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem;
+  font-family: var(--font-inter-tight), system-ui, sans-serif; font-weight: 600; font-size: 0.9rem;
   letter-spacing: 0.04em; border-radius: 4px; cursor: pointer; text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
@@ -46,14 +45,14 @@
 }
 .spec-card:hover { border-color: rgba(139,255,71,0.25); transform: translateY(-2px); }
 
-.mono-data { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #8bff47; letter-spacing: 0.05em; }
-.section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #8bff47; }
+.mono-data { font-family: var(--font-jetbrains), monospace; font-size: 0.8rem; color: #8bff47; letter-spacing: 0.05em; }
+.section-label { font-family: var(--font-jetbrains), monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #8bff47; }
 .product-float { animation: sensors-float 5s ease-in-out infinite; }
 .led-dot { width: 8px; height: 8px; border-radius: 50%; background: #8bff47; animation: sensors-ledPulse 2s ease-in-out infinite; }
 .text-gradient-green { background: linear-gradient(135deg, #8bff47 0%, #5dcc2a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .bg-surface { background-color: #141414; }
 .bg-surface-2 { background-color: #1c1c1e; }
-.stat-number { font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1; color: #f5f5f5; }
+.stat-number { font-family: var(--font-inter-tight), system-ui, sans-serif; font-weight: 700; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1; color: #f5f5f5; }
 .img-overlay-bottom { background: linear-gradient(to top, #0a0a0a 0%, transparent 50%); }
 .ticker-track { animation: sensors-ticker 30s linear infinite; }
 

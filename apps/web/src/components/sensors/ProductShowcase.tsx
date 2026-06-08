@@ -42,12 +42,12 @@ export default function ProductShowcase() {
               </div>
               <div className="reveal reveal-delay-2" style={{ direction: 'ltr' }}>
                 <div className="section-label" style={{ marginBottom: '1rem' }}>{product.label}</div>
-                <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', letterSpacing: '-0.03em', color: '#f5f5f5', lineHeight: 1.1, marginBottom: '0.5rem' }}>{product.title}</h2>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '1.1rem', fontWeight: 500, color: '#8bff47', marginBottom: '1.25rem', letterSpacing: '-0.01em' }}>{product.subtitle}</p>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.95rem', lineHeight: 1.7, color: 'rgba(245,245,245,0.6)', marginBottom: '2rem' }}>{product.description}</p>
+                <h2 style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontWeight: 800, fontSize: 'clamp(1.8rem, 3.5vw, 3rem)', letterSpacing: '-0.03em', color: '#f5f5f5', lineHeight: 1.1, marginBottom: '0.5rem' }}>{product.title}</h2>
+                <p style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontSize: '1.1rem', fontWeight: 500, color: '#8bff47', marginBottom: '1.25rem', letterSpacing: '-0.01em' }}>{product.subtitle}</p>
+                <p style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontSize: '0.95rem', lineHeight: 1.7, color: 'rgba(245,245,245,0.6)', marginBottom: '2rem' }}>{product.description}</p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0' }}>
                   {product.features.map((feat, i) => (
-                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', padding: '0.6rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)', fontFamily: "'DM Sans', sans-serif", fontSize: '0.9rem', color: 'rgba(245,245,245,0.75)' }}>
+                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', padding: '0.6rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)', fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontSize: '0.9rem', color: 'rgba(245,245,245,0.75)' }}>
                       <CheckCircle2 size={16} style={{ color: '#8bff47', flexShrink: 0, marginTop: '2px' }} />{feat}
                     </li>
                   ))}

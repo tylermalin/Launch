@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ArrowRight, Zap, Wifi, Sun } from 'lucide-react'
+import { ArrowRight, TrendingUp, ShieldCheck, Leaf } from 'lucide-react'
 
 export default function HeroSection() {
   const [loaded, setLoaded] = useState(false)
@@ -25,19 +25,21 @@ export default function HeroSection() {
         <div className="sensors-hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
           {/* Left: text */}
           <div style={{ opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 0.9s cubic-bezier(0.23,1,0.32,1), transform 0.9s cubic-bezier(0.23,1,0.32,1)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-              <div className="led-dot" />
-              <span className="section-label">Mālama Sensor System</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.3rem 0.75rem', borderRadius: '100px', background: 'rgba(139,255,71,0.08)', border: '1px solid rgba(139,255,71,0.25)' }}>
+                <span className="led-dot" style={{ width: '6px', height: '6px' }} />
+                <span className="section-label">Sensors · In Development</span>
+              </span>
             </div>
-            <h1 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', lineHeight: 1.05, letterSpacing: '-0.03em', color: '#f5f5f5', marginBottom: '1.5rem' }}>
-              Intelligence<br /><span className="text-gradient-green">Rooted</span> in<br />the Field.
+            <h1 style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontWeight: 800, fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', lineHeight: 1.05, letterSpacing: '-0.03em', color: '#f5f5f5', marginBottom: '1.5rem' }}>
+              Ground truth,<br /><span className="text-gradient-green">signed</span> at<br />the source.
             </h1>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '1.15rem', fontWeight: 400, lineHeight: 1.65, color: 'rgba(245,245,245,0.6)', maxWidth: '480px', marginBottom: '2.5rem', opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.9s 0.15s cubic-bezier(0.23,1,0.32,1), transform 0.9s 0.15s cubic-bezier(0.23,1,0.32,1)' }}>
-              Solar-powered environmental monitoring with dual-radio connectivity. Soil, atmosphere, and remote sensing — built for the harshest conditions.
+            <p style={{ fontFamily: "var(--font-inter-tight), system-ui, sans-serif", fontSize: '1.15rem', fontWeight: 400, lineHeight: 1.65, color: 'rgba(245,245,245,0.6)', maxWidth: '480px', marginBottom: '2.5rem', opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.9s 0.15s cubic-bezier(0.23,1,0.32,1), transform 0.9s 0.15s cubic-bezier(0.23,1,0.32,1)' }}>
+              Hardware-signed environmental sensors — in active development — built to settle real-world outcomes. Tamper-evident field data for prediction-market settlement, parametric insurance triggers, and climate verification.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '2.5rem', opacity: loaded ? 1 : 0, transition: 'opacity 0.9s 0.25s cubic-bezier(0.23,1,0.32,1)' }}>
-              {[{ icon: <Wifi size={13} />, label: 'LoRa + NB-IoT' }, { icon: <Sun size={13} />, label: 'Solar Powered' }, { icon: <Zap size={13} />, label: 'Real-Time Data' }].map((b) => (
-                <div key={b.label} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.35rem 0.85rem', background: 'rgba(139,255,71,0.07)', border: '1px solid rgba(139,255,71,0.2)', borderRadius: '100px', fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', color: '#8bff47', letterSpacing: '0.04em' }}>
+              {[{ icon: <TrendingUp size={13} />, label: 'Prediction Markets' }, { icon: <ShieldCheck size={13} />, label: 'Parametric Insurance' }, { icon: <Leaf size={13} />, label: 'Climate Settlement' }].map((b) => (
+                <div key={b.label} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.35rem 0.85rem', background: 'rgba(139,255,71,0.07)', border: '1px solid rgba(139,255,71,0.2)', borderRadius: '100px', fontFamily: "var(--font-jetbrains), monospace", fontSize: '0.72rem', color: '#8bff47', letterSpacing: '0.04em' }}>
                   {b.icon}{b.label}
                 </div>
               ))}

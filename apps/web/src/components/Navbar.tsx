@@ -8,13 +8,17 @@ import { useWallet } from '@meshsdk/react'
 
 type SessionData = { auth: 'email' | null; email?: string | null }
 
-const topNavLinks = [
-  { href: '/presale',   label: 'Reserve',   active: (p: string) => p.startsWith('/presale') },
-  { href: '/docs',      label: 'Docs',      active: (p: string) => p.startsWith('/docs') || p === '/whitepaper' },
-  { href: '/timeline',  label: 'Timeline',  active: (p: string) => p.startsWith('/timeline') },
-  { href: '/explorer',  label: 'Explorer',  active: (p: string) => p === '/explorer' || p.startsWith('/explorer/') },
-  { href: '/data-solutions', label: 'Data', active: (p: string) => p.startsWith('/data-solutions') },
-  { href: '/partners',  label: 'Partners',  active: (p: string) => p.startsWith('/partners') },
+// Top nav: 5 primary items. Secondary items live in the mobile menu + footer.
+const primaryNavLinks = [
+  { href: '/sensors',        label: 'Sensors',     active: (p: string) => p.startsWith('/sensors'), authOnly: false },
+  { href: '/presale',        label: 'Reserve',     active: (p: string) => p.startsWith('/presale'), authOnly: false },
+  { href: '/explorer',       label: 'Explore',     active: (p: string) => p === '/explorer' || p.startsWith('/explorer/'), authOnly: false },
+  { href: '/docs',           label: 'Docs',        active: (p: string) => p.startsWith('/docs') || p === '/whitepaper', authOnly: false },
+  { href: '/data-solutions', label: 'Data Buyers', active: (p: string) => p.startsWith('/data-solutions'), authOnly: false },
+]
+const secondaryNavLinks = [
+  { href: '/timeline',  label: 'Timeline',  active: (p: string) => p.startsWith('/timeline'), authOnly: false },
+  { href: '/partners',  label: 'Partners',  active: (p: string) => p.startsWith('/partners'), authOnly: false },
   { href: '/dashboard', label: 'Dashboard', active: (p: string) => p.startsWith('/dashboard'), authOnly: true },
 ]
 
@@ -45,6 +49,7 @@ export default function Navbar() {
   // undefined = not yet resolved (avoids flash)
   const [session, setSession] = useState<SessionData | undefined>(undefined)
   const [signingOut, setSigningOut] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const fetchSession = useCallback(() => {
     fetch('/api/auth/session', { cache: 'no-store' })
@@ -53,8 +58,8 @@ export default function Navbar() {
       .catch(() => setSession({ auth: null }))
   }, [])
 
-  // Re-fetch on mount and whenever the route changes
-  useEffect(() => { fetchSession() }, [fetchSession, pathname])
+  // Re-fetch on mount and whenever the route changes; close the mobile menu on nav.
+  useEffect(() => { fetchSession(); setMenuOpen(false) }, [fetchSession, pathname])
 
   // Re-fetch whenever any part of the app signals an auth state change
   useEffect(() => {
@@ -128,10 +133,9 @@ export default function Navbar() {
         {/* ── Right side ── */}
         <div className="flex min-w-0 items-center justify-end gap-0.5 sm:gap-2">
 
-          {/* Nav links */}
-          {topNavLinks
-            .filter(({ authOnly }) => !authOnly || isAuthed)
-            .map(({ href, label, active }) => (
+          {/* Desktop nav links (5 primary) — hidden on mobile, replaced by the hamburger */}
+          <div className="hidden lg:flex items-center gap-0.5">
+            {primaryNavLinks.map(({ href, label, active }) => (
               <Link
                 key={href}
                 href={href}
@@ -142,6 +146,7 @@ export default function Navbar() {
                 {label}
               </Link>
             ))}
+          </div>
 
           {/* Corporate link */}
           <a
@@ -187,8 +192,52 @@ export default function Navbar() {
               </Link>
             )
           )}
+
+          {/* Hamburger — mobile only */}
+          <button
+            type="button"
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+            className="lg:hidden ml-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-malama-sm border border-malama-line text-malama-ink-dim transition-colors hover:border-malama-accent/50 hover:text-malama-accent"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {menuOpen ? <path d="M6 6l12 12M6 18L18 6" /> : <><path d="M3 6h18" /><path d="M3 12h18" /><path d="M3 18h18" /></>}
+            </svg>
+          </button>
         </div>
       </div>
+
+      {/* Mobile menu panel */}
+      {menuOpen && (
+        <div className="lg:hidden border-t border-malama-line bg-malama-bg/95 px-5 py-3 backdrop-blur-[14px] sm:px-10">
+          <div className="flex flex-col">
+            {[...primaryNavLinks, ...secondaryNavLinks]
+              .filter(({ authOnly }) => !authOnly || isAuthed)
+              .map(({ href, label, active }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`rounded-sm px-2 py-3 font-mono text-[12px] font-medium uppercase tracking-[0.1em] transition-colors ${
+                    active(pathname) ? 'text-malama-accent' : 'text-malama-ink-dim hover:text-malama-accent'
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
+            <a
+              href={CORPORATE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMenuOpen(false)}
+              className="rounded-sm px-2 py-3 font-mono text-[12px] font-medium uppercase tracking-[0.1em] text-malama-ink-faint transition-colors hover:text-malama-accent"
+            >
+              malamalabs.com ↗
+            </a>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }

@@ -1,9 +1,12 @@
 name: Deploy to Testnet
 
 on:
-  push:
-    branches:
-      - develop
+  # Auto-trigger disabled (Actions not executing on this account). Re-enable by
+  # restoring the develop push trigger below once Actions/billing is resolved:
+  #   push:
+  #     branches:
+  #       - develop
+  workflow_dispatch:
 
 permissions:
   contents: read

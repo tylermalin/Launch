@@ -31,6 +31,29 @@ export function classifyCellStatus(facts: {
   return facts.isHeld ? 'global-held' : 'global-available'
 }
 
+export type CellCta = {
+  label: string
+  action: 'mint' | 'hold' | 'none'
+  enabled: boolean
+  tone: 'primary' | 'muted'
+}
+
+/** Map a cell status to the call-to-action the lookup UI should render. */
+export function cellStatusCta(status: CellStatus): CellCta {
+  switch (status) {
+    case 'curated-available':
+      return { label: 'Reserve & mint this hex', action: 'mint', enabled: true, tone: 'primary' }
+    case 'global-available':
+      return { label: 'Reserve this cell (30-day hold)', action: 'hold', enabled: true, tone: 'primary' }
+    case 'curated-taken':
+      return { label: 'Already claimed', action: 'none', enabled: false, tone: 'muted' }
+    case 'global-held':
+      return { label: 'Already reserved', action: 'none', enabled: false, tone: 'muted' }
+    case 'native':
+      return { label: 'Reserved for Native Tribes', action: 'none', enabled: false, tone: 'muted' }
+  }
+}
+
 // Built once at module load — the curated 200 and native sets are static data.
 const CURATED_HEX_SET = new Set(
   Object.values(regionsData as Record<string, { cells?: string[] }>).flatMap((r) => r?.cells ?? []),

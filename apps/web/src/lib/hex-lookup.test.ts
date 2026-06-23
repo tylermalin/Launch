@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { getResolution } from 'h3-js'
-import { resolveContainingCell } from './hex-lookup'
+import { resolveContainingCell, neighborCells } from './hex-lookup'
 
 describe('resolveContainingCell', () => {
   it('returns the Res-4 cell that contains a coordinate', () => {
@@ -26,5 +26,16 @@ describe('resolveContainingCell', () => {
 
     expect(nearby).toBe(cityHall)
     expect(distant).not.toBe(cityHall)
+  })
+})
+
+describe('neighborCells', () => {
+  it('returns the surrounding cells, excluding the cell itself', () => {
+    const cell = '8429a1dffffffff'
+    const neighbors = neighborCells(cell)
+
+    expect(neighbors).toHaveLength(6)
+    expect(neighbors).not.toContain(cell)
+    expect(neighbors.every((id) => getResolution(id) === 4)).toBe(true)
   })
 })

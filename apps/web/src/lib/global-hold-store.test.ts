@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { issueGlobalHold, getGlobalHold, releaseGlobalHold, listHoldsByEmail } from './global-hold-store'
+import { issueGlobalHold, getGlobalHold, releaseGlobalHold, listHoldsByEmail, listActiveHolds } from './global-hold-store'
 import { getStats } from './genesis-claim-registry'
 
 // Distinct global Res-4 cells per test — memKv persists in-process between tests,
@@ -81,5 +81,16 @@ describe('global-hold-store', () => {
     const holds = await listHoldsByEmail('multi@example.com')
     expect(holds.map((h) => h.hexId).sort()).toEqual([SF, TYO].sort())
     expect(holds.every((h) => h.email === 'multi@example.com')).toBe(true)
+  })
+
+  it('lists all active holds across users (for the map overlay)', async () => {
+    const SYD = '84be0e3ffffffff'
+    const CAI = '843e629ffffffff'
+    await issueGlobalHold({ hexId: SYD, email: 'au@example.com', lat: -33.87, lng: 151.21 })
+    await issueGlobalHold({ hexId: CAI, email: 'eg@example.com', lat: 30.04, lng: 31.24 })
+
+    const ids = (await listActiveHolds()).map((h) => h.hexId)
+    expect(ids).toContain(SYD)
+    expect(ids).toContain(CAI)
   })
 })

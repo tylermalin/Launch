@@ -101,6 +101,13 @@ export async function listHoldsByEmail(email: string, opts?: ClockOpts): Promise
   return holds.filter((h): h is GlobalHold => h !== null)
 }
 
+/** Every currently-active hold across all users (for the map overlay). */
+export async function listActiveHolds(opts?: ClockOpts): Promise<GlobalHold[]> {
+  const ids = await kv.smembers(K.index)
+  const holds = await Promise.all(ids.map((id) => getGlobalHold(id, opts)))
+  return holds.filter((h): h is GlobalHold => h !== null)
+}
+
 /** Release a hold. Only the owning email may release it. */
 export async function releaseGlobalHold(
   hexId: string,

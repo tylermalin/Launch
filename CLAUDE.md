@@ -65,13 +65,18 @@ Required keys: MAPBOX_TOKEN, PINATA_API_KEY, PINATA_API_SECRET, KAFKA_BOOTSTRAP,
 ## Branch Strategy
 
 - `main` — production-ready code
-- `develop` — integration branch
-- Feature branches off `develop`, PRs back to `develop`
+- `ready-to-go` — current integration branch where active work lands (ahead of `main`)
+- Feature branches off `ready-to-go`, PRs back to `ready-to-go`
+
+> ⚠️ Divergence to reconcile: CI (`ci.yml`) and testnet deploy (`deploy-testnet.yml`)
+> still trigger on a `develop` branch that does not currently exist on the remote.
+> Either create `develop` as the integration branch or repoint those workflows at
+> `ready-to-go`.
 
 ## CI/CD
 
 - GitHub Actions: Aiken build/test, Hardhat compile/test/coverage, Python pytest, Node typecheck/lint/build
-- Testnet deploy: push to `develop` triggers Cardano Pre-Prod + Base Sepolia deployment
+- Testnet deploy: push to `develop` triggers Cardano Pre-Prod + Base Sepolia deployment (see divergence note above — `develop` is currently absent)
 - Vercel: `apps/web` auto-deploys from `main`
 
 ## Conventions

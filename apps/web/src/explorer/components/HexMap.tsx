@@ -65,6 +65,7 @@ export interface HexMapHandle {
 const PHASE1_SOURCE = 'phase1-hexes';
 const LAND_SOURCE = 'land-hexes';
 const CONTEXT_SOURCE = 'context-hexes';
+const HOLDS_SOURCE = 'global-holds';
 
 /**
  * Zoom level at which the viewport-driven context hex grid becomes
@@ -388,6 +389,40 @@ export const HexMap = forwardRef<HexMapHandle, HexMapProps>(function HexMap(
         m.on('mouseleave', 'phase1-hexes-fill', () => {
           m.getCanvas().style.cursor = '';
         });
+      }
+
+      // Global holds overlay — off-chain reservations of cells outside the
+      // curated set. Amber dashed, matching the /map overlay. Added once, then
+      // populated from the holds GeoJSON endpoint.
+      if (!m.getSource(HOLDS_SOURCE)) {
+        m.addSource(HOLDS_SOURCE, {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: [] },
+        });
+        m.addLayer({
+          id: 'holds-fill',
+          type: 'fill',
+          source: HOLDS_SOURCE,
+          paint: { 'fill-color': '#F59E0B', 'fill-opacity': 0.18 },
+        });
+        m.addLayer({
+          id: 'holds-line',
+          type: 'line',
+          source: HOLDS_SOURCE,
+          paint: {
+            'line-color': '#F59E0B',
+            'line-width': 1.5,
+            'line-dasharray': [2, 1.5],
+            'line-opacity': 0.9,
+          },
+        });
+        fetch('/api/hexes/holds')
+          .then((r) => r.json())
+          .then((data) => {
+            const src = m.getSource(HOLDS_SOURCE) as mapboxgl.GeoJSONSource | undefined;
+            if (src && Array.isArray(data.features)) src.setData(data);
+          })
+          .catch((e) => console.warn('Failed to load holds overlay', e));
       }
     }
   }, [currentResolution, landCells, manifest, onHexClick]);

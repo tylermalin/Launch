@@ -166,6 +166,35 @@ export default function HexMap() {
           filter: ['==', 'id', '']
         })
 
+        // Global holds overlay — cells reserved off-chain outside the curated 200.
+        // Rendered amber + dashed to read clearly apart from the teal Genesis grid.
+        try {
+          const holdsRes = await fetch('/api/hexes/holds')
+          const holdsData = await holdsRes.json()
+          if (Array.isArray(holdsData.features) && holdsData.features.length > 0) {
+            m.addSource('holds', { type: 'geojson', data: holdsData })
+            m.addLayer({
+              id: 'holds-fill',
+              type: 'fill',
+              source: 'holds',
+              paint: { 'fill-color': '#F59E0B', 'fill-opacity': 0.18 },
+            })
+            m.addLayer({
+              id: 'holds-line',
+              type: 'line',
+              source: 'holds',
+              paint: {
+                'line-color': '#F59E0B',
+                'line-width': 1.5,
+                'line-dasharray': [2, 1.5],
+                'line-opacity': 0.9,
+              },
+            })
+          }
+        } catch (e) {
+          console.warn('Failed to load holds overlay', e)
+        }
+
         const animatePulse = () => {
           if (!m.isStyleLoaded()) {
             requestAnimationFrame(animatePulse)

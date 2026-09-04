@@ -150,7 +150,6 @@ export default function SiteFooter() {
             <span className="mx-1 hidden h-3 w-px bg-malama-line sm:inline-block" />
             <a href="https://x.com/malamalabs" target="_blank" rel="noopener noreferrer" className="text-malama-ink-dim transition-colors hover:text-malama-accent">Follow on X</a>
             <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className="text-malama-ink-dim transition-colors hover:text-malama-accent">Join Discord</a>
-            <a href="https://www.reddit.com/r/malamalabs" target="_blank" rel="noopener noreferrer" className="text-malama-ink-dim transition-colors hover:text-malama-accent">r/malamalabs</a>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-malama-ink-faint">

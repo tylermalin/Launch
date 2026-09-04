@@ -25,7 +25,6 @@ const secondaryNavLinks = [
   { href: '/dashboard', label: 'Dashboard', active: (p: string) => p.startsWith('/dashboard'), authOnly: true },
 ]
 
-const CORPORATE_URL = 'https://malamalabs.com'
 
 const NAV_BTN =
   'shrink-0 whitespace-nowrap rounded-malama-sm px-[18px] py-[11px] text-center font-mono text-[11px] font-semibold uppercase tracking-[0.1em] transition-all hover:-translate-y-px'
@@ -151,18 +150,6 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Corporate link */}
-          <a
-            href={CORPORATE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden lg:inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-sm px-3 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-malama-ink-faint hover:text-malama-accent transition-colors sm:px-4"
-          >
-            malamalabs.com
-            <svg className="w-2.5 h-2.5 opacity-60" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M1 9L9 1M9 1H3M9 1V7"/>
-            </svg>
-          </a>
 
           {/* ── Auth section — don't render until session resolves ── */}
           {!isLoading && (
@@ -229,15 +216,6 @@ export default function Navbar() {
                   {label}
                 </Link>
               ))}
-            <a
-              href={CORPORATE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-sm px-2 py-3 font-mono text-[12px] font-medium uppercase tracking-[0.1em] text-malama-ink-faint transition-colors hover:text-malama-accent"
-            >
-              malamalabs.com ↗
-            </a>
           </div>
         </div>
       )}

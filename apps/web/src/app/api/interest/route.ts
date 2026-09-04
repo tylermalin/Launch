@@ -9,7 +9,12 @@ import { Redis } from "@upstash/redis";
 export const runtime = "nodejs";
 
 // The canonical shared database (same one malama-admin reads /admin/interest from).
-const redis = Redis.fromEnv();
+// Lazy so `next build` does not evaluate the env at module load.
+let _redis: Redis | null = null;
+function redis(): Redis {
+  if (!_redis) _redis = Redis.fromEnv();
+  return _redis;
+}
 
 const CONFIRMATION =
   "Recorded. This registration is non-binding and creates no obligation on either side. We will contact you before any sale reopens.";
@@ -29,8 +34,8 @@ function ipHash(req: NextRequest): string {
 
 async function rateLimited(hash: string): Promise<boolean> {
   const key = `ratelimit:hexinterest:${hash}`;
-  const n = await redis.incr(key);
-  if (n === 1) await redis.expire(key, 3600);
+  const n = await redis().incr(key);
+  if (n === 1) await redis().expire(key, 3600);
   return n > 10;
 }
 
@@ -97,8 +102,8 @@ export async function POST(req: NextRequest) {
       source: "launch",
     };
 
-    await redis.set(`hexinterest:${id}`, record);
-    await redis.sadd("hexinterests", id);
+    await redis().set(`hexinterest:${id}`, record);
+    await redis().sadd("hexinterests", id);
 
     await sendConfirmation(email);
 

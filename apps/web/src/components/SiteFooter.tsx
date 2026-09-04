@@ -2,7 +2,6 @@ import Link from 'next/link'
 
 const DISCORD_URL = 'https://discord.gg/PcKRRUcJ'
 const AIPOWER_URL = 'https://ai-energy-impact-opal.vercel.app/'
-const CORPORATE_URL = 'https://malamalabs.com'
 
 const footerSections: { title: string; links: { href: string; label: string; external?: boolean }[] }[] = [
   {
@@ -62,14 +61,6 @@ export default function SiteFooter() {
             >
               <span className="h-1.5 w-1.5 rounded-full bg-malama-accent animate-pulse" />
               Live data stream → aipower.fyi
-            </a>
-            <a
-              href={CORPORATE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-malama-ink-faint hover:text-malama-accent transition-colors"
-            >
-              ← malamalabs.com
             </a>
             <div className="mt-5 flex items-center gap-4">
               <a

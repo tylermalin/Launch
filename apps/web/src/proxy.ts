@@ -11,10 +11,8 @@ export async function proxy(request: Request) {
 
   if (HOLDER_ONLY.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
     const cookie = request.headers.get('cookie') ?? ''
-    const loggedIn = cookie
-      .split(';')
-      .some((c) => c.trim().startsWith('malama_email_session='))
-    if (!loggedIn) {
+    const owns = await ownsGenesisHex(request.url, cookie)
+    if (!owns) {
       const dest = new URL('/auth', request.url)
       dest.searchParams.set('from', pathname + url.search)
       return NextResponse.redirect(dest)
@@ -27,6 +25,23 @@ export async function proxy(request: Request) {
   }
 
   return NextResponse.next()
+}
+
+// Strict holder check: the signed-in account must own at least one Genesis hex.
+// (Verified against /api/user, whose account carries the authoritative hexIds.)
+async function ownsGenesisHex(reqUrl: string, cookie: string): Promise<boolean> {
+  if (!cookie.includes('malama_email_session=')) return false
+  try {
+    const res = await fetch(new URL('/api/user', reqUrl), {
+      headers: { cookie },
+      cache: 'no-store',
+    })
+    if (!res.ok) return false
+    const data = (await res.json()) as { account?: { hexIds?: string[] } }
+    return (data.account?.hexIds?.length ?? 0) > 0
+  } catch {
+    return false
+  }
 }
 
 export const config = {

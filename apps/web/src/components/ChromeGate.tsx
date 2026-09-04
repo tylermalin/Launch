@@ -1,13 +1,8 @@
-'use client'
-
-import { usePathname } from 'next/navigation'
-
 /**
- * Hides global site chrome (Navbar / SiteFooter) on routes that carry their own
- * standalone layout — currently the /sensors "Obsidian" product landing.
+ * The global header and footer now render on every route (including /sensors),
+ * so this is a passthrough. Kept as a seam in case a future route needs its own
+ * standalone chrome.
  */
 export default function ChromeGate({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  if (pathname?.startsWith('/sensors')) return null
   return <>{children}</>
 }

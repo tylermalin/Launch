@@ -141,13 +141,25 @@ export default function SiteFooter() {
             </div>
           ))}
         </div>
-        <div className="flex flex-col gap-3 border-t border-malama-line pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-malama-ink-faint">
-            © 2026 Mālama Labs. All rights reserved.
-          </p>
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-malama-ink-faint">
-            Environmental intelligence core
-          </p>
+        <div className="border-t border-malama-line pt-8">
+          <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+            <Link href="/legal/terms" className="text-malama-ink-dim transition-colors hover:text-malama-accent">Terms &amp; Conditions</Link>
+            <a href="mailto:hello@malamalabs.com?subject=Hello" className="text-malama-ink-dim transition-colors hover:text-malama-accent">Contact Us</a>
+            <Link href="/legal/privacy" className="text-malama-ink-dim transition-colors hover:text-malama-accent">Privacy Policy</Link>
+            <Link href="/docs" className="text-malama-ink-dim transition-colors hover:text-malama-accent">Docs</Link>
+            <span className="mx-1 hidden h-3 w-px bg-malama-line sm:inline-block" />
+            <a href="https://x.com/malamalabs" target="_blank" rel="noopener noreferrer" className="text-malama-ink-dim transition-colors hover:text-malama-accent">Follow on X</a>
+            <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className="text-malama-ink-dim transition-colors hover:text-malama-accent">Join Discord</a>
+            <a href="https://www.reddit.com/r/malamalabs" target="_blank" rel="noopener noreferrer" className="text-malama-ink-dim transition-colors hover:text-malama-accent">r/malamalabs</a>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-malama-ink-faint">
+              © 2026 Mālama Labs. All rights reserved.
+            </p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-malama-ink-faint">
+              Environmental intelligence core
+            </p>
+          </div>
         </div>
       </div>
     </footer>

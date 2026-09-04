@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import './sensors.css'
-import SensorsNavbar from '@/components/sensors/Navbar'
 import HeroSection from '@/components/sensors/HeroSection'
 import SpecTicker from '@/components/sensors/SpecTicker'
 import UseCasesSection from '@/components/sensors/UseCasesSection'
@@ -12,7 +11,6 @@ import SystemSection from '@/components/sensors/SystemSection'
 import DeploymentMap from '@/components/sensors/DeploymentMap'
 import StatsSection from '@/components/sensors/StatsSection'
 import CTASection from '@/components/sensors/CTASection'
-import SensorsFooter from '@/components/sensors/Footer'
 
 export const metadata: Metadata = {
   title: 'Mālama Sensor Systems | Hardware-Signed Environmental Data',
@@ -25,7 +23,6 @@ export const metadata: Metadata = {
 export default function SensorsPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#f5f5f5' }}>
-      <SensorsNavbar />
       <HeroSection />
       <SpecTicker />
       <UseCasesSection />
@@ -37,7 +34,6 @@ export default function SensorsPage() {
       <DeploymentMap />
       <StatsSection />
       <CTASection />
-      <SensorsFooter />
     </div>
   )
 }

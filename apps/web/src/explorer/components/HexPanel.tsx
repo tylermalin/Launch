@@ -268,13 +268,6 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
         </Section>
       )}
 
-      {/* ── § Pricing ── */}
-      <Section title="Pricing">
-        <Field label="Listing (reference)">${hex.listingReferenceUsd.toLocaleString()}</Field>
-        <Field label="Genesis reserve">${hex.genesisReserveUsd.toLocaleString()}</Field>
-        <InternalLink href={links.pricingMethodologyDocUrl}>→ How pricing is set</InternalLink>
-      </Section>
-
       {/* ── § Reward multiplier stack ── */}
       <Section title="Reward multiplier stack">
         <MultiplierRow label="Genesis Year 1 Multiplier" value="1.50×" color="#c4f061" />
@@ -309,7 +302,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
       <Section title="What's included">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
           {[
-            <>One Hex Node hardware kit (ships end of December 2026)</>,
+            <>One Hex Node hardware kit</>,
             <>NFT-HEX geographic operating licence for this H3 cell</>,
             <>Inclusion in the Genesis 200 programme</>,
             <>1.5× Genesis Year 1 Multiplier on validation compensation</>,
@@ -365,7 +358,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
               cursor: 'pointer',
             }}
           >
-            Reserve this hex · ${hex.genesisReserveUsd.toLocaleString()}
+            Register interest
           </button>
         )}
         {isReserved && !isFounding && (

@@ -8,7 +8,7 @@ const footerSections: { title: string; links: { href: string; label: string; ext
   {
     title: 'Product',
     links: [
-      { href: '/presale',  label: 'Reserve a node' },
+      { href: '/presale',  label: 'Register interest' },
       { href: '/sensors',  label: 'Sensor Systems' },
       { href: '/data-solutions', label: 'Data Solutions' },
       { href: '/explorer', label: 'Hex Map Explorer' },
@@ -22,7 +22,6 @@ const footerSections: { title: string; links: { href: string; label: string; ext
       { href: '/docs',                label: 'Protocol Policy & Documentation' },
       { href: '/whitepaper',          label: 'Whitepaper' },
       { href: '/docs/tokenomics',     label: 'Tokenomics' },
-      { href: '/docs/pricing-roi',    label: 'Pricing & Dynamics' },
       { href: '/docs/operators',      label: 'Operator Guide' },
       { href: 'https://docs.malamalabs.com', label: 'User Documentation', external: true },
     ],

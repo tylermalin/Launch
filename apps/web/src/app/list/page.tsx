@@ -4,7 +4,7 @@ import GenesisHexList from '@/components/GenesisHexList'
 
 export const metadata: Metadata = {
   title: 'Genesis Hex List | Mālama Labs',
-  description: 'Full inventory of Mālama Genesis geographic hex zones: 200 unique zones, cross-chain mirror on credit-card purchase, regions, listing prices, and reserve.',
+  description: 'Full inventory of Mālama Genesis geographic hex zones: 200 unique zones, cross-chain mirror on credit-card purchase, regions, and regions.',
 }
 
 export default function GenesisHexListPage() {
@@ -15,7 +15,7 @@ export default function GenesisHexListPage() {
           ← Back to explorer
         </Link>
         <p className="hidden text-center text-[11px] font-mono uppercase tracking-widest text-gray-500 sm:block">
-          Reserve $2,000 USDC
+          Register interest
         </p>
         <span className="hidden w-32 sm:block" aria-hidden />
       </header>

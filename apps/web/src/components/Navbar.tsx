@@ -11,7 +11,7 @@ type SessionData = { auth: 'email' | null; email?: string | null }
 // Top nav: 5 primary items. Secondary items live in the mobile menu + footer.
 const primaryNavLinks = [
   { href: '/sensors',        label: 'Sensors',     active: (p: string) => p.startsWith('/sensors'), authOnly: false },
-  { href: '/presale',        label: 'Reserve',     active: (p: string) => p.startsWith('/presale'), authOnly: false },
+  { href: '/presale',        label: 'Register interest', active: (p: string) => p.startsWith('/presale'), authOnly: false },
   { href: '/explorer',       label: 'Explore',     active: (p: string) => p === '/explorer' || p.startsWith('/explorer/'), authOnly: false },
   { href: '/docs',           label: 'Docs',        active: (p: string) => p.startsWith('/docs') || p === '/whitepaper', authOnly: false },
   { href: '/data-solutions', label: 'Data Buyers', active: (p: string) => p.startsWith('/data-solutions'), authOnly: false },

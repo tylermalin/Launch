@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 
 const SCHEDULE = 'mailto:hello@malamalabs.com?subject=Schedule%20a%20call'
@@ -348,43 +348,48 @@ const STEPS = [
 ]
 
 function BuildSteps() {
-  const [active, setActive] = useState(0)
-  useEffect(() => {
-    const t = setInterval(() => setActive((a) => (a + 1) % STEPS.length), 1800)
-    return () => clearInterval(t)
-  }, [])
-
+  // CSS-driven staggered highlight — outline of 01 glows then fades, then 02, then
+  // 03, on a loop. No JS timer (keeps the main thread idle).
   return (
     <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
-      {STEPS.map((s, i) => {
-        const on = i === active
-        return (
-          <div
-            key={s.n}
-            onMouseEnter={() => setActive(i)}
-            className="flex flex-col rounded-malama border bg-malama-elev/50 p-7"
-            style={{
-              borderColor: on ? '#c4f061' : 'var(--malama-line, #1f2a20)',
-              boxShadow: on ? '0 0 0 1px #c4f061, 0 0 32px rgba(196,240,97,0.18)' : 'none',
-              transition: 'border-color .6s, box-shadow .6s',
-            }}
-          >
-            <div className="mb-4 flex items-center gap-3">
-              <span
-                className="flex h-8 w-8 items-center justify-center rounded-full font-mono text-xs"
-                style={{ background: on ? '#c4f061' : 'transparent', color: on ? '#0a0e0a' : '#c4f061', border: '1px solid #c4f061', transition: 'all .6s' }}
-              >
-                {s.n}
-              </span>
-              <span className="font-serif text-2xl">{s.title}</span>
-            </div>
-            <p className="mb-3 text-[15px] font-medium text-malama-ink">{s.lead}</p>
-            <p className="mb-5 flex-1 text-sm leading-relaxed text-malama-ink-dim">{s.body}</p>
-            {s.tech && <p className="mb-4 font-mono text-[10px] uppercase tracking-wide text-malama-accent">{s.tech}</p>}
-            <p className="border-t border-malama-line pt-4 text-xs text-malama-ink-faint">{s.caption}</p>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+@keyframes buildpulse {
+  0%, 24%, 100% { border-color: var(--malama-line, #1f2a20); box-shadow: none; }
+  8%, 16% { border-color: #c4f061; box-shadow: 0 0 0 1px #c4f061, 0 0 34px rgba(196,240,97,0.20); }
+}
+@keyframes buildnum {
+  0%, 24%, 100% { background: transparent; color: #c4f061; }
+  8%, 16% { background: #c4f061; color: #0a0e0a; }
+}
+.build-step { animation: buildpulse 5.4s ease-in-out infinite; }
+.build-step .build-num { animation: buildnum 5.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .build-step, .build-step .build-num { animation: none; } }
+`,
+        }}
+      />
+      {STEPS.map((s, i) => (
+        <div
+          key={s.n}
+          className="build-step flex flex-col rounded-malama border border-malama-line bg-malama-elev/50 p-7 transition-transform hover:-translate-y-1"
+          style={{ animationDelay: `${i * 1.8}s` }}
+        >
+          <div className="mb-4 flex items-center gap-3">
+            <span
+              className="build-num flex h-8 w-8 items-center justify-center rounded-full border border-malama-accent font-mono text-xs text-malama-accent"
+              style={{ animationDelay: `${i * 1.8}s` }}
+            >
+              {s.n}
+            </span>
+            <span className="font-serif text-2xl">{s.title}</span>
           </div>
-        )
-      })}
+          <p className="mb-3 text-[15px] font-medium text-malama-ink">{s.lead}</p>
+          <p className="mb-5 flex-1 text-sm leading-relaxed text-malama-ink-dim">{s.body}</p>
+          {s.tech && <p className="mb-4 font-mono text-[10px] uppercase tracking-wide text-malama-accent">{s.tech}</p>}
+          <p className="border-t border-malama-line pt-4 text-xs text-malama-ink-faint">{s.caption}</p>
+        </div>
+      ))}
     </div>
   )
 }

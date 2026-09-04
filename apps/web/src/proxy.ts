@@ -1,47 +1,27 @@
 import { NextResponse } from 'next/server'
 
-const ACCESS_COOKIE = 'malama_access'
-const ACCESS_VALUE  = 'ml-launch-2026-authorized'
-
-// Paths that bypass the password gate entirely
-// Static assets (logo, brand images, PDFs, fonts, etc.) must bypass the gate —
-// otherwise the password page's own <img src="/logo-mark.png"> gets 307'd to
-// /password and renders broken.
-const STATIC_ASSET_RE = /\.(png|jpe?g|gif|svg|webp|avif|ico|pdf|woff2?|ttf|otf|eot|css|js|map|txt|xml|json|mp4|webm)$/i
-
-function isPublicPath(pathname: string) {
-  return (
-    pathname === '/password' ||
-    pathname.startsWith('/api/auth/password') ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon') ||
-    STATIC_ASSET_RE.test(pathname) ||
-    pathname === '/presale' ||
-    pathname.startsWith('/presale/') ||
-    pathname.startsWith('/launch')
-  )
-}
+// The site is public. Only pricing and the purchase agreement are restricted —
+// reachable to logged-in holders (existing holders sign in via /auth). Everything
+// else (home, explorer, docs, /presale register-interest) is open.
+const HOLDER_ONLY = ['/docs/pricing', '/docs/pricing-roi', '/legal/hex-node-purchase']
 
 export async function proxy(request: Request) {
   const url = new URL(request.url)
   const { pathname } = url
 
-  // ── Password gate ────────────────────────────────────────────────────────
-  if (!isPublicPath(pathname)) {
-    const cookieHeader = request.headers.get('cookie') ?? ''
-    const hasAccess = cookieHeader
+  if (HOLDER_ONLY.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
+    const cookie = request.headers.get('cookie') ?? ''
+    const loggedIn = cookie
       .split(';')
-      .some(c => c.trim() === `${ACCESS_COOKIE}=${ACCESS_VALUE}`)
-
-    if (!hasAccess) {
-      const dest = new URL('/password', request.url)
+      .some((c) => c.trim().startsWith('malama_email_session='))
+    if (!loggedIn) {
+      const dest = new URL('/auth', request.url)
       dest.searchParams.set('from', pathname + url.search)
       return NextResponse.redirect(dest)
     }
   }
 
-  // Auth0 removed — email session + Magic Link are the only auth paths.
-  // /auth/* routes redirect to /dashboard so old links don't 404.
+  // Old /auth/* deep links redirect to the dashboard (kept from before).
   if (pathname.startsWith('/auth/')) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
@@ -51,6 +31,12 @@ export async function proxy(request: Request) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    '/docs/pricing',
+    '/docs/pricing/:path*',
+    '/docs/pricing-roi',
+    '/docs/pricing-roi/:path*',
+    '/legal/hex-node-purchase',
+    '/legal/hex-node-purchase/:path*',
+    '/auth/:path*',
   ],
 }

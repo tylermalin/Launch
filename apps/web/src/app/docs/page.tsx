@@ -360,14 +360,7 @@ export default function DocsOverviewPage() {
                   <Link href="/legal/terms" style={{ color: 'var(--mlma-accent)' }}>
                     Terms &amp; Conditions
                   </Link>
-                  ,{' '}
-                  <Link
-                    href="/legal/hex-node-purchase"
-                    style={{ color: 'var(--mlma-accent)' }}
-                  >
-                    Hex Node Purchase Agreement
-                  </Link>
-                  , and{' '}
+                  {' '}and{' '}
                   <Link
                     href="/legal/token-rewards-risk"
                     style={{ color: 'var(--mlma-accent)' }}

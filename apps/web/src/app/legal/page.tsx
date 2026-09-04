@@ -78,19 +78,6 @@ export default function LegalIndexPage() {
               </div>
             </Link>
 
-            <Link className="doc-card" href="/legal/hex-node-purchase">
-              <div className="topline">
-                <span className="id">MLMA-LEGAL-003 · v2</span>
-                <span className="status">In force</span>
-              </div>
-              <h3>Hex Node Purchase &amp; Preorder Agreement</h3>
-              <p>Sale-specific terms for the Genesis 200 program. Pricing, deployment window, MLMA vesting, the validation reward formula, and the mutable / immutable protocol parameters.</p>
-              <div className="footline">
-                <span>18 sections · ~22 min read</span>
-                <span className="read">Read →</span>
-              </div>
-            </Link>
-
             <Link className="doc-card" href="/legal/token-rewards-risk">
               <div className="topline">
                 <span className="id">MLMA-LEGAL-005 · v2</span>

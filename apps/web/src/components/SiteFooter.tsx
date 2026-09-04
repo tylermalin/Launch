@@ -12,7 +12,6 @@ const footerSections: { title: string; links: { href: string; label: string; ext
       { href: '/data-solutions', label: 'Data Solutions' },
       { href: '/explorer', label: 'Hex Map Explorer' },
       { href: '/timeline', label: 'Timeline' },
-      { href: '/partners', label: 'Become a partner' },
     ],
   },
   {

@@ -35,11 +35,10 @@ const NAV: NavEntry[] = [
   { label: 'Data Buyers', href: '/data-solutions', active: (p) => p.startsWith('/data-solutions') },
   {
     label: 'Learn',
-    active: (p) => p.startsWith('/docs') || p === '/whitepaper' || p.startsWith('/legal') || p.startsWith('/partners'),
+    active: (p) => p.startsWith('/docs') || p === '/whitepaper' || p.startsWith('/legal'),
     items: [
       { label: 'Docs', href: '/docs' },
       { label: 'Whitepaper', href: '/whitepaper' },
-      { label: 'Partners', href: '/partners' },
       { label: 'Corporate Information', href: '/legal' },
     ],
   },

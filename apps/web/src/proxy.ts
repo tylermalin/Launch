@@ -19,6 +19,12 @@ export async function proxy(request: Request) {
     }
   }
 
+  // The partner/commission program is closed with the sales pause. Any stray old
+  // link (/partners, /partners/apply, /partners/dashboard) redirects to home.
+  if (pathname === '/partners' || pathname.startsWith('/partners/')) {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
   // Old /auth/* deep links redirect to the dashboard (kept from before).
   if (pathname.startsWith('/auth/')) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
@@ -52,6 +58,8 @@ export const config = {
     '/docs/pricing-roi/:path*',
     '/legal/hex-node-purchase',
     '/legal/hex-node-purchase/:path*',
+    '/partners',
+    '/partners/:path*',
     '/auth/:path*',
   ],
 }

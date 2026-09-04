@@ -138,9 +138,7 @@ function ReferralLinkSection({ email }: { email: string }) {
         <h2 className="text-xl font-bold uppercase tracking-wider text-white">Your Referral Link</h2>
       </div>
       <p className="mb-6 text-sm text-gray-400 leading-relaxed">
-        Share your personalised link — when someone reserves a Genesis Hex through it, you earn reward points toward future network benefits.{' '}
-        <a href="/partners/apply" className="text-malama-teal underline underline-offset-2">Apply to the Partner Programme</a>{' '}
-        to earn commission instead.
+        Share your personalised link — when someone registers interest in a Genesis Hex through it, you earn reward points toward future network benefits.
       </p>
       {referralUrl ? (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

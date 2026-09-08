@@ -91,10 +91,10 @@ export default function Home() {
       <Section eyebrow="04 · Where it runs today" title="Carbon proved it. AI compute scales it." dark>
         <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2">
           <RunCard
-            image={{ src: '/sensors/field-hero.png', alt: 'Genesis 300 sensor node at a biochar site' }}
+            image={{ src: '/sensors/field-hero.png', alt: 'Genesis 200 sensor node at a biochar site' }}
             status="Carbon dMRV · live since June 2024 · 51,466+ signed records"
             title="Proof that a project removed the carbon it claims."
-            body="Genesis 300 sensors sit at biochar, rock-weathering, forestry, and soil projects and sign what they measure. Developers get pre-finance against verified evidence (LCO₂). Buyers get credits with a signed trail from field to registry (VCO₂). Compatible with Puro.earth, Isometric, and Verra."
+            body="Genesis 200 sensors sit at biochar, rock-weathering, forestry, and soil projects and sign what they measure. Developers get pre-finance against verified evidence (LCO₂). Buyers get credits with a signed trail from field to registry (VCO₂). Compatible with Puro.earth, Isometric, and Verra."
             href="/sensors"
             cta="Sensor systems →"
           />
@@ -342,7 +342,7 @@ function BandViz() {
 
 /* ── 03 · Animated Measure → Sign → Anchor sequence ────────────────────── */
 const STEPS = [
-  { n: '01', title: 'Measure', lead: 'A sensor in the field takes a reading.', body: 'Soil carbon at a biochar site. Power draw on a rack inside an AI data center. Continuous, high-frequency, at the source. Not once a year.', caption: 'Genesis 300 node, biochar site. Soil and atmospheric probes.' },
+  { n: '01', title: 'Measure', lead: 'A sensor in the field takes a reading.', body: 'Soil carbon at a biochar site. Power draw on a rack inside an AI data center. Continuous, high-frequency, at the source. Not once a year.', caption: 'Genesis 200 node, biochar site. Soil and atmospheric probes.' },
   { n: '02', title: 'Sign', lead: 'A secure chip signs it before it leaves the device.', body: 'Each sensor carries an ATECC608B secure element. Its private key is burned in at manufacture and never leaves the silicon. Change one digit of the reading and the signature breaks. This is the part no software-only system can copy.', caption: 'Secure element and tamper-evident seal. Studio.' },
   { n: '03', title: 'Anchor', lead: 'The signed record goes on chain as a SaveCard.', body: 'Independent Hex Node validators check the record and anchor it on Cardano. Registries, auditors, buyers, and regulators can all verify the same record. Nobody has to take our word for it.', caption: 'AI Power Sensor, rack install. Pilot hardware.', tech: 'Hardware-signed · ECDSA · Cardano · CIP-25 / CIP-68 · Liquidity on Base' },
 ]

@@ -10,6 +10,7 @@
 
 import { NextResponse } from 'next/server'
 import { getKOLByWallet, getKOLStats, buildReferralUrl, buildVanityUrl } from '@/lib/kol-registry'
+import { getAmplifyOverrides } from '@/lib/amplify-config'
 
 export const runtime = 'nodejs'
 
@@ -43,5 +44,6 @@ export async function GET(req: Request) {
     ...stats,
     referralUrl: buildReferralUrl(partner.id),
     vanityUrl: buildVanityUrl(partner.id),
+    amplifyOverrides: await getAmplifyOverrides(),
   })
 }

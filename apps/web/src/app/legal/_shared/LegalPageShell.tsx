@@ -19,7 +19,6 @@ export type LegalSlug = 'index' | 'terms' | 'privacy' | 'hex-node-purchase' | 't
 const SWITCHER_ITEMS: { slug: LegalSlug; label: string; href: string }[] = [
   { slug: 'terms', label: 'Terms & Conditions', href: '/legal/terms' },
   { slug: 'privacy', label: 'Privacy Policy', href: '/legal/privacy' },
-  { slug: 'hex-node-purchase', label: 'Hex Node Agreement', href: '/legal/hex-node-purchase' },
   { slug: 'token-rewards-risk', label: 'Risk Disclosure', href: '/legal/token-rewards-risk' },
   { slug: 'cookies', label: 'Cookie Policy', href: '/legal/cookies' },
 ]

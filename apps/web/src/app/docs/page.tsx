@@ -36,12 +36,8 @@ export default function DocsOverviewPage() {
             </Link>
             <Link href="/whitepaper">Whitepaper v1.0</Link>
             <Link href="/docs/tokenomics">Tokenomics</Link>
-            <Link href="/docs/pricing-roi">Pricing &amp; Dynamics</Link>
-            <Link href="/docs/phase-1-timeline">Phase 1 Timeline</Link>
             <Link href="/docs/operators">Operator Guide</Link>
             <Link href="/docs/data-demand-score-methodology">Data Demand Score</Link>
-            <Link href="/docs/pricing">Genesis Pricing</Link>
-            <Link href="/docs/validator-fees">Validator Fees</Link>
           </div>
         </div>
       </div>
@@ -192,40 +188,6 @@ export default function DocsOverviewPage() {
               </div>
             </Link>
 
-            <Link className="doc-card" href="/docs/pricing-roi">
-              <div className="topline">
-                <span className="id">DOCS · 02</span>
-                <span className="status">Canonical</span>
-              </div>
-              <h3>Pricing &amp; Dynamics</h3>
-              <p>
-                Capital requirement, milestone-conditional vesting (15 / 15 / 20 / 20 / 30),
-                validation distribution formula, hex demand tiers, and the two economic
-                phases.
-              </p>
-              <div className="footline">
-                <span>Capital · vesting · multipliers</span>
-                <span className="read">Read →</span>
-              </div>
-            </Link>
-
-            <Link className="doc-card" href="/docs/phase-1-timeline">
-              <div className="topline">
-                <span className="id">DOCS · 03</span>
-                <span className="status">Canonical</span>
-              </div>
-              <h3>Phase 1 Timeline</h3>
-              <p>
-                From reservation through Year 1 milestone vesting. Six phases. Reservation,
-                hardware ship, boot &amp; audit, PONO qualify, and three operational
-                milestones.
-              </p>
-              <div className="footline">
-                <span>June 2026 → ~Q4 2027</span>
-                <span className="read">Read →</span>
-              </div>
-            </Link>
-
             <Link className="doc-card" href="/docs/operators">
               <div className="topline">
                 <span className="id">DOCS · 04</span>
@@ -259,39 +221,6 @@ export default function DocsOverviewPage() {
               </div>
             </Link>
 
-            <Link className="doc-card" href="/docs/pricing">
-              <div className="topline">
-                <span className="id">DOCS · 06</span>
-                <span className="status">v1.0 · Ratified</span>
-              </div>
-              <h3>Genesis Pricing</h3>
-              <p>
-                Genesis reserve price ($2,000 flat), listing reference price formula,
-                three-multiplier reward calculation, cohort normalization, milestone vesting,
-                and buyer protections.
-              </p>
-              <div className="footline">
-                <span>Reserve · rewards · vesting</span>
-                <span className="read">Read →</span>
-              </div>
-            </Link>
-
-            <Link className="doc-card" href="/docs/validator-fees">
-              <div className="topline">
-                <span className="id">DOCS · 07</span>
-                <span className="status">v0.1 · Draft</span>
-              </div>
-              <h3>Validator Fees</h3>
-              <p>
-                USDC-denominated protocol revenue distributed to Genesis 200 operators from
-                commercial buyer relationships. Separate from MLMA emissions. Accrual logic,
-                distribution mechanics, and interaction with MLMA milestone vesting.
-              </p>
-              <div className="footline">
-                <span>Revenue · accruals · USDC</span>
-                <span className="read">Read →</span>
-              </div>
-            </Link>
           </div>
 
           {/* §01 How the system fits together */}
@@ -431,14 +360,7 @@ export default function DocsOverviewPage() {
                   <Link href="/legal/terms" style={{ color: 'var(--mlma-accent)' }}>
                     Terms &amp; Conditions
                   </Link>
-                  ,{' '}
-                  <Link
-                    href="/legal/hex-node-purchase"
-                    style={{ color: 'var(--mlma-accent)' }}
-                  >
-                    Hex Node Purchase Agreement
-                  </Link>
-                  , and{' '}
+                  {' '}and{' '}
                   <Link
                     href="/legal/token-rewards-risk"
                     style={{ color: 'var(--mlma-accent)' }}

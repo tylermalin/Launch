@@ -82,3 +82,10 @@ docker-volumes/
 .env*.local
 
 *.tsbuildinfo
+
+# Geo seed data cache (large GeoJSON)
+scripts/.cache/
+apps/web/src/data/regions.json.bak
+!apps/web/public/sensors/*.png
+!apps/web/public/sensors/*.jpg
+.env*

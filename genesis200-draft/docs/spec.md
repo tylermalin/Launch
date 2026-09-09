@@ -34,7 +34,7 @@ fit, methodology fit.
 
 ## 3. Hardware Specifications
 
-Each Genesis Hex Node operator receives **1 × Mālama Genesis 300 Hardware Kit**:
+Each Genesis Hex Node operator receives **1 × Mālama Genesis 200 Hardware Kit**:
 
 - Raspberry Pi Zero 2 W (1 GHz quad-core, 512 MB RAM)
 - Waveshare SIM7600G 4G LTE & GNSS Hat (region-unlocked)
@@ -44,7 +44,7 @@ Each Genesis Hex Node operator receives **1 × Mālama Genesis 300 Hardware Kit*
 - SHT31 temperature & humidity sensor
 - 5V 20W solar panel + 3000 mAh LiPo battery
 - IP67 polycarbonate weatherproof enclosure
-- Custom Genesis 300 firmware image on 32 GB SD card
+- Custom Genesis 200 firmware image on 32 GB SD card
 
 Retail equivalent: ~$750–$1000 USD. Operators may self-host or opt for
 Mālama's managed hosting (TBD, est. $10–20/mo).
@@ -94,7 +94,7 @@ Governance handles:
 
 ## 6. Hardware Pricing & Delivery
 
-**One-time fee:** $2000 per node, covering Genesis 300 kit, lifetime Hex
+**One-time fee:** $2000 per node, covering Genesis 200 kit, lifetime Hex
 license (non-transferable), 1 year of 4G LTE data (5GB/mo cap), onboarding &
 tech support.
 

@@ -15,11 +15,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { parseEmailSessionToken } from '@/lib/email-session';
-import { resolveAppUrl } from '@/lib/resolve-app-url';
+import { listKOLs, getKOLStats, registerKOL, updateKOL, buildReferralUrl, buildVanityUrl, recordKOLEmail } from '@/lib/kol-registry';
+import { getAmplifyOverrides, setAmplifyOverrides } from '@/lib/amplify-config';
+import { getPayoutsOverview, runPayoutBatch } from '@/lib/payouts-admin';
+import { sendEmail, emailLayout, escapeHtml } from '@/lib/email';
+
+export const runtime = 'nodejs';
 
 // ── Admin auth ────────────────────────────────────────────────────────────────
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? 'tyler@malamaproject.org')
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? 'tyler@malamaproject.org,dagwell@malamalabs.com,jeffrey@malamalabs.com')
   .split(',')
   .map((e) => e.trim().toLowerCase());
 
@@ -38,17 +43,30 @@ function isAdmin(email: string | null): boolean {
   return ADMIN_EMAILS.includes(email);
 }
 
-// ── KOL API forwarding ────────────────────────────────────────────────────────
+// ── Partner list (direct, no self-fetch) ───────────────────────────────────────
 
-const KOL_BASE = resolveAppUrl();
-
-async function kolFetch(path: string, init?: RequestInit) {
-  const secret = process.env.ADMIN_SECRET ?? '';
-  const url = `${KOL_BASE}/api/admin/kol${path}`;
-  return fetch(url, {
-    ...init,
-    headers: { ...(init?.headers ?? {}), 'x-admin-secret': secret, 'Content-Type': 'application/json' },
-  });
+async function listPartnersWithStats() {
+  const partners = await listKOLs();
+  // Per-partner try/catch: a stats failure for ONE partner must never drop the
+  // whole registry. On error we still return the partner with zeroed stats.
+  const response = (
+    await Promise.all(
+      partners.map(async (p) => {
+        try {
+          const s = await getKOLStats(p.id);
+          if (!s) return null;
+          return { ...s, referralUrl: buildReferralUrl(p.id), vanityUrl: buildVanityUrl(p.id) };
+        } catch (e) {
+          console.error('[partners] stats failed for', p.id, e);
+          return {
+            partner: p, clicks: 0, conversions: 0, totalEarned: 0, pendingEarned: 0, paidEarned: 0, commissions: [],
+            referralUrl: buildReferralUrl(p.id), vanityUrl: buildVanityUrl(p.id),
+          };
+        }
+      }),
+    )
+  ).filter(Boolean);
+  return { partners: response, count: response.length };
 }
 
 // ── Approved copy templates ───────────────────────────────────────────────────
@@ -58,139 +76,204 @@ async function kolFetch(path: string, init?: RequestInit) {
 const APPROVED_COPY_TEMPLATES = [
   {
     id: 'intro-general',
-    label: 'General Introduction',
-    subject: 'Partnership Opportunity — Mālama Labs Genesis Nodes',
+    label: 'Partner Invite (1st touch)',
+    subject: 'Partner Invite: Launching Mālama Labs Genesis Nodes ([COMMISSION]% Commission)',
     body: `Hi [NAME],
 
-We're building the world's first hardware-signed environmental data network, and we'd love to have you as a launch partner.
+We're launching the first decentralized, hardware-signed environmental data network (DePIN), and we want to invite you as a founding launch partner.
 
-Mālama Labs Genesis Nodes are city-scale hex territories that operators own outright — each comes with a hardware kit, an NFT-HEX geographic licence, and a 125,000 MLMA vesting schedule tied to real-world sensor uptime.
+Mālama Labs is deploying 200 "Genesis Hex Nodes" across the US. For web3, climate-tech, and hardware audiences it's a rare double-play asset class: a physical environmental sensor kit combined with a Res-4 geographic NFT license (~1,770 km²) that earns 125,000 $MLMA tokens based on data-uptime milestones.
 
-We have 200 launch slots across 5 US regions. Your referral link earns you [COMMISSION]% on every reservation made through it.
+Why partner with us?
+• High-yield commissions: you earn [COMMISSION]% on every $2,000 node reservation made through your link.
+• Plug-and-play kit: we provide all the copy, graphics, and live-map tracking in your dashboard.
+• True scarcity: only 200 slots across 5 US regions — built-in urgency for your audience.
 
-Referral link: [REFERRAL_URL]
+Your unique partner link is ready: [REFERRAL_URL]
 
-Happy to jump on a call — let me know.
+Got 5 minutes for a quick alignment call this week?
 
-– Mālama Labs`,
+– The Mālama Labs Team`,
   },
   {
     id: 'follow-up',
-    label: 'Follow-up (2nd touch)',
-    subject: 'Re: Mālama Labs Genesis Nodes — Quick update',
+    label: 'Follow-up — 1.5× multiplier (2nd touch)',
+    subject: 'Re: Mālama Labs Genesis Nodes — the 1.5× multiplier is live',
     body: `Hi [NAME],
 
-Following up on our partnership note — we're now live at launch.malamalabs.com and reservations are open.
+Following up on our launch partnership — we're officially live and territories on the hex map are starting to lock down.
 
-Your personalised link: [REFERRAL_URL]
+Your personalized partner link: [REFERRAL_URL]
 
-A few things that have resonated with our early operators:
-• Hardware-signed data — each node cryptographically signs its environmental readings on-chain
-• City-scale territory — Res-4 hex licences (~1,770 km²) are large enough to matter commercially
-• Genesis pricing — $2,000 flat, with a 1.5× year-1 validation multiplier
+What's driving early traction with our network operators:
+• Cryptographic truth — sensors sign environmental data directly on-chain, eliminating greenwashing.
+• Massive territories — a single Res-4 hex (~1,770 km²) gives operators real regional data dominance.
+• Early-adopter edge — the $2,000 Genesis tier includes a 1.5× Year-1 validation token multiplier.
 
-Let me know if you have questions.
+Promotion is entirely plug-and-play in your dashboard toolkit. Want any custom graphics or data angles for your specific audience?
 
-– Mālama Labs`,
+– The Mālama Labs Team`,
   },
   {
     id: 'social-caption',
-    label: 'Social / Caption Copy',
+    label: 'KOL Social / Caption (for partners to post)',
     subject: null,
-    body: `I'm partnering with Mālama Labs — the first network where environmental sensors sign their own data on-chain 🌿
+    body: `Own the environmental data grid before it's mapped out. 🌍🛰️
 
-They're selling 200 city-scale "Hex Node" territories across the US right now. Each one comes with hardware, an NFT licence, and 125k MLMA tokens vesting over your first year of operation.
+I'm partnering with @MalamaLabs for the rollout of their Genesis Nodes — the first DePIN network where physical hardware sensors cryptographically sign real-world climate data directly on-chain.
 
-My link for early access → [REFERRAL_URL]`,
+They're releasing exactly 200 city-scale "Hex Node" territories across the US.
+
+What you get as an operator:
+📦 A physical environmental hardware sensor kit (air, water, soil)
+🗺️ A geographic NFT license for a ~1,770 km² territory
+🪙 125,000 $MLMA tokens vested via real-world uptime milestones
+⚡ A 1.5× token validation multiplier for Year 1
+
+Real infrastructure. Real data. Real-world rewards.
+
+Secure your hex on the live map before your region is claimed: [REFERRAL_URL]
+
+#MalamaNodes #VerifyTheEarth #DePIN`,
   },
   {
     id: 'newsletter-blurb',
-    label: 'Newsletter / Email Blurb',
-    subject: 'Something interesting in environmental data infrastructure',
-    body: `[NAME] — quick one for your audience.
+    label: 'KOL Newsletter / Email (for partners to send)',
+    subject: 'The infrastructure play bridging crypto and climate tech',
+    body: `[NAME] — quick one for you today if you've been tracking the DePIN (Decentralized Physical Infrastructure Networks) space.
 
-Mālama Labs is opening 200 "Hex Node" territories across the US. These are physical + digital assets: you get a hardware sensor kit AND a geographic NFT licence for a ~1,770 km² territory. The hardware cryptographically signs environmental data on-chain — water quality, air quality, soil conditions.
+Mālama Labs is opening exactly 200 "Hex Node" territories across the United States to build a decentralized, un-gameable environmental data grid.
 
-Launch price: $2,000. 125,000 MLMA tokens vest based on sensor uptime milestones.
+These are hybrid physical + digital infrastructure assets. For a launch price of $2,000, operators get:
+1. A physical hardware sensor kit that cryptographically signs environmental data (water quality, air, soil) directly to the blockchain.
+2. A geographic NFT license securing a ~1,770 km² territory.
+3. A 125,000 $MLMA token package that vests based on your sensor's real-world uptime milestones.
 
-Use my link to explore the hex map and reserve: [REFERRAL_URL]`,
+Only 200 slots across the country — territories are first-come, first-served.
+
+Use my link to view the live tracking map and claim your region before the Genesis tier closes:
+
+👉 Explore the Hex Map & Reserve Your Node: [REFERRAL_URL]`,
   },
 ] as const;
 
 type ApprovedCopyTemplate = typeof APPROVED_COPY_TEMPLATES[number];
 
+function slugify(name: string): string {
+  return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 32);
+}
+
 // ── GET ───────────────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
   const email = await getCallerEmail(req);
-  if (!isAdmin(email)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  if (!isAdmin(email)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const action = req.nextUrl.searchParams.get('action') ?? 'list';
   const id = req.nextUrl.searchParams.get('id');
 
-  if (action === 'list') {
-    const res = await kolFetch('');
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
+  try {
+    if (action === 'list') return NextResponse.json(await listPartnersWithStats());
+    if (action === 'get' && id) {
+      const stats = await getKOLStats(id);
+      if (!stats) return NextResponse.json({ error: 'KOL not found' }, { status: 404 });
+      return NextResponse.json({ ...stats, referralUrl: buildReferralUrl(id), vanityUrl: buildVanityUrl(id) });
+    }
+    if (action === 'templates') return NextResponse.json({ templates: APPROVED_COPY_TEMPLATES });
+    if (action === 'payouts') return NextResponse.json(await getPayoutsOverview());
+    if (action === 'amplify-config') return NextResponse.json({ config: await getAmplifyOverrides() });
+    return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+  } catch (e) {
+    console.error('[partners-proxy GET]', action, e);
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'Server error' }, { status: 500 });
   }
-
-  if (action === 'get' && id) {
-    const res = await kolFetch(`/${id}`);
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
-
-  if (action === 'templates') {
-    return NextResponse.json({ templates: APPROVED_COPY_TEMPLATES });
-  }
-
-  return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
 }
 
 // ── POST ──────────────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
   const email = await getCallerEmail(req);
-  if (!isAdmin(email)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  if (!isAdmin(email)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const body = await req.json() as Record<string, unknown>;
+  let body: Record<string, unknown>;
+  try {
+    body = (await req.json()) as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
   const action = body.action as string;
 
-  if (action === 'invite') {
-    // Create a new partner + return their referral link
-    const { partnerEmail, displayName, commissionBps = 1000 } = body as {
-      partnerEmail?: string;
-      displayName: string;
-      commissionBps?: number;
-    };
-    const res = await kolFetch('', {
-      method: 'POST',
-      body: JSON.stringify({
-        displayName,
-        email: partnerEmail,
+  try {
+    if (action === 'invite') {
+      const { partnerEmail, displayName, commissionBps = 1000 } = body as { partnerEmail?: string; displayName?: string; commissionBps?: number };
+      if (!displayName) return NextResponse.json({ error: 'displayName required' }, { status: 400 });
+      const id = slugify(String(displayName)) || `partner-${Date.now().toString(36)}`;
+      const partner = await registerKOL({
+        id,
+        displayName: String(displayName).trim(),
+        email: partnerEmail ? String(partnerEmail).toLowerCase() : undefined,
         walletAddress: '0x0000000000000000000000000000000000000000', // placeholder until partner provides
-        commissionBps,
+        commissionBps: typeof commissionBps === 'number' ? commissionBps : 1000,
         bio: '',
         approved: true, // admin-invited partners are pre-approved
-      }),
-    });
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
+      });
+      return NextResponse.json({ partner, referralUrl: buildReferralUrl(partner.id), vanityUrl: buildVanityUrl(partner.id) });
+    }
 
-  if (action === 'approve') {
-    const { id } = body as { id: string };
-    const res = await kolFetch(`/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ approved: true }),
-    });
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  }
+    if (action === 'approve') {
+      const { id } = body as { id: string };
+      const updated = await updateKOL(id, { approved: true });
+      if (!updated) return NextResponse.json({ error: 'KOL not found' }, { status: 404 });
+      // Welcome the partner with their live referral link.
+      if (updated.email) {
+        const ref = buildReferralUrl(id);
+        await sendEmail({
+          to: updated.email,
+          subject: 'You’re approved — Mālama Labs Partner Program',
+          html: emailLayout(`Welcome aboard, ${escapeHtml(updated.displayName)}`, `
+            <p>Your Mālama Labs partner account is approved and your referral link is live:</p>
+            <p><a href="${ref}">${escapeHtml(ref)}</a></p>
+            <p>Sign in to your dashboard for ready-to-post copy across X, LinkedIn, Reddit, Telegram,
+            and Discord, plus live tracking of your referrals and commissions:
+            <a href="https://launch.malamalabs.com/partners">launch.malamalabs.com/partners</a></p>
+            <p>Let’s go win. 🌍</p>`),
+        }).catch(() => {});
+      }
+      return NextResponse.json({ partner: updated });
+    }
 
-  return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+    if (action === 'run-payouts') {
+      const { commissionIds, kolId } = body as { commissionIds?: string[]; kolId?: string };
+      const r = await runPayoutBatch({ approvedBy: email ?? 'admin', commissionIds, kolId });
+      return NextResponse.json(r.body, { status: r.status });
+    }
+
+    if (action === 'send-email') {
+      const { to, subject, body: emailBody, partnerId, templateId, templateLabel } = body as {
+        to?: string; subject?: string; body?: string; partnerId?: string; templateId?: string; templateLabel?: string;
+      };
+      if (!to || !subject || !emailBody) {
+        return NextResponse.json({ error: 'to, subject, and body are required' }, { status: 400 });
+      }
+      const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;font-size:14px;line-height:1.6">${escapeHtml(emailBody).replace(/\n/g, '<br/>')}</div>`;
+      const r = await sendEmail({ to, subject, html, text: emailBody });
+      if (!r.ok) return NextResponse.json({ error: r.error || 'Email send failed (check RESEND_API_KEY + verified domain)' }, { status: 502 });
+      // Track the send against the partner (audit + dashboard count).
+      if (partnerId) {
+        await recordKOLEmail(String(partnerId), { to, subject, templateId, templateLabel, sentBy: email ?? undefined }).catch(() => {});
+      }
+      return NextResponse.json({ ok: true, id: r.id });
+    }
+
+    if (action === 'set-amplify') {
+      const { config } = body as { config?: unknown };
+      const saved = await setAmplifyOverrides(config ?? {});
+      return NextResponse.json({ ok: true, config: saved });
+    }
+
+    return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+  } catch (e) {
+    console.error('[partners-proxy POST]', action, e);
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'Server error' }, { status: 500 });
+  }
 }

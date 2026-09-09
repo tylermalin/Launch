@@ -1,10 +1,14 @@
 name: Continuous Integration
 
 on:
-  push:
-    branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main", "develop" ]
+  # Auto-triggers disabled. GitHub Actions is not executing jobs on this account
+  # (every run fails at startup in ~2s with no steps/logs). Re-enable CI by
+  # restoring the push/pull_request triggers below once Actions/billing is resolved:
+  #   push:
+  #     branches: [ "main", "develop" ]
+  #   pull_request:
+  #     branches: [ "main", "develop" ]
+  workflow_dispatch:
 
 jobs:
   cardano-contracts:

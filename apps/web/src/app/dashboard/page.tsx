@@ -138,9 +138,7 @@ function ReferralLinkSection({ email }: { email: string }) {
         <h2 className="text-xl font-bold uppercase tracking-wider text-white">Your Referral Link</h2>
       </div>
       <p className="mb-6 text-sm text-gray-400 leading-relaxed">
-        Share your personalised link — when someone reserves a Genesis Hex through it, you earn reward points toward future network benefits.{' '}
-        <a href="/partners/apply" className="text-malama-teal underline underline-offset-2">Apply to the Partner Programme</a>{' '}
-        to earn commission instead.
+        Share your personalised link — when someone registers interest in a Genesis Hex through it, you earn reward points toward future network benefits.
       </p>
       {referralUrl ? (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -401,7 +399,7 @@ export default function Dashboard() {
   }
   // ─────────────────────────────────────────────────────────────────────────
 
-  const currentStatus = hexes.length > 0 ? 'Hardware Pending' : 'Awaiting Genesis License'
+  const currentStatus = hexes.length > 0 ? 'Hardware Order & Customization Underway' : 'Awaiting Genesis License'
   const activePredictionMarkets = hexes.length > 0 ? 8 : 0
 
   useEffect(() => {
@@ -717,10 +715,10 @@ export default function Dashboard() {
                   <Box className={`h-4 w-4 ${hexes.length > 0 ? 'text-malama-teal' : 'text-gray-500'}`} />
                 </div>
                 <span className={`font-bold ${hexes.length > 0 ? 'text-malama-teal' : 'text-gray-500'}`}>
-                  Hardware Shipped
+                  Hardware Underway
                 </span>
                 <span className="mt-1 text-xs text-malama-teal/80">
-                  {hexes.length > 0 ? 'In Transit - Expected in 6 Months' : 'Pending Verification'}
+                  {hexes.length > 0 ? 'Order & customization underway · Shipment expected by Dec 31, 2026' : 'Pending Verification'}
                 </span>
               </div>
 

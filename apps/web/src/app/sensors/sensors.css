@@ -1,0 +1,62 @@
+/*
+ * Mālama Sensor landing — "Obsidian Precision" theme.
+ * Ported from the sensorpage repo (Vite/Tailwind4) into the Next/Tailwind3 app.
+ * Components use inline styles + these custom classes + the two fonts below.
+ * Scoped: only loaded by the /sensors route.
+ */
+
+/* ── Keyframes ── */
+@keyframes sensors-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
+@keyframes sensors-ledPulse { 0%, 100% { opacity: 1; box-shadow: 0 0 6px 2px #8bff47; } 50% { opacity: 0.6; box-shadow: 0 0 12px 4px #8bff47; } }
+@keyframes sensors-ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ── Scroll reveal ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.23,1,0.32,1), transform 0.7s cubic-bezier(0.23,1,0.32,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 60ms; }
+.reveal-delay-2 { transition-delay: 120ms; }
+.reveal-delay-3 { transition-delay: 180ms; }
+.reveal-delay-4 { transition-delay: 240ms; }
+.reveal-delay-5 { transition-delay: 300ms; }
+
+/* ── Elements ── */
+.hairline { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); }
+
+.btn-malama {
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 2rem;
+  border: 1.5px solid #8bff47; color: #8bff47; background: transparent;
+  font-family: var(--font-inter-tight), system-ui, sans-serif; font-weight: 600; font-size: 0.9rem;
+  letter-spacing: 0.04em; border-radius: 4px; cursor: pointer; text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+.btn-malama:hover { background: #8bff47; color: #0a0a0a; box-shadow: 0 0 24px rgba(139,255,71,0.3); }
+.btn-malama:active { transform: scale(0.97); }
+.btn-malama-solid { background: #8bff47; color: #0a0a0a; }
+.btn-malama-solid:hover { background: #a0ff6a; box-shadow: 0 0 32px rgba(139,255,71,0.4); }
+
+.nav-frosted {
+  backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(10,10,10,0.85); border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.spec-card {
+  background: #141414; border: 1px solid rgba(255,255,255,0.07); border-radius: 12px;
+  padding: 1.5rem; transition: border-color 0.25s ease, transform 0.25s ease;
+}
+.spec-card:hover { border-color: rgba(139,255,71,0.25); transform: translateY(-2px); }
+
+.mono-data { font-family: var(--font-jetbrains), monospace; font-size: 0.8rem; color: #8bff47; letter-spacing: 0.05em; }
+.section-label { font-family: var(--font-jetbrains), monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #8bff47; }
+.product-float { animation: sensors-float 5s ease-in-out infinite; }
+.led-dot { width: 8px; height: 8px; border-radius: 50%; background: #8bff47; animation: sensors-ledPulse 2s ease-in-out infinite; }
+.text-gradient-green { background: linear-gradient(135deg, #8bff47 0%, #5dcc2a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.bg-surface { background-color: #141414; }
+.bg-surface-2 { background-color: #1c1c1e; }
+.stat-number { font-family: var(--font-inter-tight), system-ui, sans-serif; font-weight: 700; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1; color: #f5f5f5; }
+.img-overlay-bottom { background: linear-gradient(to top, #0a0a0a 0%, transparent 50%); }
+.ticker-track { animation: sensors-ticker 30s linear infinite; }
+
+/* Page-scoped responsive: hero collapses to one column on small screens */
+@media (max-width: 900px) {
+  .sensors-hero-grid { grid-template-columns: 1fr !important; }
+}

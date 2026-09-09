@@ -268,13 +268,6 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
         </Section>
       )}
 
-      {/* ── § Pricing ── */}
-      <Section title="Pricing">
-        <Field label="Listing (reference)">${hex.listingReferenceUsd.toLocaleString()}</Field>
-        <Field label="Genesis reserve">${hex.genesisReserveUsd.toLocaleString()}</Field>
-        <InternalLink href={links.pricingMethodologyDocUrl}>→ How pricing is set</InternalLink>
-      </Section>
-
       {/* ── § Reward multiplier stack ── */}
       <Section title="Reward multiplier stack">
         <MultiplierRow label="Genesis Year 1 Multiplier" value="1.50×" color="#c4f061" />
@@ -309,13 +302,12 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
       <Section title="What's included">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
           {[
-            <>One Hex Node hardware kit (ships end of December 2026)</>,
+            <>One Hex Node hardware kit</>,
             <>NFT-HEX geographic operating licence for this H3 cell</>,
             <>Inclusion in the Genesis 200 programme</>,
             <>1.5× Genesis Year 1 Multiplier on validation compensation</>,
             <>Up to{' '}<strong style={{ color: '#c4f061' }}>{computedMlma.toLocaleString()} MLMA</strong>{' '}earned across operational milestones</>,
             <>Hardware must be installed and registered within 90 days of delivery or Licence is forfeited</>,
-            <>Validation compensation begins after the Genesis Hex Sale audit (Oct 2026) confirms operational compliance</>,
           ].map((item, i) => (
             <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
               <span style={{ color: '#c4f061', fontSize: 14, lineHeight: '1.4', flexShrink: 0, userSelect: 'none' }}>•</span>
@@ -340,11 +332,8 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
             </div>
           ))}
         </div>
-        <p style={{ fontSize: 12, color: '#888', marginTop: 12 }}>By reserving, you agree to:</p>
+        <p style={{ fontSize: 12, color: '#888', marginTop: 12 }}>Reference:</p>
         <Links>
-          <ExternalLink href={links.purchaseAgreementUrl}>
-            Hex Node Purchase &amp; Preorder Agreement
-          </ExternalLink>
           <ExternalLink href={links.termsAndConditionsUrl}>Terms and Conditions</ExternalLink>
           <ExternalLink href={links.tokenRewardsRiskUrl}>Token &amp; Rewards Risk Disclosure</ExternalLink>
         </Links>
@@ -365,7 +354,7 @@ export function HexPanel({ hex, links, onReserveClick, onClose }: HexPanelProps)
               cursor: 'pointer',
             }}
           >
-            Reserve this hex · ${hex.genesisReserveUsd.toLocaleString()}
+            Register interest
           </button>
         )}
         {isReserved && !isFounding && (

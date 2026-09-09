@@ -27,12 +27,8 @@ export type DocsSlug =
 const SWITCHER_ITEMS: { slug: DocsSlug; label: string; href: string }[] = [
   { slug: 'overview', label: 'Overview', href: '/docs' },
   { slug: 'tokenomics', label: 'Tokenomics', href: '/docs/tokenomics' },
-  { slug: 'pricing-roi', label: 'Pricing & Dynamics', href: '/docs/pricing-roi' },
-  { slug: 'phase-1-timeline', label: 'Phase 1 Timeline', href: '/docs/phase-1-timeline' },
   { slug: 'operators', label: 'Operator Guide', href: '/docs/operators' },
   { slug: 'data-demand-score-methodology', label: 'Data Demand Score', href: '/docs/data-demand-score-methodology' },
-  { slug: 'pricing', label: 'Genesis Pricing', href: '/docs/pricing' },
-  { slug: 'validator-fees', label: 'Validator Fees', href: '/docs/validator-fees' },
 ]
 
 export interface DocsPageShellProps {

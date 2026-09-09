@@ -1,14 +1,13 @@
 import { Suspense } from 'react'
 import { Loader2 } from 'lucide-react'
 import { MagicProvider } from '@/components/magic/MagicProvider'
+import { getEvmRpcUrl } from '@/lib/evm-network'
 import LaunchClient from './LaunchClient'
 
 export default function LaunchPage() {
   const publishableKey = process.env.NEXT_PUBLIC_MAGIC_API_KEY?.trim() ?? ''
-  const rpcUrl =
-    process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL?.trim() ||
-    process.env.BASE_SEPOLIA_RPC_URL?.trim() ||
-    ''
+  // RPC for the active network (mainnet vs sepolia) — single source of truth.
+  const rpcUrl = getEvmRpcUrl()
 
   return (
     <MagicProvider publishableKey={publishableKey} rpcUrl={rpcUrl || undefined}>
